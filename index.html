@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>書架 — 나의 서재</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="page-header">
+    <span class="page-header-mini">書架 · Vol.1</span>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="header-btn header-btn-text" id="selectBtn" title="여러 권 선택">선택</button>
+      <button class="header-btn" id="sortBtn" title="정렬">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 6h18M7 12h10M11 18h2"/>
+        </svg>
+      </button>
+      <a href="scan.html" class="header-btn" id="addBtn" title="책 추가" style="background:var(--ink);color:var(--bg);border-radius:1px">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Chapter opener -->
+  <section class="chapter">
+    <div class="chapter-glyph">書</div>
+    <span class="chapter-no">No. 01 · Library</span>
+    <h1 class="chapter-title">나의 <em>서재</em></h1>
+    <p class="chapter-sub" id="chapterSub">기록된 책 0권</p>
+  </section>
+
+  <main class="content">
+
+    <!-- Folder filter chips (rendered by index.js) -->
+    <div class="folder-bar" id="folderBar"></div>
+
+    <!-- Gallery grid -->
+    <div class="books-grid" id="booksGrid"></div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-state-glyph">書</div>
+      <p class="empty-state-title">아직 읽은 책이 없어요</p>
+      <p class="empty-state-desc">바코드 스캔, ISBN 직접 입력, 또는<br>제목으로 검색해 첫 번째 책을 기록해 보세요.</p>
+      <div style="display:flex;gap:var(--sp-sm);justify-content:center;flex-wrap:wrap">
+        <a href="scan.html#barcode" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
+            <rect x="7" y="7" width="10" height="10" rx="1"/>
+          </svg>
+          바코드 스캔
+        </a>
+        <a href="scan.html#manual" class="btn btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+          직접 입력
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      서재
+    </a>
+    <a href="scan.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      스캔
+    </a>
+    <a href="stats.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      통계
+    </a>
+    <a href="share.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      공유
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>

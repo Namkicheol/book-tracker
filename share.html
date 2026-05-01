@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>書架 — 공유 카드</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .card-preview-wrap {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      max-width: 360px;
+      margin: 0 auto var(--sp-lg);
+      box-shadow: 4px 6px 0 var(--shadow), 0 0 0 1px var(--border) inset;
+      border-radius: 1px;
+      overflow: hidden;
+      animation: fadeInUp 0.5s ease both;
+    }
+    #shareCanvas { width: 100%; height: 100%; display: block; }
+
+    .book-picker { display: flex; flex-direction: column; gap: var(--sp-sm); margin-bottom: var(--sp-lg); }
+    .picker-item {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-md);
+      padding: var(--sp-sm) var(--sp-md);
+      background: var(--bg-paper);
+      border: 1.5px solid var(--border);
+      border-radius: 1px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+      animation: fadeInUp 0.4s ease both;
+    }
+    .picker-item.selected { border-color: var(--accent); box-shadow: 3px 4px 0 var(--shadow); }
+    .picker-item img, .picker-cover-ph {
+      width: 44px; height: 64px;
+      object-fit: cover;
+      border-radius: 1px;
+      box-shadow: 0 0 0 1px var(--border) inset;
+      flex-shrink: 0;
+    }
+    .picker-cover-ph {
+      background: linear-gradient(160deg, var(--bg-accent) 0%, var(--border) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-han); font-size: 16px; font-weight: 700;
+      color: var(--text-mute); opacity: 0.6;
+    }
+    .picker-info { flex: 1; min-width: 0; }
+    .picker-title {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .picker-author {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+    .picker-stars { font-size: 11px; color: var(--accent); letter-spacing: 1px; }
+
+    .theme-row { display: flex; gap: var(--sp-sm); margin-bottom: var(--sp-lg); }
+    .theme-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s;
+      box-shadow: 0 0 0 1px var(--border);
+    }
+    .theme-dot.active {
+      border-color: var(--accent);
+      transform: scale(1.15);
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="index.html" class="header-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </a>
+    <span class="page-header-mini">No. 05</span>
+    <span style="width:36px"></span>
+  </header>
+
+  <section class="chapter">
+    <div class="chapter-glyph">共</div>
+    <span class="chapter-no">No. 05 · Share</span>
+    <h1 class="chapter-title">공유 <em>카드</em></h1>
+    <p class="chapter-sub">인스타그램용 1080×1080 이미지로 책을 공유합니다.</p>
+  </section>
+
+  <main class="content">
+
+    <div class="card-preview-wrap">
+      <canvas id="shareCanvas" width="1080" height="1080"></canvas>
+    </div>
+
+    <p class="section-eyebrow">Theme</p>
+    <p class="section-title">카드 테마</p>
+    <div class="theme-row" id="themeRow">
+      <div class="theme-dot active" data-theme="vintage" style="background:#f5ead4" title="빈티지"></div>
+      <div class="theme-dot"        data-theme="dark"    style="background:#1a0e08" title="다크"></div>
+      <div class="theme-dot"        data-theme="wine"    style="background:#8b3a3a" title="와인"></div>
+      <div class="theme-dot"        data-theme="forest"  style="background:#2d4a3e" title="포레스트"></div>
+    </div>
+
+    <p class="section-eyebrow">Pick a book</p>
+    <p class="section-title">책 선택</p>
+    <div class="book-picker" id="bookPicker"></div>
+
+    <div class="empty-state hidden" id="shareEmpty">
+      <div class="empty-state-glyph">共</div>
+      <p class="empty-state-title">기록된 책이 없어요</p>
+      <p class="empty-state-desc">책을 기록하면 인스타용 카드를 만들 수 있어요.</p>
+      <a href="scan.html" class="btn btn-primary">책 기록하러 가기</a>
+    </div>
+
+    <button class="btn btn-primary btn-full mt-md" id="downloadBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      이미지 다운로드 1080×1080
+    </button>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      서재
+    </a>
+    <a href="scan.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      스캔
+    </a>
+    <a href="stats.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      통계
+    </a>
+    <a href="share.html" class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      공유
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/share-card.js"></script>
+</body>
+</html>

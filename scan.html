@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>書架 — 바코드 스캔</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .scanner-wrap {
+      width: 100%;
+      aspect-ratio: 4/3;
+      border-radius: 1px;
+      overflow: hidden;
+      box-shadow: 4px 6px 0 var(--shadow), 0 0 0 1px var(--border) inset;
+      background: var(--ink);
+    }
+    #reader { width: 100%; height: 100%; }
+    #reader video, #reader img { width: 100% !important; height: 100% !important; object-fit: cover; display: block; }
+    .scan-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+    .scan-line {
+      position: absolute; left: 12%; right: 12%; top: 12%;
+      height: 1.5px; background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: scanLine 2.2s ease-in-out infinite;
+    }
+    .scan-corner { position: absolute; width: 22px; height: 22px; border-color: var(--accent); border-style: solid; border-width: 0; }
+    .scan-corner.tl { top: 10%; left: 10%; border-top-width: 1.5px; border-left-width: 1.5px; }
+    .scan-corner.tr { top: 10%; right: 10%; border-top-width: 1.5px; border-right-width: 1.5px; }
+    .scan-corner.bl { bottom: 10%; left: 10%; border-bottom-width: 1.5px; border-left-width: 1.5px; }
+    .scan-corner.br { bottom: 10%; right: 10%; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+
+    @keyframes scanLine {
+      0%, 100% { top: 12%; }
+      50%       { top: 84%; }
+    }
+
+    .result-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+      box-shadow: 4px 6px 0 var(--shadow);
+      border-radius: 1px;
+      padding: var(--sp-md);
+      display: flex;
+      gap: var(--sp-md);
+      animation: fadeInUp 0.4s ease both;
+    }
+    .result-cover {
+      width: 76px;
+      flex-shrink: 0;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      border-radius: 1px;
+      box-shadow: 0 0 0 1px var(--border) inset;
+    }
+    .result-cover-placeholder {
+      width: 76px;
+      flex-shrink: 0;
+      aspect-ratio: 2/3;
+      background: linear-gradient(160deg, var(--bg-accent) 0%, var(--border) 100%);
+      border-radius: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-han);
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-mute);
+      opacity: 0.5;
+    }
+    .result-info { flex: 1; min-width: 0; }
+    .result-title {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 1.4;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .result-author {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 12px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+    .result-publisher {
+      font-size: 11px;
+      color: var(--text-mute);
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="index.html" class="header-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </a>
+    <span class="page-header-mini">No. 02</span>
+    <span style="width:36px"></span>
+  </header>
+
+  <section class="chapter">
+    <div class="chapter-glyph">索</div>
+    <span class="chapter-no">No. 02 · Add</span>
+    <h1 class="chapter-title">책 <em>추가</em></h1>
+    <p class="chapter-sub">바코드 스캔 · ISBN 입력 · 제목 검색 — 셋 중 편한 방법으로.</p>
+  </section>
+
+  <main class="content">
+
+    <!-- Mode tabs -->
+    <div class="folder-bar" id="modeTabs" style="margin-bottom:var(--sp-lg)">
+      <button class="folder-chip active" data-mode="barcode">바코드</button>
+      <button class="folder-chip" data-mode="isbn">ISBN</button>
+      <button class="folder-chip" data-mode="title">제목 검색</button>
+    </div>
+
+    <!-- ── Barcode mode ─────────────────────────── -->
+    <div id="modeBarcode" class="mode-pane">
+      <div class="scanner-wrap" style="position:relative">
+        <div id="reader"></div>
+        <div class="scan-overlay" id="scanOverlay" style="display:none">
+          <div class="scan-line"></div>
+          <div class="scan-corner tl"></div>
+          <div class="scan-corner tr"></div>
+          <div class="scan-corner bl"></div>
+          <div class="scan-corner br"></div>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full mt-md" id="startBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>
+        </svg>
+        카메라 시작
+      </button>
+      <p class="text-mute" style="font-size:11px;margin-top:8px;font-family:var(--font-display);font-style:italic;text-align:center">
+        카메라 권한을 허용해 주세요. iOS Safari·Chrome 모두 지원.
+      </p>
+    </div>
+
+    <!-- ── ISBN mode ────────────────────────────── -->
+    <div id="modeIsbn" class="mode-pane hidden">
+      <div class="form-group">
+        <label class="form-label" for="isbnInput">ISBN 직접 입력</label>
+        <div style="display:flex;gap:var(--sp-sm);align-items:flex-end">
+          <input type="text" class="form-input" id="isbnInput"
+                 placeholder="9791191056020" inputmode="numeric" maxlength="13"
+                 style="flex:1">
+          <button class="btn btn-ghost btn-sm" id="searchBtn" style="white-space:nowrap;align-self:stretch">검색</button>
+        </div>
+        <p class="text-mute" style="font-size:11px;margin-top:6px;font-family:var(--font-display);font-style:italic">
+          책 뒷면 바코드 아래 13자리 (978로 시작) 또는 10자리 숫자
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Title search mode ────────────────────── -->
+    <div id="modeTitle" class="mode-pane hidden">
+      <div class="form-group">
+        <label class="form-label" for="titleInput">제목 / 저자로 검색</label>
+        <div style="display:flex;gap:var(--sp-sm);align-items:flex-end">
+          <input type="text" class="form-input" id="titleInput"
+                 placeholder="책 제목 또는 저자명"
+                 style="flex:1">
+          <button class="btn btn-ghost btn-sm" id="titleSearchBtn" style="white-space:nowrap;align-self:stretch">검색</button>
+        </div>
+        <p class="text-mute" style="font-size:11px;margin-top:6px;font-family:var(--font-display);font-style:italic">
+          ISBN을 모르는 책(헌책·외국 도서·도서관 책)도 검색 가능
+        </p>
+      </div>
+
+      <!-- Multi-result list for title search -->
+      <div id="titleResults" class="hidden mt-md">
+        <p class="section-title" id="titleResultsLabel">검색 결과</p>
+        <div id="titleResultsList" style="display:flex;flex-direction:column;gap:var(--sp-sm)"></div>
+      </div>
+    </div>
+
+    <div id="resultSection" class="hidden mt-md">
+      <p class="section-title">검색 결과</p>
+      <div class="result-card" id="resultCard"></div>
+      <div style="display:flex;gap:var(--sp-sm);margin-top:var(--sp-md)">
+        <button class="btn btn-ghost" id="cancelBtn" style="flex:1">취소</button>
+        <button class="btn btn-primary" id="recordBtn" style="flex:2">이 책 기록하기</button>
+      </div>
+    </div>
+
+    <div id="loadingSection" class="hidden text-center mt-lg">
+      <svg style="animation:spin 1s linear infinite;color:var(--accent)" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+      </svg>
+      <p class="text-soft mt-sm font-display italic">검색 중…</p>
+    </div>
+
+    <div id="errorSection" class="hidden mt-md">
+      <div class="quote-block">
+        <p class="quote-text" id="errorMsg">책을 찾을 수 없어요.</p>
+      </div>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      서재
+    </a>
+    <a href="scan.html" class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      스캔
+    </a>
+    <a href="stats.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      통계
+    </a>
+    <a href="share.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      공유
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/scanner.js"></script>
+</body>
+</html>

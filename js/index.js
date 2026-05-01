@@ -1,0 +1,591 @@
+/**
+ * 書架 — Library page (index.html)
+ *
+ * Renders the book gallery + folder filter chips + sort cycle.
+ */
+
+(function () {
+  'use strict';
+
+  let currentFolderId = '';        // '' === 전체
+  let currentSort     = 'newest';  // newest | oldest | rating | title
+
+  // 다중 선택 모드
+  let selectMode = false;
+  const selectedIds = new Set();
+
+  const SORT_LABELS = {
+    newest: '최근 읽은 순',
+    oldest: '오래된 순',
+    rating: '별점 높은 순',
+    title:  '제목 순',
+  };
+
+  // ── Sort ─────────────────────────────────────────────────────
+
+  function sortBooks(books, mode) {
+    const arr = [...books];
+    switch (mode) {
+      case 'oldest':
+        return arr.sort((a, b) =>
+          (a.readDate || a.createdAt || '').localeCompare(b.readDate || b.createdAt || ''));
+      case 'rating':
+        return arr.sort((a, b) =>
+          (b.rating || 0) - (a.rating || 0) ||
+          (b.readDate || b.createdAt || '').localeCompare(a.readDate || a.createdAt || ''));
+      case 'title':
+        return arr.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'ko'));
+      case 'newest':
+      default:
+        return arr.sort((a, b) =>
+          (b.readDate || b.createdAt || '').localeCompare(a.readDate || a.createdAt || ''));
+    }
+  }
+
+  // ── Render: chapter sub ──────────────────────────────────────
+
+  function renderHeader() {
+    const sub = document.getElementById('chapterSub');
+    const total = Storage.getAllBooks().length;
+    const sortLabel = SORT_LABELS[currentSort];
+    sub.innerHTML = total
+      ? `기록된 책 <strong style="color:var(--text);font-weight:700">${total}</strong>권 · <span class="font-display italic">${sortLabel}</span>`
+      : '아직 책이 없습니다';
+  }
+
+  // ── Render: folders ──────────────────────────────────────────
+
+  function renderFolders() {
+    const bar = document.getElementById('folderBar');
+    const folders = Storage.getAllFolders();
+    const allBooks = Storage.getAllBooks();
+
+    const totalCount = allBooks.length;
+
+    const html = [];
+    html.push(chipHTML('', '전체', totalCount, currentFolderId === ''));
+
+    folders.forEach(f => {
+      const count = allBooks.filter(b => (b.folders || []).includes(f.id)).length;
+      html.push(chipHTML(f.id, f.name, count, currentFolderId === f.id));
+    });
+
+    html.push(`<button class="folder-chip folder-chip-add" id="addFolderChip" title="새 폴더">＋ 폴더</button>`);
+
+    bar.innerHTML = html.join('');
+
+    bar.querySelectorAll('[data-folder]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        currentFolderId = chip.dataset.folder;
+        renderFolders();
+        renderBooks();
+      });
+      // Long-press to delete (only for actual folders, not "전체")
+      if (chip.dataset.folder) {
+        attachLongPress(chip, () => promptDeleteFolder(chip.dataset.folder));
+      }
+      // Drop target — 책 카드 드롭 시 그 폴더로 이동 ("전체" 제외)
+      if (chip.dataset.folder) {
+        attachFolderDropTarget(chip);
+      }
+    });
+
+    document.getElementById('addFolderChip').addEventListener('click', promptAddFolder);
+  }
+
+  // 폴더 칩을 drop target으로 만든다. dragover 시 하이라이트, drop 시 책 → 폴더 추가.
+  function attachFolderDropTarget(chip) {
+    const folderId = chip.dataset.folder;
+
+    chip.addEventListener('dragenter', e => {
+      e.preventDefault();
+      chip.classList.add('drag-over');
+    });
+    chip.addEventListener('dragover', e => {
+      e.preventDefault();          // drop 허용
+      if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+      chip.classList.add('drag-over');
+    });
+    chip.addEventListener('dragleave', () => {
+      chip.classList.remove('drag-over');
+    });
+    chip.addEventListener('drop', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      chip.classList.remove('drag-over');
+      const dt = e.dataTransfer;
+      const bookId = (dt && (dt.getData('text/book-id') || dt.getData('text/plain'))) || '';
+      if (!bookId) return;
+      moveBookToFolder(bookId, folderId);
+    });
+  }
+
+  function moveBookToFolder(bookId, folderId) {
+    const b = Storage.getBook(bookId);
+    if (!b) return;
+    const folders = new Set(b.folders || []);
+    if (folders.has(folderId)) {
+      showToast('이미 그 폴더에 있어요');
+      return;
+    }
+    folders.add(folderId);
+    Storage.updateBook(bookId, { folders: [...folders] });
+    const folderName = (Storage.getFolder(folderId) || {}).name || '';
+    showToast(`"${folderName}" 폴더로 이동`);
+    renderFolders();
+    renderBooks();
+  }
+
+  function chipHTML(folderId, name, count, isActive) {
+    const safe = escapeHtml(name);
+    const countTag = count > 0
+      ? `<span style="opacity:0.55;font-weight:400;margin-left:5px">${count}</span>`
+      : '';
+    return `<button class="folder-chip ${isActive ? 'active' : ''}" data-folder="${escapeAttr(folderId)}">${safe}${countTag}</button>`;
+  }
+
+  // ── Render: book grid ────────────────────────────────────────
+
+  function renderBooks() {
+    const grid  = document.getElementById('booksGrid');
+    const empty = document.getElementById('emptyState');
+
+    const all = Storage.getAllBooks();
+    let books = currentFolderId
+      ? Storage.getBooksByFolder(currentFolderId)
+      : all;
+
+    books = sortBooks(books, currentSort);
+
+    if (books.length === 0) {
+      grid.innerHTML = '';
+      empty.classList.remove('hidden');
+      tweakEmpty(all.length === 0);
+      renderHeader();
+      return;
+    }
+
+    empty.classList.add('hidden');
+    grid.innerHTML = books.map(renderCard).join('');
+
+    const inSelectMode = selectMode;
+    grid.classList.toggle('select-mode', inSelectMode);
+
+    grid.querySelectorAll('.book-card').forEach(card => {
+      const id = card.dataset.id;
+
+      // 선택 모드일 때 모든 카드에 selectable 클래스, 선택된 책엔 selected
+      if (inSelectMode) {
+        card.classList.add('selectable');
+        if (selectedIds.has(id)) card.classList.add('selected');
+      }
+
+      card.addEventListener('click', e => {
+        if (selectMode) {
+          e.preventDefault();
+          toggleSelection(id);
+          return;
+        }
+        location.href = `detail.html?id=${encodeURIComponent(id)}`;
+      });
+
+      // 드래그는 선택 모드 아닐 때만
+      if (!inSelectMode) {
+        card.addEventListener('dragstart', e => {
+          e.dataTransfer.setData('text/book-id', id);
+          e.dataTransfer.setData('text/plain', id);  // 호환용
+          e.dataTransfer.effectAllowed = 'move';
+          card.classList.add('dragging');
+        });
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+        });
+      } else {
+        // 선택 모드에선 native drag 비활성
+        card.setAttribute('draggable', 'false');
+      }
+
+      // long-press → 선택 모드 진입 + 자동 선택
+      attachLongPress(card, () => {
+        if (!selectMode) selectMode = true;
+        selectedIds.add(id);
+        renderBooks();
+        renderSelectionBar();
+        updateSelectBtn();
+      }, 450);
+    });
+
+    renderHeader();
+    renderSelectionBar();
+  }
+
+  function toggleSelection(bookId) {
+    if (selectedIds.has(bookId)) selectedIds.delete(bookId);
+    else selectedIds.add(bookId);
+    // 선택 모드 진입 후 빈 상태도 유지 (헤더 "완료" 버튼으로만 종료)
+    const card = document.querySelector(`.book-card[data-id="${cssEscape(bookId)}"]`);
+    if (card) card.classList.toggle('selected');
+    renderSelectionBar();
+  }
+
+  function exitSelectMode() {
+    selectMode = false;
+    selectedIds.clear();
+    renderBooks();
+    renderSelectionBar();
+    updateSelectBtn();
+  }
+
+  function enterSelectMode() {
+    selectMode = true;
+    renderBooks();
+    renderSelectionBar();
+    updateSelectBtn();
+  }
+
+  function updateSelectBtn() {
+    const btn = document.getElementById('selectBtn');
+    if (!btn) return;
+    btn.textContent = selectMode ? '완료' : '선택';
+    btn.classList.toggle('active', selectMode);
+  }
+
+  // ── Selection Action Bar ─────────────────────────────────────
+  function renderSelectionBar() {
+    let bar = document.getElementById('selectionBar');
+    // 선택 모드 OFF면 항상 숨김
+    if (!selectMode) {
+      if (bar) bar.hidden = true;
+      return;
+    }
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'selectionBar';
+      bar.className = 'selection-bar';
+      document.body.appendChild(bar);
+    }
+    const n = selectedIds.size;
+    if (n === 0) {
+      bar.innerHTML = `
+        <span class="selection-bar-count">0</span>권 — 책을 탭해 선택
+        <button type="button" class="selection-bar-btn" id="selCancelBtn">완료</button>
+      `;
+    } else {
+      bar.innerHTML = `
+        <span class="selection-bar-count">${n}</span>권 선택
+        <button type="button" class="selection-bar-btn primary" id="selMoveBtn">＋ 폴더로 이동</button>
+        <button type="button" class="selection-bar-btn" id="selCancelBtn">완료</button>
+      `;
+      document.getElementById('selMoveBtn').addEventListener('click', openBulkFolderSheet);
+    }
+    bar.hidden = false;
+    document.getElementById('selCancelBtn').addEventListener('click', exitSelectMode);
+  }
+
+  function openBulkFolderSheet() {
+    if (selectedIds.size === 0) return;
+    const folders = Storage.getAllFolders();
+    if (folders.length === 0) {
+      const ok = confirm('폴더가 없어요. 새 폴더를 만들까요?');
+      if (ok) promptAddFolder();
+      return;
+    }
+    if (!document.getElementById('folderMoveSheet')) {
+      document.body.appendChild(createFolderMoveSheet());
+    }
+    renderBulkFolderSheet();
+  }
+
+  function renderBulkFolderSheet() {
+    const sheet = document.getElementById('folderMoveSheet');
+    if (!sheet) return;
+    document.getElementById('folderSheetTitle').textContent = `${selectedIds.size}권 일괄 이동`;
+    const list = document.getElementById('folderSheetList');
+    const folders = Storage.getAllFolders();
+
+    list.innerHTML = folders.map(f => `
+      <button type="button" class="folder-move-item" data-folder-id="${escapeAttr(f.id)}">
+        <span class="folder-move-name">${escapeHtml(f.name)}</span>
+        <span class="folder-move-state">→ ${selectedIds.size}권 이동</span>
+      </button>
+    `).join('');
+
+    list.querySelectorAll('[data-folder-id]').forEach(btn => {
+      btn.addEventListener('click', () => bulkMoveTo(btn.dataset.folderId));
+    });
+
+    sheet.querySelectorAll('[data-close-folder-sheet]').forEach(el => {
+      el.addEventListener('click', closeFolderMoveSheet, { once: true });
+    });
+
+    sheet.hidden = false;
+    document.body.classList.add('folder-sheet-open');
+  }
+
+  function bulkMoveTo(folderId) {
+    let n = 0;
+    selectedIds.forEach(bookId => {
+      const b = Storage.getBook(bookId);
+      if (!b) return;
+      const set = new Set(b.folders || []);
+      if (!set.has(folderId)) {
+        set.add(folderId);
+        Storage.updateBook(bookId, { folders: [...set] });
+        n++;
+      }
+    });
+    const folderName = (Storage.getFolder(folderId) || {}).name || '';
+    showToast(n > 0 ? `"${folderName}" 폴더로 ${n}권 이동` : '이미 모두 분류됨');
+    closeFolderMoveSheet();
+    clearSelection();
+  }
+
+  function cssEscape(s) {
+    if (window.CSS && CSS.escape) return CSS.escape(s);
+    return String(s).replace(/["\\]/g, '\\$&');
+  }
+
+  function renderCard(book) {
+    const rating = book.rating || 0;
+    const starsHtml = rating > 0
+      ? `<div class="book-card-stars"><span>${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</span></div>`
+      : '';
+    const cover = book.thumbnail
+      ? `<img class="book-cover" src="${escapeAttr(book.thumbnail)}" alt="" loading="lazy" draggable="false" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'book-cover-placeholder'}))">`
+      : `<div class="book-cover-placeholder"></div>`;
+    const author = (book.authors || []).join(', ') || '저자 미상';
+
+    return `
+      <article class="book-card" data-id="${escapeAttr(book.id)}" draggable="true">
+        <div class="book-cover-wrap">
+          ${cover}
+        </div>
+        <h3 class="book-card-title">${escapeHtml(book.title)}</h3>
+        <p class="book-card-author">${escapeHtml(author)}</p>
+        ${starsHtml}
+      </article>
+    `;
+  }
+
+  // ── Folder Move Sheet (모바일 / desktop 공용) ────────────────
+  /**
+   * long-press로 책 카드에 트리거. 폴더 목록 시트로 띄움.
+   * 클릭 시 즉시 그 폴더에 추가/제거(toggle).
+   */
+  function openFolderMoveSheet(bookId) {
+    const b = Storage.getBook(bookId);
+    if (!b) return;
+
+    const folders = Storage.getAllFolders();
+    if (folders.length === 0) {
+      const ok = confirm('폴더가 없어요. 새 폴더를 만들까요?');
+      if (ok) promptAddFolder();
+      return;
+    }
+
+    const sheet = document.getElementById('folderMoveSheet');
+    if (!sheet) {
+      const created = createFolderMoveSheet();
+      document.body.appendChild(created);
+    }
+    renderFolderMoveSheet(b);
+  }
+
+  function createFolderMoveSheet() {
+    const wrap = document.createElement('div');
+    wrap.id = 'folderMoveSheet';
+    wrap.className = 'folder-move-sheet';
+    wrap.hidden = true;
+    wrap.innerHTML = `
+      <div class="folder-move-backdrop" data-close-folder-sheet></div>
+      <div class="folder-move-card" role="dialog">
+        <button type="button" class="folder-move-close" data-close-folder-sheet aria-label="닫기">×</button>
+        <p class="folder-move-eyebrow">Move to folder</p>
+        <h3 class="folder-move-title" id="folderSheetTitle"></h3>
+        <p class="folder-move-hint">탭해서 이 책의 폴더 분류 추가/제외</p>
+        <div class="folder-move-list" id="folderSheetList"></div>
+      </div>
+    `;
+    return wrap;
+  }
+
+  function renderFolderMoveSheet(book) {
+    const sheet = document.getElementById('folderMoveSheet');
+    if (!sheet) return;
+
+    document.getElementById('folderSheetTitle').textContent = book.title || '';
+    const list = document.getElementById('folderSheetList');
+    const folders = Storage.getAllFolders();
+    const inFolders = new Set(book.folders || []);
+
+    list.innerHTML = folders.map(f => `
+      <button type="button" class="folder-move-item ${inFolders.has(f.id) ? 'active' : ''}" data-folder-id="${escapeAttr(f.id)}">
+        <span class="folder-move-name">${escapeHtml(f.name)}</span>
+        <span class="folder-move-state">${inFolders.has(f.id) ? '✓ 분류됨' : '＋'}</span>
+      </button>
+    `).join('');
+
+    list.querySelectorAll('[data-folder-id]').forEach(btn => {
+      btn.addEventListener('click', () => toggleFolderForBook(book.id, btn.dataset.folderId));
+    });
+
+    sheet.querySelectorAll('[data-close-folder-sheet]').forEach(el => {
+      el.addEventListener('click', closeFolderMoveSheet, { once: true });
+    });
+
+    sheet.hidden = false;
+    document.body.classList.add('folder-sheet-open');
+
+    document.addEventListener('keydown', escCloseSheet);
+    function escCloseSheet(e) {
+      if (e.key === 'Escape') {
+        document.removeEventListener('keydown', escCloseSheet);
+        closeFolderMoveSheet();
+      }
+    }
+  }
+
+  function toggleFolderForBook(bookId, folderId) {
+    const b = Storage.getBook(bookId);
+    if (!b) return;
+    const set = new Set(b.folders || []);
+    const wasIn = set.has(folderId);
+    if (wasIn) set.delete(folderId);
+    else set.add(folderId);
+    Storage.updateBook(bookId, { folders: [...set] });
+    const folderName = (Storage.getFolder(folderId) || {}).name || '';
+    showToast(wasIn ? `"${folderName}"에서 제외` : `"${folderName}" 폴더로 이동`);
+    renderFolders();
+    renderBooks();
+    // 시트 안 폴더 목록 갱신 (책 정보 새로 가져와서)
+    const updated = Storage.getBook(bookId);
+    if (updated) renderFolderMoveSheet(updated);
+  }
+
+  function closeFolderMoveSheet() {
+    const sheet = document.getElementById('folderMoveSheet');
+    if (!sheet) return;
+    sheet.hidden = true;
+    document.body.classList.remove('folder-sheet-open');
+  }
+
+  function tweakEmpty(isReallyEmpty) {
+    const title = document.querySelector('#emptyState .empty-state-title');
+    const desc  = document.querySelector('#emptyState .empty-state-desc');
+    const glyph = document.querySelector('#emptyState .empty-state-glyph');
+    if (!title || !desc) return;
+
+    if (isReallyEmpty) {
+      glyph.textContent = '書';
+      title.textContent = '아직 읽은 책이 없어요';
+      desc.innerHTML    = '바코드 스캔, ISBN 직접 입력, 또는<br>제목으로 검색해 첫 번째 책을 기록해 보세요.';
+    } else {
+      const folder = Storage.getFolder(currentFolderId);
+      glyph.textContent = '空';
+      title.textContent = folder ? `"${folder.name}" 폴더가 비었어요` : '책이 없어요';
+      desc.innerHTML    = '책 상세에서 이 폴더로 분류하면<br>여기 모입니다.';
+    }
+  }
+
+  // ── Folder CRUD via prompts ──────────────────────────────────
+
+  function promptAddFolder() {
+    const name = (prompt('새 폴더 이름을 입력하세요') || '').trim();
+    if (!name) return;
+    const f = Storage.saveFolder({ name });
+    showToast(`"${f.name}" 폴더 추가됨`);
+    renderFolders();
+  }
+
+  function promptDeleteFolder(folderId) {
+    const f = Storage.getFolder(folderId);
+    if (!f) return;
+    const ok = confirm(`"${f.name}" 폴더를 삭제할까요?\n\n폴더 안 책은 삭제되지 않고, 폴더 분류만 해제됩니다.`);
+    if (!ok) return;
+    Storage.deleteFolder(folderId);
+    if (currentFolderId === folderId) currentFolderId = '';
+    showToast('폴더 삭제됨');
+    renderFolders();
+    renderBooks();
+  }
+
+  // ── Sort ─────────────────────────────────────────────────────
+
+  function cycleSort() {
+    const modes = Object.keys(SORT_LABELS);
+    const i = modes.indexOf(currentSort);
+    currentSort = modes[(i + 1) % modes.length];
+    showToast(`정렬: ${SORT_LABELS[currentSort]}`);
+    renderBooks();
+  }
+
+  // ── Long-press helper ────────────────────────────────────────
+
+  function attachLongPress(el, callback, delay = 500) {
+    let timer = null;
+    let fired = false;
+
+    const start = () => {
+      fired = false;
+      timer = setTimeout(() => {
+        fired = true;
+        callback();
+      }, delay);
+    };
+    const cancel = () => {
+      if (timer) { clearTimeout(timer); timer = null; }
+    };
+
+    el.addEventListener('mousedown',  start);
+    el.addEventListener('touchstart', start, { passive: true });
+    el.addEventListener('mouseup',    cancel);
+    el.addEventListener('mouseleave', cancel);
+    el.addEventListener('mousemove',  cancel);   // 드래그 시작 시 long-press 취소
+    el.addEventListener('dragstart',  cancel);
+    el.addEventListener('touchend',   cancel);
+    el.addEventListener('touchmove',  cancel);
+
+    el.addEventListener('click', (e) => {
+      if (fired) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    }, true);
+  }
+
+  // ── Toast ────────────────────────────────────────────────────
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // ── Utils ────────────────────────────────────────────────────
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = String(s ?? '');
+    return d.innerHTML;
+  }
+  function escapeAttr(s) {
+    return String(s ?? '').replace(/"/g, '&quot;');
+  }
+
+  // ── Boot ─────────────────────────────────────────────────────
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderFolders();
+    renderBooks();
+    const sortBtn = document.getElementById('sortBtn');
+    if (sortBtn) sortBtn.addEventListener('click', cycleSort);
+    const selectBtnEl = document.getElementById('selectBtn');
+    if (selectBtnEl) selectBtnEl.addEventListener('click', () => {
+      if (selectMode) exitSelectMode();
+      else enterSelectMode();
+    });
+  });
+})();

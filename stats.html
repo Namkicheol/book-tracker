@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>書架 — 독서 통계</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-md);
+      margin-bottom: var(--sp-xl);
+    }
+    .stat-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+      box-shadow: 4px 5px 0 var(--shadow);
+      border-radius: 1px;
+      padding: var(--sp-md);
+      text-align: left;
+      animation: fadeInUp 0.4s ease both;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-card:nth-child(1) { animation-delay: 0ms; }
+    .stat-card:nth-child(2) { animation-delay: 80ms; }
+    .stat-card:nth-child(3) { animation-delay: 160ms; }
+    .stat-card:nth-child(4) { animation-delay: 240ms; }
+
+    .stat-card::after {
+      content: attr(data-glyph);
+      font-family: var(--font-han);
+      font-weight: 700;
+      font-size: 80px;
+      position: absolute;
+      bottom: -20px; right: -10px;
+      color: var(--ink);
+      opacity: 0.05;
+      line-height: 1;
+    }
+    .stat-eyebrow {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1;
+      margin-bottom: 4px;
+      letter-spacing: -0.02em;
+    }
+    .stat-value-unit {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-soft);
+      margin-left: 2px;
+    }
+    .stat-label {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--text-soft);
+      font-weight: 400;
+    }
+
+    .chart-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+      box-shadow: 4px 5px 0 var(--shadow);
+      border-radius: 1px;
+      padding: var(--sp-md);
+      margin-bottom: var(--sp-md);
+      animation: fadeInUp 0.4s ease both;
+    }
+    .chart-card:nth-of-type(1) { animation-delay: 320ms; }
+    .chart-card:nth-of-type(2) { animation-delay: 400ms; }
+
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="index.html" class="header-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </a>
+    <span class="page-header-mini">No. 04</span>
+    <span style="width:36px"></span>
+  </header>
+
+  <section class="chapter">
+    <div class="chapter-glyph">計</div>
+    <span class="chapter-no">No. 04 · Reading Stats</span>
+    <h1 class="chapter-title">독서 <em>통계</em></h1>
+    <p class="chapter-sub">한 해의 독서 흐름을 한눈에.</p>
+  </section>
+
+  <main class="content">
+
+    <div class="stat-grid">
+      <div class="stat-card" data-glyph="冊">
+        <span class="stat-eyebrow">Total</span>
+        <div class="stat-value"><span id="totalBooks">0</span><span class="stat-value-unit">권</span></div>
+        <p class="stat-label">총 독서량</p>
+      </div>
+      <div class="stat-card" data-glyph="月">
+        <span class="stat-eyebrow">This Month</span>
+        <div class="stat-value"><span id="thisMonthBooks">0</span><span class="stat-value-unit">권</span></div>
+        <p class="stat-label">이번 달</p>
+      </div>
+      <div class="stat-card" data-glyph="星">
+        <span class="stat-eyebrow">Avg. Rating</span>
+        <div class="stat-value" id="avgRating">—</div>
+        <p class="stat-label">평균 별점</p>
+      </div>
+      <div class="stat-card" data-glyph="架">
+        <span class="stat-eyebrow">Folders</span>
+        <div class="stat-value"><span id="totalFolders">0</span><span class="stat-value-unit">개</span></div>
+        <p class="stat-label">분류 폴더</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <p class="section-eyebrow">Monthly</p>
+      <p class="section-title">월별 독서량</p>
+      <canvas id="monthlyChart" height="180"></canvas>
+    </div>
+
+    <div class="chart-card">
+      <p class="section-eyebrow">By Folder</p>
+      <p class="section-title">폴더별 분포</p>
+      <canvas id="genreChart" height="200"></canvas>
+    </div>
+
+    <div class="empty-state hidden" id="statsEmpty">
+      <div class="empty-state-glyph">計</div>
+      <p class="empty-state-title">아직 데이터가 없어요</p>
+      <p class="empty-state-desc">책을 기록하면 통계가 나타납니다.</p>
+      <a href="scan.html" class="btn btn-primary">첫 책 기록하기</a>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      서재
+    </a>
+    <a href="scan.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      스캔
+    </a>
+    <a href="stats.html" class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      통계
+    </a>
+    <a href="share.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      공유
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/stats.js"></script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>書架 — 독서 기록</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .detail-hero {
+      display: flex;
+      gap: var(--sp-md);
+      margin-bottom: var(--sp-lg);
+      padding-bottom: var(--sp-lg);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .detail-cover, .detail-cover-placeholder {
+      width: 110px;
+      flex-shrink: 0;
+      aspect-ratio: 2/3;
+      object-fit: cover;
+      border-radius: 1px;
+      box-shadow: 4px 6px 0 var(--shadow), 0 0 0 1px var(--border) inset;
+    }
+    .detail-cover-placeholder {
+      background: linear-gradient(160deg, var(--bg-paper) 0%, var(--border) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-han); font-size: 36px; font-weight: 700;
+      color: var(--text-mute); opacity: 0.5;
+    }
+    .detail-meta { flex: 1; min-width: 0; }
+    .detail-title {
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.35;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .detail-author {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 13px;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+    }
+    .detail-publisher {
+      font-size: 12px;
+      color: var(--text-mute);
+      margin-bottom: var(--sp-sm);
+    }
+    .detail-isbn {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 10px;
+      color: var(--text-mute);
+      letter-spacing: 0.08em;
+      opacity: 0.7;
+    }
+    .detail-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: var(--sp-sm); }
+
+    .vocab-add-row { display: flex; gap: var(--sp-sm); margin-bottom: var(--sp-sm); align-items: flex-end; }
+    .vocab-add-row .form-input { flex: 1; }
+    .vocab-add-row .form-input:first-child { flex: 0 0 38%; }
+
+    .vocab-list { margin-bottom: var(--sp-md); }
+    .vocab-delete {
+      margin-left: auto;
+      color: var(--border);
+      font-size: 18px;
+      padding: 0 4px;
+      transition: color 0.15s;
+    }
+    .vocab-delete:active { color: var(--wine); }
+
+    .action-row {
+      display: flex;
+      gap: var(--sp-sm);
+      padding-top: var(--sp-lg);
+      border-top: 1px solid var(--border-soft);
+      margin-top: var(--sp-xl);
+    }
+
+    /* AR badge for English books */
+    .ar-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-display);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      background: var(--wine);
+      color: #fff;
+      border-radius: 1px;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="index.html" class="header-btn" id="backBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </a>
+    <span class="page-header-mini">No. 03</span>
+    <span style="width:36px"></span>
+  </header>
+
+  <section class="chapter">
+    <div class="chapter-glyph">録</div>
+    <span class="chapter-no">No. 03 · Record</span>
+    <h1 class="chapter-title">독서 <em>기록</em></h1>
+    <p class="chapter-sub">읽은 감상과 어휘를 기록합니다.</p>
+  </section>
+
+  <main class="content">
+
+    <div class="detail-hero animate-in">
+      <img class="detail-cover" id="coverImg" src="" alt="" style="display:none">
+      <div class="detail-cover-placeholder" id="coverPlaceholder">書</div>
+      <div class="detail-meta">
+        <h2 class="detail-title" id="bookTitle">제목</h2>
+        <p class="detail-author" id="bookAuthor">저자</p>
+        <p class="detail-publisher" id="bookPublisher">출판사</p>
+        <p class="detail-isbn" id="bookIsbn">ISBN</p>
+        <div id="arBadge" class="hidden"></div>
+        <div class="detail-tags" id="detailTags"></div>
+      </div>
+    </div>
+
+    <form id="recordForm">
+
+      <div class="form-group animate-in" style="animation-delay:60ms">
+        <label class="form-label">별점</label>
+        <div class="star-rating" id="starRating">
+          <button type="button" class="star-btn" data-val="1">★</button>
+          <button type="button" class="star-btn" data-val="2">★</button>
+          <button type="button" class="star-btn" data-val="3">★</button>
+          <button type="button" class="star-btn" data-val="4">★</button>
+          <button type="button" class="star-btn" data-val="5">★</button>
+        </div>
+      </div>
+
+      <div class="form-group animate-in" style="animation-delay:120ms">
+        <label class="form-label" for="reviewInput">
+          한줄평
+          <span id="reviewCounter" style="float:right;color:var(--text-mute);font-weight:400;letter-spacing:0.04em;text-transform:none">0 / 300</span>
+        </label>
+
+        <div class="review-toolbar" role="toolbar">
+          <button type="button" class="rt-btn" data-cmd="bold"      title="굵게"><strong>B</strong></button>
+          <button type="button" class="rt-btn" data-cmd="underline" title="밑줄" style="text-decoration:underline">U</button>
+          <span class="rt-sep"></span>
+          <button type="button" class="rt-btn rt-hi" data-cmd="hilite" data-color="#ffe98a" title="노랑 형광펜 (선택 후 토글)" style="background:#ffe98a;border-color:#d9bf4d;color:#5b4a14">하</button>
+          <button type="button" class="rt-btn rt-hi" data-cmd="hilite" data-color="#ffc8c8" title="핑크 형광펜 (선택 후 토글)" style="background:#ffc8c8;border-color:#d59a9a;color:#7a3a3a">하</button>
+          <span class="rt-sep"></span>
+          <button type="button" class="rt-btn" data-cmd="color" data-color="#8b3a3a" title="와인색 글자" style="color:#8b3a3a">A</button>
+          <button type="button" class="rt-btn" data-cmd="color" data-color="#c9742f" title="오렌지 글자" style="color:#c9742f">A</button>
+          <button type="button" class="rt-btn" data-cmd="color" data-color="#2d6a4f" title="녹색 글자"   style="color:#2d6a4f">A</button>
+          <button type="button" class="rt-btn" data-cmd="color" data-color="#1d4e89" title="파랑 글자"   style="color:#1d4e89">A</button>
+          <span class="rt-sep"></span>
+          <button type="button" class="rt-btn" data-cmd="clear" title="선택한 부분 서식 지우기">서식 ✕</button>
+        </div>
+
+        <div id="reviewInput" class="form-editor" contenteditable="true"
+             data-placeholder="이 책을 한 문장으로 표현한다면…"></div>
+
+        <div class="quote-block mt-sm" id="reviewPreview" style="display:none">
+          <p class="quote-text" id="reviewPreviewText"></p>
+        </div>
+      </div>
+
+      <div class="form-group animate-in" style="animation-delay:180ms">
+        <label class="form-label" for="dateInput">읽은 날짜</label>
+        <input type="date" class="form-input" id="dateInput">
+      </div>
+
+      <div class="form-group animate-in" style="animation-delay:210ms">
+        <label class="form-label" for="folderInput">폴더 (다중 선택)</label>
+        <div id="folderSelect" class="folder-bar" style="margin:0;padding:0;flex-wrap:wrap"></div>
+      </div>
+
+      <div class="action-row animate-in" style="animation-delay:280ms">
+        <button type="button" class="btn btn-ghost" id="deleteBtn" style="flex:1;color:var(--wine);border-color:var(--wine);box-shadow:3px 4px 0 var(--wine);display:none">
+          삭제
+        </button>
+        <button type="submit" class="btn btn-primary" id="saveBtn" style="flex:2">
+          저장
+        </button>
+      </div>
+
+    </form>
+
+    <!-- Recommendations (Step 6) -->
+    <div id="recommendations" class="mt-xl hidden">
+      <div class="divider"><span class="divider-ornament">推</span></div>
+
+      <p class="section-eyebrow">More from</p>
+      <p class="section-title">같은 작가</p>
+      <div class="rec-rail" id="recAuthor"></div>
+
+      <p class="section-eyebrow mt-lg">Same level</p>
+      <p class="section-title">같은 단계 책</p>
+      <div class="rec-rail" id="recPublisher"></div>
+
+      <p class="section-eyebrow mt-lg">You may also like</p>
+      <p class="section-title">이 책도 좋아요</p>
+      <div class="rec-rail" id="recAlsoLike"></div>
+
+      <details class="rec-collapse mt-lg">
+        <summary>
+          <span class="section-eyebrow">Next step</span>
+          <span class="section-title">다음 단계 추천책</span>
+        </summary>
+        <div class="rec-rail" id="recSimilar"></div>
+      </details>
+    </div>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      서재
+    </a>
+    <a href="scan.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      스캔
+    </a>
+    <a href="stats.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      통계
+    </a>
+    <a href="share.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      공유
+    </a>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- 추천 책 미리보기 모달 (body 직속이라야 fixed positioning이 안전) -->
+  <div class="book-preview-modal" id="bookPreviewModal" hidden>
+    <div class="book-preview-backdrop" data-close-preview></div>
+    <div class="book-preview-card" role="dialog" aria-labelledby="previewTitle">
+      <button type="button" class="book-preview-close" data-close-preview aria-label="닫기">×</button>
+      <div class="book-preview-body" id="previewBody"></div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/detail.js"></script>
+</body>
+</html>
