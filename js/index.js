@@ -554,12 +554,12 @@
     if (!title || !desc) return;
 
     if (isReallyEmpty) {
-      glyph.textContent = '書';
+      if (glyph) glyph.textContent = '書';
       title.textContent = '아직 읽은 책이 없어요';
       desc.innerHTML    = '바코드 스캔, ISBN 직접 입력, 또는<br>제목으로 검색해 첫 번째 책을 기록해 보세요.';
     } else {
       const folder = Storage.getFolder(currentFolderId);
-      glyph.textContent = '空';
+      if (glyph) glyph.textContent = '空';
       title.textContent = folder ? `"${folder.name}" 폴더가 비었어요` : '책이 없어요';
       desc.innerHTML    = '책 상세에서 이 폴더로 분류하면<br>여기 모입니다.';
     }
