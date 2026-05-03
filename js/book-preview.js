@@ -234,9 +234,19 @@
 
     const whyBlock = buildWhyBlock(b, meta, detail);
 
-    const primaryBtn = mode === 'library'
-      ? `<button type="button" class="btn btn-primary" id="previewLibraryBtn">📝 기록하러 가기</button>`
-      : `<button type="button" class="btn btn-primary" id="previewSaveBtn">＋ 내 서재에 기록</button>`;
+    // recommend 모드일 때 이미 서재에 있으면 다른 버튼 노출
+    const existingInLibrary = (mode === 'recommend' && window.Storage && Storage.getBookByIsbn)
+      ? Storage.getBookByIsbn(b.isbn)
+      : null;
+
+    let primaryBtn;
+    if (mode === 'library') {
+      primaryBtn = `<button type="button" class="btn btn-primary" id="previewLibraryBtn">📝 기록하러 가기</button>`;
+    } else if (existingInLibrary) {
+      primaryBtn = `<button type="button" class="btn btn-secondary" id="previewLibraryBtn" data-existing-id="${escapeAttr(existingInLibrary.id)}" style="background:#6f8b7a;color:#fff;border:none">✓ 이미 내 서재에 있어요 — 보러가기</button>`;
+    } else {
+      primaryBtn = `<button type="button" class="btn btn-primary" id="previewSaveBtn">＋ 내 서재에 기록</button>`;
+    }
 
     return `
       <div class="preview-hero">
@@ -301,17 +311,18 @@
   }
 
   function wireActions(book, modal, mode, detail) {
-    if (mode === 'library') {
-      const btn = document.getElementById('previewLibraryBtn');
-      if (btn) {
-        btn.addEventListener('click', () => {
-          location.href = `detail.html?id=${encodeURIComponent(book.id)}`;
-        });
-      }
-      return;
+    // 'library' 모드 또는 recommend 모드인데 이미 서재에 있어 "보러가기" 버튼이 노출된 경우
+    const libBtn = document.getElementById('previewLibraryBtn');
+    if (libBtn) {
+      libBtn.addEventListener('click', () => {
+        const targetId = libBtn.dataset.existingId || book.id;
+        if (!targetId) return;
+        location.href = `detail.html?id=${encodeURIComponent(targetId)}`;
+      });
     }
+    if (mode === 'library') return;
 
-    // recommend mode
+    // recommend mode (새로 기록)
     const saveBtn = document.getElementById('previewSaveBtn');
     if (!saveBtn || !window.Storage) return;
     saveBtn.addEventListener('click', () => {
