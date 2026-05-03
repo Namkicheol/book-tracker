@@ -299,30 +299,36 @@
   }
 
   // ── Result preview ───────────────────────────────────────────
+  // 풍부한 미리보기는 BookPreview 모듈에 위임. 알라딘 평점·리뷰·추천 이유까지 보고
+  // "＋ 내 서재에 기록" 버튼 누르면 자동 저장 + detail.html?id=...&new=1 이동.
 
   function showResult(book) {
     pickedBook = book;
+    if (window.BookPreview) {
+      BookPreview.show(book, { mode: 'recommend' });
+      return;
+    }
+    // Fallback (BookPreview 미로드 시 옛 in-page 카드)
+    console.warn('[scanner] BookPreview 미로드, fallback 카드 표시');
     const card = document.getElementById('resultCard');
     const section = document.getElementById('resultSection');
-
+    if (!card || !section) return;
     card.innerHTML = `
       ${book.thumbnail
-        ? `<img class="result-cover" src="${escapeAttr(book.thumbnail)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'result-cover-placeholder',textContent:'書'}))">`
+        ? `<img class="result-cover" src="${escapeAttr(book.thumbnail)}" alt="">`
         : `<div class="result-cover-placeholder">書</div>`}
       <div class="result-info">
         <div class="result-title">${escapeHtml(book.title)}</div>
         <div class="result-author">${escapeHtml((book.authors||[]).join(', ') || '저자 미상')}</div>
         <div class="result-publisher">${escapeHtml(book.publisher || '')}</div>
-        <div class="text-mute" style="font-family:var(--font-display);font-style:italic;font-size:10px;letter-spacing:0.05em;margin-top:6px">ISBN ${escapeHtml(book.isbn)}</div>
       </div>
     `;
     section.classList.remove('hidden');
-    section.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
+  // BookPreview의 saveBtn이 직접 저장 + 이동을 처리하므로 recordPicked는 fallback 용도만 유지.
   function recordPicked() {
     if (!pickedBook) return;
-    // Save book skeleton, then navigate to detail.html for the user to fill in rating/review
     const saved = Storage.saveBook({
       isbn: pickedBook.isbn,
       title: pickedBook.title,
