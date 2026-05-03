@@ -18,6 +18,7 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       recommendationData = await res.json();
+      if (window.BookPreview) BookPreview.setRecData(recommendationData);
 
       // Convert books object to array
       allBooks = Object.values(recommendationData.books || {});
@@ -142,14 +143,14 @@
     const hasMore = filteredBooks.length > showCount;
 
     // 그리드 렌더링
-    const grid = document.querySelector(`[data-grade="${gradeId}"]`);
+    const grid = document.querySelector(`.rec-browse-grid[data-grade="${CSS.escape(gradeId)}"]`);
     if (grid) {
       grid.innerHTML = booksToShow.map(book => renderCard(book)).join('');
       attachCardListeners();
     }
 
     // 더보기 버튼 렌더링
-    const moreContainer = document.querySelector(`.more-btn-container[data-grade="${gradeId}"]`);
+    const moreContainer = document.querySelector(`.more-btn-container[data-grade="${CSS.escape(gradeId)}"]`);
     if (moreContainer) {
       if (hasMore) {
         moreContainer.innerHTML = `
@@ -233,125 +234,20 @@
     `;
   }
 
-  // ── Preview Modal ────────────────────────────────────────────
-  // Simplified version of detail.js showBookPreview
+  // ── Preview Modal (delegated to BookPreview module) ──────────
 
-  async function showBookPreview(book) {
-    const modal = document.getElementById('bookPreviewModal');
-    const bodyEl = document.getElementById('previewBody');
-
-    modal.hidden = false;
-    bodyEl.innerHTML = '<p style="text-align:center;padding:40px;color:#999">로딩 중...</p>';
-
-    // Try to get more info from Aladin
-    let detail = { ...book };
-
-    if (window.WORKER_URL && book.isbn) {
-      try {
-        const item = await API.aladinLookup(book.isbn);
-        if (item) {
-          detail = {
-            ...book,
-            description: item.description || book.description,
-            customerReviewRank: item.customerReviewRank,
-            reviewCount: item.customerReviewRank ? 1 : 0,
-            link: item.link,
-          };
-        }
-      } catch (e) {
-        console.warn('[preview] Aladin lookup 실패', e);
-      }
+  function showBookPreview(book) {
+    if (!window.BookPreview) {
+      console.error('[recommendations] BookPreview 모듈 미로드');
+      return;
     }
-
-    renderPreview(detail);
+    // Recommendation entries store author as string; normalize to authors[]
+    const normalized = {
+      ...book,
+      authors: book.authors || (book.author ? [book.author] : []),
+    };
+    BookPreview.show(normalized, { mode: 'recommend' });
   }
-
-  function renderPreview(book) {
-    const bodyEl = document.getElementById('previewBody');
-
-    const cover = book.thumbnail || API.kakaoPlaceholder(book.title);
-    const desc = book.description || book.why || '';
-    const rating = book.customerReviewRank
-      ? `<p style="color:#666;font-size:13px;margin-top:8px">⭐ ${book.customerReviewRank}/10</p>`
-      : '';
-
-    const badges = (book.lists || []).map(listId => {
-      const source = recommendationData.meta.sources.find(s => s.id === listId);
-      if (!source) return '';
-      return `<span style="background:${source.badge.color};color:#fff;padding:4px 10px;border-radius:3px;font-size:11px;font-weight:600;margin-right:6px">${escapeHtml(source.badge.text)}</span>`;
-    }).filter(Boolean).join('');
-
-    const inLibrary = checkIfInLibrary(book.isbn);
-    const actionBtn = inLibrary
-      ? `<button class="btn-secondary" style="width:100%;margin-top:16px" onclick="location.href='detail.html?id=${encodeURIComponent(inLibrary)}'">내 서재에서 보기</button>`
-      : `<button class="btn-primary" style="width:100%;margin-top:16px" onclick="window.addToLibrary('${escapeAttr(book.isbn)}')">서재에 기록</button>`;
-
-    const aladinLink = book.link || `https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&KeyWord=${encodeURIComponent(book.title)}`;
-
-    bodyEl.innerHTML = `
-      <div style="text-align:center;margin-bottom:20px">
-        <img src="${escapeAttr(cover)}" alt="" style="width:160px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15)">
-      </div>
-      <h2 style="font-size:20px;font-weight:700;margin:0 0 8px 0;line-height:1.3">${escapeHtml(book.title)}</h2>
-      <p style="color:#666;font-size:14px;margin:0 0 12px 0">${escapeHtml(book.author || '')} · ${escapeHtml(book.publisher || '')}</p>
-      ${badges ? `<div style="margin-bottom:16px">${badges}</div>` : ''}
-      ${rating}
-      <div style="margin-top:16px;padding:16px;background:#f9f9f9;border-radius:8px;font-size:14px;line-height:1.6;color:#333">
-        ${escapeHtml(desc || '책 소개가 없습니다.')}
-      </div>
-      ${actionBtn}
-      <a href="${escapeAttr(aladinLink)}" target="_blank" class="btn-secondary" style="width:100%;margin-top:8px;display:block;text-align:center;text-decoration:none">알라딘에서 보기</a>
-    `;
-  }
-
-  function checkIfInLibrary(isbn) {
-    if (!isbn) return null;
-    const books = Storage.getAllBooks();
-    const found = books.find(b => String(b.isbn).replace(/\D/g, '') === String(isbn).replace(/\D/g, ''));
-    return found ? found.id : null;
-  }
-
-  // Add to library from preview
-  window.addToLibrary = async function(isbn) {
-    if (!isbn) return;
-
-    try {
-      const item = await API.aladinLookup(isbn);
-      if (!item) {
-        alert('책 정보를 가져올 수 없습니다.');
-        return;
-      }
-
-      const book = {
-        id: Date.now().toString(),
-        isbn: item.isbn13 || item.isbn,
-        title: item.title,
-        authors: [item.author],
-        publisher: item.publisher,
-        thumbnail: item.cover,
-        createdAt: new Date().toISOString(),
-        categoryId: API.extractCategoryId(item),
-        categoryName: item.categoryName,
-      };
-
-      Storage.saveBook(book);
-      alert('서재에 추가되었습니다!');
-
-      // Close modal and refresh
-      document.getElementById('bookPreviewModal').style.display = 'none';
-    } catch (err) {
-      console.error('[addToLibrary] 실패', err);
-      alert('책을 추가하는 중 오류가 발생했습니다.');
-    }
-  };
-
-  // Modal close handlers
-  document.addEventListener('click', e => {
-    if (e.target.matches('[data-close-preview]')) {
-      const modal = document.getElementById('bookPreviewModal');
-      if (modal) modal.hidden = true;
-    }
-  });
 
   // ── Utilities ────────────────────────────────────────────────
 

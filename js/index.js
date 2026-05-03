@@ -27,6 +27,7 @@
     .then(res => res.json())
     .then(data => {
       recommendationData = data;
+      if (window.BookPreview) BookPreview.setRecData(data);
       renderBooks(); // Re-render to show badges
     })
     .catch(err => console.warn('[index] 추천 도서 DB 로드 실패', err));
@@ -641,117 +642,15 @@
     showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
   }
 
-  // ── Book Preview Modal ───────────────────────────────────────
+  // ── Book Preview Modal (delegated to BookPreview module) ─────
 
-  async function showBookPreview(book) {
-    const modal = document.getElementById('bookPreviewModal');
-    const bodyEl = document.getElementById('previewBody');
-
-    modal.hidden = false;
-    bodyEl.innerHTML = '<p style="text-align:center;padding:40px;color:#999">로딩 중...</p>';
-
-    // Try to get more info from Aladin or use cached data
-    let detail = { ...book };
-
-    if (window.WORKER_URL && book.isbn && window.API) {
-      try {
-        const item = await API.aladinLookup(book.isbn);
-        if (item) {
-          detail.description = item.description || book.description;
-          detail.customerReviewRank = item.customerReviewRank;
-          detail.categoryName = item.categoryName || book.categoryName;
-        }
-      } catch (e) {
-        console.warn('[preview] Aladin lookup 실패', e);
-      }
+  function showBookPreview(book) {
+    if (!window.BookPreview) {
+      console.error('[index] BookPreview 모듈 미로드');
+      return;
     }
-
-    // Now render with the detail
-    const cover = detail.thumbnail || '';
-    const desc = detail.description || detail.review || '';
-
-    // Build rating display
-    let ratingHtml = '';
-    if (detail.customerReviewRank) {
-      const stars = Math.round(detail.customerReviewRank / 2);
-      ratingHtml = `<p style="color:#FF6B6B;font-size:14px;margin:8px 0 0 0">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)} ${detail.customerReviewRank} / 10</p>`;
-    } else if (detail.rating) {
-      ratingHtml = `<p style="color:#FF6B6B;font-size:14px;margin:8px 0 0 0">${'★'.repeat(detail.rating)}${'☆'.repeat(5 - detail.rating)}</p>`;
-    }
-
-    // Check if book is in recommendation database (isbn 우선, 제목+저자 fallback)
-    let whySection = '';
-    let recBookData = null;
-    if (recommendationData) {
-      if (book.isbn) {
-        const isbn = String(book.isbn).replace(/\D/g, '');
-        recBookData = recommendationData.books[isbn];
-      }
-      // ISBN 매칭 실패 시 제목으로 fallback 검색
-      if (!recBookData && book.title) {
-        const normalizedTitle = book.title.replace(/\s+/g, '').toLowerCase();
-        recBookData = Object.values(recommendationData.books || {}).find(b => {
-          const bTitle = (b.title || '').replace(/\s+/g, '').toLowerCase();
-          return bTitle === normalizedTitle ||
-                 bTitle.startsWith(normalizedTitle) ||
-                 normalizedTitle.startsWith(bTitle);
-        });
-      }
-      if (recBookData) {
-        // 추천 출처 뱃지
-        const badges = (recBookData.lists || []).map(listId => {
-          const source = recommendationData.meta.sources.find(s => s.id === listId);
-          if (!source) return '';
-          return `<span style="background:${source.badge.color};color:#fff;padding:3px 8px;border-radius:3px;font-size:10px;font-weight:600;margin-right:4px">${escapeHtml(source.badge.text)}</span>`;
-        }).filter(Boolean).join('');
-
-        if (recBookData.why) {
-          whySection = `
-            <div style="margin:20px 0;padding:16px;background:linear-gradient(135deg,#FFF5F5,#FFF8E1);border-left:4px solid #FF6B6B;border-radius:8px">
-              <h3 style="font-size:15px;font-weight:700;color:#FF6B6B;margin:0 0 12px 0;display:flex;align-items:center;gap:8px">
-                💝 왜 이 책을 읽어야 할까요?
-              </h3>
-              ${badges ? `<div style="margin-bottom:10px">${badges}</div>` : ''}
-              <p style="font-size:14px;line-height:1.6;color:#555;margin:0">${escapeHtml(recBookData.why)}</p>
-            </div>
-          `;
-        }
-      }
-    }
-
-    bodyEl.innerHTML = `
-      <button class="btn-primary" style="width:100%;margin-bottom:16px" onclick="location.href='detail.html?id=${encodeURIComponent(book.id)}'">
-        📝 기록하러 가기
-      </button>
-
-      <div style="text-align:center;margin-bottom:16px">
-        ${cover ? `<img src="${escapeAttr(cover)}" alt="" style="width:140px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15)">` : '<div style="width:140px;height:187px;background:#e0e0e0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:36px;color:#999;margin:0 auto">書</div>'}
-      </div>
-
-      <h2 style="font-size:18px;font-weight:700;margin:0 0 8px 0;line-height:1.3;text-align:center">${escapeHtml(book.title)}</h2>
-      <p style="color:#666;font-size:13px;margin:0;text-align:center">${escapeHtml((book.authors || []).join(', ') || '')}</p>
-      ${ratingHtml}
-
-      ${whySection}
-
-      ${desc ? `
-        <div style="margin-top:16px">
-          <h4 style="font-size:13px;font-weight:600;color:#999;margin:0 0 8px 0">줄거리 / 소개</h4>
-          <div style="padding:12px;background:#f9f9f9;border-radius:8px;font-size:13px;line-height:1.6;color:#555;max-height:150px;overflow-y:auto">
-            ${sanitizeDescription(desc)}
-          </div>
-        </div>
-      ` : ''}
-    `;
+    BookPreview.show(book, { mode: 'library' });
   }
-
-  // Modal close handlers
-  document.addEventListener('click', e => {
-    if (e.target.matches('[data-close-preview]')) {
-      const modal = document.getElementById('bookPreviewModal');
-      if (modal) modal.hidden = true;
-    }
-  });
 
   // ── Utils ────────────────────────────────────────────────────
 
