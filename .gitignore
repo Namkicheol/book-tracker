@@ -9,3 +9,10 @@ worker/.dev.vars
 
 # Node
 node_modules/
+
+# Throwaway design check / preview screenshots at repo root
+# (committed assets live in img/ — never at root)
+/*.png
+/*.jpg
+/*.jpeg
+/*.webp
