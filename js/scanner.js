@@ -199,7 +199,17 @@
     document.getElementById('titleResults').classList.add('hidden');
 
     try {
-      const list = await API.searchByTitle(q, { size: 12 });
+      const [p1, p2] = await Promise.all([
+        API.searchByTitle(q, { size: 50, page: 1 }),
+        API.searchByTitle(q, { size: 50, page: 2 }),
+      ]);
+      const seen = new Set();
+      const list = [...p1, ...p2].filter(b => {
+        const key = b.isbn || b.title;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
       hideLoading();
       renderTitleResults(list, q);
     } catch (e) {
@@ -209,40 +219,82 @@
     }
   }
 
+  const PAGE_SIZE = 20;
+
   function renderTitleResults(list, query) {
-    const wrap = document.getElementById('titleResults');
-    const listEl = document.getElementById('titleResultsList');
+    const wrap  = document.getElementById('titleResults');
     const label = document.getElementById('titleResultsLabel');
 
-    label.textContent = `검색 결과 — "${query}" (${list.length}권)`;
-
     if (list.length === 0) {
-      listEl.innerHTML = `<p class="text-soft text-center" style="padding:var(--sp-md);font-family:var(--font-display);font-style:italic">결과가 없어요. 다른 검색어를 시도해 보세요.</p>`;
+      label.textContent = `검색 결과 — "${query}" (없음)`;
+      const listEl0 = document.getElementById('titleResultsList');
+      if (listEl0) listEl0.innerHTML =
+        `<p class="text-soft text-center" style="padding:var(--sp-md);font-family:var(--font-display);font-style:italic">결과가 없어요. 다른 검색어를 시도해 보세요.</p>`;
+      const pg0 = document.getElementById('titleResultsPager');
+      if (pg0) pg0.innerHTML = '';
       wrap.classList.remove('hidden');
       return;
     }
 
-    listEl.innerHTML = list.map(b => `
-      <button type="button" class="result-card" data-isbn="${escapeAttr(b.isbn)}" style="text-align:left;width:100%;cursor:pointer">
-        ${b.thumbnail
-          ? `<img class="result-cover" src="${escapeAttr(b.thumbnail)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'result-cover-placeholder',textContent:'書'}))">`
-          : `<div class="result-cover-placeholder">書</div>`}
-        <div class="result-info">
-          <div class="result-title">${escapeHtml(b.title)}</div>
-          <div class="result-author">${escapeHtml((b.authors||[]).join(', ') || '저자 미상')}</div>
-          <div class="result-publisher">${escapeHtml(b.publisher || '')}</div>
-        </div>
-      </button>
-    `).join('');
+    const totalPages = Math.ceil(list.length / PAGE_SIZE);
+    let currentPage = 1;
 
-    listEl.querySelectorAll('[data-isbn]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const isbn = btn.dataset.isbn;
-        const picked = list.find(b => b.isbn === isbn);
-        if (picked) showResult(picked);
+    function renderPage(page) {
+      currentPage = page;
+      const start = (page - 1) * PAGE_SIZE;
+      const slice = list.slice(start, start + PAGE_SIZE);
+      const listEl = document.getElementById('titleResultsList');
+      if (!listEl) return;
+
+      label.textContent = `검색 결과 — "${query}" (${list.length}권)`;
+
+      listEl.innerHTML = slice.map(b => `
+        <button type="button" class="result-card" data-isbn="${escapeAttr(b.isbn)}" style="text-align:left;width:100%;cursor:pointer">
+          ${b.thumbnail
+            ? `<img class="result-cover" src="${escapeAttr(b.thumbnail)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'result-cover-placeholder',textContent:'書'}))">`
+            : `<div class="result-cover-placeholder">書</div>`}
+          <div class="result-info">
+            <div class="result-title">${escapeHtml(b.title)}</div>
+            <div class="result-author">${escapeHtml((b.authors||[]).join(', ') || '저자 미상')}</div>
+            <div class="result-publisher">${escapeHtml(b.publisher || '')}</div>
+          </div>
+        </button>
+      `).join('');
+
+      listEl.querySelectorAll('[data-isbn]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const picked = list.find(b => b.isbn === btn.dataset.isbn);
+          if (picked) showResult(picked);
+        });
       });
-    });
 
+      // 페이저
+      const pager = document.getElementById('titleResultsPager');
+      if (!pager) return;
+      if (totalPages <= 1) { pager.innerHTML = ''; return; }
+
+      pager.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:var(--sp-md) 0">
+          <button class="pager-btn" data-page="${page - 1}" ${page === 1 ? 'disabled' : ''}>‹</button>
+          ${Array.from({ length: totalPages }, (_, i) => i + 1).map(p =>
+            `<button class="pager-btn ${p === page ? 'active' : ''}" data-page="${p}">${p}</button>`
+          ).join('')}
+          <button class="pager-btn" data-page="${page + 1}" ${page === totalPages ? 'disabled' : ''}>›</button>
+        </div>
+      `;
+
+      pager.querySelectorAll('[data-page]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = parseInt(btn.dataset.page);
+          if (!isNaN(p) && p >= 1 && p <= totalPages) {
+            renderPage(p);
+            wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    }
+
+    renderPage(1);
     wrap.classList.remove('hidden');
   }
 

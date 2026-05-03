@@ -3,47 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>書架 — 나의 서재</title>
+  <title>맘스북스 — 우리 아이 독서 기록</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500;1,600&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-  <header class="page-header">
-    <span class="page-header-mini">書架 · Vol.1</span>
-    <div style="display:flex;gap:6px;align-items:center">
-      <button class="header-btn header-btn-text" id="selectBtn" title="여러 권 선택">선택</button>
-      <button class="header-btn" id="sortBtn" title="정렬">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M3 6h18M7 12h10M11 18h2"/>
-        </svg>
+  <!-- ── Masthead Header ── -->
+  <header class="page-header page-header-masthead">
+    <div class="hdr-top">
+      <div class="hdr-date">
+        <span class="hdr-date-num" id="hdrDate"></span>
+        <span class="hdr-date-day" id="hdrDay"></span>
+      </div>
+      <div class="hdr-brand">
+        <span class="hdr-brand-glyph">📚</span>
+        <div class="hdr-brand-name" style="font-family:var(--font-body);font-size:16px;font-weight:800;color:var(--cute-coral);letter-spacing:-0.02em">맘스<br>북스</div>
+      </div>
+      <div class="hdr-issue">
+        <span class="hdr-issue-vol">VOL.</span>
+        <span class="hdr-issue-num">01</span>
+      </div>
+    </div>
+    <div class="hdr-rule">
+      <span></span>
+      <em id="hdrCaption">An archive of 0 volumes</em>
+      <span></span>
+    </div>
+    <div class="hdr-actions">
+      <button class="hdr-action" id="selectBtn">선택</button>
+      <button class="hdr-action" id="sortBtn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+        정렬
       </button>
-      <a href="scan.html" class="header-btn" id="addBtn" title="책 추가" style="background:var(--ink);color:var(--bg);border-radius:1px">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-        </svg>
-      </a>
+      <a href="scan.html" class="hdr-action hdr-action-primary">＋ 새 기록</a>
     </div>
   </header>
 
-  <!-- Chapter opener -->
-  <section class="chapter">
-    <div class="chapter-glyph">書</div>
-    <span class="chapter-no">No. 01 · Library</span>
-    <h1 class="chapter-title">나의 <em>서재</em></h1>
-    <p class="chapter-sub" id="chapterSub">기록된 책 0권</p>
+  <!-- ── Colophon ── -->
+  <section class="colophon" style="background:linear-gradient(135deg,#FFF8F0 0%,#FFE8F0 100%);border-radius:0 0 32px 32px;padding:48px 24px 40px;position:relative;overflow:hidden">
+    <!-- Decorative background elements -->
+    <div style="position:absolute;top:20px;right:20px;width:60px;height:60px;background:radial-gradient(circle,rgba(255,184,198,0.15),transparent);border-radius:50%;pointer-events:none"></div>
+    <div style="position:absolute;bottom:30px;left:30px;width:40px;height:40px;background:radial-gradient(circle,rgba(232,197,255,0.12),transparent);border-radius:50%;pointer-events:none"></div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;gap:24px;max-width:360px;margin:0 auto">
+      <!-- Brand Icon -->
+      <img src="img/3YzCR.png" alt="맘스북스" style="width:100px;height:100px;filter:drop-shadow(0 8px 16px rgba(255,184,198,0.2));animation:float 3s ease-in-out infinite">
+
+      <!-- Brand Name -->
+      <div style="text-align:center">
+        <div style="font-family:'Gowun Batang',serif;font-size:13px;font-weight:500;letter-spacing:0.15em;color:#FF9E9E;margin-bottom:16px;opacity:0.7">READING TRACKER FOR KIDS</div>
+        <h1 style="font-family:'Gowun Batang',serif;font-size:56px;font-weight:800;letter-spacing:0.08em;background:linear-gradient(135deg,#FF9E9E 0%,#FFB8C6 50%,#E8C5FF 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0;line-height:1.1;text-shadow:0 4px 16px rgba(255,184,198,0.2);filter:drop-shadow(0 2px 8px rgba(255,158,158,0.15))">맘스북스</h1>
+      </div>
+
+      <!-- Stats -->
+      <div style="display:flex;align-items:center;gap:16px;font-family:'Gowun Batang',serif;font-size:15px;color:#8B8B8B;font-weight:500">
+        <div style="display:flex;align-items:baseline;gap:6px">
+          <strong id="colTotalVol" style="font-size:24px;font-weight:700;background:linear-gradient(135deg,#FF9E9E,#FFB8C6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">0</strong>
+          <span>권의 기록</span>
+        </div>
+        <span style="opacity:0.3">·</span>
+        <span style="opacity:0.7">2025—2026</span>
+      </div>
+    </div>
+
+    <style>
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-16px) scale(1.05); }
+      }
+    </style>
   </section>
 
+  <!-- ── Stats Strip ── -->
+  <div class="figures">
+    <div class="fig">
+      <div class="fig-num" id="figVol">0</div>
+      <div class="fig-lbl">VOLUMES</div>
+    </div>
+    <div class="fig">
+      <div class="fig-num" id="figPages">0</div>
+      <div class="fig-lbl">PAGES READ</div>
+    </div>
+    <div class="fig">
+      <div class="fig-num" id="figRating">—</div>
+      <div class="fig-lbl">AVG RATING</div>
+    </div>
+  </div>
+
+  <!-- ── Folder Tabs ── -->
+  <div class="folder-nav" id="folderBar"></div>
+
+  <!-- ── Books ── -->
   <main class="content">
-
-    <!-- Folder filter chips (rendered by index.js) -->
-    <div class="folder-bar" id="folderBar"></div>
-
-    <!-- Gallery grid -->
     <div class="books-grid" id="booksGrid"></div>
 
-    <!-- Empty state -->
     <div class="empty-state" id="emptyState">
-      <div class="empty-state-glyph">書</div>
+      <img src="img/character-reading.png" alt="책 읽는 아이" class="empty-state-character" style="width: 200px; height: 200px; margin: 0 auto var(--sp-md);">
       <p class="empty-state-title">아직 읽은 책이 없어요</p>
       <p class="empty-state-desc">바코드 스캔, ISBN 직접 입력, 또는<br>제목으로 검색해 첫 번째 책을 기록해 보세요.</p>
       <div style="display:flex;gap:var(--sp-sm);justify-content:center;flex-wrap:wrap">
@@ -71,6 +129,12 @@
       </svg>
       서재
     </a>
+    <a href="recommendations.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      추천
+    </a>
     <a href="scan.html" class="nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
@@ -94,7 +158,17 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- Book Preview Modal -->
+  <div id="bookPreviewModal" class="book-preview-modal" hidden>
+    <div class="book-preview-backdrop" data-close-preview></div>
+    <div class="book-preview-card" role="dialog" aria-modal="true">
+      <button type="button" class="book-preview-close" data-close-preview aria-label="닫기">×</button>
+      <div class="book-preview-body" id="previewBody"></div>
+    </div>
+  </div>
+
   <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
   <script src="js/index.js"></script>
 </body>
 </html>

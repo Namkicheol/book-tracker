@@ -24,3 +24,13 @@ var KAKAO_API_KEY = '2d06d393fabebae4fab202af55a80379';
  * 비워두면 추천이 카카오 폴백으로 동작합니다 (품질 낮음).
  */
 var WORKER_URL = 'https://book-tracker-aladin.obangti.workers.dev';
+
+/**
+ * 도서관정보나루 API 키
+ *
+ * 발급: https://www.data4library.kr/ (무료, 회원가입 후 즉시 발급)
+ * 사용: 소장 도서관 검색, 대출 가능 여부 조회
+ *
+ * 🔑 API 키를 받아오신 후 아래에 입력하세요:
+ */
+var LIBRARY_API_KEY = '';  // ← 여기에 API 키 입력!

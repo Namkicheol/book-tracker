@@ -17,10 +17,21 @@
   let isNew = false;
   let folders = [];
   let selectedRating = 0;
+  let recommendationData = null;
 
   // ── Boot ─────────────────────────────────────────────────────
 
   document.addEventListener('DOMContentLoaded', loadBook);
+
+  // Load recommendation database
+  fetch('data/book-recommendations.json')
+    .then(res => res.json())
+    .then(data => {
+      recommendationData = data;
+      // Retry showing badges after data loads
+      if (book) showRecommendationBadges();
+    })
+    .catch(err => console.warn('[detail] 추천 도서 DB 로드 실패', err));
 
   function loadBook() {
     const params = new URLSearchParams(location.search);
@@ -49,6 +60,14 @@
 
   // ── Hero ─────────────────────────────────────────────────────
 
+  const PALETTE_GLYPHS_D = ['書', '詩', '夢', '道', '心', '花', '月', '時'];
+
+  function detailPalette(title) {
+    let h = 0;
+    for (const c of String(title || '')) h = (h * 31 + c.charCodeAt(0)) & 0xffffff;
+    return (Math.abs(h) % 8) + 1;
+  }
+
   function renderHero() {
     document.getElementById('bookTitle').textContent = book.title || '제목 없음';
     document.getElementById('bookAuthor').textContent = (book.authors || []).join(', ') || '저자 미상';
@@ -57,14 +76,20 @@
 
     const img = document.getElementById('coverImg');
     const ph = document.getElementById('coverPlaceholder');
+    const palette = detailPalette(book.title);
+    ph.dataset.palette = palette;
+    ph.textContent = PALETTE_GLYPHS_D[palette - 1];
     if (book.thumbnail) {
       img.src = book.thumbnail;
       img.style.display = 'block';
       ph.style.display = 'none';
-      img.onerror = () => { img.style.display = 'none'; ph.style.display = ''; };
+      img.onerror = () => { img.style.display = 'none'; ph.style.display = 'flex'; };
     }
 
     if (book.ar) showARBadge(book.ar, book.lexile);
+
+    // Show recommendation list badges
+    showRecommendationBadges();
   }
 
   function showARBadge(ar, lexile) {
@@ -72,6 +97,32 @@
     const lex = lexile ? `<span class="ar-badge" style="background:var(--text-mute);margin-left:4px">${escapeHtml(lexile)}</span>` : '';
     el.innerHTML = `<span class="ar-badge">AR ${ar}</span>${lex}`;
     el.classList.remove('hidden');
+  }
+
+  function showRecommendationBadges() {
+    if (!recommendationData || !book.isbn) return;
+
+    const isbn = String(book.isbn).replace(/\D/g, '');
+    const bookData = recommendationData.books[isbn];
+
+    if (!bookData || !bookData.lists || bookData.lists.length === 0) return;
+
+    // Show recommendation badges
+    const tagsEl = document.getElementById('detailTags');
+    if (tagsEl) {
+      const badges = bookData.lists.map(listId => {
+        const source = recommendationData.meta.sources.find(s => s.id === listId);
+        if (!source) return '';
+        return `<span class="rec-badge" style="background:${source.badge.color};color:#fff;padding:3px 8px;border-radius:2px;font-size:10px;font-weight:600;letter-spacing:0.05em;display:inline-block;margin-right:4px;margin-bottom:4px">${escapeHtml(source.badge.text)}</span>`;
+      }).filter(Boolean).join('');
+
+      if (badges) {
+        tagsEl.innerHTML = badges;
+        tagsEl.style.display = 'flex';
+        tagsEl.style.flexWrap = 'wrap';
+        tagsEl.style.gap = '4px';
+      }
+    }
   }
 
   // ── Rating ───────────────────────────────────────────────────
@@ -298,6 +349,17 @@
 
     document.getElementById('recordForm').addEventListener('submit', save);
     deleteBtn.addEventListener('click', deleteCurrent);
+
+    // Instagram 공유 버튼
+    const instagramBtn = document.getElementById('instagramShareBtn');
+    if (instagramBtn) {
+      instagramBtn.addEventListener('click', shareToInstagram);
+    }
+
+    // 이미 리뷰가 있으면 Instagram 공유 버튼 표시
+    if (book.review) {
+      document.getElementById('shareRow').style.display = 'flex';
+    }
   }
 
   function save(e) {
@@ -313,6 +375,11 @@
     });
     isNew = false;  // After first save it's no longer "new"
     showToast('저장됨 — 계속 수정 가능');
+
+    // 리뷰가 있으면 Instagram 공유 버튼 표시
+    if (reviewHtml) {
+      document.getElementById('shareRow').style.display = 'flex';
+    }
   }
 
   function deleteCurrent() {
@@ -320,6 +387,202 @@
     Storage.deleteBook(book.id);
     showToast('삭제됨');
     setTimeout(() => location.href = 'index.html', 600);
+  }
+
+  async function shareToInstagram() {
+    const btn = document.getElementById('instagramShareBtn');
+    const originalText = btn.innerHTML;
+
+    try {
+      btn.disabled = true;
+      btn.innerHTML = '🎨 생성 중...';
+
+      console.log('[Detail] Starting template generation...');
+
+      // 책 데이터 준비
+      const bookData = {
+        title: book.title || '제목 없음',
+        author: (book.authors || []).join(', ') || '저자 미상',
+        publisher: book.publisher || '출판사 미상',
+        cover: book.thumbnail ? `https://book-tracker-aladin.obangti.workers.dev/image-proxy?url=${encodeURIComponent(book.thumbnail)}` : null
+      };
+
+      console.log('[Detail] Book data:', bookData);
+
+      const review = document.getElementById('reviewInput').innerHTML;
+      const rating = selectedRating || 0;
+
+      console.log('[Detail] Review length:', review.length, 'Rating:', rating);
+
+      // 템플릿 생성 (기본: 스티커북)
+      const canvas = await generateInstagramTemplate(bookData, review, rating, 1);
+
+      console.log('[Detail] Canvas created, showing modal...');
+
+      // 모달에 캔버스 표시
+      showInstagramModal(canvas, bookData, review, rating);
+
+    } catch (err) {
+      console.error('[Detail] Instagram 공유 실패:', err);
+      showToast(`이미지 생성 실패: ${err.message || '알 수 없는 오류'}`);
+      alert(`디버그 정보:\n${err.stack || err.message}`);
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = originalText;
+    }
+  }
+
+  function showInstagramModal(initialCanvas, bookData, review, rating) {
+    const modal = document.getElementById('instagramModal');
+    const previewCanvas = document.getElementById('sharePreviewCanvas');
+    let currentCanvas = initialCanvas;
+    let currentTemplateId = 1;
+
+    // 캔버스를 미리보기에 복사
+    function updatePreview(canvas) {
+      previewCanvas.width = canvas.width;
+      previewCanvas.height = canvas.height;
+      const ctx = previewCanvas.getContext('2d');
+      ctx.drawImage(canvas, 0, 0);
+      currentCanvas = canvas;
+    }
+
+    updatePreview(initialCanvas);
+
+    // 모달 표시
+    modal.removeAttribute('hidden');
+
+    // 템플릿 선택 버튼
+    const templateButtons = modal.querySelectorAll('.template-btn');
+    templateButtons.forEach(btn => {
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener('click', async () => {
+        const templateId = parseInt(newBtn.dataset.template);
+        if (templateId === currentTemplateId) return;
+
+        // 버튼 스타일 업데이트 (매번 새로 조회)
+        modal.querySelectorAll('.template-btn').forEach(b => {
+          b.style.borderColor = '#E0E0E0';
+          b.style.background = '#fff';
+        });
+        newBtn.style.borderColor = '#FFB8C6';
+        newBtn.style.background = '#FFF8F0';
+
+        // 로딩 표시
+        newBtn.innerHTML = '⏳ 생성중...';
+        newBtn.disabled = true;
+
+        try {
+          const newCanvas = await generateInstagramTemplate(bookData, review, rating, templateId);
+          updatePreview(newCanvas);
+          currentTemplateId = templateId;
+        } catch (err) {
+          console.error('Template generation failed:', err);
+          showToast('템플릿 생성 실패');
+        } finally {
+          const templateTexts = {
+            '1': '🌸 소프트 핑크',
+            '2': '🍑 피치 코랄',
+            '3': '🌿 민트 파스텔',
+            '4': '☕ 크림 베이지',
+            '5': '📖 코지 독서',
+            '6': '☕ 북카페',
+            '7': '✍️ 손글씨 노트',
+            '8': '👧 책 읽는 아이',
+            '9': '🐻 동물 친구',
+            '10': '🚀 우주 탐험',
+            '11': '🦊 숲속 동화',
+            '12': '✨ 스티커북',
+            '13': '💕 포토카드',
+            '14': '📝 일기장'
+          };
+          newBtn.innerHTML = templateTexts[newBtn.dataset.template] || '✨ 스티커북';
+          newBtn.disabled = false;
+        }
+      });
+    });
+
+    // 다운로드 버튼
+    const downloadBtn = document.getElementById('shareDownloadBtn');
+    const newDownloadBtn = downloadBtn.cloneNode(true);
+    downloadBtn.parentNode.replaceChild(newDownloadBtn, downloadBtn);
+
+    newDownloadBtn.addEventListener('click', async () => {
+      const filename = `맘스북스_${bookData.title.replace(/[^가-힣a-zA-Z0-9]/g, '_')}_${Date.now()}.png`;
+      console.log('[Detail] Download button clicked, filename:', filename);
+
+      newDownloadBtn.disabled = true;
+      newDownloadBtn.innerHTML = '⏳ 다운로드 중...';
+
+      try {
+        await downloadCanvas(currentCanvas, filename);
+        showToast('이미지 다운로드 완료! 📥');
+        console.log('[Detail] Download success');
+      } catch (err) {
+        console.error('[Detail] Download failed:', err);
+        showToast('다운로드 실패: ' + err.message);
+      } finally {
+        newDownloadBtn.disabled = false;
+        newDownloadBtn.innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          저장
+        `;
+      }
+    });
+
+    // 일반 공유 버튼 (모든 앱)
+    const shareAllBtn = document.getElementById('shareAllBtn');
+    if (shareAllBtn) {
+      const newShareAllBtn = shareAllBtn.cloneNode(true);
+      shareAllBtn.parentNode.replaceChild(newShareAllBtn, shareAllBtn);
+
+      newShareAllBtn.addEventListener('click', async () => {
+        const filename = `맘스북스_${bookData.title.replace(/[^가-힣a-zA-Z0-9]/g, '_')}.png`;
+        newShareAllBtn.disabled = true;
+        newShareAllBtn.innerHTML = '⏳ 공유 중...';
+
+        try {
+          const result = await window.shareToAll(currentCanvas, filename, bookData.title);
+          if (result.success) {
+            showToast('공유 완료! 📤');
+            modal.setAttribute('hidden', '');
+          } else if (!result.cancelled) {
+            // Web Share API 미지원 - 다운로드로 폴백
+            await downloadCanvas(currentCanvas, filename);
+            showToast('이미지를 저장했어요! 📱 사진 앱에서 원하는 앱으로 공유하세요');
+          }
+        } catch (err) {
+          console.error('Share failed:', err);
+          showToast('공유 실패: ' + err.message);
+        } finally {
+          newShareAllBtn.disabled = false;
+          newShareAllBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            공유
+          `;
+        }
+      });
+    }
+
+    // 모달 닫기
+    const closeButtons = modal.querySelectorAll('[data-close-instagram]');
+    closeButtons.forEach(btn => {
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      newBtn.addEventListener('click', () => {
+        modal.setAttribute('hidden', '');
+      });
+    });
   }
 
   // ── AR fetch (English books only) ────────────────────────────
@@ -426,6 +689,9 @@
     const author = (book.authors || [])[0];
     const useAladin = !!(window.WORKER_URL && lookupItem);
 
+    // 시리즈 감지 — Rail 2 전략 결정에 사용
+    const series = detectSeries(book.title);
+
     // Step 2: 4 rails
     const authorPromise = author && useAladin
       ? API.aladinSearch({ query: author, queryType: 'Author', categoryId, maxResults: 12 })
@@ -433,11 +699,55 @@
           .catch(() => fallbackAuthor(author))
       : (author ? fallbackAuthor(author) : Promise.resolve([]));
 
-    const sameLevelPromise = useAladin && categoryId
-      ? API.aladinList({ queryType: 'Bestseller', categoryId, maxResults: 12 })
-          .then(items => items.map(API.normalizeAladin))
-          .catch(() => fallbackPublisher(book.publisher))
-      : fallbackPublisher(book.publisher);
+    // Rail 2: 시리즈면 다음 권 검색, 아니면 제목 키워드로 같은 분야 검색
+    let rail2Reason = '';
+    let rail2Why    = '';
+    const sameLevelPromise = (async () => {
+      if (series && useAladin) {
+        const nextQuery = `${series.base} ${series.num + 1}`;
+        try {
+          const items = await API.aladinSearch({ query: nextQuery, queryType: 'Title', maxResults: 6 });
+          const norm = items.map(API.normalizeAladin).filter(Boolean);
+          if (norm.length > 0) {
+            rail2Reason = `${series.base} 시리즈`;
+            rail2Why    = `지금 읽은 ${series.num}권의 바로 다음 이야기, ${series.num + 1}권부터 계속됩니다. 같은 세계관·캐릭터를 이어서 만날 수 있어요.`;
+            return norm;
+          }
+        } catch (e) { /* 폴백으로 */ }
+      }
+      // 시리즈 아님 → 제목의 핵심 키워드로 같은 분야 검색
+      if (useAladin && categoryId) {
+        const genre = API.extractGenreKeyword(book.categoryName || '');
+        const titleWords = (book.title || '')
+          .replace(/[^가-힣\w\s]/g, '')
+          .split(/\s+/)
+          .filter(w => w.length > 1)
+          .slice(0, 2)
+          .join(' ');
+        const kw = (genre || titleWords || '').trim();
+        if (kw) {
+          try {
+            const items = await API.aladinSearch({
+              query: kw,
+              queryType: 'Keyword',
+              categoryId,
+              maxResults: 12,
+              sort: 'SalesPoint',
+            });
+            const norm = items.map(API.normalizeAladin).filter(Boolean);
+            if (norm.length > 0) {
+              rail2Reason = `"${kw}" 관련 추천`;
+              rail2Why    = `『${book.title}』과 같은 분야에서 "${kw}" 키워드로 많이 읽힌 책들입니다. 비슷한 주제를 다양한 시각으로 접할 수 있어요.`;
+              return norm;
+            }
+          } catch (e) { /* 폴백으로 */ }
+        }
+      }
+      // 최후 폴백
+      rail2Reason = '같은 출판사 책';
+      rail2Why    = `『${book.title}』과 같은 출판사의 책입니다.`;
+      return fallbackPublisher(book.publisher);
+    })();
 
     // 이 책도 좋아요 = similarBookList 우선 → 비어있으면 부모 categoryId Bestseller
     const alsoLikePromise = (async () => {
@@ -471,25 +781,29 @@
     const currentBookTitle = book.title || '이 책';
     const currentAuthor = author || '';
 
-    renderRail('recAuthor',    filterCurrent(authorBooks), {
-      reason: '같은 작가의 책',
+    const authorGenre = API.extractGenreKeyword(currentBookCategory);
+
+    renderRail('recAuthor', filterCurrent(authorBooks), {
+      reason: `${currentAuthor || '저자'}의 다른 책`,
       why: currentAuthor
-        ? `『${currentBookTitle}』의 저자 "${currentAuthor}"가 쓴 다른 작품입니다. 작가 특유의 시선·문체를 좋아한 독자에게 자연스럽게 이어집니다.`
-        : `같은 저자의 다른 작품입니다.`,
+        ? `${currentAuthor} 작가가 쓴 다른 작품입니다.${authorGenre ? ` ${authorGenre} 장르에서 꾸준히 활동하며 쌓아온 작가 특유의 시선과 문체를 이어서 만날 수 있어요.` : ' 이 책이 마음에 들었다면 같은 작가의 다음 이야기도 어울릴 거예요.'}`
+        : '같은 저자의 다른 작품입니다.',
     });
+    const r2eyebrow = document.getElementById('recPublisherEyebrow');
+    const r2title   = document.getElementById('recPublisherTitle');
+    if (r2eyebrow) r2eyebrow.textContent = series ? '시리즈' : '관련 추천';
+    if (r2title)   r2title.textContent   = rail2Reason || '비슷한 책';
     renderRail('recPublisher', filterCurrent(sameLevelBooks), {
-      reason: '같은 단계 베스트',
-      why: currentBookCategory
-        ? `『${currentBookTitle}』과 같은 분야(${prettyCategory(currentBookCategory)})의 베스트셀러입니다. 비슷한 수준·관심사의 또래 독자가 가장 많이 읽고 있는 책이에요.`
-        : `같은 분야의 베스트셀러입니다.`,
+      reason: rail2Reason || '관련 추천',
+      why:    rail2Why    || `『${currentBookTitle}』과 비슷한 주제의 책입니다.`,
     });
-    renderRail('recAlsoLike',  filterCurrent(alsoLikeBooks), {
-      reason: '이 책을 좋아한 독자가 본 책',
-      why: `알라딘 데이터 기반으로 『${currentBookTitle}』을 산 독자들이 함께 본 책 + 한 단계 넓은 분야의 베스트를 섞었습니다. 비슷한 톤이지만 분야는 살짝 다양해요.`,
+    renderRail('recAlsoLike', filterCurrent(alsoLikeBooks), {
+      reason: '이 책을 산 독자들이 함께 본 책',
+      why: `알라딘 MD가 직접 엮은 연관 도서 목록입니다. 『${currentBookTitle}』을 구매한 독자들이 함께 담은 책으로, 비슷한 취향의 독자가 실제로 선택한 책이에요.`,
     });
-    renderRail('recSimilar',   filterCurrent(nextLevelBooks), {
-      reason: '한 단계 다음 추천책',
-      why: `『${currentBookTitle}』보다 한 단계 위(어휘·주제 깊이) 책으로 골랐습니다. 지금 읽은 책이 쉽게 느껴진다면 다음에 도전해볼 만한 책이에요.`,
+    renderRail('recSimilar', filterCurrent(nextLevelBooks), {
+      reason: '한 단계 위 도전 추천',
+      why: `『${currentBookTitle}』보다 어휘 수준이나 주제 깊이가 한 단계 높은 책으로 골랐습니다. 지금 읽은 책이 쉽게 느껴지기 시작했다면 이 리스트에서 다음 책을 골라보세요.`,
     });
   }
 
@@ -498,6 +812,30 @@
       .replace(/^국내도서>/, '')
       .replace(/^외국도서>/, '')
       .replace(/>/g, ' › ');
+  }
+
+  /**
+   * 시리즈 감지 — "마법천자문 60", "마법천자문 60권", "설민석의 조선왕조실록 2"
+   * 반환: { base: "마법천자문", num: 60 } 또는 null
+   */
+  function detectSeries(title) {
+    if (!title) return null;
+    const t = title.trim();
+    // "제N권" 또는 끝에 숫자
+    const patterns = [
+      /^(.+?)\s+제\s*(\d+)\s*권$/,
+      /^(.+?)\s+(\d+)\s*권$/,
+      /^(.+?)\s+(\d+)\s*$/,
+    ];
+    for (const re of patterns) {
+      const m = t.match(re);
+      if (m) {
+        const base = m[1].trim();
+        const num  = parseInt(m[2]);
+        if (num > 0 && num < 200) return { base, num };
+      }
+    }
+    return null;
   }
 
   // 카카오 fallback (알라딘 키 미설정 / 호출 실패 시)
@@ -534,18 +872,66 @@
       return;
     }
 
-    rail.innerHTML = books.map((b, i) => {
+    const INITIAL_SHOW = 8; // 처음 8개 표시
+    const hasMore = books.length > INITIAL_SHOW;
+
+    const renderBooks = (booksToRender) => booksToRender.map((b, i) => {
       const cover = b.thumbnail
         ? `<img class="rec-cover" src="${escapeAttr(b.thumbnail)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'rec-cover',style:'background:linear-gradient(160deg,var(--bg-paper),var(--border));display:flex;align-items:center;justify-content:center;font-family:var(--font-han);font-size:24px;color:var(--text-mute);opacity:0.5',textContent:'書'}))">`
         : `<div class="rec-cover" style="background:linear-gradient(160deg,var(--bg-paper),var(--border));display:flex;align-items:center;justify-content:center;font-family:var(--font-han);font-size:24px;color:var(--text-mute);opacity:0.5">書</div>`;
+
+      // Check if this book is in recommendation database
+      let badges = '';
+      if (recommendationData && b.isbn) {
+        const isbn = String(b.isbn).replace(/\D/g, '');
+        const bookData = recommendationData.books[isbn];
+        if (bookData && bookData.lists && bookData.lists.length > 0) {
+          badges = bookData.lists.map(listId => {
+            const source = recommendationData.meta.sources.find(s => s.id === listId);
+            if (!source) return '';
+            return `<span style="background:${source.badge.color};color:#fff;padding:2px 6px;border-radius:2px;font-size:9px;font-weight:600;letter-spacing:0.05em;display:inline-block;margin-right:3px;margin-top:4px">${escapeHtml(source.badge.text)}</span>`;
+          }).filter(Boolean).join('');
+        }
+      }
+
       return `
         <button type="button" class="rec-card" data-rail="${escapeAttr(railId)}" data-idx="${i}" style="cursor:pointer;border:none;background:transparent;padding:0;text-align:left">
           ${cover}
           <div class="rec-title">${escapeHtml(b.title)}</div>
+          ${badges ? `<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:3px">${badges}</div>` : ''}
         </button>
       `;
     }).join('');
 
+    rail.innerHTML = `
+      <div class="rail-books">${renderBooks(books.slice(0, INITIAL_SHOW))}</div>
+      ${hasMore ? `
+        <button type="button" class="rail-more-btn" style="width:100%;padding:12px;margin-top:16px;border:2px dashed #E0E0E0;border-radius:8px;background:#FAFAFA;color:#718096;font-weight:600;cursor:pointer;transition:all 0.2s">
+          더보기 (+${books.length - INITIAL_SHOW}권)
+        </button>
+      ` : ''}
+    `;
+
+    // 더보기 버튼 이벤트
+    const moreBtn = rail.querySelector('.rail-more-btn');
+    if (moreBtn) {
+      moreBtn.addEventListener('click', () => {
+        const booksContainer = rail.querySelector('.rail-books');
+        booksContainer.innerHTML = renderBooks(books);
+        moreBtn.remove();
+
+        // 새로 추가된 카드에 이벤트 리스너 추가
+        booksContainer.querySelectorAll('[data-rail]').forEach(card => {
+          card.addEventListener('click', () => {
+            const idx = Number(card.dataset.idx);
+            const picked = books[idx];
+            if (picked) showBookPreview(picked, meta);
+          });
+        });
+      });
+    }
+
+    // 초기 카드 이벤트 리스너
     rail.querySelectorAll('[data-rail]').forEach(card => {
       card.addEventListener('click', () => {
         const idx = Number(card.dataset.idx);
@@ -584,6 +970,183 @@
     wirePreviewActions(book, modal);
   }
 
+  function buildWhyBlock(book, meta) {
+    const isbn = book.isbn ? String(book.isbn).replace(/\D/g, '') : '';
+    const bookData = recommendationData && isbn ? recommendationData.books[isbn] : null;
+
+    // Build curated list badges
+    const badges = bookData && bookData.lists ?
+      bookData.lists.map(listId => {
+        const source = recommendationData.meta.sources.find(s => s.id === listId);
+        if (!source) return '';
+        return `<span style="display:inline-block;background:${source.badge.color};color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.06em;margin-right:6px;margin-bottom:6px;box-shadow:0 2px 6px rgba(0,0,0,0.15)">${escapeHtml(source.badge.text)}</span>`;
+      }).filter(Boolean).join('') : '';
+
+    // Enhanced recommendation reasons
+    const reasons = [];
+
+    // 1. Curated list reason (책따세 등)
+    if (bookData && bookData.why) {
+      reasons.push({
+        icon: '📚',
+        title: '전문가 추천',
+        text: bookData.why
+      });
+    }
+
+    // 2. Algorithm-based reason (같은 저자, 같은 출판사 등)
+    if (meta.why) {
+      reasons.push({
+        icon: meta.reason === '같은 저자의 다른 책' ? '✍️' :
+              meta.reason === '같은 출판사' ? '🏢' : '💡',
+        title: meta.reason || '추천 도서',
+        text: meta.why
+      });
+    }
+
+    // 3. Best-seller / high rating / popular reasons
+    const raw = book._raw || {};
+    if (raw.bestRank && raw.bestRank <= 100) {
+      reasons.push({
+        icon: '🏆',
+        title: '베스트셀러',
+        text: `알라딘 베스트셀러 ${raw.bestRank}위! 많은 독자들이 선택한 책이에요.`
+      });
+    } else if (raw.bestRank && raw.bestRank <= 500) {
+      reasons.push({
+        icon: '📈',
+        title: '인기 도서',
+        text: `알라딘 베스트셀러 ${raw.bestRank}위 안에 드는 인기 도서예요.`
+      });
+    }
+
+    // 평점 추천 (기준 완화: 8.0 이상)
+    if (raw.customerReviewRank >= 9.0) {
+      reasons.push({
+        icon: '⭐',
+        title: '최고 평점',
+        text: `독자 평점 ${raw.customerReviewRank}/10점. 읽은 사람들의 만족도가 매우 높아요.`
+      });
+    } else if (raw.customerReviewRank >= 8.0) {
+      reasons.push({
+        icon: '⭐',
+        title: '높은 평점',
+        text: `독자 평점 ${raw.customerReviewRank}/10점. 독자들이 만족한 책이에요.`
+      });
+    }
+
+    // 리뷰 많은 책 (검증된 도서)
+    const reviewCount = Number(raw.reviewCount || 0);
+    if (reviewCount >= 50 && reasons.filter(r => r.icon === '⭐' || r.icon === '🏆' || r.icon === '📈').length === 0) {
+      reasons.push({
+        icon: '💬',
+        title: '검증된 도서',
+        text: `${reviewCount}명 이상의 독자가 리뷰를 남긴 검증된 책이에요.`
+      });
+    }
+
+    // 4. Award winners
+    if (bookData && bookData.award) {
+      const award = recommendationData.awards[bookData.award];
+      if (award) {
+        reasons.push({
+          icon: '🏆',
+          title: award.name,
+          text: award.description
+        });
+      }
+    }
+
+    // 5. 최신 도서 (2년 이내)
+    const pubDate = book.datetime || book.pubDate || '';
+    if (pubDate) {
+      const pubYear = Number(pubDate.substring(0, 4));
+      const currentYear = new Date().getFullYear();
+      if (pubYear >= currentYear - 2 && pubYear <= currentYear) {
+        reasons.push({
+          icon: '🆕',
+          title: '최신 도서',
+          text: `${pubYear}년 출간된 따끈따끈한 신간이에요. 최신 트렌드와 정보를 담고 있어요.`
+        });
+      }
+    }
+
+    // 6. Genre/Age-appropriate (더 세분화)
+    if (book.categoryName) {
+      const category = book.categoryName.replace(/^국내도서>/, '').split('>')[0];
+      const subCategory = book.categoryName.replace(/^국내도서>/, '').split('>')[1] || '';
+
+      if (category === '어린이') {
+        if (subCategory.includes('그림책')) {
+          reasons.push({
+            icon: '🎨',
+            title: '그림책',
+            text: '아름다운 그림과 함께 이야기를 즐길 수 있어요. 상상력과 감성을 키워줘요.'
+          });
+        } else if (subCategory.includes('동화')) {
+          reasons.push({
+            icon: '📖',
+            title: '동화책',
+            text: '어린이 독자를 위한 재미있는 이야기로, 독서 습관을 기르는 데 도움이 돼요.'
+          });
+        } else if (subCategory.includes('학습')) {
+          reasons.push({
+            icon: '📚',
+            title: '학습 도서',
+            text: '재미와 학습을 동시에! 유익한 내용을 쉽고 재미있게 배울 수 있어요.'
+          });
+        } else {
+          reasons.push({
+            icon: '👧',
+            title: '어린이 권장도서',
+            text: '어린이 발달 단계에 적합한 내용과 어휘로 구성되어 있어요.'
+          });
+        }
+      } else if (category === '청소년') {
+        reasons.push({
+          icon: '🎓',
+          title: '청소년 권장도서',
+          text: '청소년기 필독서. 생각의 폭을 넓히고 세상을 이해하는 데 도움이 돼요.'
+        });
+      } else if (category === '외국어') {
+        reasons.push({
+          icon: '🌍',
+          title: '영어 원서',
+          text: '영어 실력을 키우면서 재미있는 이야기를 즐길 수 있어요.'
+        });
+      }
+    }
+
+    // 7. 기본 추천 메시지 (reasons가 아직도 비어있으면)
+    if (reasons.length === 0) {
+      reasons.push({
+        icon: '💝',
+        title: '맘스북스 추천',
+        text: '우리 아이의 독서 여정에 도움이 될 책이에요. 함께 읽으며 대화해보세요.'
+      });
+    }
+
+    if (reasons.length === 0) return '';
+
+    const reasonsHTML = reasons.map(r => `
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:12px;background:linear-gradient(135deg,rgba(255,184,198,0.08),rgba(232,197,255,0.08));border-radius:12px;border:2px solid rgba(255,184,198,0.2)">
+        <span style="font-size:24px;flex-shrink:0">${r.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;font-weight:700;color:var(--cute-coral);margin-bottom:4px">${escapeHtml(r.title)}</div>
+          <div style="font-size:14px;color:var(--text-dark);line-height:1.5">${escapeHtml(r.text)}</div>
+        </div>
+      </div>
+    `).join('');
+
+    return `
+      <div class="preview-why">
+        <p class="preview-why-label" style="color:var(--cute-coral);font-size:12px;font-weight:800;letter-spacing:0.1em;margin-bottom:12px">💝 왜 이 책을 읽어야 할까요?</p>
+        ${badges ? `<div style="margin-bottom:16px">${badges}</div>` : ''}
+        ${reasonsHTML}
+      </div>
+    `;
+  }
+
   function renderPreviewSkeleton(b, meta) {
     return `
       <div class="preview-hero">
@@ -604,8 +1167,14 @@
     const reviewList = (item.subInfo && item.subInfo.reviewList) || [];
 
     const description = (item.description || b.contents || '').trim();
-    const ratingScore = Number(ratingInfo.ratingScore || 0);
-    const ratingCount = Number(ratingInfo.ratingCount || 0);
+    // ratingInfo.ratingScore (lookup), item.customerReviewRank (list/search), _raw fallback
+    const fallbackScore = Number(
+      item.customerReviewRank ||
+      ((b._raw || {}).customerReviewRank) ||
+      0
+    );
+    const ratingScore = Number(ratingInfo.ratingScore || fallbackScore);
+    const ratingCount = Number(ratingInfo.ratingCount || (b._raw || {}).reviewCount || 0);
     const categoryName = item.categoryName || b.categoryName || '';
     const pubDate = item.pubDate || b.datetime || '';
     const publisher = item.publisher || b.publisher || '';
@@ -643,12 +1212,8 @@
       ? `<a href="${escapeAttr(item.link || b.url)}" target="_blank" rel="noopener" class="btn btn-secondary">알라딘에서 보기</a>`
       : '';
 
-    const whyBlock = meta.why ? `
-      <div class="preview-why">
-        <p class="preview-why-label">WHY THIS BOOK</p>
-        <p class="preview-why-text">${escapeHtml(meta.why)}</p>
-      </div>
-    ` : '';
+    // Enhanced WHY THIS BOOK section with recommendation lists
+    const whyBlock = buildWhyBlock(b, meta);
 
     return `
       <div class="preview-hero">

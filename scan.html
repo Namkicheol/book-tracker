@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>書架 — 바코드 스캔</title>
+  <title>맘스북스 — 바코드 스캔</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
     .scanner-wrap {
@@ -176,6 +176,7 @@
       <div id="titleResults" class="hidden mt-md">
         <p class="section-title" id="titleResultsLabel">검색 결과</p>
         <div id="titleResultsList" style="display:flex;flex-direction:column;gap:var(--sp-sm)"></div>
+        <div id="titleResultsPager"></div>
       </div>
     </div>
 
@@ -209,6 +210,12 @@
         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
       </svg>
       서재
+    </a>
+    <a href="recommendations.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      추천
     </a>
     <a href="scan.html" class="nav-item active">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">

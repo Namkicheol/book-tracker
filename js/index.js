@@ -21,6 +21,16 @@
     title:  '제목 순',
   };
 
+  // Load recommendation database
+  let recommendationData = null;
+  fetch('data/book-recommendations.json')
+    .then(res => res.json())
+    .then(data => {
+      recommendationData = data;
+      renderBooks(); // Re-render to show badges
+    })
+    .catch(err => console.warn('[index] 추천 도서 DB 로드 실패', err));
+
   // ── Sort ─────────────────────────────────────────────────────
 
   function sortBooks(books, mode) {
@@ -42,15 +52,51 @@
     }
   }
 
-  // ── Render: chapter sub ──────────────────────────────────────
+  // ── Render: masthead + stats ─────────────────────────────────
 
   function renderHeader() {
-    const sub = document.getElementById('chapterSub');
-    const total = Storage.getAllBooks().length;
-    const sortLabel = SORT_LABELS[currentSort];
-    sub.innerHTML = total
-      ? `기록된 책 <strong style="color:var(--text);font-weight:700">${total}</strong>권 · <span class="font-display italic">${sortLabel}</span>`
-      : '아직 책이 없습니다';
+    const books = Storage.getAllBooks();
+    const total = books.length;
+
+    // Masthead date
+    const now = new Date();
+    const DAYS_KAN = ['日曜', '月曜', '火曜', '水曜', '木曜', '金曜', '土曜'];
+    const pad = n => String(n).padStart(2, '0');
+    const dateEl = document.getElementById('hdrDate');
+    const dayEl  = document.getElementById('hdrDay');
+    if (dateEl) dateEl.textContent = `${now.getFullYear()}.${pad(now.getMonth() + 1)}.${pad(now.getDate())}`;
+    if (dayEl)  dayEl.textContent  = DAYS_KAN[now.getDay()];
+
+    // Caption
+    const caption = document.getElementById('hdrCaption');
+    if (caption) caption.textContent = `An archive of ${total} volume${total !== 1 ? 's' : ''}`;
+
+    // Colophon total
+    const colVol = document.getElementById('colTotalVol');
+    if (colVol) colVol.textContent = total;
+
+    // Stats: volumes
+    const figVol = document.getElementById('figVol');
+    if (figVol) figVol.textContent = total;
+
+    // Stats: pages
+    const totalPages = books.reduce((s, b) => s + (parseInt(b.pages) || 0), 0);
+    const figPages = document.getElementById('figPages');
+    if (figPages) {
+      if (totalPages >= 1000) {
+        figPages.innerHTML = `${(totalPages / 1000).toFixed(1)}<small>k</small>`;
+      } else {
+        figPages.textContent = totalPages || '0';
+      }
+    }
+
+    // Stats: avg rating
+    const rated = books.filter(b => b.rating > 0);
+    const avg   = rated.length
+      ? (rated.reduce((s, b) => s + b.rating, 0) / rated.length).toFixed(1)
+      : '—';
+    const figRating = document.getElementById('figRating');
+    if (figRating) figRating.textContent = avg;
   }
 
   // ── Render: folders ──────────────────────────────────────────
@@ -70,7 +116,7 @@
       html.push(chipHTML(f.id, f.name, count, currentFolderId === f.id));
     });
 
-    html.push(`<button class="folder-chip folder-chip-add" id="addFolderChip" title="새 폴더">＋ 폴더</button>`);
+    html.push(`<button class="folder-tab folder-tab-add" id="addFolderChip" title="새 폴더">＋ 폴더</button>`);
 
     bar.innerHTML = html.join('');
 
@@ -139,9 +185,9 @@
   function chipHTML(folderId, name, count, isActive) {
     const safe = escapeHtml(name);
     const countTag = count > 0
-      ? `<span style="opacity:0.55;font-weight:400;margin-left:5px">${count}</span>`
+      ? `<sup class="num">${count}</sup>`
       : '';
-    return `<button class="folder-chip ${isActive ? 'active' : ''}" data-folder="${escapeAttr(folderId)}">${safe}${countTag}</button>`;
+    return `<button class="folder-tab ${isActive ? 'active' : ''}" data-folder="${escapeAttr(folderId)}">${safe}${countTag}</button>`;
   }
 
   // ── Render: book grid ────────────────────────────────────────
@@ -186,7 +232,9 @@
           toggleSelection(id);
           return;
         }
-        location.href = `detail.html?id=${encodeURIComponent(id)}`;
+        e.preventDefault();
+        const book = Storage.getBook(id);
+        if (book) showBookPreview(book);
       });
 
       // 드래그는 선택 모드 아닐 때만
@@ -345,15 +393,43 @@
     return String(s).replace(/["\\]/g, '\\$&');
   }
 
+  const PALETTE_GLYPHS = ['書', '詩', '夢', '道', '心', '花', '月', '時'];
+
+  function titlePalette(title) {
+    let h = 0;
+    for (const c of String(title || '')) h = (h * 31 + c.charCodeAt(0)) & 0xffffff;
+    return (Math.abs(h) % 8) + 1;
+  }
+
   function renderCard(book) {
     const rating = book.rating || 0;
     const starsHtml = rating > 0
       ? `<div class="book-card-stars"><span>${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</span></div>`
       : '';
+    const palette = titlePalette(book.title);
+    const glyph   = PALETTE_GLYPHS[palette - 1];
     const cover = book.thumbnail
-      ? `<img class="book-cover" src="${escapeAttr(book.thumbnail)}" alt="" loading="lazy" draggable="false" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'book-cover-placeholder'}))">`
-      : `<div class="book-cover-placeholder"></div>`;
+      ? `<img class="book-cover" src="${escapeAttr(book.thumbnail)}" alt="" loading="lazy" draggable="false" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`+
+        `<div class="book-cover-placeholder" data-palette="${palette}" style="display:none">${glyph}</div>`
+      : `<div class="book-cover-placeholder" data-palette="${palette}">${glyph}</div>`;
     const author = (book.authors || []).join(', ') || '저자 미상';
+
+    // Check if this book is in recommendation database
+    let badgesHtml = '';
+    if (recommendationData && book.isbn) {
+      const isbn = String(book.isbn).replace(/\D/g, '');
+      const bookData = recommendationData.books[isbn];
+      if (bookData && bookData.lists && bookData.lists.length > 0) {
+        const badges = bookData.lists.map(listId => {
+          const source = recommendationData.meta.sources.find(s => s.id === listId);
+          if (!source) return '';
+          return `<span style="background:${source.badge.color};color:#fff;padding:2px 6px;border-radius:2px;font-size:9px;font-weight:600;letter-spacing:0.05em;display:inline-block;margin-right:3px">${escapeHtml(source.badge.text)}</span>`;
+        }).filter(Boolean).join('');
+        if (badges) {
+          badgesHtml = `<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:3px">${badges}</div>`;
+        }
+      }
+    }
 
     return `
       <article class="book-card" data-id="${escapeAttr(book.id)}" draggable="true">
@@ -363,6 +439,7 @@
         <h3 class="book-card-title">${escapeHtml(book.title)}</h3>
         <p class="book-card-author">${escapeHtml(author)}</p>
         ${starsHtml}
+        ${badgesHtml}
       </article>
     `;
   }
@@ -564,6 +641,118 @@
     showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
   }
 
+  // ── Book Preview Modal ───────────────────────────────────────
+
+  async function showBookPreview(book) {
+    const modal = document.getElementById('bookPreviewModal');
+    const bodyEl = document.getElementById('previewBody');
+
+    modal.hidden = false;
+    bodyEl.innerHTML = '<p style="text-align:center;padding:40px;color:#999">로딩 중...</p>';
+
+    // Try to get more info from Aladin or use cached data
+    let detail = { ...book };
+
+    if (window.WORKER_URL && book.isbn && window.API) {
+      try {
+        const item = await API.aladinLookup(book.isbn);
+        if (item) {
+          detail.description = item.description || book.description;
+          detail.customerReviewRank = item.customerReviewRank;
+          detail.categoryName = item.categoryName || book.categoryName;
+        }
+      } catch (e) {
+        console.warn('[preview] Aladin lookup 실패', e);
+      }
+    }
+
+    // Now render with the detail
+    const cover = detail.thumbnail || '';
+    const desc = detail.description || detail.review || '';
+
+    // Build rating display
+    let ratingHtml = '';
+    if (detail.customerReviewRank) {
+      const stars = Math.round(detail.customerReviewRank / 2);
+      ratingHtml = `<p style="color:#FF6B6B;font-size:14px;margin:8px 0 0 0">${'★'.repeat(stars)}${'☆'.repeat(5 - stars)} ${detail.customerReviewRank} / 10</p>`;
+    } else if (detail.rating) {
+      ratingHtml = `<p style="color:#FF6B6B;font-size:14px;margin:8px 0 0 0">${'★'.repeat(detail.rating)}${'☆'.repeat(5 - detail.rating)}</p>`;
+    }
+
+    // Check if book is in recommendation database (isbn 우선, 제목+저자 fallback)
+    let whySection = '';
+    let recBookData = null;
+    if (recommendationData) {
+      if (book.isbn) {
+        const isbn = String(book.isbn).replace(/\D/g, '');
+        recBookData = recommendationData.books[isbn];
+      }
+      // ISBN 매칭 실패 시 제목으로 fallback 검색
+      if (!recBookData && book.title) {
+        const normalizedTitle = book.title.replace(/\s+/g, '').toLowerCase();
+        recBookData = Object.values(recommendationData.books || {}).find(b => {
+          const bTitle = (b.title || '').replace(/\s+/g, '').toLowerCase();
+          return bTitle === normalizedTitle ||
+                 bTitle.startsWith(normalizedTitle) ||
+                 normalizedTitle.startsWith(bTitle);
+        });
+      }
+      if (recBookData) {
+        // 추천 출처 뱃지
+        const badges = (recBookData.lists || []).map(listId => {
+          const source = recommendationData.meta.sources.find(s => s.id === listId);
+          if (!source) return '';
+          return `<span style="background:${source.badge.color};color:#fff;padding:3px 8px;border-radius:3px;font-size:10px;font-weight:600;margin-right:4px">${escapeHtml(source.badge.text)}</span>`;
+        }).filter(Boolean).join('');
+
+        if (recBookData.why) {
+          whySection = `
+            <div style="margin:20px 0;padding:16px;background:linear-gradient(135deg,#FFF5F5,#FFF8E1);border-left:4px solid #FF6B6B;border-radius:8px">
+              <h3 style="font-size:15px;font-weight:700;color:#FF6B6B;margin:0 0 12px 0;display:flex;align-items:center;gap:8px">
+                💝 왜 이 책을 읽어야 할까요?
+              </h3>
+              ${badges ? `<div style="margin-bottom:10px">${badges}</div>` : ''}
+              <p style="font-size:14px;line-height:1.6;color:#555;margin:0">${escapeHtml(recBookData.why)}</p>
+            </div>
+          `;
+        }
+      }
+    }
+
+    bodyEl.innerHTML = `
+      <button class="btn-primary" style="width:100%;margin-bottom:16px" onclick="location.href='detail.html?id=${encodeURIComponent(book.id)}'">
+        📝 기록하러 가기
+      </button>
+
+      <div style="text-align:center;margin-bottom:16px">
+        ${cover ? `<img src="${escapeAttr(cover)}" alt="" style="width:140px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15)">` : '<div style="width:140px;height:187px;background:#e0e0e0;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:36px;color:#999;margin:0 auto">書</div>'}
+      </div>
+
+      <h2 style="font-size:18px;font-weight:700;margin:0 0 8px 0;line-height:1.3;text-align:center">${escapeHtml(book.title)}</h2>
+      <p style="color:#666;font-size:13px;margin:0;text-align:center">${escapeHtml((book.authors || []).join(', ') || '')}</p>
+      ${ratingHtml}
+
+      ${whySection}
+
+      ${desc ? `
+        <div style="margin-top:16px">
+          <h4 style="font-size:13px;font-weight:600;color:#999;margin:0 0 8px 0">줄거리 / 소개</h4>
+          <div style="padding:12px;background:#f9f9f9;border-radius:8px;font-size:13px;line-height:1.6;color:#555;max-height:150px;overflow-y:auto">
+            ${sanitizeDescription(desc)}
+          </div>
+        </div>
+      ` : ''}
+    `;
+  }
+
+  // Modal close handlers
+  document.addEventListener('click', e => {
+    if (e.target.matches('[data-close-preview]')) {
+      const modal = document.getElementById('bookPreviewModal');
+      if (modal) modal.hidden = true;
+    }
+  });
+
   // ── Utils ────────────────────────────────────────────────────
 
   function escapeHtml(s) {
@@ -573,6 +762,16 @@
   }
   function escapeAttr(s) {
     return String(s ?? '').replace(/"/g, '&quot;');
+  }
+  function sanitizeDescription(html) {
+    if (!html) return '';
+    // HTML 태그를 임시 div에 넣고 textContent로 순수 텍스트만 추출
+    const temp = document.createElement('div');
+    temp.innerHTML = html;
+    let text = temp.textContent || temp.innerText || '';
+    // 연속된 공백과 줄바꿈 정리
+    text = text.replace(/\s+/g, ' ').trim();
+    return escapeHtml(text);
   }
 
   // ── Boot ─────────────────────────────────────────────────────

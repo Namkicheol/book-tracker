@@ -3,7 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>書架 — 독서 기록</title>
+  <title>맘스북스 — 독서 기록</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;600&family=Nanum+Myeongjo:wght@400;700&family=Black+Han+Sans&family=Jua&family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <style>
     .detail-hero {
@@ -18,15 +21,31 @@
       flex-shrink: 0;
       aspect-ratio: 2/3;
       object-fit: cover;
-      border-radius: 1px;
-      box-shadow: 4px 6px 0 var(--shadow), 0 0 0 1px var(--border) inset;
+      border-radius: 2px;
+      box-shadow: 6px 10px 0 var(--shadow), 1px 2px 0 rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.06) inset;
     }
     .detail-cover-placeholder {
-      background: linear-gradient(160deg, var(--bg-paper) 0%, var(--border) 100%);
+      background: linear-gradient(168deg, #1c0a04 0%, #541e0c 55%, #742e18 100%);
       display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-han); font-size: 36px; font-weight: 700;
-      color: var(--text-mute); opacity: 0.5;
+      font-family: var(--font-han); font-size: 40px; font-weight: 700;
+      color: rgba(240,210,175,0.92);
+      position: relative; overflow: hidden;
+      text-shadow: 0 3px 14px rgba(0,0,0,0.55);
     }
+    .detail-cover-placeholder::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0; width: 7px;
+      background: linear-gradient(to right, rgba(255,255,255,0.14), rgba(255,255,255,0.04));
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .detail-cover-placeholder[data-palette="1"] { background: linear-gradient(168deg, #200808 0%, #601414 55%, #7c2020 100%); color: rgba(245,215,180,0.92); }
+    .detail-cover-placeholder[data-palette="2"] { background: linear-gradient(168deg, #06101e 0%, #112848 55%, #1c3e6a 100%); color: rgba(200,222,248,0.92); }
+    .detail-cover-placeholder[data-palette="3"] { background: linear-gradient(168deg, #061206 0%, #143818 55%, #1e5224 100%); color: rgba(190,232,198,0.92); }
+    .detail-cover-placeholder[data-palette="4"] { background: linear-gradient(168deg, #100620 0%, #2e1054 55%, #461876 100%); color: rgba(222,198,248,0.92); }
+    .detail-cover-placeholder[data-palette="5"] { background: linear-gradient(168deg, #1a0a04 0%, #501e0c 55%, #702e18 100%); color: rgba(242,212,175,0.92); }
+    .detail-cover-placeholder[data-palette="6"] { background: linear-gradient(168deg, #060e12 0%, #102436 55%, #1a4258 100%); color: rgba(188,218,235,0.92); }
+    .detail-cover-placeholder[data-palette="7"] { background: linear-gradient(168deg, #080e06 0%, #1e3610 55%, #2e5018 100%); color: rgba(200,228,172,0.92); }
+    .detail-cover-placeholder[data-palette="8"] { background: linear-gradient(168deg, #14060e 0%, #3a1030 55%, #581848 100%); color: rgba(232,200,225,0.92); }
     .detail-meta { flex: 1; min-width: 0; }
     .detail-title {
       font-family: var(--font-body);
@@ -111,7 +130,7 @@
 
   <section class="chapter">
     <div class="chapter-glyph">録</div>
-    <span class="chapter-no">No. 03 · Record</span>
+    <span class="chapter-no">No. 03 · 錄</span>
     <h1 class="chapter-title">독서 <em>기록</em></h1>
     <p class="chapter-sub">읽은 감상과 어휘를 기록합니다.</p>
   </section>
@@ -192,27 +211,37 @@
         </button>
       </div>
 
+      <div class="action-row animate-in" style="animation-delay:320ms;border-top:none;padding-top:0;margin-top:var(--sp-md);display:none" id="shareRow">
+        <button type="button" class="btn btn-secondary" id="instagramShareBtn" style="flex:1;background:linear-gradient(135deg,#E8C5FF,#FFB8C6);color:#fff;border:none;box-shadow:0 4px 12px rgba(232,197,255,0.35)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px">
+            <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+          </svg>
+          이미지 공유
+        </button>
+      </div>
+
     </form>
 
     <!-- Recommendations (Step 6) -->
     <div id="recommendations" class="mt-xl hidden">
       <div class="divider"><span class="divider-ornament">推</span></div>
 
-      <p class="section-eyebrow">More from</p>
-      <p class="section-title">같은 작가</p>
+      <p class="section-eyebrow">같은 작가</p>
+      <p class="section-title">저자의 다른 책</p>
       <div class="rec-rail" id="recAuthor"></div>
 
-      <p class="section-eyebrow mt-lg">Same level</p>
-      <p class="section-title">같은 단계 책</p>
+      <p class="section-eyebrow mt-lg" id="recPublisherEyebrow">관련 추천</p>
+      <p class="section-title" id="recPublisherTitle">비슷한 책</p>
       <div class="rec-rail" id="recPublisher"></div>
 
-      <p class="section-eyebrow mt-lg">You may also like</p>
-      <p class="section-title">이 책도 좋아요</p>
+      <p class="section-eyebrow mt-lg">이런 책은 어때요</p>
+      <p class="section-title">함께 읽으면 좋아요</p>
       <div class="rec-rail" id="recAlsoLike"></div>
 
       <details class="rec-collapse mt-lg">
         <summary>
-          <span class="section-eyebrow">Next step</span>
+          <span class="section-eyebrow">심화</span>
           <span class="section-title">다음 단계 추천책</span>
         </summary>
         <div class="rec-rail" id="recSimilar"></div>
@@ -227,6 +256,12 @@
         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
       </svg>
       서재
+    </a>
+    <a href="recommendations.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      추천
     </a>
     <a href="scan.html" class="nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -251,6 +286,125 @@
 
   <div class="toast" id="toast"></div>
 
+  <!-- Instagram 공유 모달 -->
+  <div class="book-preview-modal" id="instagramModal" hidden>
+    <div class="book-preview-backdrop" data-close-instagram></div>
+    <div class="book-preview-card" role="dialog" aria-labelledby="instagramTitle" style="max-width:540px">
+      <button type="button" class="book-preview-close" data-close-instagram aria-label="닫기">×</button>
+      <div class="book-preview-body" style="padding:var(--sp-lg)">
+        <h3 id="instagramTitle" style="font-family:var(--font-body);font-size:20px;font-weight:700;margin:0 0 var(--sp-sm);color:var(--text)">Instagram 공유 이미지</h3>
+
+        <!-- 템플릿 선택 (장르별 그룹) -->
+        <div style="margin-bottom:var(--sp-md)">
+          <!-- 인스타 감성 -->
+          <details open style="margin-bottom:12px">
+            <summary style="padding:10px;background:linear-gradient(135deg,#FFE8F0,#FFF8F0);border-radius:8px;cursor:pointer;font-weight:600;color:#FF9E9E;user-select:none">
+              ✨ 인스타 감성 (4)
+            </summary>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center">
+              <button type="button" class="template-btn" data-template="1" style="padding:8px 16px;border:2px solid #FFB8C6;border-radius:8px;background:#FFF8F0;cursor:pointer;font-size:14px">
+                🌸 소프트 핑크
+              </button>
+              <button type="button" class="template-btn" data-template="2" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                🍑 피치 코랄
+              </button>
+              <button type="button" class="template-btn" data-template="3" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                🌿 민트 파스텔
+              </button>
+              <button type="button" class="template-btn" data-template="4" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                ☕ 크림 베이지
+              </button>
+            </div>
+          </details>
+
+          <!-- 독서 감성 -->
+          <details style="margin-bottom:12px">
+            <summary style="padding:10px;background:linear-gradient(135deg,#F4EDE3,#FFF8E7);border-radius:8px;cursor:pointer;font-weight:600;color:#8B7355;user-select:none">
+              📚 독서 감성 (3)
+            </summary>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center">
+              <button type="button" class="template-btn" data-template="5" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                📖 코지 독서
+              </button>
+              <button type="button" class="template-btn" data-template="6" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                ☕ 북카페
+              </button>
+              <button type="button" class="template-btn" data-template="7" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                ✍️ 손글씨 노트
+              </button>
+            </div>
+          </details>
+
+          <!-- 어린이 -->
+          <details style="margin-bottom:12px">
+            <summary style="padding:10px;background:linear-gradient(135deg,#E8F4FF,#FFF0F5);border-radius:8px;cursor:pointer;font-weight:600;color:#5C9EE8;user-select:none">
+              👶 어린이용 (4)
+            </summary>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center">
+              <button type="button" class="template-btn" data-template="8" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                👧 책 읽는 아이
+              </button>
+              <button type="button" class="template-btn" data-template="9" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                🐻 동물 친구
+              </button>
+              <button type="button" class="template-btn" data-template="10" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                🚀 우주 탐험
+              </button>
+              <button type="button" class="template-btn" data-template="11" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                🦊 숲속 동화
+              </button>
+            </div>
+          </details>
+
+          <!-- 기본 -->
+          <details style="margin-bottom:12px">
+            <summary style="padding:10px;background:linear-gradient(135deg,#F0F0F0,#FAFAFA);border-radius:8px;cursor:pointer;font-weight:600;color:#718096;user-select:none">
+              🎨 기본 (3)
+            </summary>
+            <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center">
+              <button type="button" class="template-btn" data-template="12" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                ✨ 스티커북
+              </button>
+              <button type="button" class="template-btn" data-template="13" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                💕 포토카드
+              </button>
+              <button type="button" class="template-btn" data-template="14" style="padding:8px 16px;border:2px solid #E0E0E0;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">
+                📝 일기장
+              </button>
+            </div>
+          </details>
+        </div>
+
+        <div style="text-align:center;margin-bottom:var(--sp-lg)">
+          <canvas id="sharePreviewCanvas" style="max-width:100%;height:auto;border-radius:12px;box-shadow:0 8px 24px rgba(255,184,198,0.25)"></canvas>
+        </div>
+
+        <div style="display:flex;gap:var(--sp-sm);flex-wrap:wrap">
+          <button type="button" id="shareDownloadBtn" class="btn btn-primary" style="flex:1;min-width:140px;display:flex;align-items:center;justify-content:center;gap:6px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            저장
+          </button>
+          <button type="button" id="shareAllBtn" class="btn btn-secondary" style="flex:1;min-width:140px;background:linear-gradient(135deg,#E8C5FF,#FFB8C6);color:#fff;border:none;box-shadow:0 4px 12px rgba(232,197,255,0.35);display:flex;align-items:center;justify-content:center;gap:6px">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            공유
+          </button>
+        </div>
+
+        <p style="text-align:center;font-size:13px;color:#8B8B8B;margin-top:var(--sp-sm)">
+          💡 공유하면 Instagram, 카톡, 메시지 등 원하는 앱을 선택할 수 있어요
+        </p>
+      </div>
+    </div>
+  </div>
+
   <!-- 추천 책 미리보기 모달 (body 직속이라야 fixed positioning이 안전) -->
   <div class="book-preview-modal" id="bookPreviewModal" hidden>
     <div class="book-preview-backdrop" data-close-preview></div>
@@ -263,6 +417,7 @@
   <script src="js/config.js"></script>
   <script src="js/storage.js"></script>
   <script src="js/api.js"></script>
+  <script src="js/share-template-new.js"></script>
   <script src="js/detail.js"></script>
 </body>
 </html>

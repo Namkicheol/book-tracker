@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>추천 도서 | 書架</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .rec-browse-header {
+      padding: 20px 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+    .rec-browse-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      font-family: var(--font-han);
+    }
+    .rec-browse-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      margin: 0;
+    }
+    .grade-section {
+      margin-bottom: 32px;
+      padding: 0 16px;
+    }
+    .grade-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border);
+    }
+    .grade-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0;
+      font-family: var(--font-han);
+    }
+    .grade-count {
+      font-size: 13px;
+      color: var(--text-mute);
+      font-weight: 600;
+    }
+    .rec-browse-grid {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 16px;
+    }
+    .rec-browse-card {
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      padding: 0;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+    }
+    .rec-browse-cover {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: linear-gradient(160deg, #f5f5f5, #e0e0e0);
+    }
+    .rec-browse-info {
+      margin-top: 8px;
+    }
+    .rec-browse-book-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin: 0 0 4px 0;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .rec-browse-author {
+      font-size: 11px;
+      color: var(--text-mute);
+      margin: 0 0 6px 0;
+    }
+    .rec-browse-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+    }
+    .rec-browse-badge {
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #fff;
+    }
+    .rec-empty {
+      padding: 60px 16px;
+      text-align: center;
+      color: var(--text-mute);
+    }
+  </style>
+</head>
+<body>
+  <header class="rec-browse-header">
+    <h1 class="rec-browse-title">📚 추천 도서</h1>
+    <p class="rec-browse-subtitle">전문가들이 추천하는 초등 필독서</p>
+  </header>
+
+  <div id="gradeContent" style="padding-bottom:40px">
+    <!-- Dynamically populated with grade sections -->
+  </div>
+
+  <!-- Reuse book preview modal from detail.html -->
+  <div id="bookPreviewModal" class="book-preview-modal" hidden>
+    <div class="book-preview-backdrop" data-close-preview></div>
+    <div class="book-preview-card" role="dialog" aria-modal="true">
+      <button type="button" class="book-preview-close" data-close-preview aria-label="닫기">×</button>
+      <div class="book-preview-body" id="previewBody"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      서재
+    </a>
+    <a href="recommendations.html" class="nav-item active">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      추천
+    </a>
+    <a href="scan.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      스캔
+    </a>
+    <a href="stats.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      통계
+    </a>
+    <a href="share.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      공유
+    </a>
+  </nav>
+
+  <script src="js/storage.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/recommendations.js"></script>
+</body>
+</html>
