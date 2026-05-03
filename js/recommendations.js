@@ -29,6 +29,7 @@
 
       console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
       renderGradeSections();
+      attachSearchListener();
     } catch (err) {
       console.error('[recommendations] 데이터 로드 실패:', err);
       const content = document.getElementById('gradeContent');
@@ -232,6 +233,47 @@
         </div>
       </button>
     `;
+  }
+
+  // ── Search ───────────────────────────────────────────────────
+
+  function attachSearchListener() {
+    const input = document.getElementById('recSearch');
+    if (!input) return;
+    let timer = null;
+    input.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => runSearch(input.value.trim()), 150);
+    });
+  }
+
+  function runSearch(query) {
+    const resultsEl = document.getElementById('searchResults');
+    const gradeEl = document.getElementById('gradeContent');
+    const grid = document.getElementById('searchGrid');
+    const meta = document.getElementById('searchMeta');
+    if (!resultsEl || !grid || !meta) return;
+
+    if (!query) {
+      resultsEl.hidden = true;
+      gradeEl.style.display = '';
+      return;
+    }
+
+    // 공백 무시 + 소문자 (한글은 영향 없음, 영어 입력 대응)
+    const norm = s => (s || '').toLowerCase().replace(/\s+/g, '');
+    const q = norm(query);
+    const matches = allBooks.filter(b => {
+      return norm(b.title).includes(q) || norm(b.author).includes(q);
+    }).slice(0, 60);
+
+    meta.textContent = `"${query}" 검색 결과 ${matches.length}권${matches.length === 60 ? ' (상위 60)' : ''}`;
+    grid.innerHTML = matches.map(b => renderCard(b)).join('') ||
+      `<p class="rec-empty">일치하는 책이 없어요.</p>`;
+    attachCardListeners();
+
+    resultsEl.hidden = false;
+    gradeEl.style.display = 'none';
   }
 
   // ── Preview Modal (delegated to BookPreview module) ──────────

@@ -106,6 +106,36 @@
       text-align: center;
       color: var(--text-mute);
     }
+    .rec-search-bar {
+      padding: 12px 16px 0;
+      position: sticky;
+      top: 0;
+      background: var(--bg, #fff);
+      z-index: 10;
+    }
+    .rec-search-input {
+      width: 100%;
+      padding: 12px 14px 12px 40px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 24px;
+      font-size: 14px;
+      background: #fafafa url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") no-repeat 14px center;
+      transition: border-color 0.2s, background-color 0.2s;
+      box-sizing: border-box;
+    }
+    .rec-search-input:focus {
+      outline: none;
+      border-color: #FF9E9E;
+      background-color: #fff;
+    }
+    .rec-search-results {
+      padding: 0 16px;
+    }
+    .rec-search-meta {
+      padding: 12px 0;
+      font-size: 13px;
+      color: var(--text-mute, #888);
+    }
   </style>
 </head>
 <body>
@@ -113,6 +143,15 @@
     <h1 class="rec-browse-title">📚 추천 도서</h1>
     <p class="rec-browse-subtitle">전문가들이 추천하는 초등 필독서</p>
   </header>
+
+  <div class="rec-search-bar">
+    <input type="search" id="recSearch" class="rec-search-input" placeholder="제목·저자 검색…" autocomplete="off">
+  </div>
+
+  <div id="searchResults" class="rec-search-results" hidden>
+    <p class="rec-search-meta" id="searchMeta"></p>
+    <div class="rec-browse-grid" id="searchGrid"></div>
+  </div>
 
   <div id="gradeContent" style="padding-bottom:40px">
     <!-- Dynamically populated with grade sections -->
