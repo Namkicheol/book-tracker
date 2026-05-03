@@ -193,6 +193,8 @@
 
   // ── Render: book grid ────────────────────────────────────────
 
+  let librarySearchQuery = '';
+
   function renderBooks() {
     const grid  = document.getElementById('booksGrid');
     const empty = document.getElementById('emptyState');
@@ -202,12 +204,32 @@
       ? Storage.getBooksByFolder(currentFolderId)
       : all;
 
+    // 검색바: 책이 3권 이상일 때만 노출 (1~2권일 땐 굳이 검색 필요 없음)
+    const searchBar = document.getElementById('librarySearchBar');
+    if (searchBar) searchBar.hidden = all.length < 3;
+
+    if (librarySearchQuery) {
+      const norm = s => (s || '').toLowerCase().replace(/\s+/g, '');
+      const q = norm(librarySearchQuery);
+      books = books.filter(b => {
+        return norm(b.title).includes(q) || (b.authors || []).some(a => norm(a).includes(q));
+      });
+    }
+
     books = sortBooks(books, currentSort);
 
     if (books.length === 0) {
       grid.innerHTML = '';
       empty.classList.remove('hidden');
-      tweakEmpty(all.length === 0);
+      // 검색 중인데 결과 없으면 다른 메시지
+      if (librarySearchQuery && all.length > 0) {
+        const title = document.querySelector('#emptyState .empty-state-title');
+        const desc  = document.querySelector('#emptyState .empty-state-desc');
+        if (title) title.textContent = `"${librarySearchQuery}" 일치 없음`;
+        if (desc)  desc.innerHTML    = '다른 검색어를 시도해보세요.';
+      } else {
+        tweakEmpty(all.length === 0);
+      }
       renderHeader();
       return;
     }
@@ -685,5 +707,17 @@
       if (selectMode) exitSelectMode();
       else enterSelectMode();
     });
+
+    const libSearch = document.getElementById('librarySearch');
+    if (libSearch) {
+      let timer = null;
+      libSearch.addEventListener('input', () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          librarySearchQuery = libSearch.value.trim();
+          renderBooks();
+        }, 150);
+      });
+    }
   });
 })();

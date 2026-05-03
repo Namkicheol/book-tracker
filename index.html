@@ -74,6 +74,24 @@
         0%, 100% { transform: translateY(0px) scale(1); }
         50% { transform: translateY(-16px) scale(1.05); }
       }
+      .library-search-bar {
+        padding: 8px 16px 12px;
+      }
+      .library-search-input {
+        width: 100%;
+        padding: 10px 14px 10px 38px;
+        border: 1.5px solid #e0e0e0;
+        border-radius: 22px;
+        font-size: 14px;
+        background: #fafafa url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") no-repeat 13px center;
+        transition: border-color 0.2s, background-color 0.2s;
+        box-sizing: border-box;
+      }
+      .library-search-input:focus {
+        outline: none;
+        border-color: #FF9E9E;
+        background-color: #fff;
+      }
     </style>
   </section>
 
@@ -95,6 +113,11 @@
 
   <!-- ── Folder Tabs ── -->
   <div class="folder-nav" id="folderBar"></div>
+
+  <!-- ── Library Search ── -->
+  <div class="library-search-bar" id="librarySearchBar" hidden>
+    <input type="search" id="librarySearch" class="library-search-input" placeholder="내 서재에서 제목·저자 검색…" autocomplete="off">
+  </div>
 
   <!-- ── Books ── -->
   <main class="content">
