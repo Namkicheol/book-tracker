@@ -55,6 +55,15 @@
     const isbn = book.isbn ? String(book.isbn).replace(/\D/g, '') : '';
     const recBookData = recData && isbn ? recData.books[isbn] : null;
 
+    // 평점은 ratingInfo.ratingScore 우선 (실제 평균), 없으면 customerReviewRank로 fallback
+    const ratingInfo = (detail && detail.subInfo && detail.subInfo.ratingInfo) || {};
+    const effectiveRating = Number(
+      ratingInfo.ratingScore ||
+      (detail && detail.customerReviewRank) ||
+      (book._raw && book._raw.customerReviewRank) ||
+      0
+    );
+
     const badges = recBookData && recBookData.lists
       ? recBookData.lists.map(listId => {
           const source = recData.meta.sources.find(s => s.id === listId);
@@ -89,11 +98,10 @@
       reasons.push({ icon: '📈', title: '인기 도서', text: `알라딘 베스트셀러 ${bestRank}위 안에 드는 인기 도서예요.` });
     }
 
-    const rank = Number(raw.customerReviewRank || 0);
-    if (rank >= 9.0) {
-      reasons.push({ icon: '⭐', title: '최고 평점', text: `독자 평점 ${rank}/10점. 읽은 사람들의 만족도가 매우 높아요.` });
-    } else if (rank >= 8.0) {
-      reasons.push({ icon: '⭐', title: '높은 평점', text: `독자 평점 ${rank}/10점. 독자들이 만족한 책이에요.` });
+    if (effectiveRating >= 9.0) {
+      reasons.push({ icon: '⭐', title: '최고 평점', text: `독자 평점 ${effectiveRating.toFixed(1)}/10점. 읽은 사람들의 만족도가 매우 높아요.` });
+    } else if (effectiveRating >= 8.0) {
+      reasons.push({ icon: '⭐', title: '높은 평점', text: `독자 평점 ${effectiveRating.toFixed(1)}/10점. 독자들이 만족한 책이에요.` });
     }
 
     const reviewCount = Number(raw.reviewCount || 0);
