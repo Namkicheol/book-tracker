@@ -800,21 +800,20 @@
         else if (cat.includes('동화')) curIdx = 1; // 어린이 동화 = 저학년 추정
         const nextAge = curIdx >= 0 && curIdx < 3 ? order[curIdx + 1] : null;
         if (nextAge) {
-          const sample = allRec
-            .filter(b => b.targetAge === nextAge && b.thumbnail)
-            .sort((a, b) => (b.lists || []).length - (a.lists || []).length)
-            .slice(0, 12)
-            .map(b => ({
-              isbn: b.isbn,
-              title: b.title,
-              authors: b.author ? [b.author] : [],
-              publisher: b.publisher,
-              thumbnail: b.thumbnail,
-              categoryId: null,
-              categoryName: '',
-              salesPoint: 0,
-              bestRank: 0,
-            }));
+          const pool = allRec.filter(b => b.targetAge === nextAge && b.thumbnail);
+          const sample = pool.slice(0, 24).map(b => ({
+            isbn: b.isbn,
+            title: b.title,
+            authors: b.author ? [b.author] : [],
+            publisher: b.publisher,
+            thumbnail: b.thumbnail,
+            categoryId: null,
+            categoryName: '',
+            // 정렬용: lists 개수를 인기 점수로, year를 pubDate(연-01-01)로 변환
+            salesPoint: (b.lists || []).length * 1000 + 1, // ≥1로 0 회피
+            bestRank: 0,
+            pubDate: b.year ? `${b.year}-01-01` : '',
+          }));
           return sample;
         }
       }
