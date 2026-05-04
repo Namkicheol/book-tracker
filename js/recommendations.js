@@ -148,6 +148,7 @@
     if (grid) {
       grid.innerHTML = booksToShow.map(book => renderCard(book)).join('');
       attachCardListeners();
+      backfillThumbnails(grid);
     }
 
     // 더보기 버튼 렌더링
@@ -211,8 +212,15 @@
     });
   }
 
+  // 빈 표지 placeholder (한 군데서 재사용)
+  const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 140%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22100%22 height=%22140%22/%3E%3Ctext x=%2250%22 y=%2270%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23999%22%3E書%3C/text%3E%3C/svg%3E';
+
+  // ISBN별 alanin lookup 결과 캐시 (thumbnail만)
+  const thumbCache = new Map();
+
   function renderCard(book) {
-    const cover = book.thumbnail || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 140%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22100%22 height=%22140%22/%3E%3Ctext x=%2250%22 y=%2270%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23999%22%3E書%3C/text%3E%3C/svg%3E';
+    const cover = book.thumbnail || PLACEHOLDER;
+    const needsLookup = !book.thumbnail && !!book.isbn;
 
     const badges = (book.lists || []).map(listId => {
       const source = recommendationData.meta.sources.find(s => s.id === listId);
@@ -220,12 +228,11 @@
       return `<span class="rec-browse-badge" style="background:${source.badge.color}">${escapeHtml(source.badge.text)}</span>`;
     }).filter(Boolean).join('');
 
-    // Escape book data for storage in data attribute
     const bookJson = escapeAttr(JSON.stringify(book));
 
     return `
-      <button type="button" class="rec-browse-card" data-book="${bookJson}">
-        <img class="rec-browse-cover" src="${escapeAttr(cover)}" alt="" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 140%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22100%22 height=%22140%22/%3E%3Ctext x=%2250%22 y=%2270%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23999%22%3E書%3C/text%3E%3C/svg%3E'">
+      <button type="button" class="rec-browse-card" data-book="${bookJson}"${needsLookup ? ` data-needs-thumb="${escapeAttr(book.isbn)}"` : ''}>
+        <img class="rec-browse-cover" src="${escapeAttr(cover)}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
         <div class="rec-browse-info">
           <h3 class="rec-browse-book-title">${escapeHtml(book.title)}</h3>
           <p class="rec-browse-author">${escapeHtml(book.author || '')}</p>
@@ -233,6 +240,46 @@
         </div>
       </button>
     `;
+  }
+
+  /**
+   * 카드 렌더 후 thumbnail 없는 책들을 알라딘 lookup으로 채움.
+   * 동시 4개까지 병렬로 fetch — 합격자 노트 책은 알라딘에 cover가 있는데
+   * 우리 DB에 미수집된 경우가 다수.
+   */
+  async function backfillThumbnails(root = document) {
+    if (!window.API || typeof API.aladinLookup !== 'function') return;
+    const cards = [...root.querySelectorAll('[data-needs-thumb]')];
+    if (!cards.length) return;
+
+    const CONCURRENCY = 4;
+    let cursor = 0;
+
+    async function worker() {
+      while (cursor < cards.length) {
+        const card = cards[cursor++];
+        const isbn = card.dataset.needsThumb;
+        delete card.dataset.needsThumb;
+        if (!isbn) continue;
+
+        let cover = thumbCache.get(isbn);
+        if (cover === undefined) {
+          try {
+            const item = await API.aladinLookup(isbn);
+            cover = (item && item.cover) || null;
+          } catch {
+            cover = null;
+          }
+          thumbCache.set(isbn, cover);
+        }
+        if (cover) {
+          const img = card.querySelector('img.rec-browse-cover');
+          if (img && img.src.startsWith('data:')) img.src = cover;
+        }
+      }
+    }
+
+    await Promise.all(Array(CONCURRENCY).fill(0).map(() => worker()));
   }
 
   // ── Search ───────────────────────────────────────────────────
@@ -271,6 +318,7 @@
     grid.innerHTML = matches.map(b => renderCard(b)).join('') ||
       `<p class="rec-empty">일치하는 책이 없어요.</p>`;
     attachCardListeners();
+    backfillThumbnails(grid);
 
     resultsEl.hidden = false;
     gradeEl.style.display = 'none';
