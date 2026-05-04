@@ -716,29 +716,29 @@
           }
         } catch (e) { /* 폴백으로 */ }
       }
-      // 시리즈 아님 → 제목의 핵심 키워드로 같은 분야 검색
+      // 같은 categoryId 베스트셀러 — 가장 안정적인 "수준 비슷한 책" 소스
       if (useAladin && categoryId) {
+        try {
+          const items = await API.aladinList({ queryType: 'Bestseller', categoryId, maxResults: 12 });
+          const norm = items.map(API.normalizeAladin).filter(Boolean);
+          if (norm.length > 0) {
+            rail2Reason = '같은 분야 베스트';
+            rail2Why    = `『${book.title}』과 같은 분야(${(book.categoryName || '').split('>').slice(-1)[0] || ''})에서 가장 많이 읽히는 책들이에요.`;
+            return norm;
+          }
+        } catch (e) { /* 폴백으로 */ }
+
+        // 제목 키워드 보조
         const genre = API.extractGenreKeyword(book.categoryName || '');
-        const titleWords = (book.title || '')
-          .replace(/[^가-힣\w\s]/g, '')
-          .split(/\s+/)
-          .filter(w => w.length > 1)
-          .slice(0, 2)
-          .join(' ');
-        const kw = (genre || titleWords || '').trim();
+        const titleWords = (book.title || '').replace(/[^가-힣\w\s]/g, '').split(/\s+/).filter(w => w.length > 1).slice(0, 2).join(' ');
+        const kw = (titleWords || genre || '').trim();
         if (kw) {
           try {
-            const items = await API.aladinSearch({
-              query: kw,
-              queryType: 'Keyword',
-              categoryId,
-              maxResults: 12,
-              sort: 'SalesPoint',
-            });
+            const items = await API.aladinSearch({ query: kw, queryType: 'Keyword', categoryId, maxResults: 12, sort: 'SalesPoint' });
             const norm = items.map(API.normalizeAladin).filter(Boolean);
             if (norm.length > 0) {
               rail2Reason = `"${kw}" 관련 추천`;
-              rail2Why    = `『${book.title}』과 같은 분야에서 "${kw}" 키워드로 많이 읽힌 책들입니다. 비슷한 주제를 다양한 시각으로 접할 수 있어요.`;
+              rail2Why    = `『${book.title}』과 같은 분야에서 "${kw}" 키워드로 많이 읽힌 책들입니다.`;
               return norm;
             }
           } catch (e) { /* 폴백으로 */ }
@@ -768,11 +768,58 @@
       }
     })();
 
-    const nextLevelPromise = useAladin
-      ? API.searchNextLevel(lookupItem, { maxResults: 12 })
-          .then(items => items.map(API.normalizeAladin))
-          .catch(() => [])
-      : Promise.resolve([]);
+    const nextLevelPromise = (async () => {
+      if (!useAladin) return [];
+      try {
+        const items = await API.searchNextLevel(lookupItem, { maxResults: 12 });
+        const norm = items.map(API.normalizeAladin).filter(Boolean);
+        if (norm.length > 0) return norm;
+      } catch (e) { /* 폴백으로 */ }
+
+      // Fallback 1: 부모 categoryId 베스트셀러에서 현재 categoryId 제외
+      const parentId = API.extractParentCategoryId(lookupItem);
+      if (parentId) {
+        try {
+          const parent = await API.aladinList({ queryType: 'Bestseller', categoryId: parentId, maxResults: 18 });
+          const norm = parent.map(API.normalizeAladin)
+            .filter(b => b && String(b.categoryId) !== String(categoryId));
+          if (norm.length > 0) return norm.slice(0, 12);
+        } catch (e) { /* 다음 폴백 */ }
+      }
+
+      // Fallback 2: 추천 DB에서 한 단계 위 학년 책 무작위
+      if (recommendationData) {
+        const allRec = Object.values(recommendationData.books || {});
+        const order = ['유아', '초등 저학년', '초등 중학년', '초등 고학년'];
+        // 현재 책의 categoryName으로 학년 추정 (알라딘 기준 → 추천 DB targetAge로 매핑)
+        const cat = (book.categoryName || '').toLowerCase();
+        let curIdx = -1;
+        if (cat.includes('유아') || cat.includes('그림책')) curIdx = 0;
+        else if (cat.includes('1') || cat.includes('2') || cat.includes('저학년')) curIdx = 1;
+        else if (cat.includes('3') || cat.includes('4') || cat.includes('중학년')) curIdx = 2;
+        else if (cat.includes('동화')) curIdx = 1; // 어린이 동화 = 저학년 추정
+        const nextAge = curIdx >= 0 && curIdx < 3 ? order[curIdx + 1] : null;
+        if (nextAge) {
+          const sample = allRec
+            .filter(b => b.targetAge === nextAge && b.thumbnail)
+            .sort((a, b) => (b.lists || []).length - (a.lists || []).length)
+            .slice(0, 12)
+            .map(b => ({
+              isbn: b.isbn,
+              title: b.title,
+              authors: b.author ? [b.author] : [],
+              publisher: b.publisher,
+              thumbnail: b.thumbnail,
+              categoryId: null,
+              categoryName: '',
+              salesPoint: 0,
+              bestRank: 0,
+            }));
+          return sample;
+        }
+      }
+      return [];
+    })();
 
     const [authorBooks, sameLevelBooks, alsoLikeBooks, nextLevelBooks] = await Promise.all([
       authorPromise, sameLevelPromise, alsoLikePromise, nextLevelPromise,
