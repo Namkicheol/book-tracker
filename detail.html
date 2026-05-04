@@ -227,25 +227,47 @@
     <div id="recommendations" class="mt-xl hidden">
       <div class="divider"><span class="divider-ornament">推</span></div>
 
-      <p class="section-eyebrow">같은 작가</p>
-      <p class="section-title">저자의 다른 책</p>
-      <div class="rec-rail" id="recAuthor"></div>
+      <div class="rec-section" data-rail-id="recAuthor">
+        <div class="rec-section-head">
+          <div>
+            <p class="section-eyebrow">같은 작가</p>
+            <p class="section-title">저자의 다른 책</p>
+          </div>
+          <div class="rec-sort">
+            <button class="rec-sort-btn active" data-rail="recAuthor" data-sort="popularity">인기순</button>
+            <button class="rec-sort-btn" data-rail="recAuthor" data-sort="recent">최신순</button>
+          </div>
+        </div>
+        <div class="rec-rail" id="recAuthor"></div>
+      </div>
 
-      <p class="section-eyebrow mt-lg" id="recPublisherEyebrow">관련 추천</p>
-      <p class="section-title" id="recPublisherTitle">비슷한 책</p>
-      <div class="rec-rail" id="recPublisher"></div>
+      <div class="rec-section mt-lg" data-rail-id="recPublisher">
+        <div class="rec-section-head">
+          <div>
+            <p class="section-eyebrow" id="recPublisherEyebrow">유사한 책</p>
+            <p class="section-title" id="recPublisherTitle">수준 비슷한 책</p>
+          </div>
+          <div class="rec-sort">
+            <button class="rec-sort-btn active" data-rail="recPublisher" data-sort="popularity">인기순</button>
+            <button class="rec-sort-btn" data-rail="recPublisher" data-sort="recent">최신순</button>
+          </div>
+        </div>
+        <div class="rec-rail" id="recPublisher"></div>
+      </div>
 
-      <p class="section-eyebrow mt-lg">이런 책은 어때요</p>
-      <p class="section-title">함께 읽으면 좋아요</p>
-      <div class="rec-rail" id="recAlsoLike"></div>
-
-      <details class="rec-collapse mt-lg">
-        <summary>
-          <span class="section-eyebrow">심화</span>
-          <span class="section-title">다음 단계 추천책</span>
-        </summary>
+      <div class="rec-section mt-lg" data-rail-id="recSimilar">
+        <div class="rec-section-head">
+          <div>
+            <p class="section-eyebrow">심화</p>
+            <p class="section-title">다음 단계 추천책</p>
+          </div>
+          <div class="rec-sort">
+            <button class="rec-sort-btn active" data-rail="recSimilar" data-sort="popularity">인기순</button>
+            <button class="rec-sort-btn" data-rail="recSimilar" data-sort="recent">최신순</button>
+          </div>
+        </div>
         <div class="rec-rail" id="recSimilar"></div>
-      </details>
+      </div>
     </div>
 
   </main>
@@ -267,7 +289,7 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
       </svg>
-      스캔
+      책 추가
     </a>
     <a href="stats.html" class="nav-item">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -414,11 +436,11 @@
     </div>
   </div>
 
-  <script src="js/config.js?v=20260504b"></script>
-  <script src="js/storage.js?v=20260504b"></script>
-  <script src="js/api.js?v=20260504b"></script>
-  <script src="js/book-preview.js?v=20260504b"></script>
-  <script src="js/share-template-new.js?v=20260504b"></script>
-  <script src="js/detail.js?v=20260504b"></script>
+  <script src="js/config.js?v=20260504d"></script>
+  <script src="js/storage.js?v=20260504d"></script>
+  <script src="js/api.js?v=20260504d"></script>
+  <script src="js/book-preview.js?v=20260504d"></script>
+  <script src="js/share-template-new.js?v=20260504d"></script>
+  <script src="js/detail.js?v=20260504d"></script>
 </body>
 </html>

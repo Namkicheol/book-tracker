@@ -68,7 +68,7 @@
       btn.addEventListener('click', () => setMode(btn.dataset.mode));
     });
     const hash = (location.hash || '').replace('#', '').toLowerCase();
-    setMode(hash in PANES ? hash : 'barcode');
+    setMode(hash in PANES ? hash : 'title');
   }
 
   // ── Barcode (html5-qrcode) ───────────────────────────────────

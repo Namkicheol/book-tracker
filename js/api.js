@@ -284,9 +284,12 @@
       contents:    item.description || '',
       url:         item.link || '',
       datetime:    item.pubDate || '',
+      pubDate:     item.pubDate || '',
       price:       Number(item.priceStandard || 0),
       categoryId:  item.categoryId || null,
       categoryName: item.categoryName || '',
+      salesPoint:  Number(item.salesPoint || 0),
+      bestRank:    Number(item.bestRank || 0),
       language:    detectLanguage(item.title || '', item.description || ''),
       _raw:        item,
     };

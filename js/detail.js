@@ -792,20 +792,26 @@
     });
     const r2eyebrow = document.getElementById('recPublisherEyebrow');
     const r2title   = document.getElementById('recPublisherTitle');
-    if (r2eyebrow) r2eyebrow.textContent = series ? '시리즈' : '관련 추천';
-    if (r2title)   r2title.textContent   = rail2Reason || '비슷한 책';
-    renderRail('recPublisher', filterCurrent(sameLevelBooks), {
-      reason: rail2Reason || '관련 추천',
-      why:    rail2Why    || `『${currentBookTitle}』과 비슷한 주제의 책입니다.`,
-    });
-    renderRail('recAlsoLike', filterCurrent(alsoLikeBooks), {
-      reason: '이 책을 산 독자들이 함께 본 책',
-      why: `알라딘 MD가 직접 엮은 연관 도서 목록입니다. 『${currentBookTitle}』을 구매한 독자들이 함께 담은 책으로, 비슷한 취향의 독자가 실제로 선택한 책이에요.`,
+    if (r2eyebrow) r2eyebrow.textContent = series ? '시리즈' : '유사한 책';
+    if (r2title)   r2title.textContent   = rail2Reason || '수준 비슷한 책';
+    // 유사 rail 보강: sameLevel이 부족하면 alsoLike(similarBookList + 부모카테고리 BS)로 채움
+    const filteredSame = filterCurrent(sameLevelBooks);
+    const filteredAlso = filterCurrent(alsoLikeBooks);
+    const seenIsbn = new Set(filteredSame.map(b => String(b.isbn).replace(/\D/g, '')));
+    const merged = [...filteredSame];
+    for (const b of filteredAlso) {
+      const k = String(b.isbn).replace(/\D/g, '');
+      if (k && !seenIsbn.has(k)) { merged.push(b); seenIsbn.add(k); }
+    }
+    renderRail('recPublisher', merged, {
+      reason: rail2Reason || '유사한 책',
+      why:    rail2Why    || `『${currentBookTitle}』과 비슷한 분야·수준의 책입니다.`,
     });
     renderRail('recSimilar', filterCurrent(nextLevelBooks), {
-      reason: '한 단계 위 도전 추천',
+      reason: '다음 단계 추천책',
       why: `『${currentBookTitle}』보다 어휘 수준이나 주제 깊이가 한 단계 높은 책으로 골랐습니다. 지금 읽은 책이 쉽게 느껴지기 시작했다면 이 리스트에서 다음 책을 골라보세요.`,
     });
+    attachRailSortListeners();
   }
 
   function prettyCategory(name) {
@@ -854,27 +860,31 @@
     ).join('');
   }
 
+  // rail별 책 목록·정렬 상태 보관 (정렬 버튼 클릭 시 재정렬)
+  const railState = {};
+
   function renderRail(railId, books, meta = {}) {
     const rail = document.getElementById(railId);
     if (!rail) return;
 
-    const detailsWrap = rail.closest('details.rec-collapse');
+    // 섹션 전체 (정렬 토글 + rail) 숨기기/보이기
+    const section = rail.closest('.rec-section') || rail;
 
     if (books.length === 0) {
-      if (detailsWrap) {
-        detailsWrap.style.display = 'none';
-      } else {
-        rail.style.display = 'none';
-        const sectionTitle = rail.previousElementSibling;
-        const eyebrow = sectionTitle?.previousElementSibling;
-        if (sectionTitle) sectionTitle.style.display = 'none';
-        if (eyebrow && eyebrow.classList.contains('section-eyebrow')) eyebrow.style.display = 'none';
-      }
+      section.style.display = 'none';
       return;
     }
+    section.style.display = '';
 
-    const INITIAL_SHOW = 8; // 처음 8개 표시
-    const hasMore = books.length > INITIAL_SHOW;
+    // 상태 저장 + 정렬
+    if (!railState[railId]) railState[railId] = { sort: 'popularity' };
+    railState[railId].books = books;
+    railState[railId].meta = meta;
+    const sortedBooks = sortRailBooks(books, railState[railId].sort);
+
+    const INITIAL_SHOW = 12;
+    const hasMore = sortedBooks.length > INITIAL_SHOW;
+    const renderTarget = sortedBooks; // closure에서 사용
 
     const renderBooks = (booksToRender) => booksToRender.map((b, i) => {
       const cover = b.thumbnail
@@ -905,39 +915,72 @@
     }).join('');
 
     rail.innerHTML = `
-      <div class="rail-books">${renderBooks(books.slice(0, INITIAL_SHOW))}</div>
+      <div class="rail-books">${renderBooks(renderTarget.slice(0, INITIAL_SHOW))}</div>
       ${hasMore ? `
         <button type="button" class="rail-more-btn" style="width:100%;padding:12px;margin-top:16px;border:2px dashed #E0E0E0;border-radius:8px;background:#FAFAFA;color:#718096;font-weight:600;cursor:pointer;transition:all 0.2s">
-          더보기 (+${books.length - INITIAL_SHOW}권)
+          더보기 (+${renderTarget.length - INITIAL_SHOW}권)
         </button>
       ` : ''}
     `;
 
-    // 더보기 버튼 이벤트
+    // 더보기 버튼
     const moreBtn = rail.querySelector('.rail-more-btn');
     if (moreBtn) {
       moreBtn.addEventListener('click', () => {
         const booksContainer = rail.querySelector('.rail-books');
-        booksContainer.innerHTML = renderBooks(books);
+        booksContainer.innerHTML = renderBooks(renderTarget);
         moreBtn.remove();
-
-        // 새로 추가된 카드에 이벤트 리스너 추가
         booksContainer.querySelectorAll('[data-rail]').forEach(card => {
           card.addEventListener('click', () => {
             const idx = Number(card.dataset.idx);
-            const picked = books[idx];
+            const picked = renderTarget[idx];
             if (picked) showBookPreview(picked, meta);
           });
         });
       });
     }
 
-    // 초기 카드 이벤트 리스너
     rail.querySelectorAll('[data-rail]').forEach(card => {
       card.addEventListener('click', () => {
         const idx = Number(card.dataset.idx);
-        const picked = books[idx];
+        const picked = renderTarget[idx];
         if (picked) showBookPreview(picked, meta);
+      });
+    });
+  }
+
+  function sortRailBooks(books, mode) {
+    const arr = [...books];
+    if (mode === 'recent') {
+      // pubDate 기준 최신순 (없으면 datetime fallback, 가장 뒤로)
+      return arr.sort((a, b) => {
+        const da = (a.pubDate || a.datetime || '').slice(0, 10);
+        const db = (b.pubDate || b.datetime || '').slice(0, 10);
+        return db.localeCompare(da);
+      });
+    }
+    // popularity: salesPoint DESC, fallback bestRank ASC
+    return arr.sort((a, b) => {
+      const sa = Number(a.salesPoint || 0);
+      const sb = Number(b.salesPoint || 0);
+      if (sa !== sb) return sb - sa;
+      const ra = Number(a.bestRank || 1e9);
+      const rb = Number(b.bestRank || 1e9);
+      return ra - rb;
+    });
+  }
+
+  function attachRailSortListeners() {
+    document.querySelectorAll('.rec-sort-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const railId = btn.dataset.rail;
+        const sort   = btn.dataset.sort;
+        if (!railState[railId]) return;
+        // 토글 active
+        document.querySelectorAll(`.rec-sort-btn[data-rail="${railId}"]`).forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        railState[railId].sort = sort;
+        renderRail(railId, railState[railId].books, railState[railId].meta);
       });
     });
   }

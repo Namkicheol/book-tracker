@@ -1052,21 +1052,21 @@ body.folder-sheet-open {
 
 .rec-card {
   flex-shrink: 0;
-  width: 96px;
+  width: 128px;
 }
 
 .rec-cover {
-  width: 96px;
+  width: 128px;
   aspect-ratio: 2/3;
   object-fit: cover;
-  border-radius: 1px;
+  border-radius: 4px;
   box-shadow: 3px 4px 0 var(--shadow), 0 0 0 1px var(--border) inset;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .rec-title {
   font-family: var(--font-body);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   line-height: 1.3;
   color: var(--text);
@@ -1074,6 +1074,36 @@ body.folder-sheet-open {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* rail 정렬 토글 */
+.rec-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: var(--sp-sm);
+  gap: var(--sp-md);
+}
+.rec-sort {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.rec-sort-btn {
+  border: 1px solid var(--border, #e0e0e0);
+  background: #fff;
+  color: var(--text-mute, #888);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.rec-sort-btn.active {
+  background: var(--cute-coral, #FF9E9E);
+  border-color: var(--cute-coral, #FF9E9E);
+  color: #fff;
 }
 
 /* ===== Collapsible rail (다음 단계 추천책) ===== */
