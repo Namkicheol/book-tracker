@@ -68,7 +68,8 @@
         sectionState[grade.id] = {
           sort: 'popularity', // popularity, recent, title
           genre: 'all',
-          current: INITIAL_SHOW
+          current: INITIAL_SHOW,
+          open: false,
         };
       }
 
@@ -80,7 +81,7 @@
       ).join('');
 
       return `
-        <details class="grade-section" data-grade-idx="${gradeIdx}" data-grade-id="${grade.id}" style="margin-bottom:16px;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden">
+        <details class="grade-section" data-grade-idx="${gradeIdx}" data-grade-id="${grade.id}" ${sectionState[grade.id].open ? 'open' : ''} style="margin-bottom:16px;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden">
           <summary style="padding:16px;cursor:pointer;background:#f9f9f9;display:flex;justify-content:space-between;align-items:center;user-select:none">
             <h2 class="grade-title" style="margin:0">${grade.icon} ${grade.name}</h2>
             <span class="grade-count">${allGradeBooks.length}권</span>
@@ -177,24 +178,40 @@
   }
 
   function attachSectionListeners() {
+    // details 열림/닫힘 상태 보존
+    document.querySelectorAll('details.grade-section').forEach(d => {
+      d.addEventListener('toggle', () => {
+        const gradeId = d.dataset.gradeId;
+        if (gradeId && sectionState[gradeId]) {
+          sectionState[gradeId].open = d.open;
+        }
+      });
+    });
+
     // 정렬 버튼
     document.querySelectorAll('.sort-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         const gradeId = btn.dataset.grade;
         const sortType = btn.dataset.sort;
         sectionState[gradeId].sort = sortType;
-        sectionState[gradeId].current = 8; // 정렬 변경 시 초기화
+        sectionState[gradeId].current = 8;
+        sectionState[gradeId].open = true; // 정렬 변경 시 열림 유지
         renderGradeSections();
       });
     });
 
     // 장르 필터
     document.querySelectorAll('.genre-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
+      chip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         const gradeId = chip.dataset.grade;
         const genre = chip.dataset.genre;
         sectionState[gradeId].genre = genre;
-        sectionState[gradeId].current = 8; // 필터 변경 시 초기화
+        sectionState[gradeId].current = 8;
+        sectionState[gradeId].open = true;
         renderGradeSections();
       });
     });
@@ -275,6 +292,12 @@
         if (cover) {
           const img = card.querySelector('img.rec-browse-cover');
           if (img && img.src.startsWith('data:')) img.src = cover;
+          // 미리보기 모달에서도 표지가 보이도록 dataset.book에 반영
+          try {
+            const bookData = JSON.parse(card.dataset.book);
+            bookData.thumbnail = cover;
+            card.dataset.book = JSON.stringify(bookData);
+          } catch {}
         }
       }
     }

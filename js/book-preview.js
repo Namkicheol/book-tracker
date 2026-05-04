@@ -186,7 +186,14 @@
   // ── 본 컨텐츠 ────────────────────────────────────────────────
 
   function renderContent(b, meta, detail, mode) {
-    const item = detail || {};
+    // 알라딘 lookup이 다른 책일 가능성 — title이 비슷할 때만 detail 신뢰.
+    // (사용자가 잘못된 ISBN으로 저장한 책 → ISBN으로 lookup하면 엉뚱한 책이 와서
+    //  표지·소개·평점이 다 다른 책 정보로 표시되는 사고 방지)
+    const titleMatches = !!(detail && detail.title && b.title && (
+      detail.title.includes(b.title.split(/\s|:/)[0]) ||
+      b.title.includes(detail.title.split(/\s|:/)[0])
+    ));
+    const item = titleMatches ? detail : {};
     const ratingInfo = (item.subInfo && item.subInfo.ratingInfo) || {};
     const reviewList = (item.subInfo && item.subInfo.reviewList) || [];
 
@@ -232,7 +239,7 @@
       ? `<a href="${escapeAttr(aladinHref)}" target="_blank" rel="noopener" class="btn btn-secondary">알라딘에서 보기</a>`
       : '';
 
-    const whyBlock = buildWhyBlock(b, meta, detail);
+    const whyBlock = buildWhyBlock(b, meta, item);
 
     // recommend 모드일 때 이미 서재에 있으면 다른 버튼 노출
     const existingInLibrary = (mode === 'recommend' && window.Storage && Storage.getBookByIsbn)
@@ -248,9 +255,11 @@
       primaryBtn = `<button type="button" class="btn btn-primary" id="previewSaveBtn">＋ 내 서재에 기록</button>`;
     }
 
+    const heroCover = b.thumbnail || (titleMatches && item.cover) || '';
+
     return `
       <div class="preview-hero">
-        <div class="preview-cover">${b.thumbnail ? `<img src="${escapeAttr(b.thumbnail)}" alt="">` : '書'}</div>
+        <div class="preview-cover">${heroCover ? `<img src="${escapeAttr(heroCover)}" alt="">` : '書'}</div>
         <div class="preview-meta">
           <p class="preview-reason">${escapeHtml(meta.reason || (mode === 'library' ? '내 서재' : '추천 도서'))}</p>
           <h3 class="preview-title" id="previewTitle">${escapeHtml(b.title || '')}</h3>
