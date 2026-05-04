@@ -264,7 +264,7 @@ body {
 /* ===== BOOK GRID ===== */
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--sp-lg) var(--sp-md);
 }
 
@@ -275,6 +275,7 @@ body {
   animation: fadeInUp 0.4s ease both;
   display: flex;
   flex-direction: column;
+  min-width: 0; /* grid item이 image natural width로 밀려나는 것 방지 */
 }
 
 .book-card:active { transform: translateY(2px); }

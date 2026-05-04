@@ -115,13 +115,13 @@
       if (award) reasons.push({ icon: '🏆', title: award.name, text: award.description });
     }
 
-    // 5. 최신 도서
-    const pubDate = (detail && detail.pubDate) || book.datetime || book.pubDate || '';
-    if (pubDate) {
-      const pubYear = Number(String(pubDate).substring(0, 4));
+    // 5. 최신 도서 — 알라딘 pubDate는 "최신 인쇄판 출간일"이라 고전(15소년 표류기 등)도
+    // 매번 신간으로 잡힘. 추천 DB의 curator year(book.year)가 최근인 경우에만 표시.
+    const curatorYear = Number(book.year || (recBookData && recBookData.year) || 0);
+    if (curatorYear) {
       const currentYear = new Date().getFullYear();
-      if (pubYear >= currentYear - 2 && pubYear <= currentYear) {
-        reasons.push({ icon: '🆕', title: '최신 도서', text: `${pubYear}년 출간된 따끈따끈한 신간이에요. 최신 트렌드와 정보를 담고 있어요.` });
+      if (curatorYear >= currentYear - 1 && curatorYear <= currentYear) {
+        reasons.push({ icon: '🆕', title: '신간 추천', text: `${curatorYear}년 추천 목록에 새로 오른 책이에요.` });
       }
     }
 
