@@ -49,11 +49,9 @@
     // Stop camera if leaving barcode mode
     if (target !== 'modeBarcode' && scannerRunning) stopBarcode();
 
-    // Auto-start camera when entering barcode mode
+    // Auto-start camera when entering barcode mode (사용자 제스처 컨텍스트 유지를 위해 즉시 호출)
     if (target === 'modeBarcode' && !scannerRunning) {
-      setTimeout(() => {
-        if (!scannerRunning) startBarcode();
-      }, 80);
+      startBarcode();
     }
 
     // URL hash
