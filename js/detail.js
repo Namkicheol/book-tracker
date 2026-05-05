@@ -719,12 +719,12 @@
       // 같은 categoryId 베스트셀러 — 가장 안정적인 "수준 비슷한 책" 소스
       if (useAladin && categoryId) {
         try {
-          const items = await API.aladinList({ queryType: 'Bestseller', categoryId, maxResults: 12 });
+          const items = await API.aladinList({ queryType: 'Bestseller', categoryId, maxResults: 30 });
           const norm = items.map(API.normalizeAladin).filter(Boolean);
           if (norm.length > 0) {
             rail2Reason = '같은 분야 베스트';
             rail2Why    = `『${book.title}』과 같은 분야(${(book.categoryName || '').split('>').slice(-1)[0] || ''})에서 가장 많이 읽히는 책들이에요.`;
-            return norm;
+            return sampleByIsbn(norm, 12, book.isbn);
           }
         } catch (e) { /* 폴백으로 */ }
 
@@ -734,12 +734,12 @@
         const kw = (titleWords || genre || '').trim();
         if (kw) {
           try {
-            const items = await API.aladinSearch({ query: kw, queryType: 'Keyword', categoryId, maxResults: 12, sort: 'SalesPoint' });
+            const items = await API.aladinSearch({ query: kw, queryType: 'Keyword', categoryId, maxResults: 30, sort: 'SalesPoint' });
             const norm = items.map(API.normalizeAladin).filter(Boolean);
             if (norm.length > 0) {
               rail2Reason = `"${kw}" 관련 추천`;
               rail2Why    = `『${book.title}』과 같은 분야에서 "${kw}" 키워드로 많이 읽힌 책들입니다.`;
-              return norm;
+              return sampleByIsbn(norm, 12, book.isbn);
             }
           } catch (e) { /* 폴백으로 */ }
         }
@@ -758,11 +758,12 @@
       const parentId = API.extractParentCategoryId(lookupItem);
       if (!parentId) return similar;
       try {
-        const parent = await API.aladinList({ queryType: 'Bestseller', categoryId: parentId, maxResults: 12 });
+        const parent = await API.aladinList({ queryType: 'Bestseller', categoryId: parentId, maxResults: 30 });
         const parentNorm = parent.map(API.normalizeAladin)
           .filter(b => b && String(b.isbn).replace(/\D/g, '') !== currentIsbn)
           .filter(b => String(b.categoryId) !== String(categoryId));
-        return [...similar, ...parentNorm].slice(0, 12);
+        const sampledParent = sampleByIsbn(parentNorm, 12, book.isbn);
+        return [...similar, ...sampledParent].slice(0, 12);
       } catch (e) {
         return similar;
       }
@@ -771,23 +772,23 @@
     const nextLevelPromise = (async () => {
       if (!useAladin) return [];
       try {
-        const items = await API.searchNextLevel(lookupItem, { maxResults: 12 });
+        const items = await API.searchNextLevel(lookupItem, { maxResults: 30 });
         const norm = items.map(API.normalizeAladin).filter(Boolean);
-        if (norm.length > 0) return norm;
+        if (norm.length > 0) return sampleByIsbn(norm, 12, book.isbn);
       } catch (e) { /* 폴백으로 */ }
 
       // Fallback 1: 부모 categoryId 베스트셀러에서 현재 categoryId 제외
       const parentId = API.extractParentCategoryId(lookupItem);
       if (parentId) {
         try {
-          const parent = await API.aladinList({ queryType: 'Bestseller', categoryId: parentId, maxResults: 18 });
+          const parent = await API.aladinList({ queryType: 'Bestseller', categoryId: parentId, maxResults: 30 });
           const norm = parent.map(API.normalizeAladin)
             .filter(b => b && String(b.categoryId) !== String(categoryId));
-          if (norm.length > 0) return norm.slice(0, 12);
+          if (norm.length > 0) return sampleByIsbn(norm, 12, book.isbn);
         } catch (e) { /* 다음 폴백 */ }
       }
 
-      // Fallback 2: 추천 DB에서 한 단계 위 학년 책 무작위
+      // Fallback 2: 추천 DB에서 한 단계 위 학년 책 (source ISBN 시드로 샘플)
       if (recommendationData) {
         const allRec = Object.values(recommendationData.books || {});
         const order = ['유아', '초등 저학년', '초등 중학년', '초등 고학년'];
@@ -801,7 +802,7 @@
         const nextAge = curIdx >= 0 && curIdx < 3 ? order[curIdx + 1] : null;
         if (nextAge) {
           const pool = allRec.filter(b => b.targetAge === nextAge && b.thumbnail);
-          const sample = pool.slice(0, 24).map(b => ({
+          const normalizedPool = pool.map(b => ({
             isbn: b.isbn,
             title: b.title,
             authors: b.author ? [b.author] : [],
@@ -814,7 +815,7 @@
             bestRank: 0,
             pubDate: b.year ? `${b.year}-01-01` : '',
           }));
-          return sample;
+          return sampleByIsbn(normalizedPool, 12, book.isbn);
         }
       }
       return [];
@@ -865,6 +866,40 @@
       .replace(/^국내도서>/, '')
       .replace(/^외국도서>/, '')
       .replace(/>/g, ' › ');
+  }
+
+  /**
+   * Source ISBN을 시드로 한 deterministic 샘플링.
+   * 같은 카테고리의 책들은 알라딘이 동일한 결과를 반환하므로,
+   * source 책 ISBN으로 풀에서 count개를 뽑아 책마다 다른 셋이 보이게 함.
+   * - 같은 source ISBN → 항상 같은 결과 (일관성)
+   * - 다른 source ISBN → 잘 분산된 다른 결과 (다양성)
+   * - 풀이 count 이하면 그대로 반환 (graceful degrade)
+   */
+  function sampleByIsbn(arr, count, sourceIsbn) {
+    if (!Array.isArray(arr) || arr.length <= count) return arr || [];
+    const seed = fnv32(String(sourceIsbn));
+    const rng = mulberry32(seed);
+    const tagged = arr.map(item => ({ item, key: rng() }));
+    tagged.sort((a, b) => a.key - b.key);
+    return tagged.slice(0, count).map(t => t.item);
+  }
+
+  function fnv32(s) {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) {
+      h = Math.imul(h ^ s.charCodeAt(i), 16777619) >>> 0;
+    }
+    return h >>> 0;
+  }
+
+  function mulberry32(seed) {
+    return function () {
+      let t = (seed = (seed + 0x6D2B79F5) | 0);
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0);
+    };
   }
 
   /**

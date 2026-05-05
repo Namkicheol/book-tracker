@@ -29,7 +29,7 @@
 
   // ── Mode tabs ────────────────────────────────────────────────
 
-  function setMode(mode) {
+  function setMode(mode, opts = {}) {
     const target = PANES[mode] || PANES.barcode;
 
     document.querySelectorAll('.mode-pane').forEach(el => {
@@ -49,8 +49,9 @@
     // Stop camera if leaving barcode mode
     if (target !== 'modeBarcode' && scannerRunning) stopBarcode();
 
-    // Auto-start camera when entering barcode mode (사용자 제스처 컨텍스트 유지를 위해 즉시 호출)
-    if (target === 'modeBarcode' && !scannerRunning) {
+    // Auto-start camera ONLY from user gesture (탭 클릭). 페이지 로드에서 자동 시작하면
+    // iOS Safari·Chrome이 user gesture 컨텍스트 부재로 NotAllowedError 발생.
+    if (target === 'modeBarcode' && !scannerRunning && opts.autoStart) {
       startBarcode();
     }
 
@@ -63,9 +64,10 @@
 
   function initModeTabs() {
     document.querySelectorAll('#modeTabs [data-mode]').forEach(btn => {
-      btn.addEventListener('click', () => setMode(btn.dataset.mode));
+      btn.addEventListener('click', () => setMode(btn.dataset.mode, { autoStart: true }));
     });
     const hash = (location.hash || '').replace('#', '').toLowerCase();
+    // 페이지 로드 시점은 user gesture가 아니므로 autoStart 생략 — 사용자가 "카메라 시작" 버튼을 눌러야 함
     setMode(hash in PANES ? hash : 'title');
   }
 
@@ -101,11 +103,15 @@
       startBtn.dataset.state = 'running';
     } catch (e) {
       console.error('[scanner] camera error', e);
-      const msg = (e && (e.name === 'NotAllowedError' || /permission/i.test(e.message || '')))
+      const errStr = String(e?.message || e || '');
+      const errName = e?.name || '';
+      const isDenied = errName === 'NotAllowedError' || /NotAllowed|permission|denied/i.test(errStr);
+      const isNotFound = errName === 'NotFoundError' || /NotFound|not\s*found/i.test(errStr);
+      const msg = isDenied
         ? '카메라 권한이 거부됐어요. 브라우저 설정에서 카메라 허용 후 다시 시도해 주세요.'
-        : (e && e.name === 'NotFoundError')
+        : isNotFound
         ? '카메라를 찾을 수 없어요. 데스크탑이라면 ISBN 직접 입력 또는 제목 검색을 사용하세요.'
-        : `카메라를 시작할 수 없어요: ${e?.message || e}`;
+        : `카메라를 시작할 수 없어요: ${errStr}`;
       showError(msg);
       startBtn.textContent = '카메라 시작';
       startBtn.disabled = false;

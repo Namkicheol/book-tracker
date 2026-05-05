@@ -68,6 +68,7 @@
         sectionState[grade.id] = {
           sort: 'popularity', // popularity, recent, title
           genre: 'all',
+          source: 'all',
           current: INITIAL_SHOW,
           open: false,
         };
@@ -79,6 +80,24 @@
       const genreChips = genres.map(g =>
         `<button class="genre-chip ${sectionState[grade.id].genre === g ? 'active' : ''}" data-grade="${grade.id}" data-genre="${g}" style="padding:6px 12px;margin:4px;border:1px solid #ddd;border-radius:16px;background:${sectionState[grade.id].genre === g ? '#FF6B6B' : '#fff'};color:${sectionState[grade.id].genre === g ? '#fff' : '#666'};font-size:12px;cursor:pointer">${g === 'all' ? '전체' : g}</button>`
       ).join('');
+
+      // 출처 칩 — 이 학년 책에 실제 등장한 소스만, meta.sources 정의 순서로
+      const sourcesPresent = new Set();
+      allGradeBooks.forEach(b => (b.lists || []).forEach(id => sourcesPresent.add(id)));
+      const availableSources = (recommendationData.meta.sources || []).filter(s => sourcesPresent.has(s.id));
+      const activeSource = sectionState[grade.id].source;
+      const sourceChips = availableSources.length === 0 ? '' : (() => {
+        const allChip =
+          `<button class="source-chip ${activeSource === 'all' ? 'active' : ''}" data-grade="${grade.id}" data-source="all" style="padding:6px 12px;margin:4px;border:1px solid #ddd;border-radius:16px;background:${activeSource === 'all' ? '#444' : '#fff'};color:${activeSource === 'all' ? '#fff' : '#666'};font-size:12px;cursor:pointer">전체</button>`;
+        const items = availableSources.map(s => {
+          const count = allGradeBooks.filter(b => (b.lists || []).includes(s.id)).length;
+          const isActive = activeSource === s.id;
+          const bg = isActive ? s.badge.color : '#fff';
+          const fg = isActive ? '#fff' : '#666';
+          return `<button class="source-chip ${isActive ? 'active' : ''}" data-grade="${grade.id}" data-source="${s.id}" style="padding:6px 12px;margin:4px;border:1px solid #ddd;border-radius:16px;background:${bg};color:${fg};font-size:12px;cursor:pointer">${escapeHtml(s.badge.text)} <span style="opacity:0.7;font-size:11px">${count}</span></button>`;
+        }).join('');
+        return allChip + items;
+      })();
 
       return `
         <details class="grade-section" data-grade-idx="${gradeIdx}" data-grade-id="${grade.id}" ${sectionState[grade.id].open ? 'open' : ''} style="margin-bottom:16px;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden">
@@ -94,8 +113,16 @@
               <button class="sort-btn ${sectionState[grade.id].sort === 'title' ? 'active' : ''}" data-grade="${grade.id}" data-sort="title" style="padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:${sectionState[grade.id].sort === 'title' ? '#4A90E2' : '#fff'};color:${sectionState[grade.id].sort === 'title' ? '#fff' : '#666'};font-size:13px;font-weight:${sectionState[grade.id].sort === 'title' ? '600' : '400'};cursor:pointer">🔤 가나다순</button>
             </div>
 
+            ${sourceChips ? `
+            <!-- 출처(추천 기관) 필터 -->
+            <div style="margin-bottom:8px;display:flex;flex-wrap:wrap;align-items:center">
+              <span style="font-size:11px;color:#999;margin-right:6px;letter-spacing:0.04em">출처</span>
+              ${sourceChips}
+            </div>` : ''}
+
             <!-- 장르 필터 -->
-            <div style="margin-bottom:16px;display:flex;flex-wrap:wrap">
+            <div style="margin-bottom:16px;display:flex;flex-wrap:wrap;align-items:center">
+              <span style="font-size:11px;color:#999;margin-right:6px;letter-spacing:0.04em">장르</span>
               ${genreChips}
             </div>
 
@@ -126,10 +153,14 @@
     const allGradeBooks = allBooks.filter(b => b.targetAge === gradeId);
     const state = sectionState[gradeId];
 
-    // 장르 필터 적용
-    let filteredBooks = state.genre === 'all'
-      ? allGradeBooks
-      : allGradeBooks.filter(b => b.genre === state.genre);
+    // 출처 필터 + 장르 필터 (AND)
+    let filteredBooks = allGradeBooks;
+    if (state.source && state.source !== 'all') {
+      filteredBooks = filteredBooks.filter(b => (b.lists || []).includes(state.source));
+    }
+    if (state.genre && state.genre !== 'all') {
+      filteredBooks = filteredBooks.filter(b => b.genre === state.genre);
+    }
 
     // 정렬 적용
     if (state.sort === 'popularity') {
@@ -210,6 +241,20 @@
         const gradeId = chip.dataset.grade;
         const genre = chip.dataset.genre;
         sectionState[gradeId].genre = genre;
+        sectionState[gradeId].current = 8;
+        sectionState[gradeId].open = true;
+        renderGradeSections();
+      });
+    });
+
+    // 출처 필터
+    document.querySelectorAll('.source-chip').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+        const gradeId = chip.dataset.grade;
+        const source = chip.dataset.source;
+        sectionState[gradeId].source = source;
         sectionState[gradeId].current = 8;
         sectionState[gradeId].open = true;
         renderGradeSections();
