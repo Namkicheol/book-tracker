@@ -164,8 +164,10 @@ function buildAladinUrl(endpoint, params, ttbKey) {
 }
 
 function buildLibraryUrl(endpoint, params, apiKey) {
+  // search → libSrchByBook (isbn + region 기반 소장 도서관 검색, 위도/경도 포함)
+  // available → bookExist (특정 도서관 대출 가능 여부)
   const apiEndpoint = {
-    search: 'loanItemSrch',
+    search: 'libSrchByBook',
     available: 'bookExist',
   }[endpoint];
 
@@ -173,15 +175,19 @@ function buildLibraryUrl(endpoint, params, apiKey) {
   out.set('authKey', apiKey);
   out.set('format', 'json');
 
-  // isbn → isbn13
   const isbn = params.get('isbn');
-  if (isbn) out.set('isbn13', isbn.replace(/\D/g, ''));
+  if (isbn) out.set('isbn', isbn.replace(/\D/g, ''));
 
-  // Forward allowed params
   const allowed = ['region', 'dtl_region', 'libCode', 'pageNo', 'pageSize'];
   for (const k of allowed) {
     const v = params.get(k);
     if (v) out.set(k, v);
+  }
+
+  // bookExist는 isbn13 파라미터명 사용
+  if (endpoint === 'available' && isbn) {
+    out.delete('isbn');
+    out.set('isbn13', isbn.replace(/\D/g, ''));
   }
 
   return `${LIBRARY_BASE}/${apiEndpoint}?${out.toString()}`;

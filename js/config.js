@@ -33,4 +33,4 @@ var WORKER_URL = 'https://book-tracker-aladin.obangti.workers.dev';
  *
  * 🔑 API 키를 받아오신 후 아래에 입력하세요:
  */
-var LIBRARY_API_KEY = '';  // ← 여기에 API 키 입력!
+var LIBRARY_API_KEY = 'b660ed963467358ba4bc5cbaf251dda8af7f50573bc69967d75f53ef5c281229';

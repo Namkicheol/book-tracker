@@ -257,6 +257,15 @@
 
     const heroCover = b.thumbnail || (titleMatches && item.cover) || '';
 
+    const librarySection = b.isbn ? `
+      <div id="previewLibrarySection" style="margin-top:var(--sp-sm)">
+        <button type="button" id="previewFindLibraryBtn"
+          style="width:100%;padding:10px 16px;border:1.5px solid rgba(45,106,79,0.35);border-radius:6px;background:rgba(45,106,79,0.06);color:#2d6a4f;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span style="font-size:16px">📍</span> 가까운 도서관에서 찾기
+        </button>
+      </div>
+    ` : '';
+
     return `
       <div class="preview-hero">
         <div class="preview-cover">${heroCover ? `<img src="${escapeAttr(heroCover)}" alt="">` : '書'}</div>
@@ -283,6 +292,8 @@
         ${primaryBtn}
         ${aladinLink}
       </div>
+
+      ${librarySection}
     `;
   }
 
@@ -329,6 +340,13 @@
         location.href = `detail.html?id=${encodeURIComponent(targetId)}`;
       });
     }
+
+    // 도서관 찾기 — 모달 열리면 자동 시작
+    const findLibBtn = document.getElementById('previewFindLibraryBtn');
+    if (findLibBtn && book.isbn && window.LibraryAPI) {
+      handleFindLibrary(book.isbn, findLibBtn);
+    }
+
     if (mode === 'library') return;
 
     // recommend mode (새로 기록)
@@ -356,6 +374,88 @@
       closePreview(modal);
       setTimeout(() => location.href = `detail.html?id=${encodeURIComponent(saved.id)}&new=1`, 700);
     });
+  }
+
+  async function handleFindLibrary(isbn, btn) {
+    if (!window.LibraryAPI) return;
+
+    const section = document.getElementById('previewLibrarySection');
+    if (!section) return;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span style="opacity:0.6">검색 중…</span>';
+
+    try {
+      const { libraries, regionName, needsRegion } = await LibraryAPI.findNearbyLibraries(isbn);
+
+      if (needsRegion) {
+        section.innerHTML = `
+          <div style="padding:14px;background:rgba(0,0,0,0.04);border-radius:8px;text-align:center">
+            <div style="font-size:13px;color:var(--text-soft);margin-bottom:8px">위치 권한을 허용하면<br>가까운 도서관을 찾아드려요</div>
+            <button type="button" id="previewFindLibraryBtn"
+              style="padding:8px 16px;border:1.5px solid rgba(45,106,79,0.35);border-radius:6px;background:rgba(45,106,79,0.06);color:#2d6a4f;font-size:12px;font-weight:600;cursor:pointer">
+              📍 다시 시도
+            </button>
+          </div>`;
+        const retryBtn = section.querySelector('#previewFindLibraryBtn');
+        if (retryBtn) retryBtn.addEventListener('click', () => handleFindLibrary(isbn, retryBtn));
+        return;
+      }
+
+      if (!libraries.length) {
+        section.innerHTML = `
+          <div style="padding:14px;background:rgba(139,58,58,0.06);border-radius:8px;border:1.5px solid rgba(139,58,58,0.15);text-align:center">
+            <div style="font-size:20px;margin-bottom:6px">📚</div>
+            <div style="font-size:13px;font-weight:600;color:#8b3a3a;margin-bottom:4px">우리 동네 도서관엔 없네요</div>
+            <div style="font-size:12px;color:var(--text-mute)">${regionName ? regionName + ' 지역 기준' : ''}</div>
+          </div>`;
+        return;
+      }
+
+      const regionLabel = regionName ? ` · ${regionName}` : '';
+      const items = libraries.map(lib => {
+        const avail = lib.available === true;
+        const unknown = lib.available === null;
+        const availText = avail ? '지금 바로 빌릴 수 있어요!' : unknown ? '대출 여부 미확인' : '지금은 다른 친구가 읽고 있어요';
+        const availColor = avail ? '#2d6a4f' : unknown ? 'var(--text-mute)' : '#8b3a3a';
+        const dot = avail ? '🟢' : unknown ? '⚪' : '🔴';
+        const libName = escapeHtml(lib.libName || '');
+        const distKm = lib.distance && lib.distance < 9999 ? `${lib.distance.toFixed(1)}km` : '';
+        const tel = lib.tel && lib.tel !== '-' ? lib.tel : '';
+        const mapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(lib.libName || '')}`;
+        return `
+          <div style="padding:10px 12px;border-bottom:1px solid var(--border-soft)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+              <span style="font-size:13px;flex-shrink:0">${dot}</span>
+              <div style="font-size:13px;font-weight:700;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${libName}</div>
+              ${distKm ? `<span style="font-size:11px;color:var(--text-mute);flex-shrink:0">${distKm}</span>` : ''}
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding-left:21px">
+              <div style="font-size:11px;color:${availColor};flex:1">${escapeHtml(availText)}</div>
+              <div style="display:flex;gap:6px;flex-shrink:0">
+                ${tel ? `<a href="tel:${escapeAttr(tel.replace(/\D/g,''))}" style="font-size:11px;color:var(--text-mute);text-decoration:none;padding:3px 7px;border:1px solid var(--border-soft);border-radius:4px">📞</a>` : ''}
+                <a href="${escapeAttr(mapUrl)}" target="_blank" rel="noopener"
+                   style="font-size:11px;color:var(--text-mute);text-decoration:none;padding:3px 7px;border:1px solid var(--border-soft);border-radius:4px">지도</a>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+
+      section.innerHTML = `
+        <div style="border:1.5px solid rgba(45,106,79,0.25);border-radius:8px;overflow:hidden;background:rgba(45,106,79,0.04)">
+          <div style="padding:10px 12px;background:rgba(45,106,79,0.08);font-size:11px;font-weight:700;color:#2d6a4f;letter-spacing:0.06em">
+            📍 가까운 도서관${regionLabel}
+          </div>
+          ${items}
+        </div>`;
+    } catch (e) {
+      section.innerHTML = `
+        <div style="padding:12px;background:rgba(0,0,0,0.04);border-radius:8px;text-align:center;font-size:12px;color:var(--text-mute)">
+          도서관 검색 실패. 잠시 후 다시 시도해주세요.
+        </div>`;
+      btn.disabled = false;
+      btn.innerHTML = '<span style="font-size:16px">📍</span> 가까운 도서관에서 찾기';
+    }
   }
 
   // ── utils ────────────────────────────────────────────────────
