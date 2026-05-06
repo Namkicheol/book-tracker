@@ -1016,7 +1016,8 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "lists": [
-        "slj"
+        "slj",
+        "childbook"
       ],
       "why": "학교도서관저널 추천위원회가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요.",
       "thumbnail": "https://image.aladin.co.kr/product/37289/35/cover200/8969151885_1.jpg"
@@ -2541,7 +2542,9 @@
       "targetAge": "초등 저학년",
       "genre": "과학",
       "bestRank": 59,
-      "lists": [],
+      "lists": [
+        "childbook"
+      ],
       "why": "알라딘 베스트셀러 59위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791141184315": {
@@ -4586,7 +4589,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 238,
-      "lists": [],
+      "lists": [
+        "childbook"
+      ],
       "why": "알라딘 베스트셀러 238위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9788936443412": {
@@ -4599,7 +4604,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 239,
-      "lists": [],
+      "lists": [
+        "childbook"
+      ],
       "why": "알라딘 베스트셀러 239위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9788934989257": {
@@ -5238,7 +5245,9 @@
       "targetAge": "유아",
       "genre": "그림책",
       "bestRank": 298,
-      "lists": [],
+      "lists": [
+        "childbook"
+      ],
       "why": "알라딘 베스트셀러 298위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791173578434": {
@@ -5489,7 +5498,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 319,
-      "lists": [],
+      "lists": [
+        "childbook"
+      ],
       "why": "알라딘 베스트셀러 319위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791199496644": {
@@ -11853,7 +11864,9 @@
       "year": 2025,
       "targetAge": "유아",
       "genre": "그림책",
-      "lists": [],
+      "lists": [
+        "childbook"
+      ],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
     "9788901252018": {
@@ -13833,7 +13846,9 @@
       "year": 2025,
       "targetAge": "유아",
       "genre": "그림책",
-      "lists": [],
+      "lists": [
+        "childbook"
+      ],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
     "9791158732752": {
@@ -26419,6 +26434,1406 @@
         "kclw"
       ],
       "why": "한국어린이문학협의회 우수 창작 도서로 선정된 책입니다."
+    },
+    "9791197042089": {
+      "isbn": "9791197042089",
+      "title": "방긋 웃어요",
+      "author": "문종훈, 울리스 햇 (지은이)",
+      "publisher": "늘보의섬",
+      "thumbnail": "https://image.aladin.co.kr/product/36210/62/cover200/k882038408_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791165736156": {
+      "isbn": "9791165736156",
+      "title": "몸을 쭉",
+      "author": "신혜영 (지은이), 김고둥 (그림)",
+      "publisher": "천개의바람",
+      "thumbnail": "https://image.aladin.co.kr/product/36157/72/cover200/k672038782_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788949114507": {
+      "isbn": "9788949114507",
+      "title": "태양 오르간",
+      "author": "아라이 료지 (지은이), 유문조 (옮긴이)",
+      "publisher": "비룡소",
+      "thumbnail": "https://image.aladin.co.kr/product/36763/92/cover200/894911450x_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791162102466": {
+      "isbn": "9791162102466",
+      "title": "코알라는 책 읽기를 좋아해요",
+      "author": "안 에르보 (지은이), 안의진 (옮긴이)",
+      "publisher": "바람의아이들",
+      "thumbnail": "https://image.aladin.co.kr/product/36043/69/cover200/k572037843_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791165884840": {
+      "isbn": "9791165884840",
+      "title": "모자 쓰는 날",
+      "author": "이승범 (지은이)",
+      "publisher": "북극곰",
+      "thumbnail": "https://image.aladin.co.kr/product/37896/92/cover200/k962033624_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791165736811": {
+      "isbn": "9791165736811",
+      "title": "딩동 누구 왔어요?",
+      "author": "도쿠다 유키히사 (지은이), 다루이시 마코 (그림), 한미숙 (옮긴이)",
+      "publisher": "천개의바람",
+      "thumbnail": "https://image.aladin.co.kr/product/37277/88/cover200/k542031429_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788901290607": {
+      "isbn": "9788901290607",
+      "title": "눈 감으면 들리는 책",
+      "author": "마거릿 와이즈 브라운 (지은이), 레너드 웨이즈가드 (그림), 이혜원 (옮긴이)",
+      "publisher": "웅진주니어",
+      "thumbnail": "https://image.aladin.co.kr/product/36043/60/cover200/890129060x_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788925574523": {
+      "isbn": "9788925574523",
+      "title": "너의 숲",
+      "author": "존 클라센 (지은이), 서남희 (옮긴이)",
+      "publisher": "주니어RHK(주니어랜덤)",
+      "thumbnail": "https://image.aladin.co.kr/product/35711/81/cover200/8925574527_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791169811965": {
+      "isbn": "9791169811965",
+      "title": "아주 좋은 내 모자",
+      "author": "이상교 (지은이), 밤코 (그림)",
+      "publisher": "사계절",
+      "thumbnail": "https://image.aladin.co.kr/product/33824/71/cover200/k892930890_1.jpg",
+      "year": 2024,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788925573397": {
+      "isbn": "9788925573397",
+      "title": "기린 조제핀",
+      "author": "클로에 알메라스 (지은이), 이정주 (옮긴이)",
+      "publisher": "주니어RHK(주니어랜덤)",
+      "thumbnail": "https://image.aladin.co.kr/product/36985/19/cover200/8925573393_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791198789235": {
+      "isbn": "9791198789235",
+      "title": "삐뽀삐뽀, 수족관 수의사의 하루",
+      "author": "오쓰카 미카 (지은이), 사이토 마키 (그림), 고향옥 (옮긴이)",
+      "publisher": "보고북스",
+      "thumbnail": "https://image.aladin.co.kr/product/35707/63/cover200/k782036121_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788925573588": {
+      "isbn": "9788925573588",
+      "title": "큰 곰과 작은 곰이 낚시하러 가요",
+      "author": "에이미 헤스트 (지은이), 에린 E. 스테드 (그림), 강무홍 (옮긴이)",
+      "publisher": "주니어RHK(주니어랜덤)",
+      "thumbnail": "https://image.aladin.co.kr/product/36581/75/cover200/892557358x_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791194828112": {
+      "isbn": "9791194828112",
+      "title": "차륵차륵 구슬치기 - 2023년 한국안데르센상 우수상 수상작",
+      "author": "이현정 (지은이), 김유진 (그림)",
+      "publisher": "한림출판사",
+      "thumbnail": "https://image.aladin.co.kr/product/36855/92/cover200/k622030403_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788925574066": {
+      "isbn": "9788925574066",
+      "title": "조그만 새싹",
+      "author": "브리타 테켄트럽 (지은이), 김서정 (옮긴이)",
+      "publisher": "주니어RHK(주니어랜덤)",
+      "thumbnail": "https://image.aladin.co.kr/product/35791/25/cover200/8925574063_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193150672": {
+      "isbn": "9791193150672",
+      "title": "이것은 한 마리 아기 고양이 이야기가 아닙니다",
+      "author": "랜달 드 세브 (지은이), 카슨 엘리스 (그림), 김지은 (옮긴이)",
+      "publisher": "봄볕",
+      "thumbnail": "https://image.aladin.co.kr/product/37685/93/cover200/k532032440_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791165736798": {
+      "isbn": "9791165736798",
+      "title": "이 열매를 집으로 할까?",
+      "author": "다카오 유코 (지은이), 황진희 (옮긴이)",
+      "publisher": "천개의바람",
+      "thumbnail": "https://image.aladin.co.kr/product/37226/92/cover200/k802031702_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791194770381": {
+      "isbn": "9791194770381",
+      "title": "우리 누리 크리스마스",
+      "author": "연수 (지은이)",
+      "publisher": "위즈덤하우스",
+      "thumbnail": "https://image.aladin.co.kr/product/37499/90/cover200/k852032721_3.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193150535": {
+      "isbn": "9791193150535",
+      "title": "어젯밤에 누가 다녀갔을까?",
+      "author": "안드레아 안티노리 (지은이), 문주선 (옮긴이)",
+      "publisher": "봄볕",
+      "thumbnail": "https://image.aladin.co.kr/product/35686/25/cover200/k952036927_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791167553218": {
+      "isbn": "9791167553218",
+      "title": "산을 날다",
+      "author": "기쿠치 치키 (지은이), 황진희 (옮긴이)",
+      "publisher": "초록귤(우리학교)",
+      "thumbnail": "https://image.aladin.co.kr/product/36082/99/cover200/k592037955_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791194100096": {
+      "isbn": "9791194100096",
+      "title": "사라진 양말 한 짝",
+      "author": "루시아나 데 루카 (지은이), 줄리아 파스토리노 (그림), 문주선 (옮긴이)",
+      "publisher": "여유당",
+      "thumbnail": "https://image.aladin.co.kr/product/37178/87/cover200/k182031789_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791170821205": {
+      "isbn": "9791170821205",
+      "title": "빵 빵 무슨 빵?",
+      "author": "김중석 (지은이)",
+      "publisher": "킨더랜드",
+      "thumbnail": "https://image.aladin.co.kr/product/36490/8/cover200/k982039112_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788943317737": {
+      "isbn": "9788943317737",
+      "title": "빨간 모자를 기다리며",
+      "author": "미레이유 메시에 (지은이), 샤를로트 파랑 (그림), 신유진 (옮긴이)",
+      "publisher": "보림",
+      "thumbnail": "https://image.aladin.co.kr/product/35736/87/cover200/8943317735_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791159954856": {
+      "isbn": "9791159954856",
+      "title": "민씨댁 불가마전",
+      "author": "민병권 (지은이)",
+      "publisher": "노란돼지",
+      "thumbnail": "https://image.aladin.co.kr/product/36255/81/cover200/k772038629_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791191917611": {
+      "isbn": "9791191917611",
+      "title": "로봇 택시 기사 무디 - 2025 문학나눔 선정도서",
+      "author": "박선화 (지은이), 김일주 (그림)",
+      "publisher": "마루비",
+      "thumbnail": "https://image.aladin.co.kr/product/35764/60/cover200/k812036742_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791199396401": {
+      "isbn": "9791199396401",
+      "title": "둘이 함께라면",
+      "author": "김성은 (지은이)",
+      "publisher": "다그림책(키다리)",
+      "thumbnail": "https://image.aladin.co.kr/product/37284/59/cover200/k182031245_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791170820956": {
+      "isbn": "9791170820956",
+      "title": "니나의 물뿌리개",
+      "author": "줄리앙 바에 (지은이), 마리 도를레앙 (그림), 이슬아 (옮긴이)",
+      "publisher": "킨더랜드",
+      "thumbnail": "https://image.aladin.co.kr/product/35987/73/cover200/k942037519_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791169813945": {
+      "isbn": "9791169813945",
+      "title": "눈사람 만들기 공식",
+      "author": "정승 (지은이)",
+      "publisher": "사계절",
+      "thumbnail": "https://image.aladin.co.kr/product/37439/39/cover200/k012032406_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788943317843": {
+      "isbn": "9788943317843",
+      "title": "그늘 안에서",
+      "author": "아드리앵 파를랑주 (지은이), 신유진 (옮긴이)",
+      "publisher": "보림",
+      "thumbnail": "https://image.aladin.co.kr/product/36386/35/cover200/8943317840_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788955827859": {
+      "isbn": "9788955827859",
+      "title": "간다 난다 달다 - 말놀이 그림책, 2026 북스타트 보물상자",
+      "author": "이서연 (지은이)",
+      "publisher": "길벗어린이",
+      "thumbnail": "https://image.aladin.co.kr/product/35337/9/cover200/8955827857_1.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791188574704": {
+      "isbn": "9791188574704",
+      "title": "가랑잎이 참 좋다",
+      "author": "오나리 유코 (지은이), 하타 고시로 (그림), 황진희 (옮긴이)",
+      "publisher": "나는별",
+      "thumbnail": "https://image.aladin.co.kr/product/36985/68/cover200/k782030128_2.jpg",
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788925574059": {
+      "isbn": "9788925574059",
+      "title": "진지한 건 내일 할래! 1",
+      "author": "주쓰 (지은이)",
+      "publisher": "주니어RHK(주니어랜덤)",
+      "thumbnail": "https://image.aladin.co.kr/product/35909/71/cover200/8925574055_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788925573847": {
+      "isbn": "9788925573847",
+      "title": "내 맘대로 방구석 모험",
+      "author": "이은선 (지은이)",
+      "publisher": "주니어RHK(주니어랜덤)",
+      "thumbnail": "https://image.aladin.co.kr/product/36298/99/cover200/8925573849_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791158365172": {
+      "isbn": "9791158365172",
+      "title": "숲은 ○○○",
+      "author": "미소노 (지은이), 주원섭 (감수)",
+      "publisher": "책읽는곰",
+      "thumbnail": "https://image.aladin.co.kr/product/36246/94/cover200/k732038425_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791171713646": {
+      "isbn": "9791171713646",
+      "title": "마이티 오! - 바다 생물의 집이 된 항공 모함",
+      "author": "제시카 스티머 (지은이), 고디 라이트 (그림), 박규리 (옮긴이)",
+      "publisher": "위즈덤하우스",
+      "thumbnail": "https://image.aladin.co.kr/product/35840/45/cover200/k432037866_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791158365011": {
+      "isbn": "9791158365011",
+      "title": "상상해 봐, 공룡!",
+      "author": "송지혜 (지은이), 김현영 (그림), 이정모 (감수)",
+      "publisher": "책읽는곰",
+      "thumbnail": "https://image.aladin.co.kr/product/35862/74/cover200/k202037577_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791163144076": {
+      "isbn": "9791163144076",
+      "title": "나비의 봄 여름 가을 겨울 - 나비 한살이 생태 관찰기",
+      "author": "권혁도 (지은이)",
+      "publisher": "보리",
+      "thumbnail": "https://image.aladin.co.kr/product/36172/61/cover200/k002038299_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791141602680": {
+      "isbn": "9791141602680",
+      "title": "뻔뻔한 황금털이 말했습니다",
+      "author": "추수진 (지은이), 유시연 (그림)",
+      "publisher": "문학동네",
+      "thumbnail": "https://image.aladin.co.kr/product/37727/73/cover200/k942033262_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791199217188": {
+      "isbn": "9791199217188",
+      "title": "맹공 군의 용감한 도전",
+      "author": "김기정 (지은이), 정문주 (그림)",
+      "publisher": "아이음북스",
+      "thumbnail": "https://image.aladin.co.kr/product/38029/87/cover200/k652034989_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791173321009": {
+      "isbn": "9791173321009",
+      "title": "내가 할배냥",
+      "author": "홍민정 (지은이), 하민석 (그림)",
+      "publisher": "주니어김영사",
+      "thumbnail": "https://image.aladin.co.kr/product/35796/41/cover200/k622036459_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791141612535": {
+      "isbn": "9791141612535",
+      "title": "나의 하하를 찾아서",
+      "author": "차영아 (지은이), 다나 (그림)",
+      "publisher": "문학동네",
+      "thumbnail": "https://image.aladin.co.kr/product/37043/2/cover200/k242030034_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193150627": {
+      "isbn": "9791193150627",
+      "title": "꼬꼬댁멍냥 가족의 탄생",
+      "author": "윤성은 (지은이), 이은경 (그림)",
+      "publisher": "봄볕",
+      "thumbnail": "https://image.aladin.co.kr/product/37149/31/cover200/k092031476_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791194770060": {
+      "isbn": "9791194770060",
+      "title": "김꼬똥, 나야 김단우야",
+      "author": "지안 (지은이), 이주희 (그림)",
+      "publisher": "위즈덤하우스",
+      "thumbnail": "https://image.aladin.co.kr/product/36528/38/cover200/k352039621_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193545720": {
+      "isbn": "9791193545720",
+      "title": "해충 3대 비극 - 제10회 상상만발 책그림전 수상작",
+      "author": "이승아 (지은이)",
+      "publisher": "이루리북스",
+      "thumbnail": "https://image.aladin.co.kr/product/36856/56/cover200/k522030404_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791191133394": {
+      "isbn": "9791191133394",
+      "title": "4·3, 기억의 폭풍 속으로 - 같은 시대를 다르게 겪은 두 사람의 삶에 관하여",
+      "author": "허호준 (지은이)",
+      "publisher": "혜화1117",
+      "thumbnail": "https://image.aladin.co.kr/product/38873/1/cover200/k272137108_1.jpg",
+      "year": 2026,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791167553331": {
+      "isbn": "9791167553331",
+      "title": "전쟁과 나",
+      "author": "유은실 (지은이), 이소영 (그림)",
+      "publisher": "초록귤(우리학교)",
+      "thumbnail": "https://image.aladin.co.kr/product/36591/25/cover200/k112039653_2.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791192655901": {
+      "isbn": "9791192655901",
+      "title": "우리는 진짜 진짜 사람입니다",
+      "author": "엑스 팡 (지은이), 김지은 (옮긴이)",
+      "publisher": "위즈덤하우스",
+      "thumbnail": "https://image.aladin.co.kr/product/35573/85/cover200/k782036570_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193255445": {
+      "isbn": "9791193255445",
+      "title": "얼음 사냥꾼",
+      "author": "세라핀 므뉘 (지은이), 마리옹 뒤발 (그림), 성미경 (옮긴이)",
+      "publisher": "분홍고래",
+      "thumbnail": "https://image.aladin.co.kr/product/37995/18/cover200/k202034782_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791171471171": {
+      "isbn": "9791171471171",
+      "title": "어디 가세요?",
+      "author": "김현례 (지은이)",
+      "publisher": "바우솔",
+      "thumbnail": "https://image.aladin.co.kr/product/36171/44/cover200/k802038195_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788949114538": {
+      "isbn": "9788949114538",
+      "title": "샐의 멋진 항해",
+      "author": "티라 헤더 (지은이), 정회성 (옮긴이)",
+      "publisher": "비룡소",
+      "thumbnail": "https://image.aladin.co.kr/product/37199/62/cover200/8949114534_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791194246732": {
+      "isbn": "9791194246732",
+      "title": "따로 또 같이 갈까?",
+      "author": "브렌던 웬젤 (지은이), 김지은 (옮긴이)",
+      "publisher": "올리",
+      "thumbnail": "https://image.aladin.co.kr/product/35834/68/cover200/k832037767_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791198660978": {
+      "isbn": "9791198660978",
+      "title": "두려움의 모양",
+      "author": "키아라 메잘라마 (지은이), 마리아키아라 디 조르조 (그림), 제님 (옮긴이)",
+      "publisher": "목요일",
+      "thumbnail": "https://image.aladin.co.kr/product/36612/18/cover200/k922030863_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788955828023": {
+      "isbn": "9788955828023",
+      "title": "다정하게 촉촉하게 - 2025 볼로냐 올해의 일러스트레이터 파이널리스트 후보",
+      "author": "서선정 (지은이)",
+      "publisher": "길벗어린이",
+      "thumbnail": "https://image.aladin.co.kr/product/36376/22/cover200/8955828020_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788955828092": {
+      "isbn": "9788955828092",
+      "title": "내 병아리",
+      "author": "장현정 (지은이)",
+      "publisher": "길벗어린이",
+      "thumbnail": "https://image.aladin.co.kr/product/36809/11/cover200/8955828098_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791187991359": {
+      "isbn": "9791187991359",
+      "title": "나는 발차기 중",
+      "author": "이혜원 (지은이)",
+      "publisher": "브와포레",
+      "thumbnail": "https://image.aladin.co.kr/product/36464/86/cover200/k292039813_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788955828054": {
+      "isbn": "9788955828054",
+      "title": "갈매기전",
+      "author": "이소영 (지은이)",
+      "publisher": "길벗어린이",
+      "thumbnail": "https://image.aladin.co.kr/product/36425/26/cover200/8955828055_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788949114484": {
+      "isbn": "9788949114484",
+      "title": "페퍼와 나 - 나의 작은 딱지 이야기",
+      "author": "베아트리체 알레마냐 (지은이), 정회성 (옮긴이)",
+      "publisher": "비룡소",
+      "thumbnail": "https://image.aladin.co.kr/product/35090/14/cover200/8949114488_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788936429133": {
+      "isbn": "9788936429133",
+      "title": "진정한 친구가 되는 법 - 2024 대한민국 그림책상 대상 수상작",
+      "author": "박현민 (지은이)",
+      "publisher": "창비",
+      "thumbnail": "https://image.aladin.co.kr/product/33315/54/cover200/8936429132_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788936429287": {
+      "isbn": "9788936429287",
+      "title": "점과 선과 새 - 2025 대한민국 그림책상 대상",
+      "author": "조오 (지은이)",
+      "publisher": "창비",
+      "thumbnail": "https://image.aladin.co.kr/product/34361/10/cover200/8936429280_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193150450": {
+      "isbn": "9791193150450",
+      "title": "오로지 나만 - 2025 볼로냐라가치상 스페셜 멘션",
+      "author": "사라 룬드베리 (지은이), 김아영 (옮긴이)",
+      "publisher": "봄볕",
+      "thumbnail": "https://image.aladin.co.kr/product/34801/9/cover200/k242933328_2.jpg",
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788983097415": {
+      "isbn": "9788983097415",
+      "title": "엄마가 체포되었어요 - 2023 스포르훈덴상, 2024 스웨덴 예술위원회 번역제작지원, 2024 올해의 환경책 어린이 부문",
+      "author": "다니엘 셸린 (지은이), 클라라 바르틸손 (그림), 신견식 (옮긴이)",
+      "publisher": "지양어린이",
+      "thumbnail": "https://image.aladin.co.kr/product/34362/57/cover200/8983097418_3.jpg",
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193150337": {
+      "isbn": "9791193150337",
+      "title": "아마존을 수놓은 책 물결",
+      "author": "이레네 바스코 (지은이), 후안 팔로미노 (그림), 김정하 (옮긴이)",
+      "publisher": "봄볕",
+      "thumbnail": "https://image.aladin.co.kr/product/34207/30/cover200/k102931833_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791169811842": {
+      "isbn": "9791169811842",
+      "title": "모두 다 음악 - 2024 볼로냐 국제 아동 도서전 올해의 일러스트레이터",
+      "author": "미란 (지은이)",
+      "publisher": "사계절",
+      "thumbnail": "https://image.aladin.co.kr/product/33377/79/cover200/k622938411_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788954698283": {
+      "isbn": "9788954698283",
+      "title": "멸치 다듬기",
+      "author": "이상교 (지은이), 밤코 (그림)",
+      "publisher": "문학동네",
+      "thumbnail": "https://image.aladin.co.kr/product/33526/16/cover200/895469828x_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788971990933": {
+      "isbn": "9788971990933",
+      "title": "나무야 나무야 - 국토와 역사의 뒤안에서 띄우는 엽서",
+      "author": "신영복 (지은이)",
+      "publisher": "돌베개",
+      "thumbnail": "https://image.aladin.co.kr/product/2/80/cover200/8971990937_2.jpg",
+      "year": 1996,
+      "targetAge": "초등 저학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791157823444": {
+      "isbn": "9791157823444",
+      "title": "라이언이라고 불러 줘",
+      "author": "카밀라 체스터 (지은이), 정회성 (옮긴이)",
+      "publisher": "초록개구리",
+      "thumbnail": "https://image.aladin.co.kr/product/37997/32/cover200/k442034786_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791163144199": {
+      "isbn": "9791163144199",
+      "title": "빵빵! 행복 빵집",
+      "author": "한나빵 (지은이)",
+      "publisher": "보리",
+      "thumbnail": "https://image.aladin.co.kr/product/36627/21/cover200/k642030577_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791192894690": {
+      "isbn": "9791192894690",
+      "title": "차곡차곡 댐",
+      "author": "후지와라 데츠지 (지은이), 최진선 (옮긴이), 김성렬 (감수)",
+      "publisher": "너머학교",
+      "thumbnail": "https://image.aladin.co.kr/product/36306/48/cover200/k772038443_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791167742131": {
+      "isbn": "9791167742131",
+      "title": "잔소리탈출연구소 1 - 집중력 도둑을 잡아라",
+      "author": "윤선아 (지은이), 원혜진 (그림)",
+      "publisher": "어크로스주니어",
+      "thumbnail": "https://image.aladin.co.kr/product/36547/39/cover200/k102039149_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788925573892": {
+      "isbn": "9788925573892",
+      "title": "오늘부터 매일매일 환경 실천",
+      "author": "정다빈 (지은이), 배누 (그림)",
+      "publisher": "주니어RHK(주니어랜덤)",
+      "thumbnail": "https://image.aladin.co.kr/product/36248/86/cover200/892557389x_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193798195": {
+      "isbn": "9791193798195",
+      "title": "세상이 궁금하다면 지리책",
+      "author": "공우석 (지은이)",
+      "publisher": "머핀북",
+      "thumbnail": "https://image.aladin.co.kr/product/35538/81/cover200/k582036175_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791194136057": {
+      "isbn": "9791194136057",
+      "title": "우리 토마토는 특별해 - 기후 위기와 물 부족",
+      "author": "에스테르 뒤플로 (지은이), 샤이엔 올리비에 (그림), 최진희 (옮긴이)",
+      "publisher": "라이브리안",
+      "thumbnail": "https://image.aladin.co.kr/product/35893/26/cover200/k602037989_2.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791163144052": {
+      "isbn": "9791163144052",
+      "title": "볼빵빵 배통통 요리 수첩",
+      "author": "박은진 (지은이)",
+      "publisher": "보리",
+      "thumbnail": "https://image.aladin.co.kr/product/36117/87/cover200/k582038162_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791199289925": {
+      "isbn": "9791199289925",
+      "title": "제비야, 왜 사람이 좋아? - 새 박사 다미의 제비 생태 보고서",
+      "author": "정다미 (지은이), 이장미 (그림)",
+      "publisher": "모알보알",
+      "thumbnail": "https://image.aladin.co.kr/product/37270/96/cover200/k162031225_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791130667607": {
+      "isbn": "9791130667607",
+      "title": "주게무의 여름 - 제73회 소학관 아동출판문화상 수상작, 제71회 산케이 아동출판문화상 수상작",
+      "author": "모가미 잇페이 (지은이), 마메 이케다 (그림), 고향옥 (옮긴이)",
+      "publisher": "다산어린이",
+      "thumbnail": "https://image.aladin.co.kr/product/36697/45/cover200/k912030585_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788925574165": {
+      "isbn": "9788925574165",
+      "title": "털실 세 뭉치로",
+      "author": "엔히케타 크리스티나 (지은이), 야라 코누 (그림), 강무홍 (옮긴이)",
+      "publisher": "주니어RHK(주니어랜덤)",
+      "thumbnail": "https://image.aladin.co.kr/product/35574/23/cover200/8925574160_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193534175": {
+      "isbn": "9791193534175",
+      "title": "두 팔 활짝 벌리고",
+      "author": "안토니오 루비오 (지은이), 마리아 히론 (그림), 문주선 (옮긴이)",
+      "publisher": "작은코도마뱀",
+      "thumbnail": "https://image.aladin.co.kr/product/35627/79/cover200/k992036398_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788983097453": {
+      "isbn": "9788983097453",
+      "title": "너를 기다리는 날들",
+      "author": "소냐 다노프스키 (지은이), 윤지원 (옮긴이)",
+      "publisher": "지양어린이",
+      "thumbnail": "https://image.aladin.co.kr/product/36628/33/cover200/8983097450_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193150689": {
+      "isbn": "9791193150689",
+      "title": "난 널 먹을 거야",
+      "author": "데이비드 더프 (지은이), 마리안나 코프 (그림), 김지은 (옮긴이)",
+      "publisher": "봄볕",
+      "thumbnail": "https://image.aladin.co.kr/product/37900/60/cover200/k342033731_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791198339270": {
+      "isbn": "9791198339270",
+      "title": "한밤의 몽상가들",
+      "author": "이자벨 심레르 (지은이), 최혜진 (옮긴이)",
+      "publisher": "여유당",
+      "thumbnail": "https://image.aladin.co.kr/product/33339/95/cover200/k732938700_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791192655857": {
+      "isbn": "9791192655857",
+      "title": "이상한 사파리",
+      "author": "한연진 (지은이)",
+      "publisher": "위즈덤하우스",
+      "thumbnail": "https://image.aladin.co.kr/product/35158/48/cover200/k282934119_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788949105635": {
+      "isbn": "9788949105635",
+      "title": "내가 만약에 말이라면",
+      "author": "소피 블랙올 (지은이), 정회성 (옮긴이)",
+      "publisher": "비룡소",
+      "thumbnail": "https://image.aladin.co.kr/product/33875/50/cover200/8949105632_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788901289670": {
+      "isbn": "9788901289670",
+      "title": "나무와 강",
+      "author": "에런 베커 (지은이)",
+      "publisher": "웅진주니어",
+      "thumbnail": "https://image.aladin.co.kr/product/35365/98/cover200/8901289679_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788965467175": {
+      "isbn": "9788965467175",
+      "title": "우리는 수영부 - 큰 변화는 서툰 발차기부터",
+      "author": "조니 크리스마스 (지은이), 지민 (옮긴이)",
+      "publisher": "밝은미래",
+      "thumbnail": "https://image.aladin.co.kr/product/35521/64/cover200/8965467179_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788961703734": {
+      "isbn": "9788961703734",
+      "title": "못생긴 제인 그리고 인어 - 2025 아이스너상 수상작",
+      "author": "베라 브로스골 (지은이), 조고은 (옮긴이)",
+      "publisher": "보물창고",
+      "thumbnail": "https://image.aladin.co.kr/product/37289/38/cover200/8961703730_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193150665": {
+      "isbn": "9791193150665",
+      "title": "탐라순력도 1702년, 제주를 돌아보다",
+      "author": "윤민용 (지은이), 샤샤미우 (그림)",
+      "publisher": "봄볕",
+      "thumbnail": "https://image.aladin.co.kr/product/37542/81/cover200/k552032125_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788961709828": {
+      "isbn": "9788961709828",
+      "title": "뱅크시, 아무 데나 낙서해도 돼?",
+      "author": "파우스토 질베르티 (지은이), 신형건 (옮긴이)",
+      "publisher": "보물창고",
+      "thumbnail": "https://image.aladin.co.kr/product/35516/73/cover200/8961709828_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788936443436": {
+      "isbn": "9788936443436",
+      "title": "허수의 정체",
+      "author": "전수경 (지은이), 김규아 (그림)",
+      "publisher": "창비",
+      "thumbnail": "https://image.aladin.co.kr/product/36422/74/cover200/8936443437_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788968308567": {
+      "isbn": "9788968308567",
+      "title": "학교에서 로봇 키운 건 비밀이야!",
+      "author": "나가츠키 아리스 (지은이), 사카이 사네 (그림), 모카 (옮긴이)",
+      "publisher": "개암나무",
+      "thumbnail": "https://image.aladin.co.kr/product/35739/58/cover200/896830856x_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788963724430": {
+      "isbn": "9788963724430",
+      "title": "장호",
+      "author": "탁동철 (지은이), 나오미양 (그림)",
+      "publisher": "양철북",
+      "thumbnail": "https://image.aladin.co.kr/product/35493/45/cover200/8963724433_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788932044170": {
+      "isbn": "9788932044170",
+      "title": "오탉의 비밀 기지",
+      "author": "주미경 (지은이), 정진희 (그림)",
+      "publisher": "문학과지성사",
+      "thumbnail": "https://image.aladin.co.kr/product/36727/35/cover200/8932044171_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788961709934": {
+      "isbn": "9788961709934",
+      "title": "똥퍼맨의 열 번째 실수",
+      "author": "제니퍼 촐덴코 (지은이), 김예원 (옮긴이)",
+      "publisher": "보물창고",
+      "thumbnail": "https://image.aladin.co.kr/product/37191/87/cover200/8961709933_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788932044200": {
+      "isbn": "9788932044200",
+      "title": "비로와 호랑할배 - 제21회 마해송문학상 수상작",
+      "author": "조은주 (지은이), 장선환 (그림)",
+      "publisher": "문학과지성사",
+      "thumbnail": "https://image.aladin.co.kr/product/36812/93/cover200/8932044201_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791173557279": {
+      "isbn": "9791173557279",
+      "title": "우리에게 다가온 다온",
+      "author": "이화 (지은이)",
+      "publisher": "미다스북스",
+      "thumbnail": "https://image.aladin.co.kr/product/38595/70/cover200/k392136378_1.jpg",
+      "year": 2026,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791139718775": {
+      "isbn": "9791139718775",
+      "title": "드디어 만나는 영국 동화 - 곰 세 마리부터 아기 돼지 삼 형제까지 흥미진진한 영국 동화 50편",
+      "author": "조셉 제이콥스 (지은이), 아서 래컴, 존 바튼 (그림), 서미석 (옮긴이)",
+      "publisher": "현대지성",
+      "thumbnail": "https://image.aladin.co.kr/product/35643/78/cover200/k852036604_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788961709910": {
+      "isbn": "9788961709910",
+      "title": "차마 말할 수 없는 이야기 - 코렛타 스콧 킹 대상 수상작",
+      "author": "콰미 알렉산더 (지은이), 데어 코울터 (그림), 신형건 (옮긴이)",
+      "publisher": "보물창고",
+      "thumbnail": "https://image.aladin.co.kr/product/36204/6/cover200/8961709917_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9788984145344": {
+      "isbn": "9788984145344",
+      "title": "작은 죽음이 찾아왔어요",
+      "author": "키티 크라우더 (지은이), 이주희 (옮긴이)",
+      "publisher": "논장",
+      "thumbnail": "https://image.aladin.co.kr/product/35439/86/cover200/8984145343_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791198712516": {
+      "isbn": "9791198712516",
+      "title": "고릴라의 뒷모습",
+      "author": "슬로보트 (지은이), 이수연 (그림)",
+      "publisher": "어떤우주",
+      "thumbnail": "https://image.aladin.co.kr/product/35891/13/cover200/k702037884_1.jpg",
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791141173012": {
+      "isbn": "9791141173012",
+      "title": "가스등 들개 탐정단 5",
+      "author": "마츠바라 토시미츠 (지은이), 아오사키 유고 (원작)",
+      "publisher": "학산문화사(만화)",
+      "thumbnail": "https://image.aladin.co.kr/product/38788/9/cover200/k382137160_1.jpg",
+      "year": 2026,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791141601065": {
+      "isbn": "9791141601065",
+      "title": "나는 돌이에요",
+      "author": "지우 (지은이)",
+      "publisher": "문학동네",
+      "thumbnail": "https://image.aladin.co.kr/product/34248/95/cover200/k192931557_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
+    },
+    "9791193150436": {
+      "isbn": "9791193150436",
+      "title": "청동 투구를 쓴 소년",
+      "author": "소윤경 (지은이)",
+      "publisher": "봄볕",
+      "thumbnail": "https://image.aladin.co.kr/product/34349/6/cover200/k402932998_1.jpg",
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "문학",
+      "lists": [
+        "childbook"
+      ],
+      "why": "어린이도서연구회 2026 권장도서로 선정된 책입니다."
     }
   },
   "awards": {
