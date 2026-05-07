@@ -51,10 +51,9 @@
     const content = document.getElementById('gradeContent');
 
     const grades = [
-      { id: '유아', icon: '🐣', name: '유아' },
-      { id: '초등 저학년', icon: '📖', name: '초등 저학년 (1-2학년)' },
-      { id: '초등 중학년', icon: '📚', name: '초등 중학년 (3-4학년)' },
-      { id: '초등 고학년', icon: '📕', name: '초등 고학년 (5-6학년)' },
+      { id: '유아',        icon: '🐣', name: '유아'                },
+      { id: '초등 저학년', icon: '📖', name: '초등 저학년 (1-3학년)' },
+      { id: '초등 고학년', icon: '📕', name: '초등 고학년 (4-6학년)' },
     ];
 
     const INITIAL_SHOW = 8;
@@ -78,7 +77,7 @@
       const genres = ['all', ...new Set(allGradeBooks.map(b => b.genre).filter(Boolean))];
 
       const genreChips = genres.map(g =>
-        `<button class="genre-chip ${sectionState[grade.id].genre === g ? 'active' : ''}" data-grade="${grade.id}" data-genre="${g}" style="padding:6px 12px;margin:4px;border:1px solid #ddd;border-radius:16px;background:${sectionState[grade.id].genre === g ? '#FF6B6B' : '#fff'};color:${sectionState[grade.id].genre === g ? '#fff' : '#666'};font-size:12px;cursor:pointer">${g === 'all' ? '전체' : g}</button>`
+        `<button class="genre-chip ${sectionState[grade.id].genre === g ? 'active' : ''}" data-grade="${grade.id}" data-genre="${g}" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${sectionState[grade.id].genre === g ? '#FF6B6B' : '#fff'};color:${sectionState[grade.id].genre === g ? '#fff' : '#666'};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">${g === 'all' ? '전체' : g}</button>`
       ).join('');
 
       // 출처 칩 — 이 학년 책에 실제 등장한 소스만, meta.sources 정의 순서로
@@ -88,13 +87,13 @@
       const activeSource = sectionState[grade.id].source;
       const sourceChips = availableSources.length === 0 ? '' : (() => {
         const allChip =
-          `<button class="source-chip ${activeSource === 'all' ? 'active' : ''}" data-grade="${grade.id}" data-source="all" style="padding:6px 12px;margin:4px;border:1px solid #ddd;border-radius:16px;background:${activeSource === 'all' ? '#444' : '#fff'};color:${activeSource === 'all' ? '#fff' : '#666'};font-size:12px;cursor:pointer">전체</button>`;
+          `<button class="source-chip ${activeSource === 'all' ? 'active' : ''}" data-grade="${grade.id}" data-source="all" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${activeSource === 'all' ? '#444' : '#fff'};color:${activeSource === 'all' ? '#fff' : '#666'};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">전체</button>`;
         const items = availableSources.map(s => {
           const count = allGradeBooks.filter(b => (b.lists || []).includes(s.id)).length;
           const isActive = activeSource === s.id;
           const bg = isActive ? s.badge.color : '#fff';
           const fg = isActive ? '#fff' : '#666';
-          return `<button class="source-chip ${isActive ? 'active' : ''}" data-grade="${grade.id}" data-source="${s.id}" style="padding:6px 12px;margin:4px;border:1px solid #ddd;border-radius:16px;background:${bg};color:${fg};font-size:12px;cursor:pointer">${escapeHtml(s.badge.text)} <span style="opacity:0.7;font-size:11px">${count}</span></button>`;
+          return `<button class="source-chip ${isActive ? 'active' : ''}" data-grade="${grade.id}" data-source="${s.id}" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${bg};color:${fg};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">${escapeHtml(s.badge.text)} <span style="opacity:0.7;font-size:11px">${count}</span></button>`;
         }).join('');
         return allChip + items;
       })();
@@ -115,15 +114,19 @@
 
             ${sourceChips ? `
             <!-- 출처(추천 기관) 필터 -->
-            <div style="margin-bottom:8px;display:flex;flex-wrap:wrap;align-items:center">
-              <span style="font-size:11px;color:#999;margin-right:6px;letter-spacing:0.04em">출처</span>
-              ${sourceChips}
+            <div style="margin-bottom:8px">
+              <span style="font-size:11px;color:#999;letter-spacing:0.04em;display:block;margin-bottom:4px">출처</span>
+              <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+                ${sourceChips}
+              </div>
             </div>` : ''}
 
             <!-- 장르 필터 -->
-            <div style="margin-bottom:16px;display:flex;flex-wrap:wrap;align-items:center">
-              <span style="font-size:11px;color:#999;margin-right:6px;letter-spacing:0.04em">장르</span>
-              ${genreChips}
+            <div style="margin-bottom:16px">
+              <span style="font-size:11px;color:#999;letter-spacing:0.04em;display:block;margin-bottom:4px">장르</span>
+              <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+                ${genreChips}
+              </div>
             </div>
 
             <!-- 책 그리드 -->
