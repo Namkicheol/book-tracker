@@ -136,6 +136,7 @@
     _listCtx.idx = next;
 
     const gen = ++_renderGen;
+    _unwireSwipe(); // 애니메이션 중 이중 swipe 차단 — 완료 후 재연결
     const book = _listCtx.books[next];
     const mode = (_listCtx.opts || {}).mode || 'recommend';
     const modal = document.getElementById('bookPreviewModal');
@@ -177,6 +178,7 @@
       bodyEl.style.cssText = '';
     }
     wireActions(book, modal, mode, detail);
+    _wireSwipe();
   }
 
   // ── Swipe detection ──────────────────────────────────────────
