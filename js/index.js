@@ -253,6 +253,7 @@
   // ── Render: book grid ────────────────────────────────────────
 
   let librarySearchQuery = '';
+  let _currentVisibleBooks = []; // renderBooks가 만든 정렬·필터된 목록을 보존
 
   function renderBooks() {
     const grid  = document.getElementById('booksGrid');
@@ -302,6 +303,7 @@
     }
 
     empty.classList.add('hidden');
+    _currentVisibleBooks = books; // 클릭 핸들러가 DOM 재조회 없이 이 배열 직접 사용
     grid.innerHTML = books.map(renderCard).join('');
     grid.classList.toggle('list-view', currentView === 'list');
 
@@ -327,10 +329,8 @@
         const book = Storage.getBook(id);
         if (!book) return;
         if (window.BookPreview && BookPreview.showList) {
-          const allCards = [...document.querySelectorAll('.book-card')];
-          const books = allCards.map(c => Storage.getBook(c.dataset.id)).filter(Boolean);
-          const idx = books.findIndex(b => b.id === book.id);
-          BookPreview.showList(books, Math.max(0, idx), { mode: 'library' });
+          const idx = _currentVisibleBooks.findIndex(b => b.id === book.id);
+          BookPreview.showList(_currentVisibleBooks, Math.max(0, idx), { mode: 'library' });
         } else {
           showBookPreview(book);
         }
