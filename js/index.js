@@ -303,8 +303,8 @@
     }
 
     empty.classList.add('hidden');
-    _currentVisibleBooks = books; // 클릭 핸들러가 DOM 재조회 없이 이 배열 직접 사용
-    grid.innerHTML = books.map(renderCard).join('');
+    _currentVisibleBooks = books;
+    grid.innerHTML = books.map((b, i) => renderCard(b, i)).join('');
     grid.classList.toggle('list-view', currentView === 'list');
 
     const inSelectMode = selectMode;
@@ -329,8 +329,8 @@
         const book = Storage.getBook(id);
         if (!book) return;
         if (window.BookPreview && BookPreview.showList) {
-          const idx = _currentVisibleBooks.findIndex(b => b.id === book.id);
-          BookPreview.showList(_currentVisibleBooks, Math.max(0, idx), { mode: 'library' });
+          const idx = parseInt(card.dataset.index, 10) || 0;
+          BookPreview.showList(_currentVisibleBooks, idx, { mode: 'library' });
         } else {
           showBookPreview(book);
         }
@@ -500,7 +500,7 @@
     return (Math.abs(h) % 8) + 1;
   }
 
-  function renderCard(book) {
+  function renderCard(book, idx) {
     const rating = book.rating || 0;
     const starsHtml = rating > 0
       ? `<div class="book-card-stars"><span>${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</span></div>`
@@ -536,7 +536,7 @@
     }
 
     return `
-      <article class="book-card" data-id="${escapeAttr(book.id)}" draggable="true">
+      <article class="book-card" data-id="${escapeAttr(book.id)}" data-index="${idx}" draggable="true">
         <div class="book-cover-wrap">
           ${cover}
         </div>

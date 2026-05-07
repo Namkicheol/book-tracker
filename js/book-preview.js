@@ -187,7 +187,7 @@
     if (!card) return;
     _swipeEl = card;
     card.addEventListener('touchstart',  _onTouchStart,  { passive: true });
-    card.addEventListener('touchmove',   _onTouchMove,   { passive: true }); // passive: just track pos
+    card.addEventListener('touchmove',   _onTouchMove,   { passive: false }); // non-passive: preventDefault for horizontal
     card.addEventListener('touchend',    _onTouchEnd,    { passive: true });
     card.addEventListener('touchcancel', _onTouchCancel, { passive: true });
   }
@@ -204,12 +204,20 @@
   }
 
   function _onTouchStart(e) {
-    _swipeStart = { x: e.touches[0].clientX, y: e.touches[0].clientY, last: null };
+    _swipeStart = { x: e.touches[0].clientX, y: e.touches[0].clientY, locked: null, last: null };
     _swipeDir   = null;
   }
 
   function _onTouchMove(e) {
-    if (_swipeStart && e.touches.length) {
+    if (!_swipeStart || !e.touches.length) return;
+    const dx = e.touches[0].clientX - _swipeStart.x;
+    const dy = e.touches[0].clientY - _swipeStart.y;
+    // 5px 이상 움직이면 방향 잠금
+    if (_swipeStart.locked === null && (Math.abs(dx) > 5 || Math.abs(dy) > 5)) {
+      _swipeStart.locked = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+    }
+    if (_swipeStart.locked === 'h') {
+      e.preventDefault(); // iOS 스크롤 차단 — 가로 스와이프 확보
       _swipeStart.last = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     }
   }
@@ -229,8 +237,8 @@
   }
 
   function _onTouchCancel() {
-    // iOS fires touchcancel when it claims scroll — use last tracked position
-    if (_swipeStart && _swipeStart.last) {
+    // 가로 잠금 중이었을 때만 복구 시도
+    if (_swipeStart && _swipeStart.locked === 'h' && _swipeStart.last) {
       _checkSwipe(_swipeStart.last.x, _swipeStart.last.y);
     } else {
       _swipeStart = null; _swipeDir = null;
