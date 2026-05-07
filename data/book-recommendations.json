@@ -2415,7 +2415,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 41,
-      "lists": [],
+      "lists": [
+        "textbook"
+      ],
       "why": "알라딘 베스트셀러 41위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791142347887": {
@@ -4950,7 +4952,8 @@
       "genre": "교양",
       "bestRank": 265,
       "lists": [
-        "childbook"
+        "childbook",
+        "textbook"
       ],
       "why": "알라딘 베스트셀러 265위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
@@ -5483,7 +5486,7 @@
       "publisher": "시공주니어",
       "thumbnail": "https://image.aladin.co.kr/product/17163/92/cover200/8952787595_1.jpg",
       "year": 2018,
-      "targetAge": "초등 저학년",
+      "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 314,
       "lists": [
@@ -6302,7 +6305,9 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "bestRank": 388,
-      "lists": [],
+      "lists": [
+        "textbook"
+      ],
       "why": "알라딘 베스트셀러 388위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9788936443368": {
@@ -7027,12 +7032,13 @@
       "publisher": "사계절",
       "thumbnail": "https://image.aladin.co.kr/product/34/91/cover200/8971968710_2.gif",
       "year": 2000,
-      "targetAge": "초등 고학년",
+      "targetAge": "초등 저학년",
       "genre": "교양",
       "bestRank": 448,
       "lists": [
         "chaektase",
-        "changbi-award"
+        "changbi-award",
+        "textbook"
       ],
       "why": "알라딘 베스트셀러 448위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
@@ -7043,7 +7049,7 @@
       "publisher": "다림",
       "thumbnail": "https://image.aladin.co.kr/product/21/65/cover200/8987721213_3.jpg",
       "year": 1999,
-      "targetAge": "초등 저학년",
+      "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 449,
       "lists": [
@@ -7058,11 +7064,12 @@
       "publisher": "다림",
       "thumbnail": "https://image.aladin.co.kr/product/10/99/cover200/8987721094_2.jpg",
       "year": 1998,
-      "targetAge": "초등 저학년",
+      "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 450,
       "lists": [
-        "jeondokse"
+        "jeondokse",
+        "textbook"
       ],
       "why": "알라딘 베스트셀러 450위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
@@ -25692,7 +25699,7 @@
       "publisher": "길벗어린이",
       "thumbnail": "https://image.aladin.co.kr/product/0/48/cover200/8986621134_1.jpg",
       "year": 1996,
-      "targetAge": "유아",
+      "targetAge": "초등 1학년",
       "genre": "그림책",
       "lists": [
         "chaektase",
@@ -25707,7 +25714,7 @@
       "publisher": "길벗어린이",
       "thumbnail": "https://image.aladin.co.kr/product/10/70/cover200/8986621339_2.jpg",
       "year": 1997,
-      "targetAge": "유아",
+      "targetAge": "초등 저학년",
       "genre": "그림책",
       "lists": [
         "chaektase",
@@ -25754,7 +25761,8 @@
       "genre": "문학",
       "lists": [
         "chaektase",
-        "changbi-award"
+        "changbi-award",
+        "textbook"
       ],
       "why": "책읽는교육사회실천회의가 선정한 추천도서입니다. 교육 현장 교사들이 직접 읽고 검증한 양서예요."
     },
@@ -25765,10 +25773,11 @@
       "publisher": "한솔수북",
       "thumbnail": "https://image.aladin.co.kr/product/23403/9/cover200/k962637315_1.jpg",
       "year": 2004,
-      "targetAge": "유아",
+      "targetAge": "초등 1학년",
       "genre": "그림책",
       "lists": [
-        "chaektase"
+        "chaektase",
+        "textbook"
       ],
       "why": "책읽는교육사회실천회의가 선정한 추천도서입니다. 교육 현장 교사들이 직접 읽고 검증한 양서예요."
     },
@@ -25779,7 +25788,7 @@
       "publisher": "Storybowl(스토리보울)",
       "thumbnail": "https://image.aladin.co.kr/product/34073/1/cover200/k742931474_1.jpg",
       "year": 2024,
-      "targetAge": "유아",
+      "targetAge": "초등 1학년",
       "genre": "그림책",
       "lists": [
         "chaektase",
@@ -25990,10 +25999,11 @@
       "publisher": "창비",
       "thumbnail": "https://image.aladin.co.kr/product/69/5/cover200/8936442295_2.jpg",
       "year": 2006,
-      "targetAge": "초등 저학년",
+      "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "chaektase"
+        "chaektase",
+        "textbook"
       ],
       "why": "책읽는교육사회실천회의가 선정한 추천도서입니다. 교육 현장 교사들이 직접 읽고 검증한 양서예요."
     },
@@ -26046,10 +26056,11 @@
       "publisher": "더스토리",
       "thumbnail": "https://image.aladin.co.kr/product/37207/21/cover200/k582031496_2.jpg",
       "year": 2025,
-      "targetAge": "초등 저학년",
+      "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "chaektase"
+        "chaektase",
+        "textbook"
       ],
       "why": "책읽는교육사회실천회의가 선정한 추천도서입니다. 교육 현장 교사들이 직접 읽고 검증한 양서예요."
     },
@@ -26074,7 +26085,7 @@
       "publisher": "인디고(글담)",
       "thumbnail": "https://image.aladin.co.kr/product/796/55/cover200/8992632312_1.jpg",
       "year": 2010,
-      "targetAge": "초등 저학년",
+      "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
         "chaektase",
@@ -26103,10 +26114,11 @@
       "publisher": "동녘",
       "thumbnail": "https://image.aladin.co.kr/product/694/68/cover200/8972976199_2.jpg",
       "year": 2003,
-      "targetAge": "초등 저학년",
+      "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "chaektase"
+        "chaektase",
+        "textbook"
       ],
       "why": "책읽는교육사회실천회의가 선정한 추천도서입니다. 교육 현장 교사들이 직접 읽고 검증한 양서예요."
     },
@@ -26159,10 +26171,11 @@
       "publisher": "비룡소",
       "thumbnail": "https://image.aladin.co.kr/product/13/71/cover200/8949110075_2.jpg",
       "year": 1999,
-      "targetAge": "유아",
+      "targetAge": "초등 1학년",
       "genre": "그림책",
       "lists": [
-        "childbook"
+        "childbook",
+        "textbook"
       ],
       "why": "어린이도서연구회가 선정한 권장도서입니다."
     },
@@ -26357,7 +26370,7 @@
       "publisher": "느림보",
       "thumbnail": "https://image.aladin.co.kr/product/37/97/cover200/8987504565_1.jpg",
       "year": 2002,
-      "targetAge": "유아",
+      "targetAge": "초등 1학년",
       "genre": "그림책",
       "lists": [
         "childbook",
@@ -26432,7 +26445,8 @@
       "genre": "문학",
       "lists": [
         "jeondokse",
-        "one-book"
+        "one-book",
+        "textbook"
       ],
       "why": "전국독서새물결모임 현장 교사들이 직접 검증한 추천도서입니다."
     },
@@ -26447,7 +26461,8 @@
       "genre": "문학",
       "lists": [
         "jeondokse",
-        "one-book"
+        "one-book",
+        "textbook"
       ],
       "why": "전국독서새물결모임 현장 교사들이 직접 검증한 추천도서입니다."
     },
@@ -28348,6 +28363,344 @@
       "targetAge": "초등 고학년",
       "genre": "동화",
       "why": "6학년 국어 교과서 수록. 채만식의 우화 동화. 욕심과 협동에 대한 교훈을 담은 이야기."
+    },
+    "9788989863786": {
+      "isbn": "9788989863786",
+      "title": "100층짜리 집",
+      "author": "이와이 도시오",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 추천 그림책. 100층을 올라가며 다양한 동물 친구들을 만나는 상상력 넘치는 이야기."
+    },
+    "9791160943610": {
+      "isbn": "9791160943610",
+      "title": "강냉이",
+      "author": "권정생",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 수준 추천. 권정생 작가의 따뜻한 시선으로 담은 소박하고 정겨운 어린이 이야기."
+    },
+    "9788986565065": {
+      "isbn": "9788986565065",
+      "title": "손 큰 할머니의 만두 만들기",
+      "author": "채인선",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 교과서 수록. 손이 큰 할머니가 온 마을 사람들과 만두를 만드는 정겨운 이야기."
+    },
+    "9788997157686": {
+      "isbn": "9788997157686",
+      "title": "콩쥐팥쥐",
+      "author": "작자미상",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "2학년 교과서 수록 전래동화. 착하고 성실한 콩쥐가 역경을 이겨내는 한국의 신데렐라 이야기."
+    },
+    "9788958283164": {
+      "isbn": "9788958283164",
+      "title": "방귀쟁이 며느리",
+      "author": "이상교",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "2학년 교과서 수록. 방귀 때문에 쫓겨났다가 방귀로 위기를 해결하는 유쾌한 전래동화."
+    },
+    "9791168252776": {
+      "isbn": "9791168252776",
+      "title": "바나나 할머니",
+      "author": "채인선",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "2학년 수록 추천. 세상 모든 것에 감사할 줄 아는 할머니의 따뜻한 삶을 담은 그림책."
+    },
+    "9791192247359": {
+      "isbn": "9791192247359",
+      "title": "용감한 꼬마 기관차",
+      "author": "와티 파이퍼",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "2학년 교과서 수록. 할 수 있다는 믿음으로 고개를 넘는 작은 기관차의 감동적인 이야기."
+    },
+    "9788934908067": {
+      "isbn": "9788934908067",
+      "title": "책 먹는 여우",
+      "author": "프란치스카 비어만",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 국어 교과서 수록. 책을 너무 좋아해 먹어치우는 여우 아저씨의 유쾌한 독서 모험."
+    },
+    "9788936446819": {
+      "isbn": "9788936446819",
+      "title": "수박 수영장",
+      "author": "안녕달",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 추천 그림책. 거대한 수박이 수영장이 되는 여름날의 달콤한 상상을 담은 그림책."
+    },
+    "9788954694391": {
+      "isbn": "9788954694391",
+      "title": "이상한 나라의 앨리스",
+      "author": "루이스 캐럴",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 교과서 추천. 토끼를 따라 들어간 이상한 나라에서 벌어지는 환상적인 모험 이야기."
+    },
+    "9788976500298": {
+      "isbn": "9788976500298",
+      "title": "섬마을 아이들",
+      "author": "이원수",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 교과서 수록. 이원수 작가의 아름다운 동화. 섬마을 아이들의 순수한 삶과 우정 이야기."
+    },
+    "9791175240414": {
+      "isbn": "9791175240414",
+      "title": "피노키오",
+      "author": "콜로디",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 교과서 수록 세계 명작. 거짓말을 하면 코가 자라는 나무 인형 피노키오의 성장 이야기."
+    },
+    "9788915100466": {
+      "isbn": "9788915100466",
+      "title": "백설공주",
+      "author": "그림 형제",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 교과서 수록 세계 명작. 계모의 질투를 이겨내는 백설공주와 일곱 난쟁이의 사랑 이야기."
+    },
+    "9791175240421": {
+      "isbn": "9791175240421",
+      "title": "오즈의 마법사",
+      "author": "라이먼 프랭크 바움",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 교과서 추천 세계 명작. 도로시가 오즈의 마법사를 찾아 떠나는 환상적인 모험."
+    },
+    "9788980408337": {
+      "isbn": "9788980408337",
+      "title": "수일이와 수일이",
+      "author": "김우경",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 국어 교과서 수록. 게임 중독인 수일이와 게임 속 자신의 만남을 통한 성장 이야기."
+    },
+    "9788992632201": {
+      "isbn": "9788992632201",
+      "title": "빨간 머리 앤",
+      "author": "루시 모드 몽고메리",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 교과서 추천. 상상력 풍부한 고아 소녀 앤의 우정과 성장을 담은 세계적인 명작."
+    },
+    "9788949110264": {
+      "isbn": "9788949110264",
+      "title": "까마귀 소년",
+      "author": "야시마 타로",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 교과서 수록. 따돌림받던 아이가 까마귀 소리로 자신을 증명하는 감동적인 그림책."
+    },
+    "9788932015941": {
+      "isbn": "9788932015941",
+      "title": "동백꽃",
+      "author": "김유정",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "5학년 국어 교과서 수록. 순박한 시골 소년 소녀의 풋사랑을 해학적으로 그린 한국 단편 명작."
+    },
+    "9788987721125": {
+      "isbn": "9788987721125",
+      "title": "봄봄",
+      "author": "김유정",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "5학년 교과서 수록. 혼인을 미루는 장인과 데릴사위의 갈등을 유머러스하게 담은 한국 단편."
+    },
+    "9788987721194": {
+      "isbn": "9788987721194",
+      "title": "메밀꽃 필 무렵",
+      "author": "이효석",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "5학년 국어 교과서 수록. 메밀꽃 핀 달밤을 배경으로 한 아름다운 서정 소설."
+    },
+    "9788965880776": {
+      "isbn": "9788965880776",
+      "title": "운수 좋은 날",
+      "author": "현진건",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "5학년 교과서 수록. 일제강점기 인력거꾼의 비극적인 하루를 담은 한국 단편 소설 명작."
+    },
+    "9788932917245": {
+      "isbn": "9788932917245",
+      "title": "어린 왕자",
+      "author": "생텍쥐페리",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "6학년 교과서 수록 세계 명작. 별에서 온 어린 왕자와 조종사의 만남을 통해 삶의 본질을 탐구."
+    },
+    "9791164453122": {
+      "isbn": "9791164453122",
+      "title": "동물 농장",
+      "author": "조지 오웰",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "6학년 교과서 추천. 동물들이 세운 농장을 통해 권력과 평등의 본질을 풍자한 세계적 우화."
+    },
+    "9788986183733": {
+      "isbn": "9788986183733",
+      "title": "흑설공주 이야기",
+      "author": "박기범",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "6학년 수록 추천. 고전 동화를 새롭게 해석해 편견과 차별에 대해 생각하게 하는 이야기."
+    },
+    "9788937461668": {
+      "isbn": "9788937461668",
+      "title": "삼국유사",
+      "author": "일연",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "6학년 국어 교과서 수록. 단군 신화부터 고려 시대까지의 설화를 담은 한국 고전 역사서."
+    },
+    "9788937462009": {
+      "isbn": "9788937462009",
+      "title": "홍길동전",
+      "author": "허균",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "6학년 교과서 수록 고전. 서얼 출신 홍길동이 차별을 극복하고 의적 활동을 펼치는 한국 고전 소설."
     }
   },
   "awards": {
