@@ -9,6 +9,12 @@
 
   let currentFolderId = '';        // '' === 전체
   let currentSort     = 'newest';  // newest | oldest | rating | title
+  let currentStatus   = 'all';     // all | want | reading | read
+
+  const STATUS_BADGE = {
+    want:    { label: '📌 읽을 책', bg: '#FF6B6B', fg: '#fff' },
+    reading: { label: '📖 읽는 중', bg: '#f39c12', fg: '#fff' },
+  };
 
   // 다중 선택 모드
   let selectMode = false;
@@ -98,6 +104,43 @@
       : '—';
     const figRating = document.getElementById('figRating');
     if (figRating) figRating.textContent = avg;
+  }
+
+  // ── Render: status tabs ──────────────────────────────────────
+
+  function renderStatusTabs() {
+    const bar = document.getElementById('statusTabBar');
+    if (!bar) return;
+    const all = Storage.getAllBooks();
+    const counts = {
+      all:     all.length,
+      reading: all.filter(b => b.status === 'reading').length,
+      want:    all.filter(b => b.status === 'want').length,
+      read:    all.filter(b => !b.status).length,
+    };
+    const tabs = [
+      { key: 'all',     label: '전체',    count: counts.all     },
+      { key: 'reading', label: '📖 읽는 중', count: counts.reading },
+      { key: 'want',    label: '📌 읽을 책', count: counts.want    },
+      { key: 'read',    label: '✅ 읽은 책', count: counts.read    },
+    ];
+    bar.innerHTML = tabs.map(t => {
+      const active = currentStatus === t.key;
+      const showCount = t.count > 0 && t.key !== 'all';
+      return `<button class="status-tab ${active ? 'active' : ''}" data-status="${t.key}"
+        style="padding:6px 14px;border:none;border-radius:16px;font-size:13px;cursor:pointer;white-space:nowrap;
+               background:${active ? '#333' : '#f0f0f0'};color:${active ? '#fff' : '#555'};
+               font-weight:${active ? '700' : '400'}">
+        ${t.label}${showCount ? ` <sup style="font-size:10px">${t.count}</sup>` : ''}
+      </button>`;
+    }).join('');
+    bar.querySelectorAll('[data-status]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentStatus = btn.dataset.status;
+        renderStatusTabs();
+        renderBooks();
+      });
+    });
   }
 
   // ── Render: folders ──────────────────────────────────────────
@@ -214,6 +257,14 @@
       books = books.filter(b => {
         return norm(b.title).includes(q) || (b.authors || []).some(a => norm(a).includes(q));
       });
+    }
+
+    if (currentStatus !== 'all') {
+      if (currentStatus === 'read') {
+        books = books.filter(b => !b.status);
+      } else {
+        books = books.filter(b => b.status === currentStatus);
+      }
     }
 
     books = sortBooks(books, currentSort);
@@ -437,6 +488,11 @@
       : `<div class="book-cover-placeholder" data-palette="${palette}">${glyph}</div>`;
     const author = (book.authors || []).join(', ') || '저자 미상';
 
+    const statusInfo = STATUS_BADGE[book.status];
+    const statusHtml = statusInfo
+      ? `<div style="margin-top:5px"><span style="background:${statusInfo.bg};color:${statusInfo.fg};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">${statusInfo.label}</span></div>`
+      : '';
+
     // Check if this book is in recommendation database
     let badgesHtml = '';
     if (recommendationData && book.isbn) {
@@ -461,6 +517,7 @@
         </div>
         <h3 class="book-card-title">${escapeHtml(book.title)}</h3>
         <p class="book-card-author">${escapeHtml(author)}</p>
+        ${statusHtml}
         ${starsHtml}
         ${badgesHtml}
       </article>
@@ -698,6 +755,7 @@
   // ── Boot ─────────────────────────────────────────────────────
 
   document.addEventListener('DOMContentLoaded', () => {
+    renderStatusTabs();
     renderFolders();
     renderBooks();
     const sortBtn = document.getElementById('sortBtn');
