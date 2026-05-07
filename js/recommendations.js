@@ -9,6 +9,7 @@
   let allBooks = [];
   let textbookMode = false;
   let recView = localStorage.getItem('recView') || 'grid';
+  let kinderData = null;
 
   // ── Load data ────────────────────────────────────────────────
 
@@ -16,7 +17,10 @@
 
   async function init() {
     try {
-      const res = await fetch('data/book-recommendations.json');
+      const [res, kinderRes] = await Promise.all([
+        fetch('data/book-recommendations.json'),
+        fetch('data/kindergarten-curated.json').catch(() => null),
+      ]);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       recommendationData = await res.json();
@@ -27,6 +31,10 @@
 
       if (allBooks.length === 0) {
         throw new Error('No books in database');
+      }
+
+      if (kinderRes && kinderRes.ok) {
+        kinderData = await kinderRes.json();
       }
 
       console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
@@ -78,6 +86,9 @@
     if (textbookMode) { renderTextbookSections(); return; }
 
     const content = document.getElementById('gradeContent');
+
+    // Prepend kindergarten curated section if data available
+    const kinderHtml = kinderData ? renderKindergartenSection() : '';
 
     const grades = [
       { id: '유아',        icon: '🐣', name: '유아'                },
@@ -171,12 +182,25 @@
       `;
     }).filter(Boolean).join('');
 
-    content.innerHTML = sections;
+    content.innerHTML = kinderHtml + sections;
 
     // 각 섹션의 책 목록 렌더링
     grades.forEach(grade => {
       renderSectionBooks(grade.id, INITIAL_SHOW);
     });
+
+    // Kindergarten section card listeners
+    if (kinderHtml) {
+      const kinderSection = content.querySelector('#kinderSection');
+      if (kinderSection) {
+        kinderSection.querySelectorAll('.rec-browse-card').forEach(card => {
+          card.addEventListener('click', () => {
+            try { const book = JSON.parse(card.dataset.book || '{}'); if (window.BookPreview) BookPreview.show(book, { mode: 'recommend' }); } catch (e) {}
+          });
+        });
+        backfillThumbnails(kinderSection);
+      }
+    }
 
     // 이벤트 리스너 등록
     attachSectionListeners();
@@ -240,6 +264,58 @@
         renderSectionBooks(gradeId, current + LOAD_MORE);
       });
     }
+  }
+
+  // ── Kindergarten Curated Section ──────────────────────────────
+
+  function renderKindergartenSection() {
+    if (!kinderData || !kinderData.themes) return '';
+
+    const themes = kinderData.themes;
+    const booksMap = new Map(allBooks.map(b => [String(b.isbn), b]));
+
+    const themeHtml = themes.map(theme => {
+      const themeBooks = (theme.books || []).map(pick => {
+        // Use full book data from allBooks if available, otherwise use pick data
+        const fromDB = booksMap.get(String(pick.isbn));
+        const book = fromDB
+          ? { ...fromDB, why: pick.why || fromDB.why }
+          : { isbn: pick.isbn, title: pick.title, author: pick.author, publisher: pick.publisher, why: pick.why, lists: [], targetAge: '유아', genre: '그림책' };
+        return book;
+      });
+
+      const cards = themeBooks.map(book => {
+        const cover = book.thumbnail || PLACEHOLDER;
+        const needsLookup = !book.thumbnail && !!book.isbn;
+        const bookJson = escapeAttr(JSON.stringify(book));
+        return `<button type="button" class="rec-browse-card" data-book="${bookJson}"${needsLookup ? ` data-needs-thumb="${escapeAttr(String(book.isbn))}"` : ''} style="min-width:100px;width:100px;flex-shrink:0">
+          <img class="rec-browse-cover" src="${escapeAttr(cover)}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER}'" style="height:130px;object-fit:cover">
+          <div class="rec-browse-info">
+            <h3 class="rec-browse-book-title" style="font-size:11px;line-height:1.3;-webkit-line-clamp:2">${escapeHtml(book.title)}</h3>
+          </div>
+        </button>`;
+      }).join('');
+
+      return `<div style="margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:0 16px">
+          <span style="font-size:18px">${theme.emoji}</span>
+          <span style="font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--text)">${escapeHtml(theme.name)}</span>
+          <span style="font-size:11px;color:var(--text-mute)">${escapeHtml(theme.description)}</span>
+        </div>
+        <div style="display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch">${cards}</div>
+      </div>`;
+    }).join('');
+
+    return `<div id="kinderSection" style="border-bottom:2px solid var(--border);padding:16px 0 20px;margin-bottom:8px">
+      <div style="padding:0 16px 12px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-size:20px">🌸</span>
+          <span style="font-family:var(--font-body);font-size:15px;font-weight:800;color:var(--text)">유치원 특선 <span style="font-size:11px;font-weight:400;color:var(--text-soft)">(5~7세)</span></span>
+        </div>
+        <p style="font-size:11px;color:var(--text-mute);font-family:var(--font-display);font-style:italic">어린이도서연구회·학교도서관저널·행복한아침독서 추천 그림책</p>
+      </div>
+      ${themeHtml}
+    </div>`;
   }
 
   // ── Textbook Mode: 1~6학년 개별 섹션 ────────────────────────
