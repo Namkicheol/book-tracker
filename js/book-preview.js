@@ -136,7 +136,8 @@
     _listCtx.idx = next;
 
     const gen = ++_renderGen;
-    _unwireSwipe(); // 애니메이션 중 이중 swipe 차단 — 완료 후 재연결
+    // unwire 하지 않음 — 빠른 스와이프 중 listener를 떼면 두 번째 swipe가
+    // 조용히 사라져 책이 건너뛰어지는 것처럼 보임. _renderGen으로 stale render만 차단.
     const book = _listCtx.books[next];
     const mode = (_listCtx.opts || {}).mode || 'recommend';
     const modal = document.getElementById('bookPreviewModal');
@@ -178,7 +179,6 @@
       bodyEl.style.cssText = '';
     }
     wireActions(book, modal, mode, detail);
-    _wireSwipe();
   }
 
   // ── Swipe detection ──────────────────────────────────────────
