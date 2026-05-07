@@ -724,6 +724,75 @@
     const author = (book.authors || [])[0];
     const useAladin = !!(window.WORKER_URL && lookupItem);
 
+    // 영어책 + AR Level 감지
+    const isEnglishAR = book.language === 'en' && book.ar;
+
+    // AR Level 범위 내 책 검색 (영어 전용)
+    // 1순위: 사용자 서재의 영어책, 2순위: Google Books API
+    async function searchARLevel(arMin, arMax) {
+      const curIsbn = String(book.isbn).replace(/\D/g, '');
+      const userBooks = Storage.getBooks()
+        .filter(b => b.language === 'en' && b.ar != null)
+        .filter(b => String(b.isbn).replace(/\D/g, '') !== curIsbn)
+        .filter(b => b.ar >= arMin && b.ar <= arMax)
+        .map(b => ({
+          isbn: b.isbn,
+          title: b.title,
+          authors: b.authors || [],
+          thumbnail: b.thumbnail || '',
+          publisher: b.publisher || '',
+          salesPoint: (b.rating || 1) * 100,
+          bestRank: 0,
+          pubDate: b.readDate || '',
+        }));
+
+      if (userBooks.length >= 6) return userBooks;
+
+      const arMid = (arMin + arMax) / 2;
+      // AR 수준에 따라 적절한 Google Books 카테고리로 매핑
+      const subject = arMid < 3 ? 'subject:juvenile+fiction+beginning+readers'
+                    : arMid < 6 ? 'subject:juvenile+fiction'
+                    : 'subject:young+adult+fiction';
+      try {
+        const url = `https://www.googleapis.com/books/v1/volumes?q=${subject}&maxResults=20&printType=books&langRestrict=en&orderBy=relevance`;
+        const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
+        if (res.ok) {
+          const data = await res.json();
+          const seen = new Set(userBooks.map(b => String(b.isbn).replace(/\D/g, '')));
+          const gbBooks = (data.items || []).map(item => {
+            const vi = item.volumeInfo || {};
+            const isbnObj = (vi.industryIdentifiers || []).find(i => i.type === 'ISBN_13') ||
+                            (vi.industryIdentifiers || []).find(i => i.type === 'ISBN_10');
+            const thumb = ((vi.imageLinks || {}).thumbnail || (vi.imageLinks || {}).smallThumbnail || '').replace('http://', 'https://');
+            return {
+              isbn: isbnObj ? isbnObj.identifier : '',
+              title: vi.title || '',
+              authors: vi.authors || [],
+              thumbnail: thumb,
+              publisher: vi.publisher || '',
+              salesPoint: 50,
+              bestRank: 0,
+              pubDate: vi.publishedDate || '',
+            };
+          }).filter(b => b.title && b.isbn && !seen.has(String(b.isbn).replace(/\D/g, '')));
+          const merged = [...userBooks];
+          for (const b of gbBooks) {
+            const k = String(b.isbn).replace(/\D/g, '');
+            if (k && !seen.has(k)) { merged.push(b); seen.add(k); }
+          }
+          return merged.slice(0, 12);
+        }
+      } catch (e) { /* Google Books 실패 시 서재 결과만 반환 */ }
+      return userBooks;
+    }
+
+    const arSameLevelPromise = isEnglishAR
+      ? searchARLevel(book.ar - 0.5, book.ar + 0.5)
+      : Promise.resolve(null);
+    const arNextLevelPromise = isEnglishAR
+      ? searchARLevel(book.ar + 0.3, book.ar + 1.5)
+      : Promise.resolve(null);
+
     // 시리즈 감지 — Rail 2 전략 결정에 사용
     const series = detectSeries(book.title);
 
@@ -855,8 +924,8 @@
       return [];
     })();
 
-    const [authorBooks, sameLevelBooks, alsoLikeBooks, nextLevelBooks] = await Promise.all([
-      authorPromise, sameLevelPromise, alsoLikePromise, nextLevelPromise,
+    const [authorBooks, sameLevelBooks, alsoLikeBooks, nextLevelBooks, arSameBooks, arNextBooks] = await Promise.all([
+      authorPromise, sameLevelPromise, alsoLikePromise, nextLevelPromise, arSameLevelPromise, arNextLevelPromise,
     ]);
 
     const currentBookCategory = book.categoryName || '';
@@ -873,25 +942,49 @@
     });
     const r2eyebrow = document.getElementById('recPublisherEyebrow');
     const r2title   = document.getElementById('recPublisherTitle');
-    if (r2eyebrow) r2eyebrow.textContent = series ? '시리즈' : '유사한 책';
-    if (r2title)   r2title.textContent   = rail2Reason || '수준 비슷한 책';
-    // 유사 rail 보강: sameLevel이 부족하면 alsoLike(similarBookList + 부모카테고리 BS)로 채움
-    const filteredSame = filterCurrent(sameLevelBooks);
-    const filteredAlso = filterCurrent(alsoLikeBooks);
-    const seenIsbn = new Set(filteredSame.map(b => String(b.isbn).replace(/\D/g, '')));
-    const merged = [...filteredSame];
-    for (const b of filteredAlso) {
-      const k = String(b.isbn).replace(/\D/g, '');
-      if (k && !seenIsbn.has(k)) { merged.push(b); seenIsbn.add(k); }
+
+    // 영어책 + AR Level이면 AR 기반 rail로 교체
+    if (isEnglishAR && arSameBooks && arSameBooks.length > 0) {
+      if (r2eyebrow) r2eyebrow.textContent = 'AR 같은 수준';
+      if (r2title)   r2title.textContent   = `AR ${(book.ar - 0.5).toFixed(1)}~${(book.ar + 0.5).toFixed(1)} 비슷한 책`;
+      renderRail('recPublisher', filterCurrent(arSameBooks), {
+        reason: `AR ${book.ar.toFixed(1)} 비슷한 수준`,
+        why: `AR 수준 ${(book.ar - 0.5).toFixed(1)}~${(book.ar + 0.5).toFixed(1)} 범위의 영어책입니다. 지금 읽은 책과 비슷한 어휘·문장 수준이에요.`,
+      });
+    } else {
+      if (r2eyebrow) r2eyebrow.textContent = series ? '시리즈' : '유사한 책';
+      if (r2title)   r2title.textContent   = rail2Reason || '수준 비슷한 책';
+      // 유사 rail 보강: sameLevel이 부족하면 alsoLike(similarBookList + 부모카테고리 BS)로 채움
+      const filteredSame = filterCurrent(sameLevelBooks);
+      const filteredAlso = filterCurrent(alsoLikeBooks);
+      const seenIsbn = new Set(filteredSame.map(b => String(b.isbn).replace(/\D/g, '')));
+      const merged = [...filteredSame];
+      for (const b of filteredAlso) {
+        const k = String(b.isbn).replace(/\D/g, '');
+        if (k && !seenIsbn.has(k)) { merged.push(b); seenIsbn.add(k); }
+      }
+      renderRail('recPublisher', merged, {
+        reason: rail2Reason || '유사한 책',
+        why:    rail2Why    || `『${currentBookTitle}』과 비슷한 분야·수준의 책입니다.`,
+      });
     }
-    renderRail('recPublisher', merged, {
-      reason: rail2Reason || '유사한 책',
-      why:    rail2Why    || `『${currentBookTitle}』과 비슷한 분야·수준의 책입니다.`,
-    });
-    renderRail('recSimilar', filterCurrent(nextLevelBooks), {
-      reason: '다음 단계 추천책',
-      why: `『${currentBookTitle}』보다 어휘 수준이나 주제 깊이가 한 단계 높은 책으로 골랐습니다. 지금 읽은 책이 쉽게 느껴지기 시작했다면 이 리스트에서 다음 책을 골라보세요.`,
-    });
+
+    if (isEnglishAR && arNextBooks && arNextBooks.length > 0) {
+      const r3section = document.querySelector('[data-rail-id="recSimilar"]');
+      const r3eyebrow = r3section && r3section.querySelector('.section-eyebrow');
+      const r3title   = r3section && r3section.querySelector('.section-title');
+      if (r3eyebrow) r3eyebrow.textContent = '다음 AR 단계';
+      if (r3title)   r3title.textContent   = `AR ${(book.ar + 0.3).toFixed(1)}~${(book.ar + 1.5).toFixed(1)} 다음 단계`;
+      renderRail('recSimilar', filterCurrent(arNextBooks), {
+        reason: '다음 AR 단계',
+        why: `AR ${(book.ar + 0.3).toFixed(1)}~${(book.ar + 1.5).toFixed(1)} 범위의 책입니다. 지금 읽은 책보다 한 단계 어려운 영어책으로, 어휘력을 자연스럽게 넓힐 수 있어요.`,
+      });
+    } else {
+      renderRail('recSimilar', filterCurrent(nextLevelBooks), {
+        reason: '다음 단계 추천책',
+        why: `『${currentBookTitle}』보다 어휘 수준이나 주제 깊이가 한 단계 높은 책으로 골랐습니다. 지금 읽은 책이 쉽게 느껴지기 시작했다면 이 리스트에서 다음 책을 골라보세요.`,
+      });
+    }
     attachRailSortListeners();
   }
 
