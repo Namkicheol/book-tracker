@@ -1404,16 +1404,16 @@ body.preview-open {
   border-bottom: 1px solid var(--border);
 }
 .preview-nav-btn {
-  width: 30px; height: 30px;
-  border: 1px solid var(--border);
+  width: 44px; height: 44px;
+  border: 1.5px solid var(--border);
   border-radius: 50%;
-  background: transparent;
-  font-size: 17px;
+  background: var(--bg-paper, #f9f8f6);
+  font-size: 20px;
   cursor: pointer;
   color: var(--text);
   line-height: 1;
   display: flex; align-items: center; justify-content: center;
-  transition: background .15s, color .15s;
+  transition: background .15s, color .15s, border-color .15s;
 }
 .preview-nav-btn:hover:not(:disabled) { background: var(--bg-paper); }
 .preview-nav-btn:disabled { opacity: 0.25; cursor: default; }
