@@ -964,20 +964,6 @@
       "why": "서울대 권장도서선정위원회가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요.",
       "thumbnail": "https://image.aladin.co.kr/product/274/67/cover200/8990332826_1.jpg"
     },
-    "9788990332875": {
-      "isbn": "9788990332875",
-      "title": "라만차 돈키호테",
-      "author": "미겔 데 세르반테스 사아베드라 (지은이), 한혜선 (엮은이), 구스타브 도레 (그림)",
-      "publisher": "거인",
-      "year": 2009,
-      "targetAge": "초등 저학년",
-      "genre": "교양",
-      "lists": [
-        "seoul-univ"
-      ],
-      "why": "서울대 권장도서선정위원회가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요.",
-      "thumbnail": "https://image.aladin.co.kr/product/337/3/cover200/8990332877_1.jpg"
-    },
     "9788965098188": {
       "isbn": "9788965098188",
       "title": "서울대학교 발달심리연구실 곽금주 교수가 추천하는 부모 지침서 - 내 아이의 미래를 밝혀 줄 부모 지침서",
@@ -1632,19 +1618,6 @@
       "why": "어린이도서연구회가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요.",
       "thumbnail": "https://image.aladin.co.kr/img/noimg_b.gif"
     },
-    "6000033649": {
-      "isbn": "6000033649",
-      "title": "주제별 동화선집 - 전10권 세트",
-      "author": "어린이도서연구회 (지은이)",
-      "publisher": "오늘",
-      "year": 2001,
-      "targetAge": "초등 저학년",
-      "genre": "교양",
-      "lists": [
-        "childbook"
-      ],
-      "why": "어린이도서연구회가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
-    },
     "9788971962534": {
       "isbn": "9788971962534",
       "title": "나의 책 달력 2권 - 5.6학년용",
@@ -1995,20 +1968,6 @@
       ],
       "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
     },
-    "9791187991175": {
-      "isbn": "9791187991175",
-      "title": "직선과 곡선 - 2022 행복한 아침독서 추천도서",
-      "author": "데보라 보그릭 (지은이), 피아 발렌티니스 (그림), 송다인 (옮긴이)",
-      "publisher": "브와포레",
-      "thumbnail": "https://image.aladin.co.kr/product/27210/36/cover200/k422732195_1.jpg",
-      "year": 2021,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [
-        "morning-reading"
-      ],
-      "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
-    },
     "9791187287568": {
       "isbn": "9791187287568",
       "title": "갯벌의 부리 자랑 - 2018 학교도서관저널 추천, 2018 오픈키드좋은어린이책목록 추천, 2017 학교도서관저널 추천",
@@ -2324,19 +2283,6 @@
       "lists": [],
       "why": "알라딘 베스트셀러 33위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
-    "9771739361205": {
-      "isbn": "9771739361205",
-      "title": "어린이 과학동아 Vol.09 : 2026.05.01",
-      "author": "과학동아 편집부 (지은이)",
-      "publisher": "동아사이언스(잡지)",
-      "thumbnail": "https://image.aladin.co.kr/product/39128/84/cover200/k962137559_1.jpg",
-      "year": 2026,
-      "targetAge": "초등 고학년",
-      "genre": "과학",
-      "bestRank": 34,
-      "lists": [],
-      "why": "알라딘 베스트셀러 34위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
-    },
     "9788954674638": {
       "isbn": "9788954674638",
       "title": "5번 레인 - 제21회 문학동네어린이문학상 대상 수상작",
@@ -2345,7 +2291,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/25151/14/cover200/8954674631_2.jpg",
       "year": 2020,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "소설",
       "bestRank": 36,
       "lists": [
         "jeondokse",
@@ -2416,7 +2362,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/39058/2/cover200/k632137643_2.jpg",
       "year": 2026,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "소설",
       "bestRank": 41,
       "lists": [
         "textbook"
@@ -3580,7 +3526,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/34646/29/cover200/k812933687_1.jpg",
       "year": 2024,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "소설",
       "bestRank": 139,
       "lists": [
         "textbook"
@@ -4021,7 +3967,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/10537/49/cover200/8936447017_1.jpg",
       "year": 2017,
       "targetAge": "초등 저학년",
-      "genre": "교양",
+      "genre": "그림책",
       "bestRank": 176,
       "lists": [
         "textbook"
@@ -4971,7 +4917,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/1634/54/cover200/893643389x_2.jpg",
       "year": 2012,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "동화",
       "bestRank": 265,
       "lists": [
         "childbook",
@@ -5093,7 +5039,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/26613/30/cover200/8949162075_1.jpg",
       "year": 2021,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "동화",
       "bestRank": 276,
       "lists": [
         "textbook"
@@ -5515,7 +5461,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/17163/92/cover200/8952787595_1.jpg",
       "year": 2018,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "소설",
       "bestRank": 314,
       "lists": [
         "textbook"
@@ -5561,6 +5507,7 @@
       "genre": "그림책",
       "bestRank": 317,
       "lists": [
+        "bookstart",
         "chaektase"
       ],
       "why": "알라딘 베스트셀러 317위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
@@ -5576,6 +5523,7 @@
       "genre": "교양",
       "bestRank": 318,
       "lists": [
+        "bookstart",
         "childbook"
       ],
       "why": "알라딘 베스트셀러 318위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
@@ -5668,7 +5616,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/28354/67/cover200/8911128732_1.jpg",
       "year": 2021,
       "targetAge": "초등 저학년",
-      "genre": "교양",
+      "genre": "동화",
       "bestRank": 325,
       "lists": [
         "textbook"
@@ -5854,7 +5802,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/27959/41/cover200/k842734212_1.jpg",
       "year": 2021,
       "targetAge": "초등 고학년",
-      "genre": "인문사회",
+      "genre": "동화",
       "bestRank": 342,
       "lists": [
         "textbook"
@@ -5875,19 +5823,6 @@
       "bestRank": 343,
       "lists": [],
       "why": "알라딘 베스트셀러 343위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
-    },
-    "9788901162232": {
-      "isbn": "9788901162232",
-      "title": "심청전",
-      "author": "김선희 (지은이), 이지선 (그림), 한국고전소설학회 (감수)",
-      "publisher": "웅진주니어",
-      "thumbnail": "https://image.aladin.co.kr/product/3614/12/cover200/8901162237_1.jpg",
-      "year": 2014,
-      "targetAge": "초등 저학년",
-      "genre": "교양",
-      "bestRank": 344,
-      "lists": [],
-      "why": "알라딘 베스트셀러 344위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791189471064": {
       "isbn": "9791189471064",
@@ -6118,7 +6053,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/3981/11/cover200/8958287489_1.jpg",
       "year": 2014,
       "targetAge": "초등 저학년",
-      "genre": "교양",
+      "genre": "동화",
       "bestRank": 364,
       "lists": [
         "textbook"
@@ -6148,7 +6083,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/34576/10/cover200/8949122073_2.jpg",
       "year": 2024,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "동화",
       "bestRank": 367,
       "lists": [
         "textbook"
@@ -6347,7 +6282,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/41/12/cover200/893644901x_1.gif",
       "year": 2003,
       "targetAge": "초등 저학년",
-      "genre": "교양",
+      "genre": "그림책",
       "bestRank": 388,
       "lists": [
         "textbook"
@@ -6958,19 +6893,6 @@
       "lists": [],
       "why": "알라딘 베스트셀러 438위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
-    "9791192874142": {
-      "isbn": "9791192874142",
-      "title": "피노키오",
-      "author": "타니아 자모르스키 (엮은이), 카를로 콜로디 (원작), 강혜영 (그림), 장혜진 (옮긴이), 아서 포버 (추천)",
-      "publisher": "연초록",
-      "thumbnail": "https://image.aladin.co.kr/product/33024/98/cover200/k032937077_1.jpg",
-      "year": 2023,
-      "targetAge": "초등 저학년",
-      "genre": "교양",
-      "bestRank": 439,
-      "lists": [],
-      "why": "알라딘 베스트셀러 439위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
-    },
     "9791167553317": {
       "isbn": "9791167553317",
       "title": "진짜로 올지도 몰라, 이런 미래 - 10년 후 세계 미리 보기",
@@ -7083,7 +7005,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/34/91/cover200/8971968710_2.gif",
       "year": 2000,
       "targetAge": "초등 저학년",
-      "genre": "교양",
+      "genre": "동화",
       "bestRank": 448,
       "lists": [
         "chaektase",
@@ -7102,7 +7024,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/21/65/cover200/8987721213_3.jpg",
       "year": 1999,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "소설",
       "bestRank": 449,
       "lists": [
         "textbook"
@@ -7119,7 +7041,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/10/99/cover200/8987721094_2.jpg",
       "year": 1998,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "소설",
       "bestRank": 450,
       "lists": [
         "jeondokse",
@@ -7334,7 +7256,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/23406/22/cover200/8949106310_1.jpg",
       "year": 2020,
       "targetAge": "초등 1학년",
-      "genre": "교양",
+      "genre": "그림책",
       "bestRank": 469,
       "lists": [
         "textbook"
@@ -11614,18 +11536,6 @@
       "lists": [],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
-    "6000582923": {
-      "isbn": "6000582923",
-      "title": "최숙희 작가 그림책 1~12권 세트/유아도서2권+색칠북 증정 - 신간 오늘, 너에게 포함",
-      "author": "최숙희 (지은이)",
-      "publisher": "책읽는곰",
-      "thumbnail": "https://image.aladin.co.kr/product/2040/70/cover200/scm8482496731.jpg",
-      "year": 2024,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
     "9788949180977": {
       "isbn": "9788949180977",
       "title": "왱왱 꼬마 불자동차",
@@ -11861,18 +11771,6 @@
       "publisher": "한림출판사",
       "thumbnail": "https://image.aladin.co.kr/product/18/99/cover200/8970942386_2.jpg",
       "year": 2007,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809264181256": {
-      "isbn": "8809264181256",
-      "title": "반짝반짝 행복한 우리 아기, 잘 자요",
-      "author": "샘 태플린 (지은이), 제니퍼 A. 벨 (그림)",
-      "publisher": "어스본코리아",
-      "thumbnail": "https://image.aladin.co.kr/product/21319/86/cover200/k552636581_1.jpg",
-      "year": 2019,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -12144,18 +12042,6 @@
       "lists": [],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
-    "8809019513592": {
-      "isbn": "8809019513592",
-      "title": "아기 펭귄",
-      "author": "이미지북스 (지은이), 황유쉬안 (그림), 문혜진 (옮긴이)",
-      "publisher": "보림",
-      "thumbnail": "https://image.aladin.co.kr/product/30585/19/cover200/k652830716_1.jpg",
-      "year": 2022,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
     "9788971967096": {
       "isbn": "9788971967096",
       "title": "아가야, 안녕?",
@@ -12163,18 +12049,6 @@
       "publisher": "사계절",
       "thumbnail": "https://image.aladin.co.kr/product/24/79/cover200/8971967099_2.jpg",
       "year": 2000,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809019513578": {
-      "isbn": "8809019513578",
-      "title": "아기 무당벌레",
-      "author": "이미지북스 (지은이), 황유쉬안 (그림), 문혜진 (옮긴이)",
-      "publisher": "보림",
-      "thumbnail": "https://image.aladin.co.kr/product/30585/26/cover200/k122830717_1.jpg",
-      "year": 2022,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -12199,18 +12073,6 @@
       "publisher": "시공주니어",
       "thumbnail": "https://image.aladin.co.kr/product/12003/85/cover200/8952785169_1.jpg",
       "year": 2017,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809019513585": {
-      "isbn": "8809019513585",
-      "title": "아기 토끼",
-      "author": "이미지북스 (지은이), 황유쉬안 (그림), 문혜진 (옮긴이)",
-      "publisher": "보림",
-      "thumbnail": "https://image.aladin.co.kr/product/30585/25/cover200/k192830717_1.jpg",
-      "year": 2022,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -12288,18 +12150,6 @@
       "lists": [],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
-    "8809019513561": {
-      "isbn": "8809019513561",
-      "title": "아기 해달",
-      "author": "이미지북스 (지은이), 황유쉬안 (그림), 문혜진 (옮긴이)",
-      "publisher": "보림",
-      "thumbnail": "https://image.aladin.co.kr/product/30585/28/cover200/k222830717_1.jpg",
-      "year": 2022,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
     "9788970572147": {
       "isbn": "9788970572147",
       "title": "아기세모의 세번째 생일",
@@ -12319,18 +12169,6 @@
       "publisher": "한울림어린이(한울림)",
       "thumbnail": "https://image.aladin.co.kr/product/456/33/cover200/8991871313_2.jpg",
       "year": 2009,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809019513639": {
-      "isbn": "8809019513639",
-      "title": "아기 오리",
-      "author": "이미지북스 (지은이), 황유쉬안 (그림), 문혜진 (옮긴이)",
-      "publisher": "보림",
-      "thumbnail": "https://image.aladin.co.kr/product/33818/42/cover200/k232930687_1.jpg",
-      "year": 2024,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -12523,18 +12361,6 @@
       "publisher": "보림",
       "thumbnail": "https://image.aladin.co.kr/product/10563/53/cover200/8943310722_1.jpg",
       "year": 2017,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809019513646": {
-      "isbn": "8809019513646",
-      "title": "아기 유니콘",
-      "author": "이미지북스 (지은이), 빅토리아 잉 (그림), 문혜진 (옮긴이)",
-      "publisher": "보림",
-      "thumbnail": "https://image.aladin.co.kr/product/33818/43/cover200/k422930687_1.jpg",
-      "year": 2024,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -12907,18 +12733,6 @@
       "publisher": "창비",
       "thumbnail": "https://image.aladin.co.kr/product/34409/30/cover200/k902932028_1.jpg",
       "year": 2024,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809338970724": {
-      "isbn": "8809338970724",
-      "title": "명작 그림책 + 집 만들기 : 아기 돼지 삼 형제",
-      "author": "애플비 편집부 (지은이), 미키빈 (그림)",
-      "publisher": "애플비",
-      "thumbnail": "https://image.aladin.co.kr/product/28997/30/cover200/k422836120_1.jpg",
-      "year": 2022,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -13627,18 +13441,6 @@
       "publisher": "시공주니어",
       "thumbnail": "https://image.aladin.co.kr/product/11959/52/cover200/8952784286_1.jpg",
       "year": 2003,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809338970748": {
-      "isbn": "8809338970748",
-      "title": "명작 그림책 + 집 만들기 : 늑대와 일곱 마리 아기 염소",
-      "author": "애플비 편집부 (지은이), 김혜완 (그림)",
-      "publisher": "애플비",
-      "thumbnail": "https://image.aladin.co.kr/product/29248/39/cover200/k562837390_1.jpg",
-      "year": 2022,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -14414,18 +14216,6 @@
       "lists": [],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
-    "6000415830": {
-      "isbn": "6000415830",
-      "title": "[어깨동무] 글꿈이 첫 그림책  총2권 세트  디그와 더그 / 꼬마 공룡 티니",
-      "author": "어깨동무 편집부 (지은이)",
-      "publisher": "어깨동무",
-      "thumbnail": "https://image.aladin.co.kr/product/778/56/cover200/scm84821212664.jpg",
-      "year": 2008,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
     "9791157857821": {
       "isbn": "9791157857821",
       "title": "키다리 7~8세 예비 초등 추천 그림책 세트 - 전4권",
@@ -14493,18 +14283,6 @@
       "publisher": "비룡소",
       "thumbnail": "https://image.aladin.co.kr/product/36639/3/cover200/8949118084_1.jpg",
       "year": 2025,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809295021606": {
-      "isbn": "8809295021606",
-      "title": "초점 사운드북",
-      "author": "유송이 (그림), 잘웃는토끼 (구성)",
-      "publisher": "블루래빗",
-      "thumbnail": "https://image.aladin.co.kr/product/29990/56/cover200/k512838158_1.jpg",
-      "year": 2022,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -14841,18 +14619,6 @@
       "publisher": "보물창고",
       "thumbnail": "https://image.aladin.co.kr/product/28693/1/cover200/8961708694_2.jpg",
       "year": 2022,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809644080940": {
-      "isbn": "8809644080940",
-      "title": "뽀로로 꼬마 도서관 사운드북 세트 (보드북 10권 + 사운드패드)",
-      "author": "키즈아이콘 편집부 (지은이)",
-      "publisher": "키즈아이콘(아이코닉스)",
-      "thumbnail": "https://image.aladin.co.kr/product/25155/88/cover200/k642633473_1.jpg",
-      "year": 2020,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -15326,18 +15092,6 @@
       "lists": [],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
-    "8809295020739": {
-      "isbn": "8809295020739",
-      "title": "두근두근 우리 몸이 궁금해 (보드북 + 청진기)",
-      "author": "이영 (지은이), 전가영 (그림)",
-      "publisher": "블루래빗",
-      "thumbnail": "https://image.aladin.co.kr/product/30171/61/cover200/k172839683_1.jpg",
-      "year": 2015,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
     "9791157411474": {
       "isbn": "9791157411474",
       "title": "마술 연필을 가진 꼬마곰의 모험 (보드북) - 개정판",
@@ -15369,18 +15123,6 @@
       "publisher": "비룡소",
       "thumbnail": "https://image.aladin.co.kr/product/33003/66/cover200/8949116561_1.jpg",
       "year": 2023,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809644081404": {
-      "isbn": "8809644081404",
-      "title": "뽀로로 꼬마 동물원 보드북 세트 - 전6권",
-      "author": "키즈아이콘 편집부 (지은이)",
-      "publisher": "키즈아이콘(아이코닉스)",
-      "thumbnail": "https://image.aladin.co.kr/product/27083/38/cover200/k272731680_1.jpg",
-      "year": 2021,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -15434,18 +15176,6 @@
       "lists": [],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
-    "8809295021774": {
-      "isbn": "8809295021774",
-      "title": "매매처럼 울지 말고 말해요 (보드북 + 손인형)",
-      "author": "이영 (지은이), 에그 자트코스타 (그림)",
-      "publisher": "블루래빗",
-      "thumbnail": "https://image.aladin.co.kr/product/29834/87/cover200/k612838726_1.jpg",
-      "year": 2022,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
     "9788901220536": {
       "isbn": "9788901220536",
       "title": "깔깔 간지럼 놀이 (보드북)",
@@ -15453,18 +15183,6 @@
       "publisher": "웅진주니어",
       "thumbnail": "https://image.aladin.co.kr/product/12733/89/cover200/8901220539_1.jpg",
       "year": 2017,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809226724866": {
-      "isbn": "8809226724866",
-      "title": "타요 매직 보드북",
-      "author": "키즈아이콘 편집부 (지은이)",
-      "publisher": "키즈아이콘(아이코닉스)",
-      "thumbnail": "https://image.aladin.co.kr/product/1400/79/cover200/8964130995_1.jpg",
-      "year": 2011,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -15818,18 +15536,6 @@
       "lists": [],
       "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
     },
-    "6000650122": {
-      "isbn": "6000650122",
-      "title": "[세트] 사계절 베스트 보드북 8종 세트 - 전8권",
-      "author": "베르너 홀츠바르트 (글), 볼프 에를브루흐 (그림)",
-      "publisher": "사계절",
-      "thumbnail": "https://image.aladin.co.kr/product/2943/18/cover200/6000650122_1.jpg",
-      "year": 2008,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
     "9788961708524": {
       "isbn": "9788961708524",
       "title": "사랑해 크리스마스에도 사랑해",
@@ -16029,18 +15735,6 @@
       "publisher": "봄이아트북스",
       "thumbnail": "https://image.aladin.co.kr/product/27467/35/cover200/k912733681_1.jpg",
       "year": 2021,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
-    },
-    "8809751270036": {
-      "isbn": "8809751270036",
-      "title": "착한 판다 부와 수 보드북 인형 세트 - 전4권",
-      "author": "실버 앤 뱀부 (지은이)",
-      "publisher": "북드림아이",
-      "thumbnail": "https://image.aladin.co.kr/product/29396/73/cover200/k582837513_1.jpg",
-      "year": 2022,
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [],
@@ -19207,20 +18901,6 @@
       "author": "박완서, 이청준, 황석영, 김주영 (지은이), 이경아 (그림), 조남현, 방민호 (감수)",
       "publisher": "휴이넘",
       "thumbnail": "https://image.aladin.co.kr/product/1257/93/cover200/893783524x_1.jpg",
-      "year": 2011,
-      "targetAge": "초등 저학년",
-      "genre": "교양",
-      "lists": [
-        "seoul-univ"
-      ],
-      "why": "서울대 권장도서선정위원회가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
-    },
-    "9788937849527": {
-      "isbn": "9788937849527",
-      "title": "휴이넘 교과서 한국문학 A세트 - 전40권 - 박완서(전10권) + 황석영(전10권) + 이청준(전10권) + 김주영(전10권), 서울대 교수진이 추천하는 통합 논술",
-      "author": "박완서, 이청준, 황석영, 김주영 (지은이), 이경아 (그림), 조남현, 방민호 (감수)",
-      "publisher": "휴이넘",
-      "thumbnail": "https://image.aladin.co.kr/product/2851/94/cover200/8937849526_1.jpg",
       "year": 2011,
       "targetAge": "초등 저학년",
       "genre": "교양",
@@ -25543,20 +25223,6 @@
       ],
       "why": "북스타트 코리아 추천 그림책입니다. 영아·유아(0~7세)에게 적합해요."
     },
-    "9788936445096": {
-      "isbn": "9788936445096",
-      "title": "알사탕",
-      "author": "백희나",
-      "publisher": "",
-      "thumbnail": "",
-      "year": null,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [
-        "bookstart"
-      ],
-      "why": "북스타트 코리아 추천 그림책입니다."
-    },
     "9788934980230": {
       "isbn": "9788934980230",
       "title": "우리가 서로에게 구원이었을 때",
@@ -25589,20 +25255,6 @@
       "isbn": "9788949180748",
       "title": "100만번 산 고양이",
       "author": "사노 요코",
-      "publisher": "",
-      "thumbnail": "",
-      "year": null,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [
-        "bookstart"
-      ],
-      "why": "북스타트 코리아 추천 그림책입니다."
-    },
-    "9788936435400": {
-      "isbn": "9788936435400",
-      "title": "팥죽 할멈과 호랑이",
-      "author": "박윤규",
       "publisher": "",
       "thumbnail": "",
       "year": null,
@@ -25696,20 +25348,6 @@
         "bookstart"
       ],
       "why": "북스타트 코리아 추천 그림책입니다. 영아·유아(0~7세)에게 적합해요."
-    },
-    "9788949109367": {
-      "isbn": "9788949109367",
-      "title": "아낌없이 주는 나무",
-      "author": "쉘 실버스타인",
-      "publisher": "",
-      "thumbnail": "",
-      "year": null,
-      "targetAge": "유아",
-      "genre": "그림책",
-      "lists": [
-        "bookstart"
-      ],
-      "why": "북스타트 코리아 추천 그림책입니다."
     },
     "9788974787417": {
       "isbn": "9788974787417",
@@ -25837,7 +25475,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/33316/28/cover200/k132938580_1.jpg",
       "year": 2024,
       "targetAge": "초등 저학년",
-      "genre": "문학",
+      "genre": "그림책",
       "lists": [
         "chaektase",
         "changbi-award",
@@ -26084,7 +25722,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/69/5/cover200/8936442295_2.jpg",
       "year": 2006,
       "targetAge": "초등 고학년",
-      "genre": "문학",
+      "genre": "동화",
       "lists": [
         "chaektase",
         "textbook"
@@ -26143,7 +25781,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/37207/21/cover200/k582031496_2.jpg",
       "year": 2025,
       "targetAge": "초등 고학년",
-      "genre": "문학",
+      "genre": "동화",
       "lists": [
         "chaektase",
         "textbook"
@@ -26174,7 +25812,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/796/55/cover200/8992632312_1.jpg",
       "year": 2010,
       "targetAge": "초등 고학년",
-      "genre": "문학",
+      "genre": "동화",
       "lists": [
         "chaektase",
         "textbook"
@@ -26205,7 +25843,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/694/68/cover200/8972976199_2.jpg",
       "year": 2003,
       "targetAge": "초등 고학년",
-      "genre": "문학",
+      "genre": "소설",
       "lists": [
         "chaektase",
         "textbook"
@@ -26537,7 +26175,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/193/55/cover200/8936456083_1.jpg",
       "year": 2008,
       "targetAge": "초등 고학년",
-      "genre": "문학",
+      "genre": "소설",
       "lists": [
         "jeondokse",
         "one-book",
@@ -26554,7 +26192,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/31893/32/cover200/k212833749_2.jpg",
       "year": 2023,
       "targetAge": "초등 고학년",
-      "genre": "문학",
+      "genre": "소설",
       "lists": [
         "jeondokse",
         "one-book",
@@ -26571,7 +26209,7 @@
       "thumbnail": "https://image.aladin.co.kr/product/98/26/cover200/8953540240_2.jpg",
       "year": 2007,
       "targetAge": "초등 저학년",
-      "genre": "문학",
+      "genre": "동화",
       "lists": [
         "kclw",
         "textbook"
@@ -28310,6 +27948,7 @@
       "author": "백희나",
       "publisher": "",
       "lists": [
+        "bookstart",
         "textbook"
       ],
       "year": 2024,
