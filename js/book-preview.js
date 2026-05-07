@@ -447,10 +447,10 @@
       function _statusBtnStyle(key) {
         const s = STATUS_CFG[key];
         const active = key === _statusKey;
-        return `flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:12px;cursor:pointer;font-size:12px;font-weight:700;font-family:var(--font-body,inherit);background:${s.bg};color:${s.fg};border:${active ? `2px solid ${s.fg}` : '2px solid transparent'};box-shadow:${active ? `0 0 0 1px ${s.fg}44` : 'none'}`;
+        return `flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:12px;cursor:pointer;font-size:12px;font-weight:700;white-space:nowrap;font-family:var(--font-body,inherit);background:${s.bg};color:${s.fg};border:${active ? `2px solid ${s.fg}` : '2px solid transparent'};box-shadow:${active ? `0 0 0 1px ${s.fg}44` : 'none'}`;
       }
       primaryBtn = `
-        <div>
+        <div style="width:100%">
           <p style="font-size:11px;font-weight:700;color:var(--text-mute,#999);letter-spacing:0.08em;text-align:center;margin:0 0 10px;font-family:var(--font-body,inherit)">읽기 상태</p>
           <div style="display:flex;gap:8px;margin-bottom:12px">
             <button type="button" id="previewLibraryWantBtn" data-lib-status="want" style="${_statusBtnStyle('want')}">
@@ -471,7 +471,7 @@
       const eKey = existingInLibrary.status === 'want' ? 'want' : existingInLibrary.status === 'reading' ? 'reading' : 'read';
       const s = STATUS_CFG[eKey];
       primaryBtn = `
-        <div>
+        <div style="width:100%">
           <div style="display:flex;justify-content:center;margin-bottom:12px">
             <span style="display:inline-flex;align-items:center;gap:5px;background:${s.bg};color:${s.fg};padding:6px 16px;border-radius:16px;font-size:13px;font-weight:700">
               ${svgIcon(eKey, 13)}${s.label}
@@ -483,19 +483,19 @@
         </div>`;
     } else {
       primaryBtn = `
-        <div>
+        <div style="width:100%">
           <p style="font-size:11px;font-weight:700;color:var(--text-mute,#999);letter-spacing:0.08em;text-align:center;margin:0 0 10px;font-family:var(--font-body,inherit)">서재에 추가</p>
           <div style="display:flex;gap:8px">
             <button type="button" id="previewSaveWantBtn"
-              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:12px;border:none;background:${STATUS_CFG.want.bg};color:${STATUS_CFG.want.fg};font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body,inherit)">
+              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:12px;border:none;background:${STATUS_CFG.want.bg};color:${STATUS_CFG.want.fg};font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;font-family:var(--font-body,inherit)">
               ${svgIcon('want', 18)}읽을 책
             </button>
             <button type="button" id="previewSaveReadingBtn"
-              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:12px;border:none;background:${STATUS_CFG.reading.bg};color:${STATUS_CFG.reading.fg};font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body,inherit)">
+              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:12px;border:none;background:${STATUS_CFG.reading.bg};color:${STATUS_CFG.reading.fg};font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;font-family:var(--font-body,inherit)">
               ${svgIcon('reading', 18)}읽는 중
             </button>
             <button type="button" id="previewSaveBtn" data-save-status=""
-              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:12px;border:none;background:${STATUS_CFG.read.bg};color:${STATUS_CFG.read.fg};font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body,inherit)">
+              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 4px;border-radius:12px;border:none;background:${STATUS_CFG.read.bg};color:${STATUS_CFG.read.fg};font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer;font-family:var(--font-body,inherit)">
               ${svgIcon('read', 18)}읽은 책
             </button>
           </div>
