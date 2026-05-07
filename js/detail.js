@@ -47,16 +47,45 @@
     folders = Storage.getAllFolders();
 
     renderHero();
+    renderStatus();
     renderRating();
     renderReview();
     renderDate();
     renderFolderPicker();
+    wireStatus();
     wireActions();
 
     if (book.language === 'en' && !book.ar) tryFetchAR();
 
     // Lazy-load recommendations
     setTimeout(loadRecommendations, 100);
+  }
+
+  // ── Status ───────────────────────────────────────────────────
+
+  const STATUS_COLORS = { '': '#4A90E2', reading: '#f39c12', want: '#FF6B6B' };
+
+  function renderStatus() {
+    const current = book.status || '';
+    document.querySelectorAll('.status-pick-btn').forEach(btn => {
+      const val = btn.dataset.status;
+      const active = val === current;
+      const col = STATUS_COLORS[val] || '#4A90E2';
+      btn.style.background   = active ? col : '#fff';
+      btn.style.color        = active ? '#fff' : '#333';
+      btn.style.borderColor  = active ? col : '#ddd';
+      btn.style.fontWeight   = active ? '700' : '500';
+    });
+  }
+
+  function wireStatus() {
+    document.querySelectorAll('.status-pick-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const newStatus = btn.dataset.status || null;
+        book = Storage.updateBook(book.id, { status: newStatus });
+        renderStatus();
+      });
+    });
   }
 
   // ── Hero ─────────────────────────────────────────────────────
