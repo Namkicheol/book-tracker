@@ -18,6 +18,7 @@
 
     renderTopCards(books, folders);
     renderStatusCards(books);
+    renderMonthlyReport(books, folders);
     renderMonthlyChart(books);
     renderFolderChart(books, folders);
     renderStreak(books);
@@ -57,6 +58,111 @@
     wantEl.textContent    = books.filter(b => b.status === 'want').length;
     readingEl.textContent = books.filter(b => b.status === 'reading').length;
     readEl.textContent    = books.filter(b => !b.status).length;
+  }
+
+  // ── Monthly Report ────────────────────────────────────────────
+
+  function renderMonthlyReport(books, folders) {
+    const el = document.getElementById('monthlyReport');
+    if (!el) return;
+
+    const now = new Date();
+    const y = now.getFullYear(), m = now.getMonth();
+    const thisKey  = `${y}-${String(m + 1).padStart(2,'0')}`;
+    const lastKey  = m === 0
+      ? `${y - 1}-12`
+      : `${y}-${String(m).padStart(2,'0')}`;
+
+    const thisMonthBooks = books.filter(b => readDateOf(b)?.startsWith(thisKey));
+    const lastMonthBooks = books.filter(b => readDateOf(b)?.startsWith(lastKey));
+
+    if (thisMonthBooks.length === 0 && lastMonthBooks.length === 0) {
+      el.style.display = 'none';
+      return;
+    }
+
+    // Month vs last month delta
+    const delta = thisMonthBooks.length - lastMonthBooks.length;
+    const deltaText = delta === 0 ? '지난달과 동일' :
+      delta > 0 ? `지난달보다 ${delta}권 더 읽었어요 📈` :
+                  `지난달보다 ${Math.abs(delta)}권 적어요 📉`;
+
+    // Best day of week this month
+    const dowCounts = [0,0,0,0,0,0,0];
+    const dowNames = ['일','월','화','수','목','금','토'];
+    thisMonthBooks.forEach(b => {
+      const d = readDateOf(b);
+      if (!d) return;
+      const dow = new Date(d).getDay();
+      dowCounts[dow]++;
+    });
+    const maxDow = dowCounts.indexOf(Math.max(...dowCounts));
+    const bestDowText = dowCounts[maxDow] > 0 ? `${dowNames[maxDow]}요일 (${dowCounts[maxDow]}권)` : '—';
+
+    // Most read folder/genre this month
+    let topFolder = null;
+    if (folders.length > 0) {
+      const fCounts = folders.map(f => ({
+        name: f.emoji ? `${f.emoji} ${f.name}` : f.name,
+        count: thisMonthBooks.filter(b => (b.folders||[]).includes(f.id)).length,
+      })).filter(f => f.count > 0);
+      if (fCounts.length > 0) {
+        fCounts.sort((a, b) => b.count - a.count);
+        topFolder = `${fCounts[0].name} (${fCounts[0].count}권)`;
+      }
+    }
+
+    // Avg rating this month
+    const monthRatings = thisMonthBooks.map(b => Number(b.rating || 0)).filter(r => r > 0);
+    const monthAvg = monthRatings.length
+      ? (monthRatings.reduce((s, r) => s + r, 0) / monthRatings.length).toFixed(1)
+      : null;
+
+    // Highest rated book this month
+    const topBook = thisMonthBooks
+      .filter(b => b.rating > 0)
+      .sort((a, b) => b.rating - a.rating)[0];
+
+    const monthName = `${m + 1}월`;
+
+    el.innerHTML = `
+      <p class="section-eyebrow">Monthly Report</p>
+      <p class="section-title">${monthName} 독서 리포트</p>
+
+      <div class="report-delta">${deltaText}</div>
+
+      <div class="report-grid">
+        <div class="report-item">
+          <div class="report-icon">📅</div>
+          <div class="report-body">
+            <div class="report-label">가장 많이 읽은 요일</div>
+            <div class="report-value">${bestDowText}</div>
+          </div>
+        </div>
+        ${topFolder ? `<div class="report-item">
+          <div class="report-icon">📂</div>
+          <div class="report-body">
+            <div class="report-label">이번 달 주력 폴더</div>
+            <div class="report-value">${topFolder}</div>
+          </div>
+        </div>` : ''}
+        ${monthAvg ? `<div class="report-item">
+          <div class="report-icon">⭐</div>
+          <div class="report-body">
+            <div class="report-label">이번 달 평균 별점</div>
+            <div class="report-value">${monthAvg}점</div>
+          </div>
+        </div>` : ''}
+        ${topBook ? `<div class="report-item">
+          <div class="report-icon">🏆</div>
+          <div class="report-body">
+            <div class="report-label">이번 달 최고 책</div>
+            <div class="report-value" style="font-size:12px;line-height:1.3">${topBook.title}</div>
+          </div>
+        </div>` : ''}
+      </div>
+    `;
+    el.style.display = 'block';
   }
 
   function renderMonthlyChart(books) {

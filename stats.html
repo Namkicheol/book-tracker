@@ -231,6 +231,60 @@
       font-weight: 600;
       margin-top: 2px;
     }
+
+    /* ── Monthly Report ── */
+    #monthlyReport {
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+      box-shadow: 4px 5px 0 var(--shadow);
+      border-radius: 1px;
+      padding: var(--sp-md);
+      margin-bottom: var(--sp-md);
+      animation: fadeInUp 0.4s ease 480ms both;
+    }
+    .report-delta {
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: var(--text-soft);
+      background: rgba(255,158,158,0.08);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 8px 0 12px;
+      border-left: 3px solid #FF9E9E;
+    }
+    .report-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .report-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .report-item:last-child { border-bottom: none; }
+    .report-icon {
+      font-size: 18px;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .report-label {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--text-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+    .report-value {
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+    }
   </style>
 </head>
 <body>
@@ -294,6 +348,9 @@
         <p class="stat-label">읽은 책</p>
       </div>
     </div>
+
+    <!-- Monthly Report — filled by JS -->
+    <div id="monthlyReport" style="display:none"></div>
 
     <div class="chart-card">
       <p class="section-eyebrow">Monthly</p>
@@ -393,7 +450,7 @@
   <div class="toast" id="toast"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="js/storage.js?v=20260508e"></script>
-  <script src="js/stats.js?v=20260508e"></script>
+  <script src="js/storage.js?v=20260508f"></script>
+  <script src="js/stats.js?v=20260508f"></script>
 </body>
 </html>
