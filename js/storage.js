@@ -171,6 +171,7 @@
       folders:   Array.isArray(b.folders) ? b.folders : [],
       ar:        b.ar != null ? Number(b.ar) : null,
       lexile:    b.lexile || null,
+      status:    ['want', 'reading'].includes(b.status) ? b.status : null,
       createdAt: b.createdAt,
       updatedAt: b.updatedAt,
     };
@@ -414,6 +415,10 @@
     updateBook,
     deleteBook,
     getBooksByFolder,
+    getBooksByStatus(status) {
+      if (status === null) return getAllBooks().filter(b => !b.status);
+      return getAllBooks().filter(b => b.status === status);
+    },
     searchBooks,
     // folders
     getAllFolders,
