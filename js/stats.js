@@ -1,5 +1,5 @@
 /**
- * 독서 통계 — Storage 데이터 기반 4개 카드 + 월별/폴더별 차트.
+ * 독서 통계 — Storage 데이터 기반 4개 카드 + 월별/폴더별 차트 + 캘린더 + 스트릭.
  */
 (function () {
   'use strict';
@@ -12,7 +12,6 @@
 
     if (books.length === 0) {
       document.getElementById('statsEmpty')?.classList.remove('hidden');
-      // 차트 영역도 숨김
       document.querySelectorAll('.chart-card').forEach(el => el.style.display = 'none');
       return;
     }
@@ -21,6 +20,8 @@
     renderStatusCards(books);
     renderMonthlyChart(books);
     renderFolderChart(books, folders);
+    renderStreak(books);
+    renderCalendarView(books);
   }
 
   function readDateOf(book) {
@@ -136,6 +137,205 @@
           legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 12 } },
         },
       },
+    });
+  }
+
+  // ── Streak ────────────────────────────────────────────────────
+
+  function renderStreak(books) {
+    const row = document.getElementById('streakRow');
+    if (!row) return;
+
+    // Collect all unique read dates (YYYY-MM-DD) that have a book
+    const dateBooksMap = {};
+    books.forEach(b => {
+      const d = readDateOf(b);
+      if (!d) return;
+      const key = d.slice(0, 10);
+      if (!dateBooksMap[key]) dateBooksMap[key] = [];
+      dateBooksMap[key].push(b);
+    });
+
+    const allDates = Object.keys(dateBooksMap).sort();
+    if (allDates.length === 0) return;
+
+    // Current streak (consecutive days ending today or yesterday)
+    const todayStr = new Date().toISOString().slice(0, 10);
+    let currentStreak = 0;
+    let cursor = new Date(todayStr);
+    while (true) {
+      const key = cursor.toISOString().slice(0, 10);
+      if (dateBooksMap[key]) {
+        currentStreak++;
+        cursor.setDate(cursor.getDate() - 1);
+      } else {
+        // Allow yesterday as "active" start — if today has no entry, check if yesterday does
+        if (currentStreak === 0) {
+          cursor.setDate(cursor.getDate() - 1);
+          const yKey = cursor.toISOString().slice(0, 10);
+          if (dateBooksMap[yKey]) {
+            currentStreak++;
+            cursor.setDate(cursor.getDate() - 1);
+            continue;
+          }
+        }
+        break;
+      }
+    }
+
+    // Best streak (all-time)
+    let bestStreak = 0;
+    let runStreak = 1;
+    for (let i = 1; i < allDates.length; i++) {
+      const prev = new Date(allDates[i - 1]);
+      const cur  = new Date(allDates[i]);
+      const diff = (cur - prev) / 86400000;
+      if (diff === 1) {
+        runStreak++;
+        bestStreak = Math.max(bestStreak, runStreak);
+      } else {
+        runStreak = 1;
+      }
+    }
+    bestStreak = Math.max(bestStreak, currentStreak, 1);
+
+    // Total days with reading this year
+    const thisYear = new Date().getFullYear();
+    const totalDaysThisYear = allDates.filter(d => d.startsWith(String(thisYear))).length;
+
+    document.getElementById('streakCurrent').textContent = currentStreak;
+    document.getElementById('streakBest').textContent = bestStreak;
+    document.getElementById('streakTotal').textContent = totalDaysThisYear;
+
+    const emoji = currentStreak >= 30 ? '🔥🔥🔥' : currentStreak >= 14 ? '🔥🔥' : currentStreak >= 7 ? '🔥' : currentStreak >= 3 ? '✨' : '📚';
+    document.getElementById('streakEmoji').textContent = emoji + ' ' + (currentStreak >= 7 ? '대단해요!' : currentStreak >= 3 ? '잘하고 있어요!' : '');
+
+    row.style.display = 'flex';
+  }
+
+  // ── Calendar View ─────────────────────────────────────────────
+
+  let _calState = { year: null, month: null, books: [] };
+
+  function renderCalendarView(books) {
+    const now = new Date();
+    _calState = { year: now.getFullYear(), month: now.getMonth(), books };
+    _buildCalendar();
+
+    document.getElementById('calPrev')?.addEventListener('click', () => {
+      _calState.month--;
+      if (_calState.month < 0) { _calState.month = 11; _calState.year--; }
+      _buildCalendar();
+    });
+    document.getElementById('calNext')?.addEventListener('click', () => {
+      _calState.month++;
+      if (_calState.month > 11) { _calState.month = 0; _calState.year++; }
+      _buildCalendar();
+    });
+  }
+
+  function _buildCalendar() {
+    const { year, month, books } = _calState;
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+    // Title
+    const titleEl = document.getElementById('calTitle');
+    if (titleEl) titleEl.textContent = `${year}년 ${month + 1}월`;
+
+    // Date → books map for this month
+    const dateMap = {};
+    books.forEach(b => {
+      const d = readDateOf(b);
+      if (!d) return;
+      const key = d.slice(0, 10);
+      if (!dateMap[key]) dateMap[key] = [];
+      dateMap[key].push(b);
+    });
+
+    const grid = document.getElementById('calGrid');
+    if (!grid) return;
+
+    // Day-of-week headers (일 월 화 수 목 금 토)
+    const dows = ['일', '월', '화', '수', '목', '금', '토'];
+    let html = dows.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+    const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInPrev  = new Date(year, month, 0).getDate();
+
+    // Leading days from prev month
+    for (let i = firstDay - 1; i >= 0; i--) {
+      const dayNum = daysInPrev - i;
+      html += `<div class="cal-day other-month"><span>${dayNum}</span></div>`;
+    }
+
+    // Days in current month
+    for (let d = 1; d <= daysInMonth; d++) {
+      const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const dayBooks = dateMap[dateStr] || [];
+      const hasBooks = dayBooks.length > 0;
+      const isToday  = dateStr === todayStr;
+      const isMulti  = dayBooks.length > 1;
+
+      let cls = 'cal-day';
+      if (hasBooks) cls += ' has-books';
+      if (isToday)  cls += ' today';
+      if (isMulti)  cls += ' multi';
+
+      const dot  = hasBooks ? '<div class="cal-dot"></div>' : '';
+      const dcnt = isMulti  ? ` data-count="${dayBooks.length}"` : '';
+      const ds   = hasBooks ? ` data-date="${dateStr}"` : '';
+
+      html += `<div class="${cls}"${dcnt}${ds}><span>${d}</span>${dot}</div>`;
+    }
+
+    // Trailing days from next month
+    const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+    const trailing = totalCells - firstDay - daysInMonth;
+    for (let d = 1; d <= trailing; d++) {
+      html += `<div class="cal-day other-month"><span>${d}</span></div>`;
+    }
+
+    grid.innerHTML = html;
+
+    // Wire day-click
+    const detail = document.getElementById('calDetail');
+    grid.querySelectorAll('.cal-day.has-books').forEach(cell => {
+      cell.addEventListener('click', () => {
+        const dateStr = cell.dataset.date;
+        if (!dateStr) return;
+
+        // Toggle off if already selected
+        if (cell.classList.contains('selected')) {
+          cell.classList.remove('selected');
+          if (detail) detail.style.display = 'none';
+          return;
+        }
+
+        grid.querySelectorAll('.cal-day.selected').forEach(c => c.classList.remove('selected'));
+        cell.classList.add('selected');
+
+        const dayBooks = dateMap[dateStr] || [];
+        const [y, m, day] = dateStr.split('-');
+        const dateLabel = `${y}년 ${parseInt(m)}월 ${parseInt(day)}일`;
+
+        if (detail) {
+          const booksHtml = dayBooks.map(b => {
+            const stars = b.rating ? '★'.repeat(b.rating) + '☆'.repeat(5 - b.rating) : '';
+            return `<div class="cal-detail-book">
+              <span style="font-size:16px;line-height:1.2">📖</span>
+              <div>
+                <div style="font-weight:600">${b.title}</div>
+                ${b.authors?.length ? `<div style="font-size:11px;color:var(--text-soft);margin-top:1px">${b.authors[0]}</div>` : ''}
+                ${stars ? `<div style="font-size:11px;color:#e8a000;margin-top:2px;letter-spacing:-0.5px">${stars}</div>` : ''}
+              </div>
+            </div>`;
+          }).join('');
+          detail.innerHTML = `<div class="cal-detail-date">${dateLabel}</div>${booksHtml}`;
+          detail.style.display = 'block';
+        }
+      });
     });
   }
 })();

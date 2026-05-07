@@ -88,6 +88,149 @@
     .chart-card:nth-of-type(2) { animation-delay: 400ms; }
 
     canvas { display: block; }
+
+    /* ── Calendar View ── */
+    .cal-nav-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text-soft);
+      line-height: 1;
+      transition: background 0.15s;
+    }
+    .cal-nav-btn:hover { background: var(--bg-hover, #f5f5f5); }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      font-family: var(--font-body);
+    }
+    .cal-dow {
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-soft);
+      padding: 6px 0 4px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .cal-dow:first-child { color: #e05; }
+    .cal-dow:last-child  { color: #36c; }
+    .cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border-radius: 6px;
+      cursor: default;
+      position: relative;
+      transition: background 0.15s;
+      gap: 2px;
+    }
+    .cal-day.other-month { opacity: 0.25; }
+    .cal-day.today {
+      font-weight: 800;
+      box-shadow: inset 0 0 0 1.5px #FF9E9E;
+      color: #FF9E9E;
+    }
+    .cal-day.has-books {
+      background: rgba(255,158,158,0.18);
+      color: #d05050;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .cal-day.has-books:active { background: rgba(255,158,158,0.35); }
+    .cal-day.selected {
+      background: rgba(255,158,158,0.4) !important;
+      color: #c03030 !important;
+    }
+    .cal-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: #FF9E9E;
+      flex-shrink: 0;
+    }
+    .cal-day.has-books.multi::after {
+      content: attr(data-count);
+      font-size: 8px;
+      line-height: 1;
+      color: #d05050;
+      position: absolute;
+      bottom: 3px;
+      right: 4px;
+    }
+    .cal-detail {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: rgba(255,158,158,0.08);
+      border-radius: 8px;
+      border-left: 3px solid #FF9E9E;
+      display: none;
+    }
+    .cal-detail-date {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 600;
+      color: #FF9E9E;
+      margin-bottom: 6px;
+      letter-spacing: 0.05em;
+    }
+    .cal-detail-book {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text);
+      padding: 3px 0;
+      line-height: 1.35;
+    }
+    .cal-detail-book + .cal-detail-book {
+      border-top: 1px solid rgba(255,158,158,0.15);
+      margin-top: 3px;
+      padding-top: 6px;
+    }
+
+    /* ── Streak Card ── */
+    .streak-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: var(--sp-md);
+    }
+    .streak-item {
+      flex: 1;
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+      box-shadow: 4px 5px 0 var(--shadow);
+      border-radius: 1px;
+      padding: 12px;
+      text-align: center;
+    }
+    .streak-val {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 500;
+      line-height: 1;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .streak-lbl {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: var(--text-soft);
+      margin-top: 4px;
+    }
+    .streak-sub {
+      font-family: var(--font-body);
+      font-size: 10px;
+      color: #FF9E9E;
+      font-weight: 600;
+      margin-top: 2px;
+    }
   </style>
 </head>
 <body>
@@ -164,6 +307,42 @@
       <canvas id="genreChart" height="200"></canvas>
     </div>
 
+    <!-- Streak row -->
+    <div class="streak-row" id="streakRow" style="display:none">
+      <div class="streak-item">
+        <div class="streak-val" id="streakCurrent">0</div>
+        <div class="streak-lbl">연속 독서일</div>
+        <div class="streak-sub" id="streakEmoji">📚</div>
+      </div>
+      <div class="streak-item">
+        <div class="streak-val" id="streakBest">0</div>
+        <div class="streak-lbl">최장 연속일</div>
+        <div class="streak-sub">🏆 All-time</div>
+      </div>
+      <div class="streak-item">
+        <div class="streak-val" id="streakTotal">0</div>
+        <div class="streak-lbl">독서한 날</div>
+        <div class="streak-sub">올해</div>
+      </div>
+    </div>
+
+    <!-- Calendar card -->
+    <div class="chart-card" id="calendarCard">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div>
+          <p class="section-eyebrow" style="margin:0">Reading Calendar</p>
+          <p class="section-title" style="margin:4px 0 0">독서 캘린더</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <button class="cal-nav-btn" id="calPrev">‹</button>
+          <span id="calTitle" style="font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;min-width:68px;text-align:center"></span>
+          <button class="cal-nav-btn" id="calNext">›</button>
+        </div>
+      </div>
+      <div id="calGrid" style="margin-top:12px"></div>
+      <div id="calDetail" class="cal-detail"></div>
+    </div>
+
     <div class="empty-state hidden" id="statsEmpty">
       <div class="empty-state-glyph">計</div>
       <p class="empty-state-title">아직 데이터가 없어요</p>
@@ -214,7 +393,7 @@
   <div class="toast" id="toast"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="js/storage.js?v=20260507b"></script>
-  <script src="js/stats.js?v=20260507b"></script>
+  <script src="js/storage.js?v=20260508e"></script>
+  <script src="js/stats.js?v=20260508e"></script>
 </body>
 </html>
