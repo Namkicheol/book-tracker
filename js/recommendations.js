@@ -7,6 +7,7 @@
 
   let recommendationData = null;
   let allBooks = [];
+  let textbookMode = false;
 
   // ── Load data ────────────────────────────────────────────────
 
@@ -28,6 +29,7 @@
       }
 
       console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
+      attachModeTabListeners();
       renderGradeSections();
       attachSearchListener();
     } catch (err) {
@@ -42,12 +44,36 @@
     }
   }
 
+  // ── Mode Tabs ────────────────────────────────────────────────
+
+  function attachModeTabListeners() {
+    const btnAll = document.getElementById('modeAll');
+    const btnTB  = document.getElementById('modeTextbook');
+    if (!btnAll || !btnTB) return;
+
+    function setMode(tb) {
+      textbookMode = tb;
+      btnAll.style.color = tb ? '#999' : '#FF6B6B';
+      btnAll.style.borderBottom = tb ? 'none' : '2px solid #FF6B6B';
+      btnAll.style.marginBottom = tb ? '' : '-2px';
+      btnTB.style.color  = tb ? '#27ae60' : '#999';
+      btnTB.style.borderBottom = tb ? '2px solid #27ae60' : 'none';
+      btnTB.style.marginBottom = tb ? '-2px' : '';
+      renderGradeSections();
+    }
+
+    btnAll.addEventListener('click', () => setMode(false));
+    btnTB.addEventListener('click', () => setMode(true));
+  }
+
   // ── Grade Sections ───────────────────────────────────────────
 
   // 각 학년별 상태 관리
   const sectionState = {};
 
   function renderGradeSections() {
+    if (textbookMode) { renderTextbookSections(); return; }
+
     const content = document.getElementById('gradeContent');
 
     const grades = [
@@ -212,6 +238,102 @@
     }
   }
 
+  // ── Textbook Mode: 1~6학년 개별 섹션 ────────────────────────
+
+  const tbState = {};  // { [grade]: { sort, current, open } }
+
+  function renderTextbookSections() {
+    const content = document.getElementById('gradeContent');
+    const tbGrades = [
+      { g: 1, icon: '📗', name: '1학년' },
+      { g: 2, icon: '📘', name: '2학년' },
+      { g: 3, icon: '📙', name: '3학년' },
+      { g: 4, icon: '📕', name: '4학년' },
+      { g: 5, icon: '📓', name: '5학년' },
+      { g: 6, icon: '📔', name: '6학년' },
+    ];
+    const INITIAL = 8;
+
+    const sections = tbGrades.map(({ g, icon, name }) => {
+      const books = allBooks.filter(b => b.textbookGrade === g);
+      if (!books.length) return '';
+      if (!tbState[g]) tbState[g] = { sort: 'title', current: INITIAL, open: false };
+
+      return `
+        <details class="grade-section tb-section" data-tb-grade="${g}" ${tbState[g].open ? 'open' : ''} style="margin-bottom:16px;border:1px solid #b8e0c8;border-radius:8px;overflow:hidden">
+          <summary style="padding:16px;cursor:pointer;background:#f0faf4;display:flex;justify-content:space-between;align-items:center;user-select:none">
+            <h2 class="grade-title" style="margin:0;color:#1a7a45">${icon} 초등 ${name}</h2>
+            <span class="grade-count" style="color:#27ae60">${books.length}권</span>
+          </summary>
+          <div style="padding:16px">
+            <div style="margin-bottom:12px;display:flex;gap:8px">
+              ${['title','popularity','recent'].map(s => {
+                const label = s === 'title' ? '🔤 가나다' : s === 'popularity' ? '📊 인기' : '🆕 최신';
+                const active = tbState[g].sort === s;
+                return `<button class="tb-sort-btn" data-tbg="${g}" data-sort="${s}" style="padding:7px 12px;border:1px solid ${active ? '#27ae60' : '#ddd'};border-radius:6px;background:${active ? '#27ae60' : '#fff'};color:${active ? '#fff' : '#666'};font-size:12px;cursor:pointer">${label}</button>`;
+              }).join('')}
+            </div>
+            <div class="tb-grid" data-tbg="${g}"></div>
+            <div class="tb-more" data-tbg="${g}"></div>
+          </div>
+        </details>
+      `;
+    }).filter(Boolean).join('');
+
+    content.innerHTML = sections;
+
+    tbGrades.forEach(({ g }) => renderTbBooks(g, INITIAL));
+    attachTbListeners();
+  }
+
+  function renderTbBooks(g, showCount) {
+    const state = tbState[g];
+    let books = allBooks.filter(b => b.textbookGrade === g);
+
+    if (state.sort === 'popularity') books.sort((a, b) => (b.lists||[]).length - (a.lists||[]).length);
+    else if (state.sort === 'recent') books.sort((a, b) => (b.year||0) - (a.year||0));
+    else books.sort((a, b) => (a.title||'').localeCompare(b.title||'', 'ko'));
+
+    const shown = books.slice(0, showCount);
+    const hasMore = books.length > showCount;
+
+    const grid = document.querySelector(`.tb-grid[data-tbg="${g}"]`);
+    if (grid) {
+      grid.innerHTML = shown.map(b => renderCard(b, true)).join('');
+      attachCardListeners();
+      backfillThumbnails(grid);
+    }
+
+    const more = document.querySelector(`.tb-more[data-tbg="${g}"]`);
+    if (more) {
+      more.innerHTML = hasMore
+        ? `<button class="btn-secondary" style="width:100%;margin-top:16px" data-tb-more="${g}" data-current="${showCount}">더보기 (+${books.length - showCount}권)</button>`
+        : '';
+      more.querySelector('[data-tb-more]')?.addEventListener('click', e => {
+        const cur = parseInt(e.target.dataset.current);
+        renderTbBooks(g, cur + 12);
+      });
+    }
+  }
+
+  function attachTbListeners() {
+    document.querySelectorAll('details.tb-section').forEach(d => {
+      d.addEventListener('toggle', () => {
+        const g = parseInt(d.dataset.tbGrade);
+        if (tbState[g]) tbState[g].open = d.open;
+      });
+    });
+    document.querySelectorAll('.tb-sort-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation(); e.preventDefault();
+        const g = parseInt(btn.dataset.tbg);
+        tbState[g].sort = btn.dataset.sort;
+        tbState[g].open = true;
+        renderTextbookSections();
+      });
+    });
+  }
+
   function attachSectionListeners() {
     // details 열림/닫힘 상태 보존
     document.querySelectorAll('details.grade-section').forEach(d => {
@@ -284,7 +406,7 @@
   // ISBN별 alanin lookup 결과 캐시 (thumbnail만)
   const thumbCache = new Map();
 
-  function renderCard(book) {
+  function renderCard(book, showUnit = false) {
     const cover = book.thumbnail || PLACEHOLDER;
     const needsLookup = !book.thumbnail && !!book.isbn;
 
@@ -295,6 +417,9 @@
     }).filter(Boolean).join('');
 
     const bookJson = escapeAttr(JSON.stringify(book));
+    const unitBadge = showUnit && book.textbookUnit
+      ? `<span style="display:inline-block;margin-top:3px;padding:2px 6px;border-radius:3px;background:#e8f5e9;color:#2e7d32;font-size:9px;font-weight:600">${escapeHtml(book.textbookUnit)}</span>`
+      : '';
 
     return `
       <button type="button" class="rec-browse-card" data-book="${bookJson}"${needsLookup ? ` data-needs-thumb="${escapeAttr(book.isbn)}"` : ''}>
@@ -303,6 +428,7 @@
           <h3 class="rec-browse-book-title">${escapeHtml(book.title)}</h3>
           <p class="rec-browse-author">${escapeHtml(book.author || '')}</p>
           ${badges ? `<div class="rec-browse-badges">${badges}</div>` : ''}
+          ${unitBadge}
         </div>
       </button>
     `;

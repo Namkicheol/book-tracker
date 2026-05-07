@@ -148,6 +148,12 @@
     <input type="search" id="recSearch" class="rec-search-input" placeholder="제목·저자 검색…" autocomplete="off">
   </div>
 
+  <!-- 모드 탭 -->
+  <div id="modeTabs" style="display:flex;gap:0;border-bottom:2px solid #e0e0e0;background:#fff;position:sticky;top:56px;z-index:9">
+    <button id="modeAll" class="mode-tab mode-tab-active" style="flex:1;padding:10px 0;font-size:13px;font-weight:600;border:none;background:transparent;color:#FF6B6B;border-bottom:2px solid #FF6B6B;margin-bottom:-2px;cursor:pointer">전체 추천</button>
+    <button id="modeTextbook" class="mode-tab" style="flex:1;padding:10px 0;font-size:13px;font-weight:600;border:none;background:transparent;color:#999;cursor:pointer">📖 교과서 학년별</button>
+  </div>
+
   <div id="searchResults" class="rec-search-results" hidden>
     <p class="rec-search-meta" id="searchMeta"></p>
     <div class="rec-browse-grid" id="searchGrid"></div>
@@ -209,6 +215,6 @@
   <script src="js/api.js?v=20260504d"></script>
   <script src="js/library-api.js?v=20260507a"></script>
   <script src="js/book-preview.js?v=20260507a"></script>
-  <script src="js/recommendations.js?v=20260505a"></script>
+  <script src="js/recommendations.js?v=20260507b"></script>
 </body>
 </html>
