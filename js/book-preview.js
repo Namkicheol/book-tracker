@@ -21,8 +21,9 @@
   // List-navigation state
   let _listCtx   = null;  // { books, idx, opts } | null
   let _renderGen = 0;     // monotonic counter to cancel stale renders
-  let _swipeEl   = null;  // element that has swipe listeners attached
-  let _swipeStart = null; // { x, y }
+  let _swipeEl        = null;  // element that has swipe listeners attached
+  let _swipeStart     = null; // { x, y }
+  let _swipeDir       = null; // 'h' | 'v' | null — direction locked after first move
 
   // Status display config — mirrors STATUS_BADGE / STATUS_ICONS in index.js
   const STATUS_CFG = {
@@ -185,30 +186,51 @@
     const card = document.querySelector('.book-preview-card');
     if (!card) return;
     _swipeEl = card;
-    card.addEventListener('touchstart', _onTouchStart, { passive: true });
-    card.addEventListener('touchend',   _onTouchEnd,   { passive: true });
+    card.addEventListener('touchstart',  _onTouchStart,  { passive: true });
+    card.addEventListener('touchmove',   _onTouchMove,   { passive: false }); // non-passive: can preventDefault
+    card.addEventListener('touchend',    _onTouchEnd,    { passive: true });
+    card.addEventListener('touchcancel', _onTouchCancel, { passive: true });
   }
 
   function _unwireSwipe() {
     if (!_swipeEl) return;
-    _swipeEl.removeEventListener('touchstart', _onTouchStart);
-    _swipeEl.removeEventListener('touchend',   _onTouchEnd);
+    _swipeEl.removeEventListener('touchstart',  _onTouchStart);
+    _swipeEl.removeEventListener('touchmove',   _onTouchMove);
+    _swipeEl.removeEventListener('touchend',    _onTouchEnd);
+    _swipeEl.removeEventListener('touchcancel', _onTouchCancel);
     _swipeEl = null;
     _swipeStart = null;
+    _swipeDir   = null;
   }
 
   function _onTouchStart(e) {
     _swipeStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    _swipeDir   = null;
+  }
+
+  function _onTouchMove(e) {
+    if (!_swipeStart) return;
+    const dx = Math.abs(e.touches[0].clientX - _swipeStart.x);
+    const dy = Math.abs(e.touches[0].clientY - _swipeStart.y);
+    if (!_swipeDir && (dx > 6 || dy > 6)) {
+      _swipeDir = dx > dy ? 'h' : 'v';
+    }
+    // Lock horizontal: prevent card from scrolling so swipe feels intentional
+    if (_swipeDir === 'h') e.preventDefault();
   }
 
   function _onTouchEnd(e) {
-    if (!_swipeStart) return;
-    const dx = e.changedTouches[0].clientX - _swipeStart.x;
-    const dy = e.changedTouches[0].clientY - _swipeStart.y;
-    _swipeStart = null;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      _navigateBook(dx < 0 ? 1 : -1);
+    if (!_swipeStart || _swipeDir !== 'h') {
+      _swipeStart = null; _swipeDir = null;
+      return;
     }
+    const dx = e.changedTouches[0].clientX - _swipeStart.x;
+    _swipeStart = null; _swipeDir = null;
+    if (Math.abs(dx) > 40) _navigateBook(dx < 0 ? 1 : -1);
+  }
+
+  function _onTouchCancel() {
+    _swipeStart = null; _swipeDir = null;
   }
 
   // ── Why block (multi-reason cards) ────────────────────────────

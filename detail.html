@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;700&family=Noto+Serif+KR:wght@400;600&family=Nanum+Myeongjo:wght@400;700&family=Black+Han+Sans&family=Jua&family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=20260507c">
+  <link rel="stylesheet" href="css/style.css?v=20260507d">
   <style>
     .detail-hero {
       display: flex;
@@ -156,16 +156,16 @@
         <label class="form-label">읽기 상태</label>
         <div id="statusPicker" style="display:flex;gap:8px;flex-wrap:wrap">
           <button type="button" class="status-pick-btn" data-status=""
-            style="padding:8px 16px;border-radius:20px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:13px;font-weight:500">
-            ✅ 읽었어요
+            style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:16px;border:1.5px solid transparent;background:rgba(46,204,113,0.1);color:#1a7a43;cursor:pointer;font-size:13px;font-weight:600">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>읽은 책
           </button>
           <button type="button" class="status-pick-btn" data-status="reading"
-            style="padding:8px 16px;border-radius:20px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:13px;font-weight:500">
-            📖 읽는 중
+            style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:16px;border:1.5px solid transparent;background:rgba(243,156,18,0.1);color:#c17f00;cursor:pointer;font-size:13px;font-weight:600">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>읽는 중
           </button>
           <button type="button" class="status-pick-btn" data-status="want"
-            style="padding:8px 16px;border-radius:20px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:13px;font-weight:500">
-            📌 읽을 책
+            style="display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:16px;border:1.5px solid transparent;background:rgba(255,158,158,0.15);color:var(--accent,#FF9E9E);cursor:pointer;font-size:13px;font-weight:600">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>읽을 책
           </button>
         </div>
       </div>
@@ -462,8 +462,8 @@
   <script src="js/storage.js?v=20260504g"></script>
   <script src="js/api.js?v=20260504g"></script>
   <script src="js/library-api.js?v=20260507a"></script>
-  <script src="js/book-preview.js?v=20260507c"></script>
+  <script src="js/book-preview.js?v=20260507d"></script>
   <script src="js/share-template-new.js?v=20260504g"></script>
-  <script src="js/detail.js?v=20260505c"></script>
+  <script src="js/detail.js?v=20260507d"></script>
 </body>
 </html>

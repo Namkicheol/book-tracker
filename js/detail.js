@@ -63,18 +63,23 @@
 
   // ── Status ───────────────────────────────────────────────────
 
-  const STATUS_COLORS = { '': '#4A90E2', reading: '#f39c12', want: '#FF6B6B' };
+  const STATUS_STYLES = {
+    '':        { bg: 'rgba(46,204,113,0.12)',  fg: '#1a7a43',               activeBorder: 'rgba(26,122,67,0.4)'   },
+    reading:   { bg: 'rgba(243,156,18,0.12)',  fg: '#c17f00',               activeBorder: 'rgba(193,127,0,0.4)'   },
+    want:      { bg: 'rgba(255,158,158,0.15)', fg: 'var(--accent,#FF9E9E)', activeBorder: 'rgba(255,158,158,0.5)' },
+  };
 
   function renderStatus() {
     const current = book.status || '';
     document.querySelectorAll('.status-pick-btn').forEach(btn => {
       const val = btn.dataset.status;
       const active = val === current;
-      const col = STATUS_COLORS[val] || '#4A90E2';
-      btn.style.background   = active ? col : '#fff';
-      btn.style.color        = active ? '#fff' : '#333';
-      btn.style.borderColor  = active ? col : '#ddd';
-      btn.style.fontWeight   = active ? '700' : '500';
+      const s = STATUS_STYLES[val] || STATUS_STYLES[''];
+      btn.style.background  = s.bg;
+      btn.style.color       = s.fg;
+      btn.style.borderColor = active ? s.activeBorder : 'transparent';
+      btn.style.fontWeight  = active ? '800' : '600';
+      btn.style.boxShadow   = active ? `0 0 0 1.5px ${s.activeBorder}` : 'none';
     });
   }
 

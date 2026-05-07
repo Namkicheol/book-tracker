@@ -1373,6 +1373,10 @@ body.folder-sheet-open {
 body.preview-open {
   overflow: hidden;
 }
+/* iOS rubber-band prevention: block touches on the backdrop (not card) */
+.book-preview-backdrop {
+  touch-action: none;
+}
 .book-preview-close {
   position: absolute;
   top: 8px;
