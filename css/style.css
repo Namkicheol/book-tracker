@@ -46,6 +46,84 @@
   --max-w:    480px;
 }
 
+/* ===== DARK MODE ===== */
+[data-theme="dark"] {
+  --bg:          #1E1A1A;
+  --bg-accent:   #251E25;
+  --bg-paper:    #2A2424;
+  --text:        #EDE8E0;
+  --text-dark:   #F2EDE5;
+  --text-soft:   #9A9090;
+  --text-mute:   #6A6060;
+  --text-gray:   #9A9090;
+  --border:      rgba(255, 184, 198, 0.18);
+  --border-soft: rgba(255, 184, 198, 0.10);
+  --shadow:      rgba(0, 0, 0, 0.45);
+  --ink:         #EDE8E0;
+}
+
+[data-theme="dark"] body {
+  background: linear-gradient(180deg, #1E1A1A 0%, #221520 100%);
+}
+
+[data-theme="dark"] .page-header {
+  background: rgba(30, 26, 26, 0.95);
+  border-bottom-color: rgba(255, 184, 198, 0.12);
+}
+
+[data-theme="dark"] .page-header-masthead {
+  background: rgba(30, 26, 26, 0.97);
+}
+
+[data-theme="dark"] .bottom-nav {
+  background: rgba(42, 36, 36, 0.97);
+  border-top-color: rgba(255, 184, 198, 0.15);
+}
+
+[data-theme="dark"] .book-preview-card {
+  background: #2A2424;
+}
+
+[data-theme="dark"] .colophon {
+  background: linear-gradient(135deg, #251E20 0%, #1E1528 100%) !important;
+}
+
+[data-theme="dark"] .figures {
+  background: var(--bg-paper);
+}
+
+[data-theme="dark"] .book-card {
+  background: var(--bg-paper);
+}
+
+[data-theme="dark"] .folder-tab {
+  background: var(--bg-paper);
+  color: var(--text-soft);
+}
+
+[data-theme="dark"] .folder-tab.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+[data-theme="dark"] .modal-overlay,
+[data-theme="dark"] .book-preview-backdrop {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: #332C2C;
+  color: var(--text);
+  border-color: rgba(255, 184, 198, 0.25);
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--text-mute);
+}
+
 /* ===== RESET ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 16px; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
