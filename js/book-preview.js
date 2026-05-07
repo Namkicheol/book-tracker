@@ -18,9 +18,35 @@
 
   let recData = null;
 
+  // List-navigation state
+  let _listCtx   = null;  // { books, idx, opts } | null
+  let _renderGen = 0;     // monotonic counter to cancel stale renders
+  let _swipeEl   = null;  // element that has swipe listeners attached
+  let _swipeStart = null; // { x, y }
+
   function setRecData(data) { recData = data; }
 
+  // ── Public: single-book mode ─────────────────────────────────
   async function show(book, opts = {}) {
+    _listCtx = null;
+    await _openModal(book, opts);
+  }
+
+  // ── Public: list mode (swipe navigation) ─────────────────────
+  async function showList(books, idx, opts = {}) {
+    if (!books || !books.length) return;
+    _listCtx = { books, idx: Math.max(0, Math.min(idx, books.length - 1)), opts };
+    const book = _listCtx.books[_listCtx.idx];
+    await _openModal(book, opts);
+    if (_listCtx && _listCtx.books.length > 1) {
+      _injectNav();
+      _updateNav();
+      _wireSwipe();
+    }
+  }
+
+  // ── Internal: open modal, render skeleton → detail ───────────
+  async function _openModal(book, opts) {
     const meta = opts.meta || {};
     const mode = opts.mode || 'recommend';
 
@@ -31,11 +57,16 @@
       return;
     }
 
+    // Remove stale nav from previous session
+    modal.querySelector('.preview-list-nav')?.remove();
+
+    bodyEl.style.cssText = '';
     bodyEl.innerHTML = renderSkeleton(book, meta);
     modal.hidden = false;
     document.body.classList.add('preview-open');
     wireClose(modal);
 
+    const gen = ++_renderGen;
     let detail = null;
     if (book.isbn && window.API && typeof API.aladinLookup === 'function') {
       try {
@@ -44,9 +75,118 @@
         console.warn('[BookPreview] 알라딘 lookup 실패', e.message);
       }
     }
+    if (gen !== _renderGen) return;
 
     bodyEl.innerHTML = renderContent(book, meta, detail, mode);
     wireActions(book, modal, mode, detail);
+  }
+
+  // ── Navigation bar ───────────────────────────────────────────
+
+  function _injectNav() {
+    const card = document.querySelector('.book-preview-card');
+    if (!card || card.querySelector('.preview-list-nav')) return;
+    const nav = document.createElement('div');
+    nav.className = 'preview-list-nav';
+    const closeBtn = card.querySelector('.book-preview-close');
+    if (closeBtn) closeBtn.insertAdjacentElement('afterend', nav);
+    else card.prepend(nav);
+  }
+
+  function _updateNav() {
+    const nav = document.querySelector('.preview-list-nav');
+    if (!nav || !_listCtx) return;
+    const { idx, books } = _listCtx;
+    nav.innerHTML = `
+      <button class="preview-nav-btn" id="prevBookBtn" aria-label="이전 책"${idx === 0 ? ' disabled' : ''}>‹</button>
+      <span class="preview-nav-counter">${idx + 1} / ${books.length}</span>
+      <button class="preview-nav-btn" id="nextBookBtn" aria-label="다음 책"${idx === books.length - 1 ? ' disabled' : ''}>›</button>
+    `;
+    nav.querySelector('#prevBookBtn').addEventListener('click', () => _navigateBook(-1));
+    nav.querySelector('#nextBookBtn').addEventListener('click', () => _navigateBook(1));
+  }
+
+  async function _navigateBook(dir) {
+    if (!_listCtx) return;
+    const next = Math.max(0, Math.min(_listCtx.idx + dir, _listCtx.books.length - 1));
+    if (next === _listCtx.idx) return;
+    _listCtx.idx = next;
+
+    const gen = ++_renderGen;
+    const book = _listCtx.books[next];
+    const mode = (_listCtx.opts || {}).mode || 'recommend';
+    const modal = document.getElementById('bookPreviewModal');
+    const bodyEl = document.getElementById('previewBody');
+
+    // Slide out
+    if (bodyEl) {
+      bodyEl.style.transition = 'opacity .13s ease, transform .13s ease';
+      bodyEl.style.opacity = '0';
+      bodyEl.style.transform = `translateX(${dir > 0 ? '-28px' : '28px'})`;
+      await new Promise(r => setTimeout(r, 140));
+      if (gen !== _renderGen) return;
+    }
+
+    // Show skeleton from opposite side, slide in
+    if (bodyEl) {
+      bodyEl.style.transition = 'none';
+      bodyEl.style.transform = `translateX(${dir > 0 ? '28px' : '-28px'})`;
+      bodyEl.innerHTML = renderSkeleton(book, {});
+      bodyEl.getBoundingClientRect(); // force reflow
+      bodyEl.style.transition = 'opacity .13s ease, transform .13s ease';
+      bodyEl.style.opacity = '1';
+      bodyEl.style.transform = 'translateX(0)';
+    }
+
+    _updateNav();
+    const card = document.querySelector('.book-preview-card');
+    if (card) card.scrollTop = 0;
+
+    // Load detail
+    let detail = null;
+    if (book.isbn && window.API && typeof API.aladinLookup === 'function') {
+      try { detail = await API.aladinLookup(book.isbn); } catch {}
+    }
+    if (gen !== _renderGen) return;
+
+    if (bodyEl) {
+      bodyEl.innerHTML = renderContent(book, {}, detail, mode);
+      bodyEl.style.cssText = '';
+    }
+    wireActions(book, modal, mode, detail);
+  }
+
+  // ── Swipe detection ──────────────────────────────────────────
+
+  function _wireSwipe() {
+    _unwireSwipe();
+    const card = document.querySelector('.book-preview-card');
+    if (!card) return;
+    _swipeEl = card;
+    card.addEventListener('touchstart', _onTouchStart, { passive: true });
+    card.addEventListener('touchend',   _onTouchEnd,   { passive: true });
+  }
+
+  function _unwireSwipe() {
+    if (!_swipeEl) return;
+    _swipeEl.removeEventListener('touchstart', _onTouchStart);
+    _swipeEl.removeEventListener('touchend',   _onTouchEnd);
+    _swipeEl = null;
+    _swipeStart = null;
+  }
+
+  function _onTouchStart(e) {
+    _swipeStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }
+
+  function _onTouchEnd(e) {
+    if (!_swipeStart) return;
+    const dx = e.changedTouches[0].clientX - _swipeStart.x;
+    const dy = e.changedTouches[0].clientY - _swipeStart.y;
+    _swipeStart = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      _navigateBook(dx < 0 ? 1 : -1);
+    }
   }
 
   // ── Why block (multi-reason cards) ────────────────────────────
@@ -235,9 +375,16 @@
     ` : '';
 
     const aladinHref = item.link || b.url || '';
-    const aladinLink = aladinHref
-      ? `<a href="${escapeAttr(aladinHref)}" target="_blank" rel="noopener" class="btn btn-secondary">알라딘에서 보기</a>`
-      : '';
+    const searchQ = b.isbn ? String(b.isbn).replace(/\D/g, '') : encodeURIComponent(b.title || '');
+    const yes24Href  = `https://www.yes24.com/Product/Search?query=${searchQ}`;
+    const kyoboHref  = `https://search.kyobobook.co.kr/search?keyword=${searchQ}`;
+    const shopLinks = `
+      <div style="display:flex;gap:6px;margin-top:8px">
+        ${aladinHref ? `<a href="${escapeAttr(aladinHref)}" target="_blank" rel="noopener" class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px 4px">알라딘</a>` : ''}
+        <a href="${escapeAttr(yes24Href)}" target="_blank" rel="noopener" class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px 4px">YES24</a>
+        <a href="${escapeAttr(kyoboHref)}" target="_blank" rel="noopener" class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px 4px">교보문고</a>
+      </div>
+    `;
 
     const whyBlock = buildWhyBlock(b, meta, item);
 
@@ -306,7 +453,7 @@
 
       <div class="preview-actions">
         ${primaryBtn}
-        ${aladinLink}
+        ${shopLinks}
       </div>
 
       ${librarySection}
@@ -344,6 +491,9 @@
   function closePreview(modal) {
     modal.hidden = true;
     document.body.classList.remove('preview-open');
+    _listCtx = null;
+    _unwireSwipe();
+    modal.querySelector('.preview-list-nav')?.remove();
   }
 
   function wireActions(book, modal, mode, detail) {
@@ -505,5 +655,5 @@
   }
   function escapeAttr(s) { return String(s ?? '').replace(/"/g, '&quot;'); }
 
-  window.BookPreview = { show, setRecData };
+  window.BookPreview = { show, showList, setRecData };
 })();

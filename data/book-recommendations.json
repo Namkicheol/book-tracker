@@ -3706,11 +3706,15 @@
       "publisher": "키다리",
       "thumbnail": "https://image.aladin.co.kr/product/28501/13/cover200/k982835625_1.jpg",
       "year": 2021,
-      "targetAge": "유아",
+      "targetAge": "초등 1학년",
       "genre": "그림책",
       "bestRank": 149,
-      "lists": [],
-      "why": "알라딘 베스트셀러 149위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
+      "lists": [
+        "textbook"
+      ],
+      "why": "알라딘 베스트셀러 149위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다.",
+      "textbookGrade": 1,
+      "textbookUnit": "2학기"
     },
     "9791193407493": {
       "isbn": "9791193407493",
@@ -4704,11 +4708,15 @@
       "publisher": "Storybowl(스토리보울)",
       "thumbnail": "https://image.aladin.co.kr/product/33743/46/cover200/k002930862_1.jpg",
       "year": 2024,
-      "targetAge": "유아",
+      "targetAge": "초등 저학년",
       "genre": "그림책",
       "bestRank": 242,
-      "lists": [],
-      "why": "알라딘 베스트셀러 242위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
+      "lists": [
+        "textbook"
+      ],
+      "why": "알라딘 베스트셀러 242위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다.",
+      "textbookGrade": 3,
+      "textbookUnit": "2학기"
     },
     "9788962472066": {
       "isbn": "9788962472066",
@@ -7294,11 +7302,15 @@
       "publisher": "비룡소",
       "thumbnail": "https://image.aladin.co.kr/product/23406/22/cover200/8949106310_1.jpg",
       "year": 2020,
-      "targetAge": "초등 고학년",
+      "targetAge": "초등 1학년",
       "genre": "교양",
       "bestRank": 469,
-      "lists": [],
-      "why": "알라딘 베스트셀러 469위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
+      "lists": [
+        "textbook"
+      ],
+      "why": "알라딘 베스트셀러 469위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
     },
     "9791142326271": {
       "isbn": "9791142326271",
@@ -13080,10 +13092,14 @@
       "publisher": "문학동네",
       "thumbnail": "https://image.aladin.co.kr/product/44/14/cover200/8982817514_2.jpg",
       "year": 2003,
-      "targetAge": "유아",
+      "targetAge": "초등 저학년",
       "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
+      "lists": [
+        "textbook"
+      ],
+      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
     },
     "9788943307936": {
       "isbn": "9788943307936",
@@ -13308,10 +13324,14 @@
       "publisher": "웅진주니어",
       "thumbnail": "https://image.aladin.co.kr/product/2832/15/cover200/8901158434_1.jpg",
       "year": 2013,
-      "targetAge": "유아",
+      "targetAge": "초등 1학년",
       "genre": "그림책",
-      "lists": [],
-      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다."
+      "lists": [
+        "textbook"
+      ],
+      "why": "유아를 위한 그림책입니다. 아이의 상상력과 언어 발달에 도움을 줍니다.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
     },
     "9788943304997": {
       "isbn": "9788943304997",
@@ -16050,12 +16070,15 @@
       "publisher": "천개의바람",
       "thumbnail": "https://image.aladin.co.kr/product/10009/93/cover200/k152536467_2.jpg",
       "year": 2017,
-      "targetAge": "유아",
+      "targetAge": "초등 1학년",
       "genre": "그림책",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "textbook"
       ],
-      "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
+      "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요.",
+      "textbookGrade": 1,
+      "textbookUnit": "2학기"
     },
     "9791187287636": {
       "isbn": "9791187287636",
@@ -28822,6 +28845,636 @@
       "why": "6학년 교과서 수록 고전. 서얼 출신 홍길동이 차별을 극복하고 의적 활동을 펼치는 한국 고전 소설.",
       "textbookGrade": 6,
       "textbookUnit": "1학기"
+    },
+    "9788943306915": {
+      "isbn": "9788943306915",
+      "title": "노란 우산",
+      "author": "류재수",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 글 없이 그림만으로 이야기를 전하는 아름다운 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9791138854191": {
+      "isbn": "9791138854191",
+      "title": "학교 가는 길",
+      "author": "유은실",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 처음 학교에 가는 설레는 아침을 따뜻하게 담은 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9791158360337": {
+      "isbn": "9791158360337",
+      "title": "꽃에서 나온 코끼리",
+      "author": "이현주",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 꽃 속에서 나온 아기 코끼리와 가족의 따뜻한 이야기.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9791187439578": {
+      "isbn": "9791187439578",
+      "title": "코끼리가 꼈어요",
+      "author": "앙겔리카 하름스",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 코끼리가 화장실에 끼어버린 황당하고 유쾌한 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9788937813801": {
+      "isbn": "9788937813801",
+      "title": "구름놀이",
+      "author": "최재은",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 구름의 다양한 모양을 상상하며 떠나는 즐거운 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9788901091693": {
+      "isbn": "9788901091693",
+      "title": "도서관 고양이",
+      "author": "드웨인 슬레이터",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 도서관 한 구석에 사는 고양이와 아이들의 우정 이야기.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9791190747066": {
+      "isbn": "9791190747066",
+      "title": "모두모두 한집에 살아요",
+      "author": "이지현",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 다양한 생명체가 어우러져 사는 생태계를 담은 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9788961703833": {
+      "isbn": "9788961703833",
+      "title": "감자꽃",
+      "author": "권태응",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 동시인 권태응의 아름다운 자연 동시 모음집.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9788992855556": {
+      "isbn": "9788992855556",
+      "title": "꼭 잡아",
+      "author": "박종진",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 아이가 엄마 손을 꼭 잡으며 함께하는 따뜻한 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9788952789884": {
+      "isbn": "9788952789884",
+      "title": "맛있는 건 맛있어",
+      "author": "다다 히로시",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 다양한 음식에 대한 솔직한 감정을 담은 공감 가득한 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "1학기"
+    },
+    "9791165731335": {
+      "isbn": "9791165731335",
+      "title": "가시 소년",
+      "author": "이시즈 치히로",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 온몸에 가시가 난 소년이 따뜻한 우정으로 자신을 사랑하게 되는 이야기.",
+      "textbookGrade": 1,
+      "textbookUnit": "2학기"
+    },
+    "9791190253253": {
+      "isbn": "9791190253253",
+      "title": "화내지 말고 예쁘게 말해요",
+      "author": "최향랑",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 화가 날 때 바른 말로 감정을 표현하는 법을 배우는 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "2학기"
+    },
+    "9788994368269": {
+      "isbn": "9788994368269",
+      "title": "아주 무서운 날",
+      "author": "에밀리 그래빗",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 처음 마주하는 두려움을 친구와 함께 이겨내는 이야기.",
+      "textbookGrade": 1,
+      "textbookUnit": "2학기"
+    },
+    "9791185934273": {
+      "isbn": "9791185934273",
+      "title": "짝 바꾸는 날",
+      "author": "박현진",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 짝이 바뀌는 날 새 친구와 가까워지는 학교생활 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "2학기"
+    },
+    "9791159950506": {
+      "isbn": "9791159950506",
+      "title": "마음이 그랬어",
+      "author": "박진아",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 다양한 감정을 자연스럽게 표현하는 법을 배우는 그림책.",
+      "textbookGrade": 1,
+      "textbookUnit": "2학기"
+    },
+    "9791185903682": {
+      "isbn": "9791185903682",
+      "title": "낭송하고 싶은 우리 동시",
+      "author": "박방희",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 1학년",
+      "genre": "그림책",
+      "why": "1학년 2022 개정 교과서 수록. 낭송하기 좋은 우리 동시를 엄선하여 담은 동시 모음집.",
+      "textbookGrade": 1,
+      "textbookUnit": "2학기"
+    },
+    "9788956187372": {
+      "isbn": "9788956187372",
+      "title": "고구마구마",
+      "author": "사이다",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "2학년 2022 개정 교과서 수록. 고구마와 관련된 재치 넘치는 말놀이 그림책.",
+      "textbookGrade": 2,
+      "textbookUnit": "1학기"
+    },
+    "9788936455255": {
+      "isbn": "9788936455255",
+      "title": "꽃을 선물할게",
+      "author": "이루리",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "2학년 2022 개정 교과서 수록. 마음을 전하는 꽃 선물의 의미를 담은 따뜻한 그림책.",
+      "textbookGrade": 2,
+      "textbookUnit": "1학기"
+    },
+    "9791198610690": {
+      "isbn": "9791198610690",
+      "title": "삐약이 엄마",
+      "author": "백희나",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "2학년 2022 개정 교과서 수록. 병아리와 엄마의 따뜻한 사랑을 담은 백희나 작가의 그림책.",
+      "textbookGrade": 2,
+      "textbookUnit": "1학기"
+    },
+    "9788947548304": {
+      "isbn": "9788947548304",
+      "title": "수상한 수학 동화",
+      "author": "정완상",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "2학년 2022 개정 교과서 수록. 수학 개념을 재미있는 이야기로 배우는 수학 동화.",
+      "textbookGrade": 2,
+      "textbookUnit": "1학기"
+    },
+    "9788937473289": {
+      "isbn": "9788937473289",
+      "title": "있잖아",
+      "author": "피아 린덴바움",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "2학년 2022 개정 교과서 수록. 비밀과 고민을 털어놓는 아이의 솔직한 마음을 담은 그림책.",
+      "textbookGrade": 2,
+      "textbookUnit": "2학기"
+    },
+    "9788936451059": {
+      "isbn": "9788936451059",
+      "title": "들키고 싶은 비밀",
+      "author": "황선미",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "2학년 2022 개정 교과서 수록. 비밀이 들키기를 바라는 아이의 심리를 담은 동화.",
+      "textbookGrade": 2,
+      "textbookUnit": "2학기"
+    },
+    "9788997335947": {
+      "isbn": "9788997335947",
+      "title": "고자질쟁이 웃음",
+      "author": "한현정",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 고자질과 웃음 사이에서 갈등하는 아이의 이야기.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9791198046215": {
+      "isbn": "9791198046215",
+      "title": "그레이엄 할아버지께",
+      "author": "크리스틴 에반스",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 먼 곳의 할아버지께 편지를 쓰며 정을 나누는 감동 그림책.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9788962479058": {
+      "isbn": "9788962479058",
+      "title": "하나 둘 셋 찰칵! 김치, 치즈, 카프카",
+      "author": "선현경",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 한국과 체코 두 문화가 만나는 다문화 그림책.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9788901143347": {
+      "isbn": "9788901143347",
+      "title": "수원 화성",
+      "author": "정은주",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 세계유산 수원 화성의 역사와 의미를 알기 쉽게 설명한 책.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9788958286707": {
+      "isbn": "9788958286707",
+      "title": "허허 할아버지",
+      "author": "김현수",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 노인의 지혜와 여유를 배울 수 있는 따뜻한 이야기.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9788932370613": {
+      "isbn": "9788932370613",
+      "title": "우산 쓴 지렁이",
+      "author": "이상교",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 자연의 생명을 유머러스하게 담은 어린이 동시집.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9791158541521": {
+      "isbn": "9791158541521",
+      "title": "재미가 쏠쏠 우리 민속놀이",
+      "author": "서혜숙",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 전통 민속놀이를 배우며 우리 문화를 이해하는 책.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9791193074473": {
+      "isbn": "9791193074473",
+      "title": "레오의 특별한 꿈",
+      "author": "레오 리오니",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 자신만의 꿈을 가진 특별한 존재에 대한 레오 리오니의 명작.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9788955430004": {
+      "isbn": "9788955430004",
+      "title": "한석봉",
+      "author": "박숙희",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 조선 최고 명필가 한석봉의 노력과 어머니의 교육을 담은 이야기.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9788952760661": {
+      "isbn": "9788952760661",
+      "title": "거짓말 같은 이야기",
+      "author": "이나영",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 믿기 어려운 자연 현상을 유머러스하게 담은 과학 그림책.",
+      "textbookGrade": 3,
+      "textbookUnit": "2학기"
+    },
+    "9788962221909": {
+      "isbn": "9788962221909",
+      "title": "손에 잡히는 사회 교과서",
+      "author": "한국사회교재연구회",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 사회과 기초 개념을 이야기로 배우는 어린이 교양서.",
+      "textbookGrade": 3,
+      "textbookUnit": "2학기"
+    },
+    "9791192655314": {
+      "isbn": "9791192655314",
+      "title": "가정 통신문 시 쓰기 소동",
+      "author": "송미경",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 가정 통신문 때문에 벌어지는 유쾌한 시 쓰기 소동 동화.",
+      "textbookGrade": 4,
+      "textbookUnit": "1학기"
+    },
+    "9788991146303": {
+      "isbn": "9788991146303",
+      "title": "세종대왕이 사랑한 조선 최고의 발명가 장영실",
+      "author": "송윤섭",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 과학 천재 발명가 장영실의 삶을 흥미롭게 담은 전기문.",
+      "textbookGrade": 4,
+      "textbookUnit": "1학기"
+    },
+    "9791188717224": {
+      "isbn": "9791188717224",
+      "title": "씨앗을 부탁해",
+      "author": "김은식",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 씨앗을 지키고 키우는 과정에서 배우는 생명의 소중함.",
+      "textbookGrade": 4,
+      "textbookUnit": "1학기"
+    },
+    "9788994198170": {
+      "isbn": "9788994198170",
+      "title": "목 짧은 기린 지피",
+      "author": "고정욱",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 목이 짧아 다른 기린과 다른 지피가 자신을 사랑하게 되는 이야기.",
+      "textbookGrade": 4,
+      "textbookUnit": "1학기"
+    },
+    "9791189879013": {
+      "isbn": "9791189879013",
+      "title": "해바라기가 된 우산",
+      "author": "천선옥",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 버려진 우산이 해바라기처럼 아름다워지는 감동적인 그림책.",
+      "textbookGrade": 4,
+      "textbookUnit": "1학기"
+    },
+    "9791191197341": {
+      "isbn": "9791191197341",
+      "title": "올해의 좋은 동시 2022",
+      "author": "강기원",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 2022년 한 해 동안 발표된 좋은 동시를 엄선한 동시 모음.",
+      "textbookGrade": 4,
+      "textbookUnit": "1학기"
+    },
+    "9788967340704": {
+      "isbn": "9788967340704",
+      "title": "도서관을 훔친 아이",
+      "author": "앤드루 클레먼츠",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 앤드루 클레먼츠의 유쾌한 학교 이야기 시리즈.",
+      "textbookGrade": 4,
+      "textbookUnit": "2학기"
+    },
+    "9791192529448": {
+      "isbn": "9791192529448",
+      "title": "아름다운 아이",
+      "author": "R.J. 팔라시오",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 얼굴이 다른 소년 어기가 새 학교에 다니며 성장하는 감동 이야기.",
+      "textbookGrade": 4,
+      "textbookUnit": "2학기"
+    },
+    "9788901043791": {
+      "isbn": "9788901043791",
+      "title": "우리 반 비밀이야",
+      "author": "김홍신",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2025,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "4학년 2022 개정 교과서 수록. 반 아이들이 함께 비밀을 지키며 친해지는 교실 이야기.",
+      "textbookGrade": 4,
+      "textbookUnit": "2학기"
     }
   },
   "awards": {

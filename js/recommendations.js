@@ -395,7 +395,22 @@
 
       card.addEventListener('click', () => {
         const bookData = JSON.parse(card.dataset.book);
-        showBookPreview(bookData);
+
+        // Build list from the same grid section for swipe navigation
+        const grid = card.closest('.rec-browse-grid, .tb-grid, #searchGrid');
+        if (grid && window.BookPreview && BookPreview.showList) {
+          const siblings = [...grid.querySelectorAll('.rec-browse-card')];
+          const idx = siblings.indexOf(card);
+          const books = siblings.map(c => {
+            try {
+              const b = JSON.parse(c.dataset.book);
+              return { ...b, authors: b.authors || (b.author ? [b.author] : []) };
+            } catch { return null; }
+          }).filter(Boolean);
+          BookPreview.showList(books, Math.max(0, idx), { mode: 'recommend' });
+        } else {
+          showBookPreview(bookData);
+        }
       });
     });
   }

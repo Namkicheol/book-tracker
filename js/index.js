@@ -308,7 +308,15 @@
         }
         e.preventDefault();
         const book = Storage.getBook(id);
-        if (book) showBookPreview(book);
+        if (!book) return;
+        if (window.BookPreview && BookPreview.showList) {
+          const allCards = [...document.querySelectorAll('.book-card')];
+          const idx = allCards.indexOf(card);
+          const books = allCards.map(c => Storage.getBook(c.dataset.id)).filter(Boolean);
+          BookPreview.showList(books, Math.max(0, idx), { mode: 'library' });
+        } else {
+          showBookPreview(book);
+        }
       });
 
       // 드래그는 선택 모드 아닐 때만
