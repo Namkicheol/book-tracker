@@ -581,9 +581,23 @@
 
     const settingsBtn = document.getElementById('settingsBtn');
     if (settingsBtn) {
-      settingsBtn.addEventListener('click', () => {
-        showToast('프로필 설정 (준비 중)');
-      });
+      settingsBtn.addEventListener('click', showProfileEditor);
+    }
+
+    const profileGrade = document.getElementById('profileGrade');
+    if (profileGrade) {
+      profileGrade.addEventListener('click', showProfileEditor);
+      profileGrade.style.cursor = 'pointer';
+    }
+    const profileRegion = document.getElementById('profileRegion');
+    if (profileRegion) {
+      profileRegion.addEventListener('click', showProfileEditor);
+      profileRegion.style.cursor = 'pointer';
+    }
+
+    const shareCardBtn = document.getElementById('shareCardBtn');
+    if (shareCardBtn) {
+      shareCardBtn.addEventListener('click', showShareCard);
     }
 
     const editGoalBtn = document.getElementById('editGoalBtn');
@@ -745,4 +759,286 @@
     clearTimeout(showToast._t);
     showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
   }
+
+  // ── 프로필 편집 모달 ──────────────────────────────────────────
+  function showProfileEditor() {
+    const cur = {
+      name:   localStorage.getItem('profileName')   || '책읽는엄마',
+      grade:  localStorage.getItem('profileGrade')  || '초5',
+      region: localStorage.getItem('profileRegion') || '강남구',
+      goal:   parseInt(localStorage.getItem('monthlyGoal') || '20', 10),
+    };
+    const grades = ['초1','초2','초3','초4','초5','초6','중1','중2','중3','고1','고2','고3','기타'];
+
+    const modal = document.createElement('div');
+    modal.className = 'friend-modal';
+    modal.innerHTML = `
+      <div class="friend-modal-content" style="max-width:360px">
+        <div class="friend-modal-header">
+          <div class="friend-avatar">⚙️</div>
+          <div class="friend-info">
+            <div class="friend-name">프로필 편집</div>
+            <div class="friend-stats">아바타·이름은 직접 클릭해서도 변경 가능</div>
+          </div>
+          <button class="friend-close" id="profEditClose">✕</button>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">닉네임</span>
+            <input id="profEditName" type="text" value="${escapeAttr(cur.name)}" maxlength="20"
+              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">학년</span>
+            <select id="profEditGrade"
+              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
+              ${grades.map(g => `<option value="${g}"${g===cur.grade?' selected':''}>${g}</option>`).join('')}
+            </select>
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">지역 (예: 강남구, 분당)</span>
+            <input id="profEditRegion" type="text" value="${escapeAttr(cur.region)}" maxlength="20"
+              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">이번 달 목표 (권)</span>
+            <input id="profEditGoal" type="number" min="1" max="200" value="${cur.goal}"
+              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
+          </label>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:18px">
+          <button id="profEditCancel" class="cheer-cancel" style="flex:1;margin:0">취소</button>
+          <button id="profEditSave" class="encouragement-btn" style="flex:1;margin:0">저장</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const close = () => modal.remove();
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    modal.querySelector('#profEditClose').addEventListener('click', close);
+    modal.querySelector('#profEditCancel').addEventListener('click', close);
+    modal.querySelector('#profEditSave').addEventListener('click', () => {
+      const name   = modal.querySelector('#profEditName').value.trim()   || cur.name;
+      const grade  = modal.querySelector('#profEditGrade').value         || cur.grade;
+      const region = modal.querySelector('#profEditRegion').value.trim() || cur.region;
+      const goal   = Math.max(1, parseInt(modal.querySelector('#profEditGoal').value, 10) || cur.goal);
+
+      localStorage.setItem('profileName',   name);
+      localStorage.setItem('profileGrade',  grade);
+      localStorage.setItem('profileRegion', region);
+      localStorage.setItem('monthlyGoal',   String(goal));
+
+      document.getElementById('profileName').textContent   = name;
+      document.getElementById('profileGrade').textContent  = grade;
+      document.getElementById('profileRegion').textContent = region;
+      myStats.goalTarget = goal;
+      renderGoal();
+
+      close();
+      showToast('✅ 프로필이 저장됐어요');
+    });
+  }
+
+  // ── 공유 카드 (Canvas 1080×1350) ──────────────────────────────
+  async function showShareCard() {
+    const name   = localStorage.getItem('profileName')   || '책읽는엄마';
+    const avatar = localStorage.getItem('profileAvatar') || '👩';
+    const grade  = localStorage.getItem('profileGrade')  || '';
+    const region = localStorage.getItem('profileRegion') || '';
+    const books  = Storage.getAllBooks();
+
+    const W = 1080, H = 1350;
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    // 배경 그라디언트
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0,   '#FFF8F0');
+    bg.addColorStop(0.5, '#FFE8F0');
+    bg.addColorStop(1,   '#F8E8FF');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+    // 장식 원
+    ctx.fillStyle = 'rgba(255, 184, 198, 0.18)';
+    ctx.beginPath(); ctx.arc(W - 80, 120, 140, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'rgba(232, 197, 255, 0.15)';
+    ctx.beginPath(); ctx.arc(120, H - 180, 180, 0, Math.PI*2); ctx.fill();
+
+    // 헤더 — 맘스북스
+    ctx.fillStyle = '#FF9E9E';
+    ctx.font = '700 32px "Gowun Batang", serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('📚 맘스북스', W/2, 110);
+    ctx.fillStyle = 'rgba(139, 139, 139, 0.7)';
+    ctx.font = '500 20px sans-serif';
+    ctx.fillText('READING TRACKER FOR KIDS', W/2, 145);
+
+    // 아바타 원
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(W/2, 250, 60, 0, Math.PI*2); ctx.fill();
+    ctx.font = '64px sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(avatar, W/2, 252);
+    ctx.textBaseline = 'alphabetic';
+
+    // 닉네임
+    ctx.fillStyle = '#4A4A4A';
+    ctx.font = '700 44px sans-serif';
+    ctx.fillText(name, W/2, 360);
+
+    // 학년·지역
+    if (grade || region) {
+      ctx.fillStyle = '#8B8B8B';
+      ctx.font = '500 24px sans-serif';
+      ctx.fillText([grade, region].filter(Boolean).join(' · '), W/2, 400);
+    }
+
+    // 큰 숫자 — 이번 달
+    ctx.fillStyle = '#8B8B8B';
+    ctx.font = '700 22px sans-serif';
+    ctx.fillText('이번 달', W/2, 510);
+
+    // 그라디언트 큰 숫자
+    const numGrad = ctx.createLinearGradient(0, 530, 0, 700);
+    numGrad.addColorStop(0, '#FF9E9E');
+    numGrad.addColorStop(1, '#E8C5FF');
+    ctx.fillStyle = numGrad;
+    ctx.font = '800 200px "Gowun Batang", serif';
+    ctx.fillText(String(myStats.monthBooks), W/2, 700);
+
+    ctx.fillStyle = '#FF9E9E';
+    ctx.font = '700 36px sans-serif';
+    ctx.fillText('권 읽었어요', W/2, 760);
+
+    // 3-칸 통계 박스
+    const boxY = 830, boxH = 140;
+    const boxes = [
+      { num: myStats.weekBooks,  label: '이번 주' },
+      { num: myStats.yearBooks,  label: '올해' },
+      { num: myStats.streak,     label: '연속 일' },
+    ];
+    const boxW = (W - 160) / 3;
+    boxes.forEach((b, i) => {
+      const x = 80 + i * boxW;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+      _roundRect(ctx, x + 8, boxY, boxW - 16, boxH, 18);
+      ctx.fill();
+
+      ctx.fillStyle = '#FF9E9E';
+      ctx.font = '800 56px "Gowun Batang", serif';
+      ctx.fillText(String(b.num), x + boxW/2, boxY + 70);
+
+      ctx.fillStyle = '#8B8B8B';
+      ctx.font = '600 22px sans-serif';
+      ctx.fillText(b.label, x + boxW/2, boxY + 110);
+    });
+
+    // 목표 진행
+    const goalY = 1020;
+    const target = myStats.goalTarget || 20;
+    const pct = Math.min(myStats.monthBooks / target, 1);
+    ctx.fillStyle = '#4A4A4A';
+    ctx.font = '600 28px sans-serif';
+    ctx.fillText(`🎯 목표 ${target}권 · ${Math.round(pct*100)}%`, W/2, goalY);
+    // 바 배경
+    const barX = 140, barW = W - 280, barH = 24, barY = goalY + 30;
+    ctx.fillStyle = 'rgba(0,0,0,0.06)';
+    _roundRect(ctx, barX, barY, barW, barH, 12); ctx.fill();
+    // 바 fill
+    const barGrad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
+    barGrad.addColorStop(0, '#FF9E9E');
+    barGrad.addColorStop(1, '#E8C5FF');
+    ctx.fillStyle = barGrad;
+    _roundRect(ctx, barX, barY, Math.max(barH, barW * pct), barH, 12); ctx.fill();
+
+    // 뱃지
+    const unlocked = BADGES.filter(b => b.condition(myStats));
+    ctx.fillStyle = '#4A4A4A';
+    ctx.font = '600 26px sans-serif';
+    ctx.fillText(`🏆 뱃지 ${unlocked.length}/${BADGES.length}`, W/2, 1140);
+
+    // 푸터
+    ctx.fillStyle = 'rgba(139, 139, 139, 0.7)';
+    ctx.font = '500 22px sans-serif';
+    ctx.fillText('우리 아이 독서 기록 · 맘스북스', W/2, H - 60);
+
+    // 카드 미리보기 + 공유 모달
+    canvas.toBlob(async (blob) => {
+      if (!blob) { showToast('이미지 생성 실패'); return; }
+      const url = URL.createObjectURL(blob);
+      _showShareCardModal(url, blob, name);
+    }, 'image/png', 0.95);
+  }
+
+  function _roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function _showShareCardModal(imgUrl, blob, name) {
+    const modal = document.createElement('div');
+    modal.className = 'friend-modal';
+    modal.innerHTML = `
+      <div class="friend-modal-content" style="max-width:380px;padding:20px">
+        <div style="text-align:center;margin-bottom:14px">
+          <div style="font-size:14px;font-weight:700;color:var(--text-dark);margin-bottom:4px">📤 독서 기록 공유</div>
+          <div style="font-size:12px;color:var(--text-gray)">인스타·카톡으로 자랑하기</div>
+        </div>
+        <div style="background:#f5f5f5;border-radius:12px;overflow:hidden;margin-bottom:14px">
+          <img src="${imgUrl}" alt="공유 카드" style="width:100%;display:block">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button id="shareCardCancel" class="cheer-cancel" style="flex:1;margin:0">닫기</button>
+          <button id="shareCardDownload" class="encouragement-btn" style="flex:1;margin:0">📥 저장</button>
+          <button id="shareCardShare" class="encouragement-btn" style="flex:1;margin:0">📤 공유</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    const close = () => { URL.revokeObjectURL(imgUrl); modal.remove(); };
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    modal.querySelector('#shareCardCancel').addEventListener('click', close);
+
+    modal.querySelector('#shareCardDownload').addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = imgUrl;
+      a.download = `momsbooks_${name}_${new Date().toISOString().slice(0,10)}.png`;
+      document.body.appendChild(a); a.click(); a.remove();
+      showToast('📥 이미지가 저장됐어요');
+    });
+
+    modal.querySelector('#shareCardShare').addEventListener('click', async () => {
+      try {
+        const file = new File([blob], 'momsbooks_share.png', { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            files: [file],
+            title: '맘스북스 독서 기록',
+            text: `${name}의 독서 기록 — 이번 달 ${myStats.monthBooks}권`,
+          });
+          close();
+        } else {
+          showToast('이 기기는 공유 미지원 — 저장 후 직접 공유해주세요');
+        }
+      } catch (e) {
+        if (e.name !== 'AbortError') showToast('공유 실패: ' + e.message);
+      }
+    });
+  }
+
+  function escapeAttr(s) { return String(s ?? '').replace(/"/g, '&quot;'); }
 })();
