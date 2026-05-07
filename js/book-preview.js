@@ -186,17 +186,15 @@
     const card = document.querySelector('.book-preview-card');
     if (!card) return;
     _swipeEl = card;
-    card.addEventListener('touchstart',  _onTouchStart,  { passive: true });
-    card.addEventListener('touchmove',   _onTouchMove,   { passive: false }); // non-passive: can preventDefault
-    card.addEventListener('touchend',    _onTouchEnd,    { passive: true });
+    card.addEventListener('touchstart', _onTouchStart, { passive: true });
+    card.addEventListener('touchend',   _onTouchEnd,   { passive: true });
     card.addEventListener('touchcancel', _onTouchCancel, { passive: true });
   }
 
   function _unwireSwipe() {
     if (!_swipeEl) return;
-    _swipeEl.removeEventListener('touchstart',  _onTouchStart);
-    _swipeEl.removeEventListener('touchmove',   _onTouchMove);
-    _swipeEl.removeEventListener('touchend',    _onTouchEnd);
+    _swipeEl.removeEventListener('touchstart', _onTouchStart);
+    _swipeEl.removeEventListener('touchend',   _onTouchEnd);
     _swipeEl.removeEventListener('touchcancel', _onTouchCancel);
     _swipeEl = null;
     _swipeStart = null;
@@ -208,25 +206,14 @@
     _swipeDir   = null;
   }
 
-  function _onTouchMove(e) {
-    if (!_swipeStart) return;
-    const dx = Math.abs(e.touches[0].clientX - _swipeStart.x);
-    const dy = Math.abs(e.touches[0].clientY - _swipeStart.y);
-    if (!_swipeDir && (dx > 6 || dy > 6)) {
-      _swipeDir = dx > dy ? 'h' : 'v';
-    }
-    // Lock horizontal: prevent card from scrolling so swipe feels intentional
-    if (_swipeDir === 'h') e.preventDefault();
-  }
-
   function _onTouchEnd(e) {
-    if (!_swipeStart || _swipeDir !== 'h') {
-      _swipeStart = null; _swipeDir = null;
-      return;
-    }
+    if (!_swipeStart) return;
     const dx = e.changedTouches[0].clientX - _swipeStart.x;
+    const dy = e.changedTouches[0].clientY - _swipeStart.y;
     _swipeStart = null; _swipeDir = null;
-    if (Math.abs(dx) > 40) _navigateBook(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      _navigateBook(dx < 0 ? 1 : -1);
+    }
   }
 
   function _onTouchCancel() {
@@ -440,13 +427,24 @@
     const _statusKey = b.status === 'want' ? 'want' : b.status === 'reading' ? 'reading' : 'read';
     let primaryBtn;
     if (mode === 'library') {
-      const s = STATUS_CFG[_statusKey];
+      function _statusBtnStyle(key) {
+        const s = STATUS_CFG[key];
+        const active = key === _statusKey;
+        return `flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;cursor:pointer;font-size:12px;font-weight:700;font-family:var(--font-body,inherit);background:${s.bg};color:${s.fg};border:${active ? `2px solid ${s.fg}` : '2px solid transparent'};box-shadow:${active ? `0 0 0 1px ${s.fg}44` : 'none'}`;
+      }
       primaryBtn = `
         <div>
-          <div style="display:flex;justify-content:center;margin-bottom:12px">
-            <span style="display:inline-flex;align-items:center;gap:5px;background:${s.bg};color:${s.fg};padding:6px 16px;border-radius:16px;font-size:13px;font-weight:700">
-              ${svgIcon(_statusKey, 13)}${s.label}
-            </span>
+          <p style="font-size:11px;font-weight:700;color:var(--text-mute,#999);letter-spacing:0.08em;text-align:center;margin:0 0 10px;font-family:var(--font-body,inherit)">읽기 상태</p>
+          <div style="display:flex;gap:8px;margin-bottom:12px">
+            <button type="button" id="previewLibraryWantBtn" data-lib-status="want" style="${_statusBtnStyle('want')}">
+              ${svgIcon('want', 18)}읽을 책
+            </button>
+            <button type="button" id="previewLibraryReadingBtn" data-lib-status="reading" style="${_statusBtnStyle('reading')}">
+              ${svgIcon('reading', 18)}읽는 중
+            </button>
+            <button type="button" id="previewLibraryReadBtn" data-lib-status="read" style="${_statusBtnStyle('read')}">
+              ${svgIcon('read', 18)}읽었어요
+            </button>
           </div>
           <button type="button" class="btn btn-primary" id="previewLibraryBtn" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%">
             ${svgIcon('pencil', 14)} 기록하러 가기
@@ -582,7 +580,37 @@
       handleFindLibrary(book.isbn, findLibBtn);
     }
 
-    if (mode === 'library') return;
+    if (mode === 'library') {
+      // Status change buttons
+      ['previewLibraryWantBtn', 'previewLibraryReadingBtn', 'previewLibraryReadBtn'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+          const newStatusKey = btn.dataset.libStatus; // 'want'|'reading'|'read'
+          const newStatus = newStatusKey === 'read' ? null : newStatusKey;
+          if (!window.Storage || !book.id) return;
+          Storage.updateBook(book.id, { status: newStatus });
+          // Update local list context so navigation uses fresh status
+          if (_listCtx) {
+            const listBook = _listCtx.books[_listCtx.idx];
+            if (listBook && listBook.id === book.id) listBook.status = newStatus;
+          }
+          // Re-render buttons with new active state
+          const statuses = { want: 'want', reading: 'reading', read: null };
+          const cfgKeys = ['want', 'reading', 'read'];
+          cfgKeys.forEach(k => {
+            const el = document.querySelector(`[data-lib-status="${k}"]`);
+            if (!el) return;
+            const s = STATUS_CFG[k];
+            const active = k === newStatusKey;
+            el.style.border = active ? `2px solid ${s.fg}` : '2px solid transparent';
+            el.style.boxShadow = active ? `0 0 0 1px ${s.fg}44` : 'none';
+          });
+          toast(newStatusKey === 'want' ? '읽을 책으로 변경' : newStatusKey === 'reading' ? '읽는 중으로 변경' : '읽은 책으로 변경');
+        });
+      });
+      return;
+    }
 
     // recommend mode — 상태별 저장 공통 함수
     if (!window.Storage) return;
