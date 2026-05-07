@@ -5084,8 +5084,12 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 276,
-      "lists": [],
-      "why": "알라딘 베스트셀러 276위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
+      "lists": [
+        "textbook"
+      ],
+      "why": "알라딘 베스트셀러 276위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
     },
     "9788991550506": {
       "isbn": "9788991550506",
@@ -29474,6 +29478,486 @@
       "genre": "동화",
       "why": "4학년 2022 개정 교과서 수록. 반 아이들이 함께 비밀을 지키며 친해지는 교실 이야기.",
       "textbookGrade": 4,
+      "textbookUnit": "2학기"
+    },
+    "9791157852055": {
+      "isbn": "9791157852055",
+      "title": "세상에 둘도 없는 반짝이 신발",
+      "author": "제인 고드윈",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2022,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "2학년 2022 개정 교과서 수록. 무엇도 채울 수 없는 슬픔을 지닌 소녀가 반짝이 신발을 통해 상처를 치유하는 감동 그림책.",
+      "textbookGrade": 2,
+      "textbookUnit": "1학기"
+    },
+    "9791160340990": {
+      "isbn": "9791160340990",
+      "title": "이게 뭐예요?",
+      "author": "라파엘 마르탱",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2022,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "2학년 2022 개정 국어활동 수록. 자연에서 볼 수 있는 온갖 모양들을 찾아가는 창의적 그림책.",
+      "textbookGrade": 2,
+      "textbookUnit": "1학기"
+    },
+    "9791188283798": {
+      "isbn": "9791188283798",
+      "title": "수상한 선글라스",
+      "author": "고수산나",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2022,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "3학년 2022 개정 교과서 수록. 수상한 선글라스를 쓰면서 일어나는 신기하고 유쾌한 이야기.",
+      "textbookGrade": 3,
+      "textbookUnit": "1학기"
+    },
+    "9788952207746": {
+      "isbn": "9788952207746",
+      "title": "어린이를 위한 시크릿",
+      "author": "윤태익",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 1학기 국어 5-1(가) 수록. 꿈을 이루는 7가지 비밀을 어린이 눈높이에서 풀어낸 자기계발서.",
+      "textbookGrade": 5,
+      "textbookUnit": "1학기"
+    },
+    "9788957981924": {
+      "isbn": "9788957981924",
+      "title": "날 좀 내버려 둬",
+      "author": "양인자",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 1학기 국어 5-1(가) 수록. 제7회 푸른문학상 동화집으로 아이들의 솔직한 감정을 담은 이야기 모음.",
+      "textbookGrade": 5,
+      "textbookUnit": "1학기"
+    },
+    "9788957984918": {
+      "isbn": "9788957984918",
+      "title": "일곱 발, 열아홉 발",
+      "author": "김해우",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 1학기 국어 5-1(가) 수록. 다양한 측정 방법으로 세상을 탐구하는 창의적 그림책.",
+      "textbookGrade": 5,
+      "textbookUnit": "1학기"
+    },
+    "9788936440725": {
+      "isbn": "9788936440725",
+      "title": "신라 이야기 1",
+      "author": "윤경렬",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 2학기 국어 교과서 수록. 신라의 역사와 문화를 이야기로 풀어낸 역사 동화.",
+      "textbookGrade": 5,
+      "textbookUnit": "2학기"
+    },
+    "9788949110349": {
+      "isbn": "9788949110349",
+      "title": "오른발, 왼발",
+      "author": "토미 드 파올라",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 2학기 국어 교과서 수록. 할아버지와 손자의 따뜻한 사랑을 담은 토미 드 파올라의 감동 그림책.",
+      "textbookGrade": 5,
+      "textbookUnit": "2학기"
+    },
+    "9788986621785": {
+      "isbn": "9788986621785",
+      "title": "메아리",
+      "author": "이주홍",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 2학기 국어 교과서 수록. 산골 마을 아이들의 순수한 삶과 자연을 담은 동화.",
+      "textbookGrade": 5,
+      "textbookUnit": "2학기"
+    },
+    "9788984284470": {
+      "isbn": "9788984284470",
+      "title": "새들은 시험 안 봐서 좋겠구나",
+      "author": "한국글쓰기교육연구회",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 2학기 국어 교과서 수록. 아이들이 직접 쓴 글을 엮은 초등학교 어린이 글모음집.",
+      "textbookGrade": 5,
+      "textbookUnit": "2학기"
+    },
+    "9788954605199": {
+      "isbn": "9788954605199",
+      "title": "선생님을 이긴 날",
+      "author": "김은영",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 2학기 국어 교과서 수록. 선생님과의 논쟁에서 이기게 된 날의 특별한 경험을 담은 동화.",
+      "textbookGrade": 5,
+      "textbookUnit": "2학기"
+    },
+    "9788936446178": {
+      "isbn": "9788936446178",
+      "title": "별똥별 아줌마가 들려주는 우주 이야기",
+      "author": "이지유",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 2학기 국어 교과서 수록. 별똥별 아줌마가 쉽고 재미있게 들려주는 어린이 우주 과학책.",
+      "textbookGrade": 5,
+      "textbookUnit": "2학기"
+    },
+    "9788936446444": {
+      "isbn": "9788936446444",
+      "title": "뽀뽀의 힘",
+      "author": "김유진",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "5학년 2학기 국어 교과서 수록. 사랑과 위로의 힘을 뽀뽀로 표현한 동시집.",
+      "textbookGrade": 5,
+      "textbookUnit": "2학기"
+    },
+    "9788962680942": {
+      "isbn": "9788962680942",
+      "title": "우주 호텔",
+      "author": "유순희",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 6-1(가) 수록. 우주 호텔에서 펼쳐지는 모험과 성장 이야기.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788957985328": {
+      "isbn": "9788957985328",
+      "title": "산새알 물새알",
+      "author": "박목월",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 6-1(나) 수록. 한국 현대시의 거장 박목월의 자연과 생명을 노래한 동시집.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788976504241": {
+      "isbn": "9788976504241",
+      "title": "속담 하나 이야기 하나",
+      "author": "임덕연",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 재미있는 이야기와 함께 우리 속담의 의미를 배우는 책.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788936442552": {
+      "isbn": "9788936442552",
+      "title": "말대꾸하면 안 돼요?",
+      "author": "배봉기",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 아이와 어른 사이의 소통을 유머러스하게 담은 이야기.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788990611727": {
+      "isbn": "9788990611727",
+      "title": "조선왕실의 보물 의궤",
+      "author": "유지현",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 조선왕실 의식과 문화를 담은 보물 의궤를 어린이에게 소개하는 책.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788958288602": {
+      "isbn": "9788958288602",
+      "title": "가랑비 가랑가랑 가랑파 가랑가랑",
+      "author": "정완영",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 동시인 정완영의 아름다운 자연과 삶을 담은 동시집.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788961703826": {
+      "isbn": "9788961703826",
+      "title": "귀뚜라미와 나와",
+      "author": "권태응",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 우리 동시의 아름다움을 담은 명시 선집.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788957986752": {
+      "isbn": "9788957986752",
+      "title": "얘, 내 옆에 앉아!",
+      "author": "연필시 동인",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 아이들의 일상과 감정을 담은 연필시 동인의 동시 모음집.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788974742959": {
+      "isbn": "9788974742959",
+      "title": "초등 고학년을 위한 행복한 청소부",
+      "author": "모니카 페트",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 청소부의 일과 삶의 아름다움을 통해 행복의 의미를 일깨우는 그림책.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788997714346": {
+      "isbn": "9788997714346",
+      "title": "뻥튀기",
+      "author": "고일",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 일상의 소소한 즐거움을 담은 고일 시인의 동시집.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788993963120": {
+      "isbn": "9788993963120",
+      "title": "황금 사과",
+      "author": "송희진",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 황금 사과를 둘러싼 욕심과 지혜에 관한 이야기.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788936441777": {
+      "isbn": "9788936441777",
+      "title": "샘마을 몽당깨비",
+      "author": "황선미",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 1학기 국어 교과서 수록. 황선미 작가의 우리 고유의 정서를 담은 판타지 동화.",
+      "textbookGrade": 6,
+      "textbookUnit": "1학기"
+    },
+    "9788977980082": {
+      "isbn": "9788977980082",
+      "title": "우산 속",
+      "author": "문삼석",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 2학기 국어 교과서 수록. 한국 연작 시화 선집으로 서정적인 시와 그림이 어우러진 작품집.",
+      "textbookGrade": 6,
+      "textbookUnit": "2학기"
+    },
+    "9788936440282": {
+      "isbn": "9788936440282",
+      "title": "나무 그늘을 산 총각",
+      "author": "손동인",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 2학기 국어 교과서 수록. 나무 그늘을 사고파는 재치 있는 우리 전래 동화.",
+      "textbookGrade": 6,
+      "textbookUnit": "2학기"
+    },
+    "9788971967355": {
+      "isbn": "9788971967355",
+      "title": "독도를 지키는 사람들",
+      "author": "김병렬",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 2학기 국어 교과서 수록. 독도를 지켜온 사람들의 이야기를 담은 독도 관련 도서.",
+      "textbookGrade": 6,
+      "textbookUnit": "2학기"
+    },
+    "9788957981856": {
+      "isbn": "9788957981856",
+      "title": "마사코의 질문",
+      "author": "손연자",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 2학기 국어 교과서 수록. 일제강점기를 배경으로 민족 정체성과 양심을 담은 역사 동화.",
+      "textbookGrade": 6,
+      "textbookUnit": "2학기"
+    },
+    "9788959864690": {
+      "isbn": "9788959864690",
+      "title": "오시오 자시오 가시오",
+      "author": "김향이",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 2학기 국어 교과서 수록. 어린이 고전 마당 시리즈로 고전 문학을 현대적으로 재해석한 작품.",
+      "textbookGrade": 6,
+      "textbookUnit": "2학기"
+    },
+    "9788901099576": {
+      "isbn": "9788901099576",
+      "title": "송아지가 뚫어 준 울타리 구멍",
+      "author": "손춘익",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 2학기 국어 교과서 수록. 송아지 구멍을 통해 이웃 간 따뜻한 정을 담은 이야기.",
+      "textbookGrade": 6,
+      "textbookUnit": "2학기"
+    },
+    "9788934967026": {
+      "isbn": "9788934967026",
+      "title": "바다 건너 불어온 향기",
+      "author": "한아",
+      "publisher": "",
+      "lists": [
+        "textbook"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "6학년 2학기 국어 교과서 수록. 이민 가족의 정체성과 뿌리에 대한 따뜻한 이야기.",
+      "textbookGrade": 6,
       "textbookUnit": "2학기"
     }
   },
