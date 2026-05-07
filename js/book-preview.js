@@ -252,7 +252,23 @@
     } else if (existingInLibrary) {
       primaryBtn = `<button type="button" class="btn btn-secondary" id="previewLibraryBtn" data-existing-id="${escapeAttr(existingInLibrary.id)}" style="background:#6f8b7a;color:#fff;border:none">✓ 이미 내 서재에 있어요 — 보러가기</button>`;
     } else {
-      primaryBtn = `<button type="button" class="btn btn-primary" id="previewSaveBtn">＋ 내 서재에 기록</button>`;
+      primaryBtn = `
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button type="button" class="btn btn-primary" id="previewSaveBtn" data-save-status=""
+            style="background:#4A90E2">
+            ✅ 읽었어요 — 서재에 기록
+          </button>
+          <div style="display:flex;gap:8px">
+            <button type="button" class="btn btn-secondary" id="previewSaveWantBtn"
+              style="flex:1;background:#fff;border:1.5px solid #FF6B6B;color:#FF6B6B;font-weight:600">
+              📌 읽을 책으로 저장
+            </button>
+            <button type="button" class="btn btn-secondary" id="previewSaveReadingBtn"
+              style="flex:1;background:#fff;border:1.5px solid #f39c12;color:#f39c12;font-weight:600">
+              📖 읽는 중으로 저장
+            </button>
+          </div>
+        </div>`;
     }
 
     const heroCover = b.thumbnail || (titleMatches && item.cover) || '';
@@ -349,31 +365,44 @@
 
     if (mode === 'library') return;
 
-    // recommend mode (새로 기록)
-    const saveBtn = document.getElementById('previewSaveBtn');
-    if (!saveBtn || !window.Storage) return;
-    saveBtn.addEventListener('click', () => {
+    // recommend mode — 상태별 저장 공통 함수
+    if (!window.Storage) return;
+
+    function saveWithStatus(status) {
       const existing = Storage.getBookByIsbn ? Storage.getBookByIsbn(book.isbn) : null;
       if (existing) {
-        toast('이미 기록된 책');
+        if (status !== null) Storage.updateBook(existing.id, { status });
+        const label = status === 'want' ? '읽을 책으로 저장' : status === 'reading' ? '읽는 중으로 저장' : '이미 서재에 있어요';
+        toast(label);
         setTimeout(() => location.href = `detail.html?id=${encodeURIComponent(existing.id)}`, 600);
         return;
       }
       const saved = Storage.saveBook({
-        isbn:      book.isbn,
-        title:     book.title,
-        authors:   book.authors || (book.author ? [book.author] : []),
-        publisher: book.publisher,
-        thumbnail: book.thumbnail,
-        contents:  book.contents || '',
-        language:  book.language || 'ko',
+        isbn:        book.isbn,
+        title:       book.title,
+        authors:     book.authors || (book.author ? [book.author] : []),
+        publisher:   book.publisher,
+        thumbnail:   book.thumbnail,
+        contents:    book.contents || '',
+        language:    book.language || 'ko',
+        status:      status,
         categoryId:   book.categoryId   || (window.API && API.extractCategoryId ? API.extractCategoryId(detail || {}) : undefined),
         categoryName: book.categoryName || (detail && detail.categoryName),
       });
-      toast(`"${book.title}" 기록됨`);
+      const label = status === 'want' ? `"${book.title}" 읽을 책으로 저장` : status === 'reading' ? `"${book.title}" 읽는 중으로 저장` : `"${book.title}" 기록됨`;
+      toast(label);
       closePreview(modal);
       setTimeout(() => location.href = `detail.html?id=${encodeURIComponent(saved.id)}&new=1`, 700);
-    });
+    }
+
+    const saveBtn = document.getElementById('previewSaveBtn');
+    if (saveBtn) saveBtn.addEventListener('click', () => saveWithStatus(null));
+
+    const saveWantBtn = document.getElementById('previewSaveWantBtn');
+    if (saveWantBtn) saveWantBtn.addEventListener('click', () => saveWithStatus('want'));
+
+    const saveReadingBtn = document.getElementById('previewSaveReadingBtn');
+    if (saveReadingBtn) saveReadingBtn.addEventListener('click', () => saveWithStatus('reading'));
   }
 
   async function handleFindLibrary(isbn, btn) {
