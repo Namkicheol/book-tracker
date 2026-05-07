@@ -328,8 +328,8 @@
         if (!book) return;
         if (window.BookPreview && BookPreview.showList) {
           const allCards = [...document.querySelectorAll('.book-card')];
-          const idx = allCards.indexOf(card);
           const books = allCards.map(c => Storage.getBook(c.dataset.id)).filter(Boolean);
+          const idx = books.findIndex(b => b.id === book.id);
           BookPreview.showList(books, Math.max(0, idx), { mode: 'library' });
         } else {
           showBookPreview(book);
