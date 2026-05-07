@@ -24,6 +24,23 @@
   let _swipeEl   = null;  // element that has swipe listeners attached
   let _swipeStart = null; // { x, y }
 
+  // Status display config — mirrors STATUS_BADGE / STATUS_ICONS in index.js
+  const STATUS_CFG = {
+    want:    { label: '읽을 책', bg: 'rgba(255,158,158,0.15)', fg: 'var(--accent,#FF9E9E)' },
+    reading: { label: '읽는 중', bg: 'rgba(243,156,18,0.12)',  fg: '#c17f00'               },
+    read:    { label: '읽은 책', bg: 'rgba(46,204,113,0.12)',  fg: '#1a7a43'               },
+  };
+  const _SVG_PATHS = {
+    want:    `<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>`,
+    reading: `<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>`,
+    read:    `<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>`,
+    pencil:  `<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>`,
+  };
+  function svgIcon(key, size) {
+    const sz = size || 14;
+    return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${_SVG_PATHS[key] || ''}</svg>`;
+  }
+
   function setRecData(data) { recData = data; }
 
   // ── Public: single-book mode ─────────────────────────────────
@@ -37,16 +54,18 @@
     if (!books || !books.length) return;
     _listCtx = { books, idx: Math.max(0, Math.min(idx, books.length - 1)), opts };
     const book = _listCtx.books[_listCtx.idx];
-    await _openModal(book, opts);
-    if (_listCtx && _listCtx.books.length > 1) {
-      _injectNav();
-      _updateNav();
-      _wireSwipe();
-    }
+    // onVisible: inject nav/swipe IMMEDIATELY after skeleton (before Aladin lookup)
+    await _openModal(book, opts, () => {
+      if (_listCtx && _listCtx.books.length > 1) {
+        _injectNav();
+        _updateNav();
+        _wireSwipe();
+      }
+    });
   }
 
   // ── Internal: open modal, render skeleton → detail ───────────
-  async function _openModal(book, opts) {
+  async function _openModal(book, opts, onVisible) {
     const meta = opts.meta || {};
     const mode = opts.mode || 'recommend';
 
@@ -65,6 +84,9 @@
     modal.hidden = false;
     document.body.classList.add('preview-open');
     wireClose(modal);
+
+    // Immediately visible — wire nav/swipe before slow async work
+    if (onVisible) onVisible();
 
     const gen = ++_renderGen;
     let detail = null;
@@ -393,26 +415,51 @@
       ? Storage.getBookByIsbn(b.isbn)
       : null;
 
+    const _statusKey = b.status === 'want' ? 'want' : b.status === 'reading' ? 'reading' : 'read';
     let primaryBtn;
     if (mode === 'library') {
-      primaryBtn = `<button type="button" class="btn btn-primary" id="previewLibraryBtn">📝 기록하러 가기</button>`;
+      const s = STATUS_CFG[_statusKey];
+      primaryBtn = `
+        <div>
+          <div style="display:flex;justify-content:center;margin-bottom:12px">
+            <span style="display:inline-flex;align-items:center;gap:5px;background:${s.bg};color:${s.fg};padding:6px 16px;border-radius:16px;font-size:13px;font-weight:700">
+              ${svgIcon(_statusKey, 13)}${s.label}
+            </span>
+          </div>
+          <button type="button" class="btn btn-primary" id="previewLibraryBtn" style="display:flex;align-items:center;justify-content:center;gap:6px;width:100%">
+            ${svgIcon('pencil', 14)} 기록하러 가기
+          </button>
+        </div>`;
     } else if (existingInLibrary) {
-      primaryBtn = `<button type="button" class="btn btn-secondary" id="previewLibraryBtn" data-existing-id="${escapeAttr(existingInLibrary.id)}" style="background:#6f8b7a;color:#fff;border:none">✓ 이미 내 서재에 있어요 — 보러가기</button>`;
+      const eKey = existingInLibrary.status === 'want' ? 'want' : existingInLibrary.status === 'reading' ? 'reading' : 'read';
+      const s = STATUS_CFG[eKey];
+      primaryBtn = `
+        <div>
+          <div style="display:flex;justify-content:center;margin-bottom:12px">
+            <span style="display:inline-flex;align-items:center;gap:5px;background:${s.bg};color:${s.fg};padding:6px 16px;border-radius:16px;font-size:13px;font-weight:700">
+              ${svgIcon(eKey, 13)}${s.label}
+            </span>
+          </div>
+          <button type="button" class="btn btn-secondary" id="previewLibraryBtn" data-existing-id="${escapeAttr(existingInLibrary.id)}" style="background:#6f8b7a;color:#fff;border:none;display:flex;align-items:center;justify-content:center;gap:6px;width:100%">
+            이미 내 서재에 있어요 — 보러가기
+          </button>
+        </div>`;
     } else {
       primaryBtn = `
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <button type="button" class="btn btn-primary" id="previewSaveBtn" data-save-status=""
-            style="background:#4A90E2">
-            ✅ 읽었어요 — 서재에 기록
-          </button>
+        <div>
+          <p style="font-size:11px;font-weight:700;color:var(--text-mute,#999);letter-spacing:0.08em;text-align:center;margin:0 0 10px;font-family:var(--font-body,inherit)">서재에 추가</p>
           <div style="display:flex;gap:8px">
-            <button type="button" class="btn btn-secondary" id="previewSaveWantBtn"
-              style="flex:1;background:#fff;border:1.5px solid #FF6B6B;color:#FF6B6B;font-weight:600">
-              📌 읽을 책으로 저장
+            <button type="button" id="previewSaveWantBtn"
+              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;border:none;background:${STATUS_CFG.want.bg};color:${STATUS_CFG.want.fg};font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body,inherit)">
+              ${svgIcon('want', 18)}읽을 책
             </button>
-            <button type="button" class="btn btn-secondary" id="previewSaveReadingBtn"
-              style="flex:1;background:#fff;border:1.5px solid #f39c12;color:#f39c12;font-weight:600">
-              📖 읽는 중으로 저장
+            <button type="button" id="previewSaveReadingBtn"
+              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;border:none;background:${STATUS_CFG.reading.bg};color:${STATUS_CFG.reading.fg};font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body,inherit)">
+              ${svgIcon('reading', 18)}읽는 중
+            </button>
+            <button type="button" id="previewSaveBtn" data-save-status=""
+              style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:14px;border:none;background:${STATUS_CFG.read.bg};color:${STATUS_CFG.read.fg};font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body,inherit)">
+              ${svgIcon('read', 18)}읽었어요
             </button>
           </div>
         </div>`;
