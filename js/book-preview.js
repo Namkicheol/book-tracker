@@ -186,15 +186,17 @@
     const card = document.querySelector('.book-preview-card');
     if (!card) return;
     _swipeEl = card;
-    card.addEventListener('touchstart', _onTouchStart, { passive: true });
-    card.addEventListener('touchend',   _onTouchEnd,   { passive: true });
+    card.addEventListener('touchstart',  _onTouchStart,  { passive: true });
+    card.addEventListener('touchmove',   _onTouchMove,   { passive: true }); // passive: just track pos
+    card.addEventListener('touchend',    _onTouchEnd,    { passive: true });
     card.addEventListener('touchcancel', _onTouchCancel, { passive: true });
   }
 
   function _unwireSwipe() {
     if (!_swipeEl) return;
-    _swipeEl.removeEventListener('touchstart', _onTouchStart);
-    _swipeEl.removeEventListener('touchend',   _onTouchEnd);
+    _swipeEl.removeEventListener('touchstart',  _onTouchStart);
+    _swipeEl.removeEventListener('touchmove',   _onTouchMove);
+    _swipeEl.removeEventListener('touchend',    _onTouchEnd);
     _swipeEl.removeEventListener('touchcancel', _onTouchCancel);
     _swipeEl = null;
     _swipeStart = null;
@@ -202,22 +204,37 @@
   }
 
   function _onTouchStart(e) {
-    _swipeStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    _swipeStart = { x: e.touches[0].clientX, y: e.touches[0].clientY, last: null };
     _swipeDir   = null;
   }
 
-  function _onTouchEnd(e) {
+  function _onTouchMove(e) {
+    if (_swipeStart && e.touches.length) {
+      _swipeStart.last = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+  }
+
+  function _checkSwipe(endX, endY) {
     if (!_swipeStart) return;
-    const dx = e.changedTouches[0].clientX - _swipeStart.x;
-    const dy = e.changedTouches[0].clientY - _swipeStart.y;
+    const dx = endX - _swipeStart.x;
+    const dy = endY - _swipeStart.y;
     _swipeStart = null; _swipeDir = null;
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) {
       _navigateBook(dx < 0 ? 1 : -1);
     }
   }
 
+  function _onTouchEnd(e) {
+    _checkSwipe(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+  }
+
   function _onTouchCancel() {
-    _swipeStart = null; _swipeDir = null;
+    // iOS fires touchcancel when it claims scroll — use last tracked position
+    if (_swipeStart && _swipeStart.last) {
+      _checkSwipe(_swipeStart.last.x, _swipeStart.last.y);
+    } else {
+      _swipeStart = null; _swipeDir = null;
+    }
   }
 
   // ── Why block (multi-reason cards) ────────────────────────────
