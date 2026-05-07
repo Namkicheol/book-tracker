@@ -268,6 +268,38 @@ body {
   gap: var(--sp-lg) var(--sp-md);
 }
 
+/* ── List view ── */
+.books-grid.list-view {
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+.books-grid.list-view .book-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-paper);
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  box-shadow: 2px 3px 0 var(--shadow);
+}
+.books-grid.list-view .book-cover-wrap {
+  flex-shrink: 0;
+  width: 46px;
+  margin-bottom: 0;
+}
+.books-grid.list-view .book-cover,
+.books-grid.list-view .book-cover-placeholder {
+  width: 46px;
+  border-radius: 6px;
+  border-width: 2px;
+  font-size: 20px;
+}
+.books-grid.list-view .book-card-info { flex: 1; min-width: 0; }
+.books-grid.list-view .book-card-title { font-size: 13px; -webkit-line-clamp: 2; }
+.books-grid.list-view .book-card-author { font-size: 11px; }
+.books-grid.list-view .book-card-stars { margin-top: 2px; }
+
 /* ===== BOOK CARD ===== */
 .book-card {
   cursor: pointer;
@@ -1158,6 +1190,68 @@ body.folder-sheet-open {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+}
+
+/* ── Rec list view ── */
+.rec-browse-grid.list-view,
+.tb-grid.list-view {
+  grid-template-columns: 1fr !important;
+  gap: 6px;
+}
+.rec-browse-grid.list-view .rec-browse-card,
+.tb-grid.list-view .rec-browse-card {
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-paper);
+  border-radius: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  width: 100%;
+}
+.rec-browse-grid.list-view .rec-browse-cover,
+.tb-grid.list-view .rec-browse-cover {
+  width: 46px;
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+.rec-browse-grid.list-view .rec-browse-info,
+.tb-grid.list-view .rec-browse-info {
+  margin-top: 0;
+  flex: 1;
+  min-width: 0;
+}
+.rec-browse-grid.list-view .rec-browse-book-title,
+.tb-grid.list-view .rec-browse-book-title {
+  font-size: 13px;
+}
+
+/* ── Scroll to top ── */
+.scroll-top-btn {
+  position: fixed;
+  bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px));
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(255,158,158,0.4);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 90;
+}
+.scroll-top-btn.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 @media (min-width: 600px) {

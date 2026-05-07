@@ -10,6 +10,7 @@
   let currentFolderId = '';        // '' === 전체
   let currentSort     = 'newest';  // newest | oldest | rating | title
   let currentStatus   = 'all';     // all | want | reading | read
+  let currentView     = localStorage.getItem('libraryView') || 'grid'; // grid | list
 
   const STATUS_BADGE = {
     want:    {
@@ -302,6 +303,7 @@
 
     empty.classList.add('hidden');
     grid.innerHTML = books.map(renderCard).join('');
+    grid.classList.toggle('list-view', currentView === 'list');
 
     const inSelectMode = selectMode;
     grid.classList.toggle('select-mode', inSelectMode);
@@ -538,11 +540,13 @@
         <div class="book-cover-wrap">
           ${cover}
         </div>
-        <h3 class="book-card-title">${escapeHtml(book.title)}</h3>
-        <p class="book-card-author">${escapeHtml(author)}</p>
-        ${statusHtml}
-        ${starsHtml}
-        ${badgesHtml}
+        <div class="book-card-info">
+          <h3 class="book-card-title">${escapeHtml(book.title)}</h3>
+          <p class="book-card-author">${escapeHtml(author)}</p>
+          ${statusHtml}
+          ${starsHtml}
+          ${badgesHtml}
+        </div>
       </article>
     `;
   }
@@ -798,6 +802,19 @@
           librarySearchQuery = libSearch.value.trim();
           renderBooks();
         }, 150);
+      });
+    }
+
+    const viewBtn = document.getElementById('viewToggleBtn');
+    if (viewBtn) {
+      viewBtn.querySelector('.icon-list').style.display = currentView === 'list' ? 'none' : '';
+      viewBtn.querySelector('.icon-grid').style.display = currentView === 'list' ? '' : 'none';
+      viewBtn.addEventListener('click', () => {
+        currentView = currentView === 'grid' ? 'list' : 'grid';
+        localStorage.setItem('libraryView', currentView);
+        viewBtn.querySelector('.icon-list').style.display = currentView === 'list' ? 'none' : '';
+        viewBtn.querySelector('.icon-grid').style.display = currentView === 'list' ? '' : 'none';
+        renderBooks();
       });
     }
 

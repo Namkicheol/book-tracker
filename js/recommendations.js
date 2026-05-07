@@ -8,6 +8,7 @@
   let recommendationData = null;
   let allBooks = [];
   let textbookMode = false;
+  let recView = localStorage.getItem('recView') || 'grid';
 
   // ── Load data ────────────────────────────────────────────────
 
@@ -30,6 +31,8 @@
 
       console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
       attachModeTabListeners();
+      attachViewToggle();
+      attachScrollTop();
       renderGradeSections();
       attachSearchListener();
     } catch (err) {
@@ -177,6 +180,7 @@
 
     // 이벤트 리스너 등록
     attachSectionListeners();
+    applyRecView();
   }
 
   function renderSectionBooks(gradeId, showCount) {
@@ -284,6 +288,7 @@
 
     tbGrades.forEach(({ g }) => renderTbBooks(g, INITIAL));
     attachTbListeners();
+    applyRecView();
   }
 
   function renderTbBooks(g, showCount) {
@@ -550,6 +555,40 @@
       authors: book.authors || (book.author ? [book.author] : []),
     };
     BookPreview.show(normalized, { mode: 'recommend' });
+  }
+
+  // ── View Toggle ─────────────────────────────────────────────
+
+  function applyRecView() {
+    document.querySelectorAll('.rec-browse-grid, .tb-grid').forEach(el => {
+      el.classList.toggle('list-view', recView === 'list');
+    });
+    const btn = document.getElementById('recViewToggleBtn');
+    if (!btn) return;
+    btn.querySelector('.icon-list').style.display = recView === 'list' ? 'none' : '';
+    btn.querySelector('.icon-grid').style.display = recView === 'list' ? '' : 'none';
+  }
+
+  function attachViewToggle() {
+    const btn = document.getElementById('recViewToggleBtn');
+    if (!btn) return;
+    applyRecView();
+    btn.addEventListener('click', () => {
+      recView = recView === 'grid' ? 'list' : 'grid';
+      localStorage.setItem('recView', recView);
+      applyRecView();
+    });
+  }
+
+  // ── Scroll to Top ────────────────────────────────────────────
+
+  function attachScrollTop() {
+    const btn = document.getElementById('scrollTopBtn');
+    if (!btn) return;
+    window.addEventListener('scroll', () => {
+      btn.classList.toggle('visible', window.scrollY > 300);
+    }, { passive: true });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
   }
 
   // ── Utilities ────────────────────────────────────────────────
