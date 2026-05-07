@@ -18,6 +18,7 @@
     }
 
     renderTopCards(books, folders);
+    renderStatusCards(books);
     renderMonthlyChart(books);
     renderFolderChart(books, folders);
   }
@@ -45,6 +46,16 @@
     document.getElementById('avgRating').textContent = avg !== null ? avg.toFixed(1) : '—';
 
     document.getElementById('totalFolders').textContent = folders.length;
+  }
+
+  function renderStatusCards(books) {
+    const wantEl    = document.getElementById('statusWant');
+    const readingEl = document.getElementById('statusReading');
+    const readEl    = document.getElementById('statusRead');
+    if (!wantEl) return;
+    wantEl.textContent    = books.filter(b => b.status === 'want').length;
+    readingEl.textContent = books.filter(b => b.status === 'reading').length;
+    readEl.textContent    = books.filter(b => !b.status).length;
   }
 
   function renderMonthlyChart(books) {

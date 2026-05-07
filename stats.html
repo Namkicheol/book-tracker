@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>맘스북스 — 독서 통계</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500;1,600&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=20260504c">
   <style>
     .stat-grid {
@@ -95,13 +98,13 @@
         <path d="M15 18l-6-6 6-6"/>
       </svg>
     </a>
-    <span class="page-header-mini">No. 04</span>
+    <span class="page-header-mini">Stats</span>
     <span style="width:36px"></span>
   </header>
 
   <section class="chapter">
     <div class="chapter-glyph">計</div>
-    <span class="chapter-no">No. 04 · Reading Stats</span>
+    <span class="chapter-no">Reading Stats</span>
     <h1 class="chapter-title">독서 <em>통계</em></h1>
     <p class="chapter-sub">한 해의 독서 흐름을 한눈에.</p>
   </section>
@@ -128,6 +131,24 @@
         <span class="stat-eyebrow">Folders</span>
         <div class="stat-value"><span id="totalFolders">0</span><span class="stat-value-unit">개</span></div>
         <p class="stat-label">분류 폴더</p>
+      </div>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:var(--sp-md)">
+      <div class="stat-card" data-glyph="積">
+        <span class="stat-eyebrow">To Read</span>
+        <div class="stat-value"><span id="statusWant">0</span><span class="stat-value-unit">권</span></div>
+        <p class="stat-label">읽을 책</p>
+      </div>
+      <div class="stat-card" data-glyph="讀">
+        <span class="stat-eyebrow">Reading</span>
+        <div class="stat-value"><span id="statusReading">0</span><span class="stat-value-unit">권</span></div>
+        <p class="stat-label">읽는 중</p>
+      </div>
+      <div class="stat-card" data-glyph="完">
+        <span class="stat-eyebrow">Done</span>
+        <div class="stat-value"><span id="statusRead">0</span><span class="stat-value-unit">권</span></div>
+        <p class="stat-label">읽은 책</p>
       </div>
     </div>
 
@@ -193,7 +214,7 @@
   <div class="toast" id="toast"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script src="js/storage.js?v=20260504b"></script>
-  <script src="js/stats.js?v=20260504b"></script>
+  <script src="js/storage.js?v=20260507b"></script>
+  <script src="js/stats.js?v=20260507b"></script>
 </body>
 </html>

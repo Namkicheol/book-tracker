@@ -12,8 +12,16 @@
   let currentStatus   = 'all';     // all | want | reading | read
 
   const STATUS_BADGE = {
-    want:    { label: '📌 읽을 책', bg: '#FF6B6B', fg: '#fff' },
-    reading: { label: '📖 읽는 중', bg: '#f39c12', fg: '#fff' },
+    want:    {
+      label: '읽을 책',
+      bg: 'rgba(255,158,158,0.15)', fg: 'var(--accent)',
+      icon: `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+    },
+    reading: {
+      label: '읽는 중',
+      bg: 'rgba(243,156,18,0.12)', fg: '#c17f00',
+      icon: `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+    },
   };
 
   // 다중 선택 모드
@@ -118,20 +126,27 @@
       want:    all.filter(b => b.status === 'want').length,
       read:    all.filter(b => !b.status).length,
     };
+    const STATUS_ICONS = {
+      all:     `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+      want:    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>`,
+      reading: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>`,
+      read:    `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+    };
     const tabs = [
       { key: 'all',     label: '전체',    count: counts.all     },
-      { key: 'reading', label: '📖 읽는 중', count: counts.reading },
-      { key: 'want',    label: '📌 읽을 책', count: counts.want    },
-      { key: 'read',    label: '✅ 읽은 책', count: counts.read    },
+      { key: 'want',    label: '읽을 책', count: counts.want    },
+      { key: 'reading', label: '읽는 중', count: counts.reading },
+      { key: 'read',    label: '읽은 책', count: counts.read    },
     ];
     bar.innerHTML = tabs.map(t => {
       const active = currentStatus === t.key;
       const showCount = t.count > 0 && t.key !== 'all';
       return `<button class="status-tab ${active ? 'active' : ''}" data-status="${t.key}"
-        style="padding:6px 14px;border:none;border-radius:16px;font-size:13px;cursor:pointer;white-space:nowrap;
-               background:${active ? '#333' : '#f0f0f0'};color:${active ? '#fff' : '#555'};
-               font-weight:${active ? '700' : '400'}">
-        ${t.label}${showCount ? ` <sup style="font-size:10px">${t.count}</sup>` : ''}
+        style="display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border:none;border-radius:16px;font-size:13px;cursor:pointer;white-space:nowrap;
+               background:${active ? 'var(--accent)' : 'rgba(255,184,198,0.15)'};
+               color:${active ? '#fff' : 'var(--text-soft)'};
+               font-weight:${active ? '700' : '400'};font-family:var(--font-body)">
+        ${STATUS_ICONS[t.key]}${t.label}${showCount ? `<span style="font-size:10px;opacity:0.8;margin-left:1px">${t.count}</span>` : ''}
       </button>`;
     }).join('');
     bar.querySelectorAll('[data-status]').forEach(btn => {
@@ -498,7 +513,7 @@
 
     const statusInfo = STATUS_BADGE[book.status];
     const statusHtml = statusInfo
-      ? `<div style="margin-top:5px"><span style="background:${statusInfo.bg};color:${statusInfo.fg};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">${statusInfo.label}</span></div>`
+      ? `<div style="margin-top:5px"><span style="display:inline-flex;align-items:center;gap:3px;background:${statusInfo.bg};color:${statusInfo.fg};padding:2px 7px;border-radius:10px;font-size:10px;font-weight:600">${statusInfo.icon}${statusInfo.label}</span></div>`
       : '';
 
     // Check if this book is in recommendation database
@@ -785,5 +800,7 @@
         }, 150);
       });
     }
+
+    if (window.LibraryAPI) LibraryAPI.prefetchPosition();
   });
 })();

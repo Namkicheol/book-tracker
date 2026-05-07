@@ -144,15 +144,26 @@
     },
 
     _getCurrentPosition() {
+      if (this._cachedPos && Date.now() < this._cachedPosExpiry) {
+        return Promise.resolve(this._cachedPos);
+      }
       return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
           reject(new Error('Geolocation not supported'));
           return;
         }
-        navigator.geolocation.getCurrentPosition(resolve, () => {
+        navigator.geolocation.getCurrentPosition(pos => {
+          this._cachedPos = pos;
+          this._cachedPosExpiry = Date.now() + 5 * 60 * 1000;
+          resolve(pos);
+        }, () => {
           reject(new Error('위치 권한이 거부되었습니다.'));
-        }, { timeout: 8000 });
+        }, { timeout: 5000 });
       });
+    },
+
+    prefetchPosition() {
+      this._getCurrentPosition().catch(() => {});
     },
 
     _estimateRegion(lat, lng) {
