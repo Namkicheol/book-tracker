@@ -1270,6 +1270,14 @@ body.folder-sheet-open {
   gap: 12px;
 }
 
+/* ── Textbook grid base ── */
+.tb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  padding: 0;
+}
+
 /* ── Rec list view ── */
 .rec-browse-grid.list-view,
 .tb-grid.list-view {
