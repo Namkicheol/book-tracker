@@ -1278,6 +1278,57 @@ body.folder-sheet-open {
   padding: 0;
 }
 
+/* ── Shop links (알라딘 / YES24 / 교보문고) ── */
+.shop-links {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+.shop-link {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 6px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-paper);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.shop-link:active {
+  transform: translateY(1px);
+}
+.shop-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+.shop-aladin {
+  border-color: #00b9b3;
+  color: #008780;
+}
+.shop-aladin:hover { background: rgba(0,185,179,0.08); }
+.shop-yes24 {
+  border-color: #1a4f8b;
+  color: #1a4f8b;
+}
+.shop-yes24:hover { background: rgba(26,79,139,0.08); }
+.shop-kyobo {
+  border-color: #b91c1c;
+  color: #b91c1c;
+}
+.shop-kyobo:hover { background: rgba(185,28,28,0.08); }
+
+[data-theme="dark"] .shop-aladin { color: #4dd9d3; }
+[data-theme="dark"] .shop-yes24 { color: #6fa8d8; }
+[data-theme="dark"] .shop-kyobo { color: #e07474; }
+
 /* ── Kindergarten curated nested toggle ── */
 .kinder-summary {
   list-style: none;

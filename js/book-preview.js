@@ -427,11 +427,21 @@
     const searchQ = b.isbn ? String(b.isbn).replace(/\D/g, '') : encodeURIComponent(b.title || '');
     const yes24Href  = `https://www.yes24.com/Product/Search?query=${searchQ}`;
     const kyoboHref  = `https://search.kyobobook.co.kr/search?keyword=${searchQ}`;
+    const favicon = (domain) => `https://www.google.com/s2/favicons?domain=${domain}&sz=32`;
     const shopLinks = `
-      <div style="display:flex;gap:6px;margin-top:8px">
-        ${aladinHref ? `<a href="${escapeAttr(aladinHref)}" target="_blank" rel="noopener" class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px 4px">알라딘</a>` : ''}
-        <a href="${escapeAttr(yes24Href)}" target="_blank" rel="noopener" class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px 4px">YES24</a>
-        <a href="${escapeAttr(kyoboHref)}" target="_blank" rel="noopener" class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px 4px">교보문고</a>
+      <div class="shop-links">
+        ${aladinHref ? `<a href="${escapeAttr(aladinHref)}" target="_blank" rel="noopener" class="shop-link shop-aladin">
+          <img src="${favicon('aladin.co.kr')}" alt="" class="shop-icon" loading="lazy">
+          <span>알라딘</span>
+        </a>` : ''}
+        <a href="${escapeAttr(yes24Href)}" target="_blank" rel="noopener" class="shop-link shop-yes24">
+          <img src="${favicon('yes24.com')}" alt="" class="shop-icon" loading="lazy">
+          <span>YES24</span>
+        </a>
+        <a href="${escapeAttr(kyoboHref)}" target="_blank" rel="noopener" class="shop-link shop-kyobo">
+          <img src="${favicon('kyobobook.co.kr')}" alt="" class="shop-icon" loading="lazy">
+          <span>교보문고</span>
+        </a>
       </div>
     `;
 
