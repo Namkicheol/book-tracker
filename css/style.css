@@ -258,7 +258,7 @@ body {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 34px;
-  line-height: 1.1;
+  line-height: 1.25;
   letter-spacing: -0.015em;
   color: var(--text);
   margin-bottom: var(--sp-sm);
@@ -1268,6 +1268,14 @@ body.folder-sheet-open {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
+}
+
+/* ── Textbook grid base ── */
+.tb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  padding: 0;
 }
 
 /* ── Rec list view ── */

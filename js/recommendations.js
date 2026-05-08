@@ -68,6 +68,15 @@
       btnTB.style.color  = tb ? '#27ae60' : '#999';
       btnTB.style.borderBottom = tb ? '2px solid #27ae60' : 'none';
       btnTB.style.marginBottom = tb ? '-2px' : '';
+
+      // 검색 상태 초기화 + gradeContent 강제 표시
+      const searchInput = document.getElementById('recSearch');
+      if (searchInput) searchInput.value = '';
+      const resultsEl = document.getElementById('searchResults');
+      if (resultsEl) resultsEl.hidden = true;
+      const gradeEl = document.getElementById('gradeContent');
+      if (gradeEl) gradeEl.style.display = 'block';
+
       renderGradeSections();
     }
 
@@ -191,11 +200,7 @@
     if (kinderHtml) {
       const kinderSection = content.querySelector('#kinderSection');
       if (kinderSection) {
-        kinderSection.querySelectorAll('.rec-browse-card').forEach(card => {
-          card.addEventListener('click', () => {
-            try { const book = JSON.parse(card.dataset.book || '{}'); if (window.BookPreview) BookPreview.show(book, { mode: 'recommend' }); } catch (e) {}
-          });
-        });
+        attachCardListeners();
         backfillThumbnails(kinderSection);
       }
     }
@@ -203,12 +208,6 @@
     // 이벤트 리스너 등록
     attachSectionListeners();
     applyRecView();
-  }
-
-  function applyRecView() {
-    document.querySelectorAll('.rec-browse-grid, .tb-grid').forEach(el => {
-      el.classList.add('list-view');
-    });
   }
 
   function renderSectionBooks(gradeId, showCount) {
@@ -280,7 +279,6 @@
 
     const themeHtml = themes.map(theme => {
       const themeBooks = (theme.books || []).map(pick => {
-        // Use full book data from allBooks if available, otherwise use pick data
         const fromDB = booksMap.get(String(pick.isbn));
         const book = fromDB
           ? { ...fromDB, why: pick.why || fromDB.why }
@@ -288,38 +286,31 @@
         return book;
       });
 
-      const cards = themeBooks.map(book => {
-        const cover = book.thumbnail || PLACEHOLDER;
-        const needsLookup = !book.thumbnail && !!book.isbn;
-        const bookJson = escapeAttr(JSON.stringify(book));
-        return `<button type="button" class="rec-browse-card" data-book="${bookJson}"${needsLookup ? ` data-needs-thumb="${escapeAttr(String(book.isbn))}"` : ''} style="min-width:100px;width:100px;flex-shrink:0">
-          <img class="rec-browse-cover" src="${escapeAttr(cover)}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER}'" style="height:130px;object-fit:cover">
-          <div class="rec-browse-info">
-            <h3 class="rec-browse-book-title" style="font-size:11px;line-height:1.3;-webkit-line-clamp:2">${escapeHtml(book.title)}</h3>
-          </div>
-        </button>`;
-      }).join('');
+      const cards = themeBooks.map(book => renderCard(book)).join('');
 
-      return `<div style="margin-bottom:12px">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;padding:0 16px">
+      return `<div style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;padding:0 16px">
           <span style="font-size:18px">${theme.emoji}</span>
           <span style="font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--text)">${escapeHtml(theme.name)}</span>
           <span style="font-size:11px;color:var(--text-mute)">${escapeHtml(theme.description)}</span>
         </div>
-        <div style="display:flex;gap:8px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-webkit-overflow-scrolling:touch">${cards}</div>
+        <div class="kinder-book-grid">${cards}</div>
       </div>`;
     }).join('');
 
-    return `<div id="kinderSection" style="border-bottom:2px solid var(--border);padding:16px 0 20px;margin-bottom:8px">
-      <div style="padding:0 16px 12px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+    return `<details id="kinderSection" open style="border-bottom:2px solid var(--border);margin-bottom:8px">
+      <summary class="kinder-summary">
+        <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
           <span style="font-size:20px">🌸</span>
-          <span style="font-family:var(--font-body);font-size:15px;font-weight:800;color:var(--text)">유치원 특선 <span style="font-size:11px;font-weight:400;color:var(--text-soft)">(5~7세)</span></span>
+          <div>
+            <div style="font-family:var(--font-body);font-size:15px;font-weight:800;color:var(--text)">유치원 특선 <span style="font-size:11px;font-weight:400;color:var(--text-soft)">(5~7세)</span></div>
+            <div style="font-size:11px;color:var(--text-mute);margin-top:2px;font-style:italic">어린이도서연구회·학교도서관저널·행복한아침독서 추천 그림책</div>
+          </div>
         </div>
-        <p style="font-size:11px;color:var(--text-mute);font-family:var(--font-display);font-style:italic">어린이도서연구회·학교도서관저널·행복한아침독서 추천 그림책</p>
-      </div>
-      ${themeHtml}
-    </div>`;
+        <svg class="kinder-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div style="padding-bottom:20px">${themeHtml}</div>
+    </details>`;
   }
 
   // ── Textbook Mode: 1~6학년 개별 섹션 ────────────────────────
@@ -482,7 +473,7 @@
         const bookData = JSON.parse(card.dataset.book);
 
         // Build list from the same grid section for swipe navigation
-        const grid = card.closest('.rec-browse-grid, .tb-grid, #searchGrid');
+        const grid = card.closest('.rec-browse-grid, .tb-grid, .kinder-book-grid, #searchGrid');
         if (grid && window.BookPreview && BookPreview.showList) {
           const siblings = [...grid.querySelectorAll('.rec-browse-card')];
           const books = siblings.map(c => {
@@ -635,6 +626,14 @@
       authors: book.authors || (book.author ? [book.author] : []),
     };
     BookPreview.show(normalized, { mode: 'recommend' });
+  }
+
+  // ── List view (forced) ──────────────────────────────────────
+
+  function applyRecView() {
+    document.querySelectorAll('.rec-browse-grid, .tb-grid, .kinder-book-grid').forEach(el => {
+      el.classList.add('list-view');
+    });
   }
 
   // ── Scroll to Top ────────────────────────────────────────────

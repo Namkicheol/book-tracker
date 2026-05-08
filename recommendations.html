@@ -136,6 +136,34 @@
       font-size: 13px;
       color: var(--text-mute, #888);
     }
+    /* 유치원 특선 테마별 그리드 — 권수가 적어도 가운데 정렬 */
+    .kinder-book-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 160px));
+      gap: 12px;
+      padding: 0 16px 12px;
+      justify-content: center;
+    }
+    .kinder-book-grid.list-view {
+      grid-template-columns: 1fr !important;
+      justify-content: start;
+      gap: 6px;
+    }
+    /* 유치원 특선 접기/펼치기 */
+    .kinder-summary {
+      padding: 16px;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      user-select: none;
+      background: var(--bg, #fff);
+    }
+    .kinder-summary::-webkit-details-marker { display: none; }
+    .kinder-chevron { transition: transform 0.2s ease; flex-shrink: 0; color: var(--text-mute, #999); }
+    #kinderSection[open] .kinder-chevron { transform: rotate(180deg); }
   </style>
 </head>
 <body>
@@ -154,12 +182,12 @@
     <button id="modeTextbook" class="mode-tab" style="flex:1;padding:10px 0;font-size:13px;font-weight:600;border:none;background:transparent;color:#999;cursor:pointer">📖 교과서 학년별</button>
   </div>
 
-  <div id="searchResults" class="rec-search-results" hidden style="max-width:900px;margin:0 auto">
+  <div id="searchResults" class="rec-search-results" hidden>
     <p class="rec-search-meta" id="searchMeta"></p>
     <div class="rec-browse-grid" id="searchGrid"></div>
   </div>
 
-  <div id="gradeContent" style="padding-bottom:40px;max-width:900px;margin:0 auto">
+  <div id="gradeContent" style="padding-bottom:40px">
     <!-- Dynamically populated with grade sections -->
   </div>
 
@@ -221,6 +249,6 @@
   <script src="js/api.js?v=20260504d"></script>
   <script src="js/library-api.js?v=20260507b"></script>
   <script src="js/book-preview.js?v=20260507i"></script>
-  <script src="js/recommendations.js?v=20260508j"></script>
+  <script src="js/recommendations.js?v=20260508m"></script>
 </body>
 </html>
