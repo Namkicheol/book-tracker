@@ -1283,6 +1283,8 @@ body.folder-sheet-open {
   display: flex;
   gap: 8px;
   margin-top: 18px;
+  width: 100%;
+  flex-basis: 100%;
 }
 .shop-link {
   flex: 1;
