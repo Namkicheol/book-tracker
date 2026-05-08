@@ -91,7 +91,7 @@
     const kinderHtml = kinderData ? renderKindergartenSection() : '';
 
     const grades = [
-      { id: '유아',        icon: '🐣', name: '유아'                },
+      { id: '유아',        icon: '🐣', name: '유치원 (5~7세)'       },
       { id: '초등 1학년', icon: '📗', name: '초등 1학년 (입문)'    },
       { id: '초등 저학년', icon: '📖', name: '초등 저학년 (2-3학년)' },
       { id: '초등 고학년', icon: '📕', name: '초등 고학년 (4-6학년)' },

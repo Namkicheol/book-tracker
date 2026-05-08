@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>맘스북스 — 설정</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400;1,9..144,500&family=Gowun+Batang:wght@400;700&family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=20260508h">
+  <style>
+    .settings-section {
+      margin-bottom: var(--sp-lg);
+    }
+    .settings-section-title {
+      font-family: var(--font-display);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-mute);
+      padding: 0 var(--sp-md);
+      margin-bottom: var(--sp-xs);
+    }
+    .settings-list {
+      background: var(--bg-paper);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px var(--sp-md);
+      border-bottom: 1px solid var(--border-soft);
+      gap: var(--sp-md);
+    }
+    .settings-row:last-child { border-bottom: none; }
+    .settings-row-label {
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--text);
+    }
+    .settings-row-desc {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--text-mute);
+      margin-top: 2px;
+    }
+    /* Toggle switch */
+    .toggle-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .toggle-input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-track {
+      display: block;
+      width: 48px;
+      height: 28px;
+      background: var(--border);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+    .toggle-input:checked + .toggle-track {
+      background: var(--accent);
+    }
+    .toggle-input:checked + .toggle-track::after {
+      transform: translateX(20px);
+    }
+    .settings-version {
+      text-align: center;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 11px;
+      color: var(--text-mute);
+      padding: var(--sp-lg) var(--sp-md);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <a href="javascript:history.back()" class="header-btn" aria-label="뒤로">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </a>
+    <span class="page-header-mini">Settings</span>
+    <span style="width:42px"></span>
+  </header>
+
+  <section class="chapter" style="padding-bottom:var(--sp-md)">
+    <span class="chapter-no">Preferences</span>
+    <h1 class="chapter-title">설정</h1>
+  </section>
+
+  <main class="content" style="padding-top:0">
+
+    <div class="settings-section">
+      <p class="settings-section-title">화면</p>
+      <div class="settings-list">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">다크 모드</div>
+            <div class="settings-row-desc">어두운 배경으로 전환합니다</div>
+          </div>
+          <label class="toggle-wrap">
+            <input type="checkbox" class="toggle-input" id="darkToggle">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <p class="settings-version">맘스북스 · 2026</p>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+      </svg>
+      서재
+    </a>
+    <a href="recommendations.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      추천
+    </a>
+    <a href="scan.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><rect x="7" y="7" width="10" height="10" rx="1"/>
+      </svg>
+      책 추가
+    </a>
+    <a href="stats.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+      </svg>
+      통계
+    </a>
+    <a href="share.html" class="nav-item">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+        <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+        <path d="M4 22h16"/>
+        <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+        <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+        <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+      </svg>
+      랭킹
+    </a>
+  </nav>
+
+  <script src="js/theme.js?v=20260508b"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const toggle = document.getElementById('darkToggle');
+      const current = document.documentElement.dataset.theme;
+      toggle.checked = current === 'dark';
+
+      toggle.addEventListener('change', function () {
+        const next = toggle.checked ? 'dark' : 'light';
+        const KEY = 'momsbooks.theme';
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem(KEY, next);
+      });
+
+      // Sync if changed via system
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        if (!localStorage.getItem('momsbooks.theme')) {
+          toggle.checked = e.matches;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
