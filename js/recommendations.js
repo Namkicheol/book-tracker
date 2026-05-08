@@ -8,7 +8,6 @@
   let recommendationData = null;
   let allBooks = [];
   let textbookMode = false;
-  let recView = localStorage.getItem('recView') || 'grid';
   let kinderData = null;
 
   // ── Load data ────────────────────────────────────────────────
@@ -39,7 +38,6 @@
 
       console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
       attachModeTabListeners();
-      attachViewToggle();
       attachScrollTop();
       renderGradeSections();
       attachSearchListener();
@@ -630,26 +628,11 @@
     BookPreview.show(normalized, { mode: 'recommend' });
   }
 
-  // ── View Toggle ─────────────────────────────────────────────
+  // ── List view (forced) ──────────────────────────────────────
 
   function applyRecView() {
     document.querySelectorAll('.rec-browse-grid, .tb-grid, .kinder-book-grid').forEach(el => {
-      el.classList.toggle('list-view', recView === 'list');
-    });
-    const btn = document.getElementById('recViewToggleBtn');
-    if (!btn) return;
-    btn.querySelector('.icon-list').style.display = recView === 'list' ? 'none' : '';
-    btn.querySelector('.icon-grid').style.display = recView === 'list' ? '' : 'none';
-  }
-
-  function attachViewToggle() {
-    const btn = document.getElementById('recViewToggleBtn');
-    if (!btn) return;
-    applyRecView();
-    btn.addEventListener('click', () => {
-      recView = recView === 'grid' ? 'list' : 'grid';
-      localStorage.setItem('recView', recView);
-      applyRecView();
+      el.classList.add('list-view');
     });
   }
 
