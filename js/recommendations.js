@@ -70,6 +70,15 @@
       btnTB.style.color  = tb ? '#27ae60' : '#999';
       btnTB.style.borderBottom = tb ? '2px solid #27ae60' : 'none';
       btnTB.style.marginBottom = tb ? '-2px' : '';
+
+      // 검색 상태 초기화
+      const searchInput = document.getElementById('recSearch');
+      if (searchInput) searchInput.value = '';
+      const resultsEl = document.getElementById('searchResults');
+      if (resultsEl) resultsEl.hidden = true;
+      const gradeEl = document.getElementById('gradeContent');
+      if (gradeEl) gradeEl.style.display = '';
+
       renderGradeSections();
     }
 

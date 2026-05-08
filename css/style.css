@@ -258,7 +258,7 @@ body {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 34px;
-  line-height: 1.1;
+  line-height: 1.25;
   letter-spacing: -0.015em;
   color: var(--text);
   margin-bottom: var(--sp-sm);
