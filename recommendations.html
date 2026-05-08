@@ -136,6 +136,21 @@
       font-size: 13px;
       color: var(--text-mute, #888);
     }
+    /* 유치원 특선 접기/펼치기 */
+    .kinder-summary {
+      padding: 16px;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      user-select: none;
+      background: var(--bg, #fff);
+    }
+    .kinder-summary::-webkit-details-marker { display: none; }
+    .kinder-chevron { transition: transform 0.2s ease; flex-shrink: 0; color: var(--text-mute, #999); }
+    #kinderSection[open] .kinder-chevron { transform: rotate(180deg); }
   </style>
 </head>
 <body>
@@ -225,6 +240,6 @@
   <script src="js/api.js?v=20260504d"></script>
   <script src="js/library-api.js?v=20260507b"></script>
   <script src="js/book-preview.js?v=20260507i"></script>
-  <script src="js/recommendations.js?v=20260508j"></script>
+  <script src="js/recommendations.js?v=20260508k"></script>
 </body>
 </html>
