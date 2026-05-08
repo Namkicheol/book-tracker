@@ -94,8 +94,8 @@
 
     const content = document.getElementById('gradeContent');
 
-    // Prepend kindergarten curated section if data available
-    const kinderHtml = kinderData ? renderKindergartenSection() : '';
+    // 유치원 특선은 유아 섹션 안쪽 (책 목록 아래) 에 nested details로 들어감
+    const kinderInnerHtml = kinderData ? renderKindergartenSection() : '';
 
     const grades = [
       { id: '유아',        icon: '🐣', name: '유치원 (5~7세)'       },
@@ -128,22 +128,18 @@
         `<button class="genre-chip ${sectionState[grade.id].genre === g ? 'active' : ''}" data-grade="${grade.id}" data-genre="${g}" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${sectionState[grade.id].genre === g ? '#FF6B6B' : '#fff'};color:${sectionState[grade.id].genre === g ? '#fff' : '#666'};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">${g === 'all' ? '전체' : g}</button>`
       ).join('');
 
-      // 출처 칩 — 이 학년 책에 실제 등장한 소스만, meta.sources 정의 순서로
+      // 출처(추천 기관) 드롭다운 — 이 학년 책에 실제 등장한 소스만, meta.sources 정의 순서로
       const sourcesPresent = new Set();
       allGradeBooks.forEach(b => (b.lists || []).forEach(id => sourcesPresent.add(id)));
       const availableSources = (recommendationData.meta.sources || []).filter(s => sourcesPresent.has(s.id));
       const activeSource = sectionState[grade.id].source;
-      const sourceChips = availableSources.length === 0 ? '' : (() => {
-        const allChip =
-          `<button class="source-chip ${activeSource === 'all' ? 'active' : ''}" data-grade="${grade.id}" data-source="all" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${activeSource === 'all' ? '#444' : '#fff'};color:${activeSource === 'all' ? '#fff' : '#666'};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">전체</button>`;
+      const sourceSelect = availableSources.length === 0 ? '' : (() => {
+        const allOpt = `<option value="all" ${activeSource === 'all' ? 'selected' : ''}>전체 (${allGradeBooks.length})</option>`;
         const items = availableSources.map(s => {
           const count = allGradeBooks.filter(b => (b.lists || []).includes(s.id)).length;
-          const isActive = activeSource === s.id;
-          const bg = isActive ? s.badge.color : '#fff';
-          const fg = isActive ? '#fff' : '#666';
-          return `<button class="source-chip ${isActive ? 'active' : ''}" data-grade="${grade.id}" data-source="${s.id}" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${bg};color:${fg};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">${escapeHtml(s.badge.text)} <span style="opacity:0.7;font-size:11px">${count}</span></button>`;
+          return `<option value="${s.id}" ${activeSource === s.id ? 'selected' : ''}>${escapeHtml(s.badge.text)} (${count})</option>`;
         }).join('');
-        return allChip + items;
+        return `<select class="source-select" data-grade="${grade.id}">${allOpt}${items}</select>`;
       })();
 
       return `
@@ -160,13 +156,11 @@
               <button class="sort-btn ${sectionState[grade.id].sort === 'title' ? 'active' : ''}" data-grade="${grade.id}" data-sort="title" style="padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:${sectionState[grade.id].sort === 'title' ? '#4A90E2' : '#fff'};color:${sectionState[grade.id].sort === 'title' ? '#fff' : '#666'};font-size:13px;font-weight:${sectionState[grade.id].sort === 'title' ? '600' : '400'};cursor:pointer">🔤 가나다순</button>
             </div>
 
-            ${sourceChips ? `
+            ${sourceSelect ? `
             <!-- 출처(추천 기관) 필터 -->
             <div style="margin-bottom:8px">
               <span style="font-size:11px;color:#999;letter-spacing:0.04em;display:block;margin-bottom:4px">출처</span>
-              <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
-                ${sourceChips}
-              </div>
+              ${sourceSelect}
             </div>` : ''}
 
             <!-- 장르 필터 -->
@@ -184,20 +178,21 @@
 
             <!-- 더보기 버튼 -->
             <div class="more-btn-container" data-grade="${grade.id}"></div>
+            ${grade.id === '유아' ? kinderInnerHtml : ''}
           </div>
         </details>
       `;
     }).filter(Boolean).join('');
 
-    content.innerHTML = kinderHtml + sections;
+    content.innerHTML = sections;
 
     // 각 섹션의 책 목록 렌더링
     grades.forEach(grade => {
       renderSectionBooks(grade.id, INITIAL_SHOW);
     });
 
-    // Kindergarten section card listeners
-    if (kinderHtml) {
+    // Kindergarten section card listeners (now nested inside 유아 section)
+    if (kinderInnerHtml) {
       const kinderSection = content.querySelector('#kinderSection');
       if (kinderSection) {
         attachCardListeners();
@@ -298,18 +293,18 @@
       </div>`;
     }).join('');
 
-    return `<details id="kinderSection" open style="border-bottom:2px solid var(--border);margin-bottom:8px">
-      <summary class="kinder-summary">
+    return `<details id="kinderSection" style="margin-top:20px;padding-top:16px;border-top:1px dashed var(--border)">
+      <summary class="kinder-summary" style="margin:0 -16px;padding:12px 16px">
         <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-          <span style="font-size:20px">🌸</span>
+          <span style="font-size:18px">🌸</span>
           <div>
-            <div style="font-family:var(--font-body);font-size:15px;font-weight:800;color:var(--text)">유치원 특선 <span style="font-size:11px;font-weight:400;color:var(--text-soft)">(5~7세)</span></div>
+            <div style="font-family:var(--font-body);font-size:14px;font-weight:700;color:var(--text)">유치원 특선 <span style="font-size:11px;font-weight:400;color:var(--text-soft)">(5~7세)</span></div>
             <div style="font-size:11px;color:var(--text-mute);margin-top:2px;font-style:italic">어린이도서연구회·학교도서관저널·행복한아침독서 추천 그림책</div>
           </div>
         </div>
         <svg class="kinder-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </summary>
-      <div style="padding-bottom:20px">${themeHtml}</div>
+      <div style="padding-top:12px">${themeHtml}</div>
     </details>`;
   }
 
@@ -449,18 +444,18 @@
       });
     });
 
-    // 출처 필터
-    document.querySelectorAll('.source-chip').forEach(chip => {
-      chip.addEventListener('click', (e) => {
+    // 출처 필터 (드롭다운)
+    document.querySelectorAll('.source-select').forEach(sel => {
+      sel.addEventListener('change', (e) => {
         e.stopPropagation();
-        e.preventDefault();
-        const gradeId = chip.dataset.grade;
-        const source = chip.dataset.source;
-        sectionState[gradeId].source = source;
+        const gradeId = sel.dataset.grade;
+        sectionState[gradeId].source = sel.value;
         sectionState[gradeId].current = 8;
         sectionState[gradeId].open = true;
         renderGradeSections();
       });
+      // summary 클릭 토글이 select 클릭에 반응하지 않도록 차단
+      sel.addEventListener('click', (e) => e.stopPropagation());
     });
   }
 
