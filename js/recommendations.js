@@ -296,7 +296,7 @@
           <span style="font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--text)">${escapeHtml(theme.name)}</span>
           <span style="font-size:11px;color:var(--text-mute)">${escapeHtml(theme.description)}</span>
         </div>
-        <div class="rec-browse-grid">${cards}</div>
+        <div class="kinder-book-grid">${cards}</div>
       </div>`;
     }).join('');
 
@@ -475,7 +475,7 @@
         const bookData = JSON.parse(card.dataset.book);
 
         // Build list from the same grid section for swipe navigation
-        const grid = card.closest('.rec-browse-grid, .tb-grid, #searchGrid');
+        const grid = card.closest('.rec-browse-grid, .tb-grid, .kinder-book-grid, #searchGrid');
         if (grid && window.BookPreview && BookPreview.showList) {
           const siblings = [...grid.querySelectorAll('.rec-browse-card')];
           const books = siblings.map(c => {
@@ -633,7 +633,7 @@
   // ── View Toggle ─────────────────────────────────────────────
 
   function applyRecView() {
-    document.querySelectorAll('.rec-browse-grid, .tb-grid').forEach(el => {
+    document.querySelectorAll('.rec-browse-grid, .tb-grid, .kinder-book-grid').forEach(el => {
       el.classList.toggle('list-view', recView === 'list');
     });
     const btn = document.getElementById('recViewToggleBtn');
