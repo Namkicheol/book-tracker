@@ -1278,6 +1278,54 @@ body.folder-sheet-open {
   padding: 0;
 }
 
+/* ── Kindergarten curated nested toggle ── */
+.kinder-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  background: var(--bg-soft, #fafafa);
+  border-radius: 8px;
+}
+.kinder-summary::-webkit-details-marker { display: none; }
+.kinder-chevron {
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: transform 0.2s;
+  color: var(--text-mute);
+}
+#kinderSection[open] .kinder-chevron { transform: rotate(180deg); }
+.kinder-book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 0 16px;
+}
+.kinder-book-grid.list-view {
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+/* ── Rec source dropdown ── */
+.source-select {
+  width: 100%;
+  padding: 9px 32px 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-paper) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>") no-repeat right 12px center;
+  font-size: 13px;
+  color: var(--text-main);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  font-family: inherit;
+}
+.source-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 /* ── Rec list view ── */
 .rec-browse-grid.list-view,
 .tb-grid.list-view {
