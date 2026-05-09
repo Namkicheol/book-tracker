@@ -41,6 +41,7 @@
       attachScrollTop();
       renderGradeSections();
       attachSearchListener();
+      attachBannerDelegation();
 
       // 책 미리보기 모달의 추천 기관 배지 → 학년 섹션 필터로 점프
       window.applySourceFilter = applySourceFilter;
@@ -255,17 +256,13 @@
         const sourceObj = recommendationData.meta.sources.find(s => s.id === state.source);
         const allFromSource = allBooks.filter(b => (b.lists || []).includes(state.source));
         if (sourceObj) {
+          const c = sourceObj.badge.color;
+          const t = escapeHtml(sourceObj.badge.text);
           bannerContainer.innerHTML = `
-            <div style="margin-bottom:14px;padding:12px 14px;background:${sourceObj.badge.color}15;border:1.5px dashed ${sourceObj.badge.color};border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
-              <span style="font-size:13px;color:${sourceObj.badge.color};font-weight:700">📍 ${escapeHtml(sourceObj.badge.text)} · ${filteredBooks.length}권</span>
-              <button class="all-grades-btn" data-source="${state.source}" style="background:${sourceObj.badge.color};color:#fff;border:none;padding:7px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 2px 6px ${sourceObj.badge.color}40">🌐 전체 학년 (${allFromSource.length}권)</button>
+            <div class="source-banner-clear" data-grade="${escapeAttr(gradeId)}" title="필터 해제 (점선 영역 클릭)" style="margin-bottom:14px;padding:12px 14px;background:${c}15;border:1.5px dashed ${c};border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;cursor:pointer">
+              <span style="font-size:13px;color:${c};font-weight:700;pointer-events:none">📍 ${t} · ${filteredBooks.length}권 <span style="font-size:10px;font-weight:500;opacity:0.7">(눌러서 닫기)</span></span>
+              <button type="button" class="all-grades-btn" data-source="${escapeAttr(state.source)}" style="background:${c};color:#fff;border:none;padding:7px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 2px 6px ${c}40">🌐 ${t} 전체보기 (${allFromSource.length}권)</button>
             </div>`;
-          const allBtn = bannerContainer.querySelector('.all-grades-btn');
-          allBtn?.addEventListener('click', e => {
-            e.stopPropagation();
-            e.preventDefault();
-            applySourceToAllGrades(state.source);
-          });
         }
       } else {
         bannerContainer.innerHTML = '';
@@ -351,6 +348,40 @@
     });
     renderGradeSections();
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 60);
+  }
+
+  function clearSourceFilter(gradeId) {
+    if (!sectionState[gradeId]) return;
+    sectionState[gradeId].source = 'all';
+    sectionState[gradeId].current = 8;
+    sectionState[gradeId].open = true;
+    renderGradeSections();
+  }
+
+  // 배너/전체보기 버튼은 renderGradeSections마다 DOM이 새로 만들어져
+  // per-render addEventListener가 누락되거나 이전 핸들러로 가는 일이
+  // 잦았음. document 레벨 위임 한 번만 걸어 안정적으로 처리.
+  let _bannerDelegated = false;
+  function attachBannerDelegation() {
+    if (_bannerDelegated) return;
+    _bannerDelegated = true;
+    document.addEventListener('click', (e) => {
+      const allBtn = e.target.closest('.all-grades-btn');
+      if (allBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const sourceId = allBtn.dataset.source;
+        if (sourceId) applySourceToAllGrades(sourceId);
+        return;
+      }
+      const banner = e.target.closest('.source-banner-clear');
+      if (banner) {
+        e.preventDefault();
+        e.stopPropagation();
+        const gradeId = banner.dataset.grade;
+        if (gradeId) clearSourceFilter(gradeId);
+      }
+    });
   }
 
   // ── Kindergarten Curated Section ──────────────────────────────
