@@ -42,16 +42,17 @@
       renderGradeSections();
       attachSearchListener();
       attachBannerDelegation();
+      attachSourceViewListeners();
 
-      // 책 미리보기 모달의 추천 기관 배지 → 학년 섹션 필터로 점프
-      window.applySourceFilter = applySourceFilter;
+      // 책 미리보기 모달의 추천 기관 배지 → 추천 기관 전용 페이지 열기
+      window.openSourceView = openSourceView;
 
-      // ?source=...&grade=... 쿼리스트링으로 진입 시 필터 자동 적용
+      // ?source=...&grade=... 쿼리스트링으로 진입 시 자동으로 sourceView 열기
       const params = new URLSearchParams(window.location.search);
       const querySource = params.get('source');
-      const queryGrade = params.get('grade');
-      if (querySource && queryGrade) {
-        setTimeout(() => applySourceFilter(queryGrade, querySource), 80);
+      const queryGrade = params.get('grade') || 'all';
+      if (querySource) {
+        setTimeout(() => openSourceView(querySource, queryGrade), 80);
       }
     } catch (err) {
       console.error('[recommendations] 데이터 로드 실패:', err);
@@ -249,19 +250,18 @@
     // 미리보기 캐러셀이 전체 filteredBooks를 순회할 수 있도록 캐시
     state._allFiltered = filteredBooks;
 
-    // 추천 기관 배너 (필터 활성 시)
+    // 추천 기관 배너 (필터 활성 시) — "🌐 [기관명] 전용 페이지" 진입 버튼
     const bannerContainer = document.querySelector(`.source-banner-container[data-grade="${CSS.escape(gradeId)}"]`);
     if (bannerContainer) {
       if (state.source && state.source !== 'all') {
         const sourceObj = recommendationData.meta.sources.find(s => s.id === state.source);
-        const allFromSource = allBooks.filter(b => (b.lists || []).includes(state.source));
         if (sourceObj) {
           const c = sourceObj.badge.color;
           const t = escapeHtml(sourceObj.badge.text);
           bannerContainer.innerHTML = `
             <div class="source-banner-clear" data-grade="${escapeAttr(gradeId)}" title="필터 해제 (점선 영역 클릭)" style="margin-bottom:14px;padding:12px 14px;background:${c}15;border:1.5px dashed ${c};border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;cursor:pointer">
               <span style="font-size:13px;color:${c};font-weight:700;pointer-events:none">📍 ${t} · ${filteredBooks.length}권 <span style="font-size:10px;font-weight:500;opacity:0.7">(눌러서 닫기)</span></span>
-              <button type="button" class="all-grades-btn" data-source="${escapeAttr(state.source)}" style="background:${c};color:#fff;border:none;padding:7px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 2px 6px ${c}40">🌐 ${t} 전체보기 (${allFromSource.length}권)</button>
+              <button type="button" class="open-source-page-btn" data-source="${escapeAttr(state.source)}" data-grade="${escapeAttr(gradeId)}" style="background:${c};color:#fff;border:none;padding:7px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 2px 6px ${c}40">📖 ${t} 페이지 열기</button>
             </div>`;
         }
       } else {
@@ -315,41 +315,6 @@
     return sectionState[gradeId];
   }
 
-  function applySourceFilter(gradeId, sourceId) {
-    if (!ALL_GRADE_IDS.includes(gradeId)) return;
-    if (textbookMode) {
-      // 전체 추천 탭으로 강제 전환
-      document.getElementById('modeAll')?.click();
-    }
-    const st = ensureSectionState(gradeId);
-    st.source = sourceId;
-    st.genre = 'all';
-    st.current = 8;
-    st.open = true;
-    // 다른 학년은 접어두기
-    Object.keys(sectionState).forEach(g => {
-      if (g !== gradeId && sectionState[g]) sectionState[g].open = false;
-    });
-    renderGradeSections();
-    setTimeout(() => {
-      const sec = document.querySelector(`details.grade-section[data-grade-id="${CSS.escape(gradeId)}"]`);
-      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 60);
-  }
-
-  function applySourceToAllGrades(sourceId) {
-    if (textbookMode) document.getElementById('modeAll')?.click();
-    ALL_GRADE_IDS.forEach(g => {
-      const st = ensureSectionState(g);
-      st.source = sourceId;
-      st.genre = 'all';
-      st.current = 8;
-      st.open = true;
-    });
-    renderGradeSections();
-    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 60);
-  }
-
   function clearSourceFilter(gradeId) {
     if (!sectionState[gradeId]) return;
     sectionState[gradeId].source = 'all';
@@ -358,20 +323,136 @@
     renderGradeSections();
   }
 
-  // 배너/전체보기 버튼은 renderGradeSections마다 DOM이 새로 만들어져
-  // per-render addEventListener가 누락되거나 이전 핸들러로 가는 일이
-  // 잦았음. document 레벨 위임 한 번만 걸어 안정적으로 처리.
+  // ── 추천 기관 전용 페이지 (sourceView) ─────────────────────────
+
+  let sourceViewState = { active: false, sourceId: null, grade: 'all' };
+
+  function openSourceView(sourceId, initialGrade) {
+    if (!recommendationData) return;
+    const sourceObj = recommendationData.meta.sources.find(s => s.id === sourceId);
+    if (!sourceObj) return;
+
+    sourceViewState.active = true;
+    sourceViewState.sourceId = sourceId;
+    // 책 모달에서 들어온 학년을 기본 선택. 유효 학년이 아니면 'all'로.
+    sourceViewState.grade = ALL_GRADE_IDS.includes(initialGrade) ? initialGrade : 'all';
+
+    // 메인 학년 뷰/검색/탭 숨김
+    toggleMainView(false);
+
+    // 헤더 채우기
+    const c = sourceObj.badge.color;
+    const sv = document.getElementById('sourceView');
+    const header = document.getElementById('sourceViewHeader');
+    if (header) header.style.background = `linear-gradient(135deg, ${c} 0%, ${c}d0 100%)`;
+
+    document.getElementById('sourceViewBadge').textContent = sourceObj.badge.text;
+    document.getElementById('sourceViewTitle').textContent = sourceObj.fullName || sourceObj.name;
+    document.getElementById('sourceViewDesc').textContent = sourceObj.description || '';
+
+    const allFromSource = allBooks.filter(b => (b.lists || []).includes(sourceId));
+    document.getElementById('sourceViewCount').textContent = `총 ${allFromSource.length}권`;
+
+    if (sv) sv.hidden = false;
+    renderSourceGradeTabs();
+    renderSourceGrid();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function closeSourceView() {
+    sourceViewState.active = false;
+    const sv = document.getElementById('sourceView');
+    if (sv) sv.hidden = true;
+    toggleMainView(true);
+  }
+
+  function toggleMainView(show) {
+    const els = [
+      document.querySelector('.rec-search-bar'),
+      document.getElementById('modeTabs'),
+      document.getElementById('searchResults'),
+      document.getElementById('gradeContent'),
+    ];
+    els.forEach(el => { if (el) el.style.display = show ? '' : 'none'; });
+  }
+
+  function renderSourceGradeTabs() {
+    const wrap = document.getElementById('sourceGradeTabs');
+    if (!wrap || !sourceViewState.sourceId) return;
+    const sourceObj = recommendationData.meta.sources.find(s => s.id === sourceViewState.sourceId);
+    const c = sourceObj ? sourceObj.badge.color : '#FF6B6B';
+    const sourceBooks = allBooks.filter(b => (b.lists || []).includes(sourceViewState.sourceId));
+
+    const tabs = [
+      { id: 'all',         label: '전체',  icon: '📚' },
+      { id: '유아',         label: '유아',  icon: '🐣' },
+      { id: '초등 1학년',   label: '1학년', icon: '📗' },
+      { id: '초등 저학년',  label: '저학년', icon: '📖' },
+      { id: '초등 고학년',  label: '고학년', icon: '📕' },
+    ];
+
+    wrap.innerHTML = tabs.map(t => {
+      const count = t.id === 'all' ? sourceBooks.length : sourceBooks.filter(b => b.targetAge === t.id).length;
+      if (count === 0 && t.id !== 'all') return '';
+      const active = sourceViewState.grade === t.id;
+      return `<button class="source-grade-tab" data-grade="${escapeAttr(t.id)}" style="flex-shrink:0;padding:8px 14px;border:1.5px solid ${active ? c : '#e0e0e0'};border-radius:18px;background:${active ? c : '#fff'};color:${active ? '#fff' : '#666'};font-size:13px;font-weight:${active ? 700 : 500};cursor:pointer;white-space:nowrap">${t.icon} ${t.label} (${count})</button>`;
+    }).filter(Boolean).join('');
+
+    wrap.querySelectorAll('.source-grade-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sourceViewState.grade = btn.dataset.grade;
+        renderSourceGradeTabs();
+        renderSourceGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
+  function renderSourceGrid() {
+    const grid = document.getElementById('sourceGrid');
+    if (!grid || !sourceViewState.sourceId) return;
+    let books = allBooks.filter(b => (b.lists || []).includes(sourceViewState.sourceId));
+    if (sourceViewState.grade !== 'all') {
+      books = books.filter(b => b.targetAge === sourceViewState.grade);
+    }
+    // 학년 → 인기순 정렬
+    const gradeOrder = { '유아': 0, '초등 1학년': 1, '초등 저학년': 2, '초등 고학년': 3 };
+    books.sort((a, b) => {
+      const ga = gradeOrder[a.targetAge] ?? 9;
+      const gb = gradeOrder[b.targetAge] ?? 9;
+      if (ga !== gb) return ga - gb;
+      return (b.lists || []).length - (a.lists || []).length;
+    });
+
+    if (books.length === 0) {
+      grid.innerHTML = `<p style="text-align:center;padding:40px 16px;color:#999">이 학년에는 추천 도서가 없어요.</p>`;
+      return;
+    }
+    grid.innerHTML = books.map(b => renderCard(b)).join('');
+    attachCardListeners();
+    backfillThumbnails(grid);
+
+    // sourceView에서 책 카드 클릭 시 미리보기 캐러셀이 books 전체를 순회하도록
+    grid._sourceBooks = books;
+  }
+
+  function attachSourceViewListeners() {
+    document.getElementById('sourceBackBtn')?.addEventListener('click', closeSourceView);
+  }
+
+  // 배너/페이지 진입 버튼 click — document 레벨 위임 한 번
   let _bannerDelegated = false;
   function attachBannerDelegation() {
     if (_bannerDelegated) return;
     _bannerDelegated = true;
     document.addEventListener('click', (e) => {
-      const allBtn = e.target.closest('.all-grades-btn');
-      if (allBtn) {
+      const openBtn = e.target.closest('.open-source-page-btn');
+      if (openBtn) {
         e.preventDefault();
         e.stopPropagation();
-        const sourceId = allBtn.dataset.source;
-        if (sourceId) applySourceToAllGrades(sourceId);
+        const sourceId = openBtn.dataset.source;
+        const grade = openBtn.dataset.grade;
+        if (sourceId) openSourceView(sourceId, grade);
         return;
       }
       const banner = e.target.closest('.source-banner-clear');

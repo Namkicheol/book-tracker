@@ -593,20 +593,19 @@
   }
 
   function wireActions(book, modal, mode, detail) {
-    // 추천 기관 배지 클릭 → 추천 페이지의 해당 학년 섹션 필터로 점프
+    // 추천 기관 배지 클릭 → 그 기관 전용 페이지 열기 (책의 학년이 기본 선택)
     modal.querySelectorAll('.rec-source-badge').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();
         e.preventDefault();
         const sourceId = btn.dataset.sourceId;
-        const grade = btn.dataset.grade;
-        if (!sourceId || !grade) return;
-        if (typeof window.applySourceFilter === 'function') {
-          // 이미 추천 페이지 — 모달 닫고 필터 적용
+        const grade = btn.dataset.grade || 'all';
+        if (!sourceId) return;
+        if (typeof window.openSourceView === 'function') {
           closePreview(modal);
-          window.applySourceFilter(grade, sourceId);
+          window.openSourceView(sourceId, grade);
         } else {
-          // 다른 페이지(서재/상세) — 추천 페이지로 이동
+          // 다른 페이지(서재/상세)에서 클릭 — 추천 페이지로 이동
           window.location.href = `recommendations.html?source=${encodeURIComponent(sourceId)}&grade=${encodeURIComponent(grade)}`;
         }
       });
