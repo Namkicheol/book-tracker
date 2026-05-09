@@ -41,6 +41,17 @@
       attachScrollTop();
       renderGradeSections();
       attachSearchListener();
+
+      // 책 미리보기 모달의 추천 기관 배지 → 학년 섹션 필터로 점프
+      window.applySourceFilter = applySourceFilter;
+
+      // ?source=...&grade=... 쿼리스트링으로 진입 시 필터 자동 적용
+      const params = new URLSearchParams(window.location.search);
+      const querySource = params.get('source');
+      const queryGrade = params.get('grade');
+      if (querySource && queryGrade) {
+        setTimeout(() => applySourceFilter(queryGrade, querySource), 80);
+      }
     } catch (err) {
       console.error('[recommendations] 데이터 로드 실패:', err);
       const content = document.getElementById('gradeContent');
@@ -139,7 +150,7 @@
           const count = allGradeBooks.filter(b => (b.lists || []).includes(s.id)).length;
           return `<option value="${s.id}" ${activeSource === s.id ? 'selected' : ''}>${escapeHtml(s.badge.text)} (${count})</option>`;
         }).join('');
-        return `<select class="source-select" data-grade="${grade.id}">${allOpt}${items}</select>`;
+        return `<select class="source-select" data-grade="${grade.id}" style="width:100%;padding:9px 12px;border:1.5px solid #F48FB1;border-radius:8px;background:#fff;color:#C2185B;font-size:14px;font-weight:600;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23E91E63' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;);background-repeat:no-repeat;background-position:right 10px center;padding-right:32px">${allOpt}${items}</select>`;
       })();
 
       return `
@@ -149,6 +160,7 @@
             <span class="grade-count">${allGradeBooks.length}권</span>
           </summary>
           <div style="padding:16px">
+            ${grade.id === '유아' ? kinderInnerHtml : ''}
             <!-- 정렬 버튼 -->
             <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap">
               <button class="sort-btn ${sectionState[grade.id].sort === 'popularity' ? 'active' : ''}" data-grade="${grade.id}" data-sort="popularity" style="padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:${sectionState[grade.id].sort === 'popularity' ? '#4A90E2' : '#fff'};color:${sectionState[grade.id].sort === 'popularity' ? '#fff' : '#666'};font-size:13px;font-weight:${sectionState[grade.id].sort === 'popularity' ? '600' : '400'};cursor:pointer">📊 인기순</button>
@@ -157,9 +169,9 @@
             </div>
 
             ${sourceSelect ? `
-            <!-- 출처(추천 기관) 필터 -->
-            <div style="margin-bottom:8px">
-              <span style="font-size:11px;color:#999;letter-spacing:0.04em;display:block;margin-bottom:4px">출처</span>
+            <!-- 추천 기관 필터 -->
+            <div style="margin-bottom:12px;padding:10px 12px;background:linear-gradient(135deg,#fff0f4,#fff5f8);border:2px solid #E91E63;border-radius:10px;box-shadow:0 1px 3px rgba(233,30,99,0.08)">
+              <span style="font-size:13px;color:#C2185B;font-weight:800;letter-spacing:0.01em;display:block;margin-bottom:6px">📚 추천 기관별 보기</span>
               ${sourceSelect}
             </div>` : ''}
 
@@ -171,6 +183,9 @@
               </div>
             </div>
 
+            <!-- 추천 기관 필터 활성 시 배너 -->
+            <div class="source-banner-container" data-grade="${grade.id}"></div>
+
             <!-- 책 그리드 -->
             <div class="rec-browse-grid" data-grade="${grade.id}">
               <!-- 동적으로 렌더링 -->
@@ -178,7 +193,6 @@
 
             <!-- 더보기 버튼 -->
             <div class="more-btn-container" data-grade="${grade.id}"></div>
-            ${grade.id === '유아' ? kinderInnerHtml : ''}
           </div>
         </details>
       `;
@@ -234,6 +248,30 @@
     // 미리보기 캐러셀이 전체 filteredBooks를 순회할 수 있도록 캐시
     state._allFiltered = filteredBooks;
 
+    // 추천 기관 배너 (필터 활성 시)
+    const bannerContainer = document.querySelector(`.source-banner-container[data-grade="${CSS.escape(gradeId)}"]`);
+    if (bannerContainer) {
+      if (state.source && state.source !== 'all') {
+        const sourceObj = recommendationData.meta.sources.find(s => s.id === state.source);
+        const allFromSource = allBooks.filter(b => (b.lists || []).includes(state.source));
+        if (sourceObj) {
+          bannerContainer.innerHTML = `
+            <div style="margin-bottom:14px;padding:12px 14px;background:${sourceObj.badge.color}15;border:1.5px dashed ${sourceObj.badge.color};border-radius:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-size:13px;color:${sourceObj.badge.color};font-weight:700">📍 ${escapeHtml(sourceObj.badge.text)} · ${filteredBooks.length}권</span>
+              <button class="all-grades-btn" data-source="${state.source}" style="background:${sourceObj.badge.color};color:#fff;border:none;padding:7px 12px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 2px 6px ${sourceObj.badge.color}40">🌐 전체 학년 (${allFromSource.length}권)</button>
+            </div>`;
+          const allBtn = bannerContainer.querySelector('.all-grades-btn');
+          allBtn?.addEventListener('click', e => {
+            e.stopPropagation();
+            e.preventDefault();
+            applySourceToAllGrades(state.source);
+          });
+        }
+      } else {
+        bannerContainer.innerHTML = '';
+      }
+    }
+
     // 그리드 렌더링
     const grid = document.querySelector(`.rec-browse-grid[data-grade="${CSS.escape(gradeId)}"]`);
     if (grid) {
@@ -265,6 +303,54 @@
         renderSectionBooks(gradeId, current + LOAD_MORE);
       });
     }
+  }
+
+  // ── 추천 기관 점프/전체 학년 ─────────────────────────────────
+
+  const ALL_GRADE_IDS = ['유아', '초등 1학년', '초등 저학년', '초등 고학년'];
+
+  function ensureSectionState(gradeId) {
+    if (!sectionState[gradeId]) {
+      sectionState[gradeId] = {
+        sort: 'popularity', genre: 'all', source: 'all', current: 8, open: false,
+      };
+    }
+    return sectionState[gradeId];
+  }
+
+  function applySourceFilter(gradeId, sourceId) {
+    if (!ALL_GRADE_IDS.includes(gradeId)) return;
+    if (textbookMode) {
+      // 전체 추천 탭으로 강제 전환
+      document.getElementById('modeAll')?.click();
+    }
+    const st = ensureSectionState(gradeId);
+    st.source = sourceId;
+    st.genre = 'all';
+    st.current = 8;
+    st.open = true;
+    // 다른 학년은 접어두기
+    Object.keys(sectionState).forEach(g => {
+      if (g !== gradeId && sectionState[g]) sectionState[g].open = false;
+    });
+    renderGradeSections();
+    setTimeout(() => {
+      const sec = document.querySelector(`details.grade-section[data-grade-id="${CSS.escape(gradeId)}"]`);
+      if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 60);
+  }
+
+  function applySourceToAllGrades(sourceId) {
+    if (textbookMode) document.getElementById('modeAll')?.click();
+    ALL_GRADE_IDS.forEach(g => {
+      const st = ensureSectionState(g);
+      st.source = sourceId;
+      st.genre = 'all';
+      st.current = 8;
+      st.open = true;
+    });
+    renderGradeSections();
+    setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 60);
   }
 
   // ── Kindergarten Curated Section ──────────────────────────────

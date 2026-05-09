@@ -253,11 +253,12 @@
       0
     );
 
+    const targetGrade = book.targetAge || (recBookData && recBookData.targetAge) || '';
     const badges = recBookData && recBookData.lists
       ? recBookData.lists.map(listId => {
           const source = recData.meta.sources.find(s => s.id === listId);
           if (!source) return '';
-          return `<span style="display:inline-block;background:${source.badge.color};color:#fff;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.06em;margin-right:6px;margin-bottom:6px;box-shadow:0 2px 6px rgba(0,0,0,0.15)">${escapeHtml(source.badge.text)}</span>`;
+          return `<button type="button" class="rec-source-badge" data-source-id="${listId}" data-grade="${escapeAttr(targetGrade)}" title="이 기관의 추천 도서 보기" style="display:inline-flex;align-items:center;gap:3px;background:${source.badge.color};color:#fff;padding:5px 11px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.04em;margin-right:6px;margin-bottom:6px;box-shadow:0 2px 6px rgba(0,0,0,0.18);border:none;cursor:pointer;font-family:inherit">${escapeHtml(source.badge.text)} <span style="font-size:9px;opacity:0.85">›</span></button>`;
         }).filter(Boolean).join('')
       : '';
 
@@ -592,6 +593,25 @@
   }
 
   function wireActions(book, modal, mode, detail) {
+    // 추천 기관 배지 클릭 → 추천 페이지의 해당 학년 섹션 필터로 점프
+    modal.querySelectorAll('.rec-source-badge').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        e.preventDefault();
+        const sourceId = btn.dataset.sourceId;
+        const grade = btn.dataset.grade;
+        if (!sourceId || !grade) return;
+        if (typeof window.applySourceFilter === 'function') {
+          // 이미 추천 페이지 — 모달 닫고 필터 적용
+          closePreview(modal);
+          window.applySourceFilter(grade, sourceId);
+        } else {
+          // 다른 페이지(서재/상세) — 추천 페이지로 이동
+          window.location.href = `recommendations.html?source=${encodeURIComponent(sourceId)}&grade=${encodeURIComponent(grade)}`;
+        }
+      });
+    });
+
     // 'library' 모드 또는 recommend 모드인데 이미 서재에 있어 "보러가기" 버튼이 노출된 경우
     const libBtn = document.getElementById('previewLibraryBtn');
     if (libBtn) {
