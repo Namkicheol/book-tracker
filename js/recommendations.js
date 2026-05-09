@@ -231,6 +231,9 @@
     const booksToShow = filteredBooks.slice(0, showCount);
     const hasMore = filteredBooks.length > showCount;
 
+    // 미리보기 캐러셀이 전체 filteredBooks를 순회할 수 있도록 캐시
+    state._allFiltered = filteredBooks;
+
     // 그리드 렌더링
     const grid = document.querySelector(`.rec-browse-grid[data-grade="${CSS.escape(gradeId)}"]`);
     if (grid) {
@@ -467,7 +470,20 @@
       card.addEventListener('click', () => {
         const bookData = JSON.parse(card.dataset.book);
 
-        // Build list from the same grid section for swipe navigation
+        // 학년별 섹션이면 sectionState 캐시의 전체 filteredBooks를 사용
+        // (그리드에 보이는 카드는 8개로 캐핑되어 있어 미리보기 캐러셀이 8/8에서 끊김)
+        const gradeSection = card.closest('details.grade-section[data-grade-id]');
+        const gradeId = gradeSection?.dataset.gradeId;
+        const cachedAll = gradeId && sectionState[gradeId]?._allFiltered;
+
+        if (cachedAll && cachedAll.length && window.BookPreview && BookPreview.showList) {
+          const books = cachedAll.map(b => ({ ...b, authors: b.authors || (b.author ? [b.author] : []) }));
+          const idx = books.findIndex(b => b.isbn === bookData.isbn);
+          BookPreview.showList(books, Math.max(0, idx), { mode: 'recommend' });
+          return;
+        }
+
+        // fallback: 검색 그리드 / 교과서 / 유치원 섹션은 기존 로직 유지
         const grid = card.closest('.rec-browse-grid, .tb-grid, .kinder-book-grid, #searchGrid');
         if (grid && window.BookPreview && BookPreview.showList) {
           const siblings = [...grid.querySelectorAll('.rec-browse-card')];

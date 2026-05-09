@@ -703,8 +703,14 @@
   }
 
   // ── 아바타 선택기 ────────────────────────────────────────────
-  function showAvatarPicker() {
-    const avatars = ['👩', '👨', '👧', '👦', '🧑', '👶', '🐰', '🐻', '🐱', '🐶', '🦊', '🐼', '🦁', '🐯', '🐨', '🐷'];
+  function showAvatarPicker(onChange) {
+    const avatars = [
+      '👩', '👨', '👧', '👦', '🧑', '👶', '👵', '👴',
+      '👩‍🎓', '👨‍🎓', '👩‍🏫', '👨‍🏫', '🧑‍🚀', '🦸', '🦸‍♀️', '🧙',
+      '🐰', '🐻', '🐱', '🐶', '🦊', '🐼', '🦁', '🐯',
+      '🐨', '🐷', '🐹', '🐭', '🐮', '🐸', '🐵', '🐧',
+      '🦄', '🐲', '🦖', '🐙', '🦋', '🐝', '🐞', '🦉'
+    ];
 
     const modal = document.createElement('div');
     modal.className = 'friend-modal';
@@ -733,7 +739,9 @@
       btn.addEventListener('click', () => {
         const emoji = btn.textContent;
         localStorage.setItem('profileAvatar', emoji);
-        document.getElementById('profileAvatar').textContent = emoji;
+        const mainAvatar = document.getElementById('profileAvatar');
+        if (mainAvatar) mainAvatar.textContent = emoji;
+        if (typeof onChange === 'function') onChange(emoji);
         showToast(`✅ 프로필 아바타가 변경되었어요!`);
         modal.remove();
       });
@@ -767,6 +775,7 @@
       grade:  localStorage.getItem('profileGrade')  || '초5',
       region: localStorage.getItem('profileRegion') || '강남구',
       goal:   parseInt(localStorage.getItem('monthlyGoal') || '20', 10),
+      avatar: localStorage.getItem('profileAvatar') || '👩',
     };
     const grades = ['초1','초2','초3','초4','초5','초6','중1','중2','중3','고1','고2','고3','기타'];
 
@@ -775,7 +784,9 @@
     modal.innerHTML = `
       <div class="friend-modal-content" style="max-width:360px">
         <div class="friend-modal-header">
-          <div class="friend-avatar">⚙️</div>
+          <button class="friend-avatar" id="profEditAvatar" type="button"
+            style="background:linear-gradient(135deg,#FFE0EC,#FFD1DC);border:none;cursor:pointer"
+            title="아바타 변경">${cur.avatar}</button>
           <div class="friend-info">
             <div class="friend-name">프로필 편집</div>
             <div class="friend-stats">아바타·이름은 직접 클릭해서도 변경 가능</div>
@@ -820,6 +831,14 @@
     modal.addEventListener('click', e => { if (e.target === modal) close(); });
     modal.querySelector('#profEditClose').addEventListener('click', close);
     modal.querySelector('#profEditCancel').addEventListener('click', close);
+
+    const avatarBtn = modal.querySelector('#profEditAvatar');
+    avatarBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showAvatarPicker(() => {
+        avatarBtn.textContent = localStorage.getItem('profileAvatar') || '👩';
+      });
+    });
     modal.querySelector('#profEditSave').addEventListener('click', () => {
       const name   = modal.querySelector('#profEditName').value.trim()   || cur.name;
       const grade  = modal.querySelector('#profEditGrade').value         || cur.grade;

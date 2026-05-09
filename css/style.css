@@ -217,17 +217,24 @@ body {
 .chapter-glyph {
   position: absolute;
   top: 50%;
-  right: -28px;
+  right: -60px;
   transform: translateY(-50%);
   font-family: var(--font-han);
-  font-size: 260px;
+  font-size: 200px;
   font-weight: 700;
   line-height: 0.8;
   color: var(--ink);
-  opacity: 0.075;
+  opacity: 0.05;
   pointer-events: none;
   user-select: none;
   letter-spacing: -0.05em;
+  z-index: 0;
+}
+
+.chapter-no,
+.chapter-title,
+.chapter-sub {
+  z-index: 1;
 }
 
 .chapter-no {
