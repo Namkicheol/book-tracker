@@ -127,6 +127,28 @@
     return r.data;
   }
 
+  // 같은 학교 친구 조회 — RLS가 자동으로 privacy != 'private' AND
+  //   (privacy='public' OR same school as auth.uid()) 필터링
+  async function getSchoolFriends() {
+    if (!client) return [];
+    var u = await getUser();
+    if (!u) return [];
+    var me = await getProfile(u.id);
+    if (!me || !me.school) return [];
+    var r = await client
+      .from('users')
+      .select('id, nickname, avatar, grade, school, city, district, privacy')
+      .eq('school', me.school)
+      .neq('id', u.id)
+      .neq('privacy', 'private')
+      .limit(50);
+    if (r.error) {
+      console.warn('[supabase] getSchoolFriends error:', r.error);
+      return [];
+    }
+    return r.data || [];
+  }
+
   window.SB = {
     client: client,
     enabled: enabled,
@@ -137,6 +159,7 @@
     signOut: signOut,
     onAuthChange: onAuthChange,
     upsertProfile: upsertProfile,
-    getProfile: getProfile
+    getProfile: getProfile,
+    getSchoolFriends: getSchoolFriends
   };
 })();

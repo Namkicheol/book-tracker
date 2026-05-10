@@ -232,6 +232,76 @@
     wireEvents();
     wireAuth();
     checkEncouragement();
+    renderSchoolFriends();
+  }
+
+  // ── 짧은 ID — UUID 앞 6자, 닉네임 미설정 시 표시용 ──────────────
+  function shortId(uuid) {
+    if (!uuid) return '????';
+    return String(uuid).replace(/-/g, '').slice(0, 6).toUpperCase();
+  }
+
+  // ── 우리 학교 친구 리스트 (별명 + 짧은 ID + 아바타만 노출, 실명 비노출) ──
+  async function renderSchoolFriends() {
+    const section = document.getElementById('schoolFriendsSection');
+    const listEl = document.getElementById('schoolFriendsList');
+    const label = document.getElementById('schoolFriendsLabel');
+    if (!section || !listEl) return;
+    if (!window.SB || !window.SB.enabled) return;
+
+    const sess = await window.SB.getSession();
+    if (!sess || !sess.user) return; // 비로그인 시 섹션 자체 숨김
+
+    const mySchool = localStorage.getItem('profileSchool');
+    if (!mySchool) {
+      section.style.display = 'block';
+      label.textContent = '';
+      listEl.innerHTML = `
+        <div style="background:#FFF8F0;border-radius:14px;padding:14px;font-size:13px;color:var(--text-gray);text-align:center">
+          학교를 선택하면 같은 학교 친구 엄마들의 닉네임이 여기에 보여요.<br>
+          <button id="goSetSchool" type="button" style="margin-top:10px;padding:8px 14px;border:none;border-radius:10px;background:linear-gradient(135deg,#FFB8C6,#E8C5FF);color:#fff;font-weight:700;cursor:pointer">학교 설정하기</button>
+        </div>`;
+      const goBtn = document.getElementById('goSetSchool');
+      if (goBtn) goBtn.addEventListener('click', showProfileEditor);
+      return;
+    }
+
+    let friends;
+    try { friends = await window.SB.getSchoolFriends(); } catch (e) { friends = []; }
+
+    if (!friends || friends.length === 0) {
+      section.style.display = 'block';
+      label.textContent = mySchool;
+      listEl.innerHTML = `
+        <div style="background:#FFF8F0;border-radius:14px;padding:14px;font-size:13px;color:var(--text-gray);text-align:center">
+          아직 같은 학교 친구가 없어요. 새 친구가 가입하면 여기에 나타납니다.
+        </div>`;
+      return;
+    }
+
+    section.style.display = 'block';
+    label.textContent = `${mySchool} · ${friends.length}명`;
+    listEl.innerHTML = friends.map(f => {
+      const display = (f.nickname && f.nickname.trim()) ? f.nickname.trim() : `친구 #${shortId(f.id)}`;
+      const avatarHtml = (f.avatar && /^https?:\/\//.test(f.avatar))
+        ? `<img src="${String(f.avatar).replace(/"/g,'%22')}" alt="" referrerpolicy="no-referrer" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0">`
+        : `<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFE0EC,#FFD1DC);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${escapeAttr(f.avatar || '👩')}</div>`;
+      return `
+        <button type="button" class="friend-row" data-fid="${escapeAttr(f.id)}" style="display:flex;align-items:center;gap:12px;padding:12px;background:#fff;border:1.5px solid rgba(255,184,198,0.2);border-radius:14px;cursor:pointer;text-align:left;width:100%;font-family:inherit">
+          ${avatarHtml}
+          <div style="flex:1;min-width:0">
+            <div style="font-size:14px;font-weight:700;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeAttr(display)}</div>
+            <div style="font-size:11px;color:var(--text-gray);margin-top:2px">${escapeAttr(f.grade || '')}${f.grade && f.district ? ' · ' : ''}${escapeAttr(f.district || '')}</div>
+          </div>
+          <span style="font-size:12px;color:#B5B5B5">서재 보기 →</span>
+        </button>`;
+    }).join('');
+
+    listEl.querySelectorAll('.friend-row').forEach(btn => {
+      btn.addEventListener('click', () => {
+        showToast('🚧 친구 서재 보기는 곧 도착! (책 동기화 후 활성화)');
+      });
+    });
   }
 
   // ── Auth (Supabase) ─────────────────────────────────────────
@@ -262,9 +332,12 @@
           }
         }
         if (event === 'SIGNED_IN') showToast('✅ 로그인 완료');
+        renderSchoolFriends();
       }
       if (event === 'SIGNED_OUT') {
         showToast('로그아웃 되었어요');
+        const sec = document.getElementById('schoolFriendsSection');
+        if (sec) sec.style.display = 'none';
       }
       refreshAuthUI();
     });
@@ -849,6 +922,7 @@
       city:   localStorage.getItem('profileCity')   || '',
       district: localStorage.getItem('profileDistrict') || '',
       school: localStorage.getItem('profileSchool') || '',
+      privacy: localStorage.getItem('profilePrivacy') || 'school',
       // legacy free-text 지역 — city/district 미설정 시 fallback 표시
       region: localStorage.getItem('profileRegion') || '',
       goal:   parseInt(localStorage.getItem('monthlyGoal') || '20', 10),
@@ -937,6 +1011,15 @@
             <span style="font-size:12px;font-weight:700;color:var(--text-gray)">이번 달 목표 (권)</span>
             <input id="profEditGoal" type="number" min="1" max="200" value="${cur.goal}"
               style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:6px">
+            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">공개 범위 <span style="font-weight:400;color:#B5B5B5">(누가 내 서재를 볼 수 있나요)</span></span>
+            <select id="profEditPrivacy"
+              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
+              <option value="school"${cur.privacy==='school'?' selected':''}>👯 같은 학교 친구들에게만 (추천)</option>
+              <option value="public"${cur.privacy==='public'?' selected':''}>🌍 전체 공개 — 모든 엄마들에게</option>
+              <option value="private"${cur.privacy==='private'?' selected':''}>🔒 비공개 — 나만 보기</option>
+            </select>
           </label>
         </div>
 
@@ -1126,6 +1209,7 @@
       const city     = modal.querySelector('#profEditCity').value            || '';
       const district = modal.querySelector('#profEditDistrict').value        || '';
       const school   = modal.querySelector('#profEditSchool').value.trim()   || '';
+      const privacy  = modal.querySelector('#profEditPrivacy').value         || 'school';
       const goal     = Math.max(1, parseInt(modal.querySelector('#profEditGoal').value, 10) || cur.goal);
 
       // 표시용 region: "부산 · 부산진구" 또는 단일/legacy fallback
@@ -1140,6 +1224,7 @@
       localStorage.setItem('profileCity',     city);
       localStorage.setItem('profileDistrict', district);
       localStorage.setItem('profileSchool',   school);
+      localStorage.setItem('profilePrivacy',  privacy);
       localStorage.setItem('profileRegion',   region); // 표시용 통일 문자열
       localStorage.setItem('monthlyGoal',     String(goal));
 
@@ -1159,8 +1244,12 @@
           avatar: localStorage.getItem('profileAvatar') || '👩',
           grade: grade,
           region: region,
+          city: city || null,
+          district: district || null,
+          school: school || null,
+          privacy: privacy,
           monthly_goal: goal
-        }).catch(() => {});
+        }).then(() => renderSchoolFriends()).catch(() => {});
       }
     });
   }
