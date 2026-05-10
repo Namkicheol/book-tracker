@@ -248,8 +248,10 @@
       '<button id="apvClose" style="background:none;border:none;font-size:22px;cursor:pointer;color:#8B8B8B;padding:0;line-height:1" aria-label="닫기">×</button>',
       '</div>',
 
-      // 1. 카카오/구글 프로필 가져오기 — 상단 (이미 가져온 상태면 숨김)
-      ((importedName || importedAvatar) && !(importedAvatar && cur.avatar === importedAvatar && (!importedName || cur.name === importedName))) ?
+      // 1. 카카오/구글 프로필 가져오기 — 상단
+      // 이미 카카오 사진을 아바타로 가져온 상태면 버튼 숨김 (닉네임은 사용자가 별명으로
+      // 자유롭게 바꾸기 때문에 일치 여부와 무관).
+      ((importedName || importedAvatar) && !(importedAvatar && cur.avatar === importedAvatar)) ?
         '<button type="button" id="apvImport" style="width:100%;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:' + (provider === 'kakao' ? '#FEE500' : '#fff') + ';color:#3C1E1E;border:' + (provider === 'kakao' ? 'none' : '1.5px solid #e0e0e0') + ';margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px">' +
           (importedAvatar ? '<img src="' + importedAvatar.replace(/"/g, '%22') + '" alt="" referrerpolicy="no-referrer" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0">' : '') +
           '<span>' + providerImportLabel + (importedName ? '<br><span style="font-size:11px;font-weight:500;opacity:0.7">' + htmlEscape(importedName) + '</span>' : '') + '</span>' +
@@ -279,15 +281,15 @@
       '<div id="apvAvatarGrid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:12px"></div>',
       '</details>',
 
-      // 4. 액션 버튼들
+      // 4. 액션 버튼들 — 저장/취소 50/50
       '<div style="display:flex;gap:8px;margin-top:18px">',
-      '<button id="apvSave" type="button" style="flex:2;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff">저장</button>',
       '<button id="apvCancel" type="button" style="flex:1;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:#8B8B8B">취소</button>',
+      '<button id="apvSave" type="button" style="flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff">저장</button>',
       '</div>',
 
-      // 5. 앱 설정 + 로그아웃 — 맨 아래
+      // 5. 앱 설정 + 로그아웃 — 맨 아래 (50/50, 둘 다 톤다운)
       '<div style="display:flex;gap:8px;margin-top:10px">',
-      '<a href="settings.html" style="flex:1;padding:10px;border:1.5px solid #eee;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#8B8B8B;text-align:center;text-decoration:none">⚙️ 앱 설정</a>',
+      '<a href="settings.html" style="flex:1;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#bbb;text-align:center;text-decoration:none">⚙️ 앱 설정</a>',
       '<button id="apvLogout" type="button" style="flex:1;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#bbb">🚪 로그아웃</button>',
       '</div>',
 
