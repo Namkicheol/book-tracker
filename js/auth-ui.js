@@ -34,7 +34,7 @@
   function injectFloatingButton() {
     if (!window.SB || !window.SB.enabled) return;
     if (document.getElementById('authBtnGlobal')) return;
-    if (document.getElementById('authBtn')) return; // 페이지가 자체 버튼 가짐
+    // share.html은 헤더에 자체 #authBtn이 있지만, 모든 페이지에 동일하게 floating CTA 노출 — 중복 허용
 
     var btn = document.createElement('button');
     btn.id = 'authBtnGlobal';
