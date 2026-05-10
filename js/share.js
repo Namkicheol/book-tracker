@@ -860,6 +860,10 @@
 
         <div id="profEditAuthBanner" style="display:none"></div>
 
+        <button type="button" id="profEditKakaoImport" style="display:none;margin-bottom:14px;width:100%;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:#FEE500;color:#3C1E1E">
+          💬 카카오 프로필 가져오기
+        </button>
+
         <div style="display:flex;flex-direction:column;gap:14px">
           <label style="display:flex;flex-direction:column;gap:6px">
             <span style="font-size:12px;font-weight:700;color:var(--text-gray)">닉네임</span>
@@ -884,10 +888,6 @@
               style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
           </label>
         </div>
-
-        <button type="button" id="profEditKakaoImport" style="display:none;margin-top:12px;width:100%;padding:11px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:#FEE500;color:#3C1E1E">
-          💬 카카오 프로필 가져오기
-        </button>
 
         <div style="display:flex;gap:8px;margin-top:18px">
           <button id="profEditCancel" class="cheer-cancel" style="flex:1;margin:0">취소</button>
