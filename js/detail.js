@@ -84,11 +84,14 @@
   }
 
   function wireStatus() {
+    const STATUS_LABELS = { 'want': '읽을 책', 'reading': '읽는 중', '': '읽은 책' };
     document.querySelectorAll('.status-pick-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const newStatus = btn.dataset.status || null;
         book = Storage.updateBook(book.id, { status: newStatus });
         renderStatus();
+        const label = STATUS_LABELS[newStatus || ''];
+        showToast(`✅ '${label}'으로 저장됐어요 — 따로 저장 안 눌러도 돼요`);
       });
     });
   }

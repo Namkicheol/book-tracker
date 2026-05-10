@@ -31,9 +31,22 @@
     if (row.monthly_goal) localStorage.setItem('monthlyGoal',   String(row.monthly_goal));
   }
 
+  // 카카오/구글 OAuth 메타데이터에서 닉네임을 추출
+  function extractProviderNickname(user) {
+    if (!user) return '';
+    var meta = user.user_metadata || {};
+    return meta.name || meta.full_name || meta.nickname || meta.preferred_username || '';
+  }
+
+  // localStorage에 있는 닉네임이 "기본값"이라 OAuth 닉네임으로 대체해도 되는지
+  function isDefaultNickname(name) {
+    return !name || name === '책읽는엄마';
+  }
+
   /**
    * 로그인 직후 호출. Supabase에 행 없으면 localStorage 값을 올리고,
    * 있으면 Supabase 값을 localStorage에 반영. 동기화 후 row 반환.
+   * 신규 사용자라면 카카오/구글 닉네임을 우선 사용.
    */
   async function syncProfileOnSignIn() {
     if (!window.SB || !window.SB.enabled) return null;
@@ -44,9 +57,16 @@
       return existing;
     }
 
-    // 신규 사용자: localStorage 프로필 업로드
+    // 신규 사용자: localStorage + OAuth 메타데이터 병합
+    var user = await window.SB.getUser();
+    var providerNick = extractProviderNickname(user);
     var local = readLocalProfile();
+    if (providerNick && isDefaultNickname(local.nickname)) {
+      local.nickname = providerNick;
+    }
+
     var saved = await window.SB.upsertProfile(local);
+    if (saved) writeLocalProfile(saved);
     return saved || null;
   }
 
