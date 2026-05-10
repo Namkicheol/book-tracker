@@ -152,7 +152,7 @@
           const count = allGradeBooks.filter(b => (b.lists || []).includes(s.id)).length;
           return `<option value="${s.id}" ${activeSource === s.id ? 'selected' : ''}>${escapeHtml(s.badge.text)} (${count})</option>`;
         }).join('');
-        return `<select class="source-select" data-grade="${grade.id}" style="width:100%;padding:8px 12px;border:1px solid #ddd;border-radius:6px;background:#fff;color:#444;font-size:13px;font-weight:500;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;);background-repeat:no-repeat;background-position:right 10px center;padding-right:32px">${allOpt}${items}</select>`;
+        return `<select class="source-select" data-grade="${grade.id}" style="width:100%;padding:9px 12px;border:none;border-radius:8px;background:#fff;color:#C2185B;font-size:14px;font-weight:600;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23E91E63' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>&quot;);background-repeat:no-repeat;background-position:right 10px center;padding-right:32px">${allOpt}${items}</select>`;
       })();
 
       return `
@@ -172,8 +172,8 @@
 
             ${sourceSelect ? `
             <!-- 추천 기관 필터 -->
-            <div style="margin-bottom:12px">
-              <span style="font-size:11px;color:#999;letter-spacing:0.04em;display:block;margin-bottom:4px">추천 기관</span>
+            <div style="margin-bottom:12px;padding:10px 12px;background:linear-gradient(135deg,#fff0f4,#fff5f8);border-radius:10px">
+              <span style="font-size:13px;color:#C2185B;font-weight:800;letter-spacing:0.01em;display:block;margin-bottom:6px">📚 추천 기관별 보기</span>
               ${sourceSelect}
             </div>` : ''}
 
