@@ -1012,15 +1012,10 @@
             <input id="profEditGoal" type="number" min="1" max="200" value="${cur.goal}"
               style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
           </label>
-          <label style="display:flex;flex-direction:column;gap:6px">
-            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">공개 범위 <span style="font-weight:400;color:#B5B5B5">(누가 내 서재를 볼 수 있나요)</span></span>
-            <select id="profEditPrivacy"
-              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
-              <option value="public"${cur.privacy==='public'?' selected':''}>🌍 전체 공개 — 모든 엄마들에게 (기본)</option>
-              <option value="school"${cur.privacy==='school'?' selected':''}>👯 같은 학교 친구들에게만</option>
-              <option value="private"${cur.privacy==='private'?' selected':''}>🔒 비공개 — 나만 보기</option>
-            </select>
-          </label>
+        </div>
+        <div style="margin-top:14px;padding:10px 12px;background:#FFF8F0;border-radius:10px;font-size:12px;color:#8B8B8B;line-height:1.55">
+          🔧 공개 범위(전체 공개·같은 학교만·비공개)는 <a href="settings.html" style="color:#FF7B7B;font-weight:700;text-decoration:none">앱 설정 →</a>에서 변경할 수 있어요.
+          ${cur.privacy === 'private' ? '<br><span style="color:#FF7B7B;font-weight:700">⚠️ 현재 비공개 상태 — 다른 사람의 서재도 볼 수 없어요.</span>' : ''}
         </div>
 
         <div style="display:flex;gap:8px;margin-top:18px">
@@ -1209,7 +1204,8 @@
       const city     = modal.querySelector('#profEditCity').value            || '';
       const district = modal.querySelector('#profEditDistrict').value        || '';
       const school   = modal.querySelector('#profEditSchool').value.trim()   || '';
-      const privacy  = modal.querySelector('#profEditPrivacy').value         || 'school';
+      // 공개 범위는 이 모달이 아니라 settings.html 에서 변경 — localStorage 값 그대로 유지
+      const privacy  = cur.privacy;
       const goal     = Math.max(1, parseInt(modal.querySelector('#profEditGoal').value, 10) || cur.goal);
 
       // 표시용 region: "부산 · 부산진구" 또는 단일/legacy fallback

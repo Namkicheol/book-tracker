@@ -131,6 +131,29 @@
       </div>
     </div>
 
+    <div class="settings-section">
+      <p class="settings-section-title">공개 범위</p>
+      <div class="settings-list">
+        <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:10px">
+          <div>
+            <div class="settings-row-label">내 서재를 누가 볼 수 있나요</div>
+            <div class="settings-row-desc">
+              비공개로 두면 다른 엄마들의 서재도 볼 수 없어요. 친구들과 책 추천을 주고받으려면 공개가 필요합니다.
+            </div>
+          </div>
+          <select id="privacySelect"
+            style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg-paper);color:var(--text);width:100%">
+            <option value="public">🌍 전체 공개 — 모든 엄마들에게 (기본)</option>
+            <option value="school">👯 같은 학교 친구들에게만</option>
+            <option value="private">🔒 비공개 — 나만 보기</option>
+          </select>
+          <div id="privacyWarning" style="display:none;background:#FFF8F0;border:1.5px dashed #FFB8C6;border-radius:10px;padding:10px;font-size:12px;color:#FF7B7B;line-height:1.55">
+            ⚠️ 비공개 상태에서는 <b>다른 사람의 서재도 볼 수 없어요</b>. 공개로 바꾸면 같은 학교 친구·다른 엄마들의 서재를 둘러볼 수 있습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
     <p class="settings-version">맘스북스 · 2026</p>
 
   </main>
@@ -195,6 +218,23 @@
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
         if (!localStorage.getItem('momsbooks.theme')) {
           toggle.checked = e.matches;
+        }
+      });
+
+      // ── 공개 범위 ──────────────────────────────────────────────
+      const privacySel = document.getElementById('privacySelect');
+      const privacyWarn = document.getElementById('privacyWarning');
+      const curPrivacy = localStorage.getItem('profilePrivacy') || 'public';
+      privacySel.value = curPrivacy;
+      privacyWarn.style.display = curPrivacy === 'private' ? 'block' : 'none';
+
+      privacySel.addEventListener('change', function () {
+        const v = privacySel.value;
+        localStorage.setItem('profilePrivacy', v);
+        privacyWarn.style.display = v === 'private' ? 'block' : 'none';
+        // 로그인 상태면 Supabase에도 반영 (실패해도 localStorage는 이미 저장됨)
+        if (window.SB && window.SB.enabled) {
+          window.SB.upsertProfile({ privacy: v }).catch(() => {});
         }
       });
     });
