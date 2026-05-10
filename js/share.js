@@ -312,7 +312,11 @@
     const grade = localStorage.getItem('profileGrade') || '초5';
     const region = localStorage.getItem('profileRegion') || '강남구';
 
-    document.getElementById('profileAvatar').textContent = avatar;
+    if (window.setAvatarEl) {
+      window.setAvatarEl(document.getElementById('profileAvatar'), avatar);
+    } else {
+      document.getElementById('profileAvatar').textContent = avatar;
+    }
     document.getElementById('profileName').textContent = name;
     document.getElementById('profileGrade').textContent = grade;
     document.getElementById('profileRegion').textContent = region;
@@ -804,7 +808,10 @@
         const emoji = btn.textContent;
         localStorage.setItem('profileAvatar', emoji);
         const mainAvatar = document.getElementById('profileAvatar');
-        if (mainAvatar) mainAvatar.textContent = emoji;
+        if (mainAvatar) {
+          if (window.setAvatarEl) window.setAvatarEl(mainAvatar, emoji);
+          else mainAvatar.textContent = emoji;
+        }
         if (typeof onChange === 'function') onChange(emoji);
         showToast(`✅ 프로필 아바타가 변경되었어요!`);
         modal.remove();
@@ -849,8 +856,8 @@
       <div class="friend-modal-content" style="max-width:360px">
         <div class="friend-modal-header">
           <button class="friend-avatar" id="profEditAvatar" type="button"
-            style="background:linear-gradient(135deg,#FFE0EC,#FFD1DC);border:none;cursor:pointer"
-            title="아바타 변경">${cur.avatar}</button>
+            style="background:linear-gradient(135deg,#FFE0EC,#FFD1DC);border:none;cursor:pointer;overflow:hidden"
+            title="아바타 변경"></button>
           <div class="friend-info">
             <div class="friend-name">프로필 편집</div>
             <div class="friend-stats">아바타·이름은 직접 클릭해서도 변경 가능</div>
@@ -903,10 +910,14 @@
     modal.querySelector('#profEditCancel').addEventListener('click', close);
 
     const avatarBtn = modal.querySelector('#profEditAvatar');
+    if (window.setAvatarEl) window.setAvatarEl(avatarBtn, cur.avatar);
+    else avatarBtn.textContent = cur.avatar;
     avatarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       showAvatarPicker(() => {
-        avatarBtn.textContent = localStorage.getItem('profileAvatar') || '👩';
+        const v = localStorage.getItem('profileAvatar') || '👩';
+        if (window.setAvatarEl) window.setAvatarEl(avatarBtn, v);
+        else avatarBtn.textContent = v;
       });
     });
 
@@ -918,19 +929,27 @@
         if (!importBtn) return;
         const meta = sess.user.user_metadata || {};
         const provider = (sess.user.app_metadata && sess.user.app_metadata.provider) || '';
-        // Kakao: meta.name / meta.full_name / meta.nickname
-        // Google: meta.full_name / meta.name
         const importedName = meta.name || meta.full_name || meta.nickname || meta.preferred_username || '';
-        if (!importedName) return;
-        const label = provider === 'kakao' ? '💬 카카오 프로필 가져오기'
-                    : provider === 'google' ? '🅖 구글 프로필 가져오기'
+        const importedAvatar = meta.avatar_url || meta.picture || meta.profile_image || '';
+        if (!importedName && !importedAvatar) return;
+        const label = provider === 'kakao' ? '💬 카카오 프로필 가져오기 (사진+닉네임)'
+                    : provider === 'google' ? '🅖 구글 프로필 가져오기 (사진+닉네임)'
                     : '☁️ 계정 프로필 가져오기';
         importBtn.textContent = label;
         importBtn.style.display = 'block';
         importBtn.addEventListener('click', () => {
-          const nameInput = modal.querySelector('#profEditName');
-          if (nameInput) nameInput.value = importedName;
-          showToast(`✨ '${importedName}'으로 닉네임이 채워졌어요`);
+          if (importedName) {
+            const nameInput = modal.querySelector('#profEditName');
+            if (nameInput) nameInput.value = importedName;
+          }
+          if (importedAvatar) {
+            localStorage.setItem('profileAvatar', importedAvatar);
+            const avatarBtnInModal = modal.querySelector('#profEditAvatar');
+            if (avatarBtnInModal && window.setAvatarEl) window.setAvatarEl(avatarBtnInModal, importedAvatar);
+            const mainAv = document.getElementById('profileAvatar');
+            if (mainAv && window.setAvatarEl) window.setAvatarEl(mainAv, importedAvatar);
+          }
+          showToast(`✨ 프로필을 가져왔어요`);
         });
       });
     }
