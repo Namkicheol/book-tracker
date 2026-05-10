@@ -21,7 +21,8 @@
     '☁️ 어떤 기기에서도 같은 프로필·목표',
     '📚 폰·태블릿 서재 자동 동기화 <span style="color:#FF9E9E;font-weight:700">(곧)</span>',
     '🏆 다른 엄마들과 독서 랭킹 비교 <span style="color:#FF9E9E;font-weight:700">(곧)</span>',
-    '👀 우리반·또래 친구들의 인기책 둘러보기 <span style="color:#FF9E9E;font-weight:700">(곧)</span>'
+    '👀 다른 엄마의 서재도 확인할 수 있어요 <span style="color:#FF9E9E;font-weight:700">(곧)</span>',
+    '⭐ 우리반·또래 친구들의 인기책 둘러보기 <span style="color:#FF9E9E;font-weight:700">(곧)</span>'
   ];
 
   function svgLogIn() {
