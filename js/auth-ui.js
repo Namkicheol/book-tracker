@@ -68,27 +68,49 @@
     btn.title = '로그인';
     btn.setAttribute('aria-label', '로그인');
     btn.innerHTML = svgLogIn();
-    btn.style.cssText = [
-      'position:fixed', 'top:14px', 'right:14px',
-      'width:40px', 'height:40px',
-      'border-radius:50%',
-      'border:2px solid #fff',
-      'background:linear-gradient(135deg,#FF9E9E,#E8C5FF)',
-      'color:#fff',
-      'box-shadow:0 4px 14px rgba(255,158,158,0.35)',
-      'cursor:pointer',
-      'display:flex', 'align-items:center', 'justify-content:center',
-      'z-index:990',
-      'font-size:20px',
-      'transition:transform .15s ease',
-      'padding:0'
-    ].join(';');
+
+    // 슬림 page-header가 있으면 헤더 내부 우측에 inline으로 배치 (z-index 충돌 방지).
+    // 마스트헤드(index.html)나 헤더가 없는 페이지는 fixed top-right로 fallback.
+    var slimHeader = document.querySelector('.page-header:not(.page-header-masthead)');
+    if (slimHeader) {
+      btn.style.cssText = [
+        'width:34px', 'height:34px',
+        'border-radius:50%',
+        'border:2px solid #fff',
+        'background:linear-gradient(135deg,#FF9E9E,#E8C5FF)',
+        'color:#fff',
+        'box-shadow:0 3px 10px rgba(255,158,158,0.35)',
+        'cursor:pointer',
+        'display:flex', 'align-items:center', 'justify-content:center',
+        'flex-shrink:0',
+        'transition:transform .15s ease',
+        'padding:0',
+        'margin-left:6px'
+      ].join(';');
+      slimHeader.appendChild(btn);
+    } else {
+      btn.style.cssText = [
+        'position:fixed', 'top:14px', 'right:14px',
+        'width:40px', 'height:40px',
+        'border-radius:50%',
+        'border:2px solid #fff',
+        'background:linear-gradient(135deg,#FF9E9E,#E8C5FF)',
+        'color:#fff',
+        'box-shadow:0 4px 14px rgba(255,158,158,0.35)',
+        'cursor:pointer',
+        'display:flex', 'align-items:center', 'justify-content:center',
+        'z-index:990',
+        'font-size:20px',
+        'transition:transform .15s ease',
+        'padding:0'
+      ].join(';');
+      document.body.appendChild(btn);
+    }
 
     btn.addEventListener('mouseenter', function () { btn.style.transform = 'scale(1.08)'; });
     btn.addEventListener('mouseleave', function () { btn.style.transform = 'scale(1)'; });
     btn.addEventListener('click', onClick);
 
-    document.body.appendChild(btn);
     refresh();
     // Supabase 세션 복원이 비동기로 늦게 완료되는 경우 INITIAL_SESSION 이벤트가
     // 도착하기 전에 첫 refresh가 user=null로 끝나는 케이스가 있어 지연 retry 한 번 더.
@@ -263,10 +285,11 @@
       '<button id="apvCancel" type="button" style="flex:1;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:#8B8B8B">취소</button>',
       '</div>',
 
-      // 5. 로그아웃 — 맨 아래
-      '<button id="apvLogout" type="button" style="width:100%;margin-top:10px;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#bbb">',
-      '🚪 로그아웃',
-      '</button>',
+      // 5. 앱 설정 + 로그아웃 — 맨 아래
+      '<div style="display:flex;gap:8px;margin-top:10px">',
+      '<a href="settings.html" style="flex:1;padding:10px;border:1.5px solid #eee;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#8B8B8B;text-align:center;text-decoration:none">⚙️ 앱 설정</a>',
+      '<button id="apvLogout" type="button" style="flex:1;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#bbb">🚪 로그아웃</button>',
+      '</div>',
 
       '</div>'
     ].join('');
