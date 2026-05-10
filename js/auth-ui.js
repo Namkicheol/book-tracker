@@ -111,10 +111,20 @@
     btn.addEventListener('mouseleave', function () { btn.style.transform = 'scale(1)'; });
     btn.addEventListener('click', onClick);
 
-    refresh();
-    // Supabase 세션 복원이 비동기로 늦게 완료되는 경우 INITIAL_SESSION 이벤트가
-    // 도착하기 전에 첫 refresh가 user=null로 끝나는 케이스가 있어 지연 retry 한 번 더.
-    setTimeout(refresh, 600);
+    // Supabase 세션 복원/토큰 refresh가 늦게 끝나는 경우를 위해 폴링.
+    // 세션이 감지되면 즉시 중단. 최대 10초까지 시도.
+    var pollAttempts = 0;
+    async function pollRefresh() {
+      await refresh();
+      pollAttempts++;
+      try {
+        var sess = window.SB ? await window.SB.getSession() : null;
+        if (sess && sess.user) return; // 로그인 감지 → 중단
+      } catch (e) { /* ignore */ }
+      if (pollAttempts >= 10) return; // 10초 후 포기
+      setTimeout(pollRefresh, 1000);
+    }
+    pollRefresh();
   }
 
   async function refresh() {
