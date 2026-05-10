@@ -9,6 +9,7 @@
   let allBooks = [];
   let textbookMode = false;
   let kinderData = null;
+  let grade1Data = null;
 
   // ── Load data ────────────────────────────────────────────────
 
@@ -16,9 +17,10 @@
 
   async function init() {
     try {
-      const [res, kinderRes] = await Promise.all([
+      const [res, kinderRes, grade1Res] = await Promise.all([
         fetch('data/book-recommendations.json'),
         fetch('data/kindergarten-curated.json').catch(() => null),
+        fetch('data/grade1-curated.json').catch(() => null),
       ]);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
@@ -34,6 +36,9 @@
 
       if (kinderRes && kinderRes.ok) {
         kinderData = await kinderRes.json();
+      }
+      if (grade1Res && grade1Res.ok) {
+        grade1Data = await grade1Res.json();
       }
 
       console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
@@ -107,13 +112,14 @@
 
     const content = document.getElementById('gradeContent');
 
-    // 유치원 특선은 유아 섹션 안쪽 (책 목록 아래) 에 nested details로 들어감
+    // 유치원 특선은 유아 섹션 안쪽에 nested details로 들어감
     const kinderInnerHtml = kinderData ? renderKindergartenSection() : '';
+    // 초1특선은 초등 저학년 섹션 안쪽에 nested details로 들어감
+    const grade1InnerHtml = grade1Data ? renderGrade1Section() : '';
 
     const grades = [
-      { id: '유아',        icon: '🐣', name: '유치원 (5~7세)'       },
-      { id: '초등 1학년', icon: '📗', name: '초등 1학년 (입문)'    },
-      { id: '초등 저학년', icon: '📖', name: '초등 저학년 (2-3학년)' },
+      { id: '유아',        icon: '🐣', name: '유치원 (5~7세)'        },
+      { id: '초등 저학년', icon: '📖', name: '초등 저학년 (1-3학년)' },
       { id: '초등 고학년', icon: '📕', name: '초등 고학년 (4-6학년)' },
     ];
 
@@ -163,6 +169,7 @@
           </summary>
           <div style="padding:16px">
             ${grade.id === '유아' ? kinderInnerHtml : ''}
+            ${grade.id === '초등 저학년' ? grade1InnerHtml : ''}
             <!-- 정렬 버튼 -->
             <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap">
               <button class="sort-btn ${sectionState[grade.id].sort === 'popularity' ? 'active' : ''}" data-grade="${grade.id}" data-sort="popularity" style="padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:${sectionState[grade.id].sort === 'popularity' ? '#4A90E2' : '#fff'};color:${sectionState[grade.id].sort === 'popularity' ? '#fff' : '#666'};font-size:13px;font-weight:${sectionState[grade.id].sort === 'popularity' ? '600' : '400'};cursor:pointer">📊 인기순</button>
@@ -213,6 +220,15 @@
       if (kinderSection) {
         attachCardListeners();
         backfillThumbnails(kinderSection);
+      }
+    }
+
+    // Grade1 section card listeners (nested inside 초등 저학년 section)
+    if (grade1InnerHtml) {
+      const grade1Section = content.querySelector('#grade1Section');
+      if (grade1Section) {
+        attachCardListeners();
+        backfillThumbnails(grade1Section);
       }
     }
 
@@ -304,7 +320,7 @@
 
   // ── 추천 기관 점프/전체 학년 ─────────────────────────────────
 
-  const ALL_GRADE_IDS = ['유아', '초등 1학년', '초등 저학년', '초등 고학년'];
+  const ALL_GRADE_IDS = ['유아', '초등 저학년', '초등 고학년'];
 
   function ensureSectionState(gradeId) {
     if (!sectionState[gradeId]) {
@@ -386,7 +402,6 @@
     const tabs = [
       { id: 'all',         label: '전체',  icon: '📚' },
       { id: '유아',         label: '유아',  icon: '🐣' },
-      { id: '초등 1학년',   label: '1학년', icon: '📗' },
       { id: '초등 저학년',  label: '저학년', icon: '📖' },
       { id: '초등 고학년',  label: '고학년', icon: '📕' },
     ];
@@ -416,7 +431,7 @@
       books = books.filter(b => b.targetAge === sourceViewState.grade);
     }
     // 학년 → 인기순 정렬
-    const gradeOrder = { '유아': 0, '초등 1학년': 1, '초등 저학년': 2, '초등 고학년': 3 };
+    const gradeOrder = { '유아': 0, '초등 저학년': 1, '초등 고학년': 2 };
     books.sort((a, b) => {
       const ga = gradeOrder[a.targetAge] ?? 9;
       const gb = gradeOrder[b.targetAge] ?? 9;
@@ -501,6 +516,48 @@
           <div>
             <div style="font-family:var(--font-body);font-size:14px;font-weight:700;color:var(--text)">유치원 특선 <span style="font-size:11px;font-weight:400;color:var(--text-soft)">(5~7세)</span></div>
             <div style="font-size:11px;color:var(--text-mute);margin-top:2px;font-style:italic">어린이도서연구회·학교도서관저널·행복한아침독서 추천 그림책</div>
+          </div>
+        </div>
+        <svg class="kinder-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div style="padding-top:12px">${themeHtml}</div>
+    </details>`;
+  }
+
+  function renderGrade1Section() {
+    if (!grade1Data || !grade1Data.themes) return '';
+
+    const themes = grade1Data.themes;
+    const booksMap = new Map(allBooks.map(b => [String(b.isbn), b]));
+
+    const themeHtml = themes.map(theme => {
+      const themeBooks = (theme.books || []).map(pick => {
+        const fromDB = booksMap.get(String(pick.isbn));
+        const book = fromDB
+          ? { ...fromDB, why: pick.why || fromDB.why }
+          : { isbn: pick.isbn, title: pick.title, author: pick.author, publisher: pick.publisher, why: pick.why, lists: [], targetAge: '초등 저학년', genre: '그림책' };
+        return book;
+      });
+
+      const cards = themeBooks.map(book => renderCard(book)).join('');
+
+      return `<div style="margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;padding:0 16px">
+          <span style="font-size:18px">${theme.emoji}</span>
+          <span style="font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--text)">${escapeHtml(theme.name)}</span>
+          <span style="font-size:11px;color:var(--text-mute)">${escapeHtml(theme.description)}</span>
+        </div>
+        <div class="kinder-book-grid">${cards}</div>
+      </div>`;
+    }).join('');
+
+    return `<details id="grade1Section" style="margin-top:20px;padding-top:16px;border-top:1px dashed var(--border)">
+      <summary class="kinder-summary" style="margin:0 -16px;padding:12px 16px">
+        <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+          <span style="font-size:18px">📗</span>
+          <div>
+            <div style="font-family:var(--font-body);font-size:14px;font-weight:700;color:var(--text)">초1 특선 <span style="font-size:11px;font-weight:400;color:var(--text-soft)">(교과서 수록 그림책)</span></div>
+            <div style="font-size:11px;color:var(--text-mute);margin-top:2px;font-style:italic">2022 개정 교과서 수록 · 어린이도서연구회 · 책따세 추천</div>
           </div>
         </div>
         <svg class="kinder-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
