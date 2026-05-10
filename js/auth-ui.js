@@ -35,6 +35,21 @@
     return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>';
   }
 
+  // avatar 값(URL 또는 emoji) → DOM 엘리먼트에 적절히 렌더
+  function setAvatarEl(el, value) {
+    if (!el) return;
+    if (value && /^https?:\/\//.test(value)) {
+      el.textContent = '';
+      el.innerHTML = '<img src="' + value.replace(/"/g, '%22') + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block">';
+    } else {
+      el.innerHTML = '';
+      el.textContent = value || '👩';
+    }
+  }
+
+  function isUrl(v) { return v && /^https?:\/\//.test(v); }
+  window.setAvatarEl = setAvatarEl; // share.js에서도 재사용
+
   function ensureAnim() {
     if (document.getElementById('authUiAnim')) return;
     var st = document.createElement('style');
@@ -86,8 +101,13 @@
     var user = sess && sess.user ? sess.user : null;
     if (user) {
       btn.title = '내 프로필';
-      var emoji = localStorage.getItem('profileAvatar') || '👩';
-      btn.innerHTML = '<span style="font-size:20px;line-height:1">' + emoji + '</span>';
+      var avatar = localStorage.getItem('profileAvatar') || '👩';
+      if (isUrl(avatar)) {
+        btn.innerHTML = '<img src="' + avatar.replace(/"/g, '%22') + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block">';
+        btn.style.padding = '0';
+      } else {
+        btn.innerHTML = '<span style="font-size:20px;line-height:1">' + avatar + '</span>';
+      }
     } else {
       btn.title = '로그인';
       btn.innerHTML = svgLogIn();
@@ -168,11 +188,12 @@
     var meta = sess.user.user_metadata || {};
     var provider = (sess.user.app_metadata && sess.user.app_metadata.provider) || '';
     var importedName = meta.name || meta.full_name || meta.nickname || meta.preferred_username || '';
+    var importedAvatar = meta.avatar_url || meta.picture || meta.profile_image || '';
     var providerLabel = provider === 'kakao' ? '💬 카카오 계정'
                       : provider === 'google' ? '🅖 구글 계정'
                       : '☁️ 연결된 계정';
-    var providerImportLabel = provider === 'kakao' ? '💬 카카오 프로필 가져오기'
-                            : provider === 'google' ? '🅖 구글 프로필 가져오기'
+    var providerImportLabel = provider === 'kakao' ? '💬 카카오 프로필 가져오기 (사진+닉네임)'
+                            : provider === 'google' ? '🅖 구글 프로필 가져오기 (사진+닉네임)'
                             : '☁️ 계정 프로필 가져오기';
 
     var cur = {
@@ -194,7 +215,7 @@
       // 헤더 — avatar + 이름 + provider badge
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">',
       '<div style="display:flex;align-items:center;gap:12px">',
-      '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FFE0EC,#FFD1DC);display:flex;align-items:center;justify-content:center;font-size:30px;border:3px solid #fff;box-shadow:0 4px 12px rgba(255,158,158,0.3)" id="apvAvatarShow">' + cur.avatar + '</div>',
+      '<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FFE0EC,#FFD1DC);display:flex;align-items:center;justify-content:center;font-size:30px;border:3px solid #fff;box-shadow:0 4px 12px rgba(255,158,158,0.3);overflow:hidden" id="apvAvatarShow"></div>',
       '<div>',
       '<div style="font-size:18px;font-weight:800;color:#4A4A4A" id="apvNameShow">' + htmlEscape(cur.name) + '</div>',
       '<div style="font-size:11px;color:#8B8B8B;margin-top:3px">' + providerLabel + '</div>',
@@ -203,9 +224,11 @@
       '</div>',
 
       // 1. 카카오/구글 프로필 가져오기 — 상단
-      importedName ?
-        '<button type="button" id="apvImport" style="width:100%;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:' + (provider === 'kakao' ? '#FEE500' : '#fff') + ';color:#3C1E1E;border:' + (provider === 'kakao' ? 'none' : '1.5px solid #e0e0e0') + ';margin-bottom:16px">' +
-        providerImportLabel + ' (닉네임: ' + htmlEscape(importedName) + ')</button>'
+      (importedName || importedAvatar) ?
+        '<button type="button" id="apvImport" style="width:100%;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:' + (provider === 'kakao' ? '#FEE500' : '#fff') + ';color:#3C1E1E;border:' + (provider === 'kakao' ? 'none' : '1.5px solid #e0e0e0') + ';margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px">' +
+          (importedAvatar ? '<img src="' + importedAvatar.replace(/"/g, '%22') + '" alt="" referrerpolicy="no-referrer" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0">' : '') +
+          '<span>' + providerImportLabel + (importedName ? '<br><span style="font-size:11px;font-weight:500;opacity:0.7">' + htmlEscape(importedName) + '</span>' : '') + '</span>' +
+        '</button>'
         : '',
 
       // 2. 입력 필드들
@@ -225,8 +248,8 @@
       // 3. 이모티콘 아바타 선택 — 하단
       '<details style="margin-top:16px;border:1.5px solid #eee;border-radius:12px;padding:12px">',
       '<summary style="cursor:pointer;font-size:13px;font-weight:700;color:#8B8B8B;list-style:none;display:flex;justify-content:space-between;align-items:center">',
-      '<span>아바타 이모티콘 변경</span>',
-      '<span id="apvAvatarPreview" style="font-size:22px">' + cur.avatar + '</span>',
+      '<span>아바타 이모티콘으로 변경</span>',
+      '<span id="apvAvatarPreview" style="font-size:22px;width:28px;height:28px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center"></span>',
       '</summary>',
       '<div id="apvAvatarGrid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:12px"></div>',
       '</details>',
@@ -247,13 +270,18 @@
 
     document.body.appendChild(modal);
 
-    // 아바타 이모티콘 그리드 채우기
+    // 초기 avatar 렌더 (URL이면 img, emoji면 텍스트)
+    setAvatarEl(modal.querySelector('#apvAvatarShow'), cur.avatar);
+    setAvatarEl(modal.querySelector('#apvAvatarPreview'), cur.avatar);
+
+    // 아바타 이모티콘 그리드 채우기 (클릭하면 emoji로 전환 — URL 덮어쓰기)
     var grid = modal.querySelector('#apvAvatarGrid');
     AVATAR_EMOJIS.forEach(function (emo) {
       var b = document.createElement('button');
       b.type = 'button';
       b.textContent = emo;
-      b.style.cssText = 'padding:8px;border:1.5px solid ' + (emo === cur.avatar ? '#FF9E9E' : 'transparent') + ';border-radius:10px;font-size:22px;cursor:pointer;background:' + (emo === cur.avatar ? '#FFE0EC' : '#fff');
+      var isActive = emo === cur.avatar;
+      b.style.cssText = 'padding:8px;border:1.5px solid ' + (isActive ? '#FF9E9E' : 'transparent') + ';border-radius:10px;font-size:22px;cursor:pointer;background:' + (isActive ? '#FFE0EC' : '#fff');
       b.addEventListener('click', function () {
         cur.avatar = emo;
         grid.querySelectorAll('button').forEach(function (x) {
@@ -262,8 +290,8 @@
         });
         b.style.borderColor = '#FF9E9E';
         b.style.background = '#FFE0EC';
-        modal.querySelector('#apvAvatarPreview').textContent = emo;
-        modal.querySelector('#apvAvatarShow').textContent = emo;
+        setAvatarEl(modal.querySelector('#apvAvatarPreview'), emo);
+        setAvatarEl(modal.querySelector('#apvAvatarShow'), emo);
       });
       grid.appendChild(b);
     });
@@ -273,12 +301,24 @@
     modal.querySelector('#apvClose').addEventListener('click', close);
     modal.querySelector('#apvCancel').addEventListener('click', close);
 
-    // 카카오 프로필 가져오기 → 닉네임 input에 채우기
+    // 카카오 프로필 가져오기 → 닉네임 + 아바타 사진 둘 다 적용
     var importBtn = modal.querySelector('#apvImport');
     if (importBtn) {
       importBtn.addEventListener('click', function () {
-        modal.querySelector('#apvName').value = importedName;
-        modal.querySelector('#apvNameShow').textContent = importedName;
+        if (importedName) {
+          modal.querySelector('#apvName').value = importedName;
+          modal.querySelector('#apvNameShow').textContent = importedName;
+        }
+        if (importedAvatar) {
+          cur.avatar = importedAvatar;
+          setAvatarEl(modal.querySelector('#apvAvatarShow'), importedAvatar);
+          setAvatarEl(modal.querySelector('#apvAvatarPreview'), importedAvatar);
+          // 그리드 emoji 활성 표시 해제
+          grid.querySelectorAll('button').forEach(function (x) {
+            x.style.borderColor = 'transparent';
+            x.style.background = '#fff';
+          });
+        }
       });
     }
 
@@ -296,14 +336,13 @@
       localStorage.setItem('profileAvatar', avatar);
 
       // share.html DOM에도 즉시 반영 (페이지에 있을 때만)
-      ['profileName','profileGrade','profileRegion','profileAvatar'].forEach(function (id) {
-        var el = document.getElementById(id);
-        if (!el) return;
-        el.textContent = id === 'profileName' ? name
-                       : id === 'profileGrade' ? grade
-                       : id === 'profileRegion' ? region
-                       : avatar;
-      });
+      var nameEl = document.getElementById('profileName');
+      if (nameEl) nameEl.textContent = name;
+      var gradeEl = document.getElementById('profileGrade');
+      if (gradeEl) gradeEl.textContent = grade;
+      var regionEl = document.getElementById('profileRegion');
+      if (regionEl) regionEl.textContent = region;
+      setAvatarEl(document.getElementById('profileAvatar'), avatar);
 
       // Supabase upsert
       try {
