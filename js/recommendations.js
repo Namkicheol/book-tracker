@@ -942,18 +942,24 @@
       c.style.outline = '';
       c.style.outlineOffset = '';
     });
-    const bar = document.getElementById('recSelectBar');
-    if (bar) bar.hidden = true;
-    const btn = document.getElementById('recSelectBtn');
-    if (btn) btn.textContent = '선택';
+    const idle = document.getElementById('recBarIdle');
+    const picking = document.getElementById('recBarPicking');
+    if (idle) idle.hidden = false;
+    if (picking) picking.hidden = true;
+    // 위로가기 버튼 다시 보이게 (display 비움 → 기존 scroll handler가 토글)
+    const top = document.getElementById('scrollTopBtn');
+    if (top) top.style.display = '';
   }
 
   function enterRecSelectMode() {
     window.__recSelectMode = true;
-    const bar = document.getElementById('recSelectBar');
-    if (bar) bar.hidden = false;
-    const btn = document.getElementById('recSelectBtn');
-    if (btn) btn.textContent = '✕ 닫기';
+    const idle = document.getElementById('recBarIdle');
+    const picking = document.getElementById('recBarPicking');
+    if (idle) idle.hidden = true;
+    if (picking) picking.hidden = false;
+    // 위로가기 버튼 숨김 — 담기 버튼과 겹쳐 글자 가림
+    const top = document.getElementById('scrollTopBtn');
+    if (top) top.style.display = 'none';
     updateRecSelectCount();
   }
 
@@ -963,10 +969,7 @@
     const addBtn = document.getElementById('recSelectAddWant');
     if (!btn || !window.Storage) return;
 
-    btn.addEventListener('click', () => {
-      if (window.__recSelectMode) exitRecSelectMode();
-      else enterRecSelectMode();
-    });
+    btn.addEventListener('click', enterRecSelectMode);
     if (cancelBtn) cancelBtn.addEventListener('click', exitRecSelectMode);
 
     if (addBtn) addBtn.addEventListener('click', () => {
