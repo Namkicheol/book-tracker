@@ -885,6 +885,10 @@
           </label>
         </div>
 
+        <button type="button" id="profEditKakaoImport" style="display:none;margin-top:12px;width:100%;padding:11px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:#FEE500;color:#3C1E1E">
+          💬 카카오 프로필 가져오기
+        </button>
+
         <div style="display:flex;gap:8px;margin-top:18px">
           <button id="profEditCancel" class="cheer-cancel" style="flex:1;margin:0">취소</button>
           <button id="profEditSave" class="encouragement-btn" style="flex:1;margin:0">저장</button>
@@ -905,6 +909,31 @@
         avatarBtn.textContent = localStorage.getItem('profileAvatar') || '👩';
       });
     });
+
+    // 로그인 상태면 "카카오 프로필 가져오기" 버튼 활성화
+    if (window.SB && window.SB.enabled) {
+      window.SB.getSession().then(sess => {
+        if (!sess || !sess.user) return;
+        const importBtn = modal.querySelector('#profEditKakaoImport');
+        if (!importBtn) return;
+        const meta = sess.user.user_metadata || {};
+        const provider = (sess.user.app_metadata && sess.user.app_metadata.provider) || '';
+        // Kakao: meta.name / meta.full_name / meta.nickname
+        // Google: meta.full_name / meta.name
+        const importedName = meta.name || meta.full_name || meta.nickname || meta.preferred_username || '';
+        if (!importedName) return;
+        const label = provider === 'kakao' ? '💬 카카오 프로필 가져오기'
+                    : provider === 'google' ? '🅖 구글 프로필 가져오기'
+                    : '☁️ 계정 프로필 가져오기';
+        importBtn.textContent = label;
+        importBtn.style.display = 'block';
+        importBtn.addEventListener('click', () => {
+          const nameInput = modal.querySelector('#profEditName');
+          if (nameInput) nameInput.value = importedName;
+          showToast(`✨ '${importedName}'으로 닉네임이 채워졌어요`);
+        });
+      });
+    }
 
     // 비로그인 상태면 모달 상단에 로그인 CTA 배너 노출
     if (window.SB && window.SB.enabled) {
