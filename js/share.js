@@ -250,7 +250,9 @@
     if (btn) btn.addEventListener('click', onAuthBtnClick);
 
     window.SB.onAuthChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) {
+      // SIGNED_IN: 새 OAuth 흐름 직후 / INITIAL_SESSION: 페이지 로드 시 세션 복원
+      // 둘 다 sync 한 번 돌려서 다른 기기에서 변경된 프로필 가져오기
+      if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
         if (window.Sync) {
           const row = await window.Sync.syncProfileOnSignIn();
           if (row) {
@@ -259,7 +261,7 @@
             renderGoal();
           }
         }
-        showToast('✅ 로그인 완료');
+        if (event === 'SIGNED_IN') showToast('✅ 로그인 완료');
       }
       if (event === 'SIGNED_OUT') {
         showToast('로그아웃 되었어요');
@@ -271,7 +273,8 @@
   async function refreshAuthUI() {
     const btn = document.getElementById('authBtn');
     if (!btn) return;
-    const user = await window.SB.getUser();
+    const sess = await window.SB.getSession();
+    const user = sess && sess.user ? sess.user : null;
     if (user) {
       btn.title = '로그아웃';
       btn.innerHTML = `
@@ -288,8 +291,8 @@
   }
 
   async function onAuthBtnClick() {
-    const user = await window.SB.getUser();
-    if (user) {
+    const sess = await window.SB.getSession();
+    if (sess && sess.user) {
       if (confirm('로그아웃 하시겠어요?')) await window.SB.signOut();
       return;
     }
@@ -905,8 +908,8 @@
 
     // 비로그인 상태면 모달 상단에 로그인 CTA 배너 노출
     if (window.SB && window.SB.enabled) {
-      window.SB.getUser().then(user => {
-        if (user) return;
+      window.SB.getSession().then(sess => {
+        if (sess && sess.user) return;
         const banner = modal.querySelector('#profEditAuthBanner');
         if (!banner) return;
         banner.style.cssText = 'display:block;background:linear-gradient(135deg,#FFF8F0,#FFE8F0);border-radius:14px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.55;color:#4A4A4A';
