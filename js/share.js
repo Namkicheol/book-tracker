@@ -692,7 +692,9 @@
 
     const profileAvatar = document.getElementById('profileAvatar');
     if (profileAvatar) {
-      profileAvatar.addEventListener('click', showAvatarPicker);
+      // 단순 이모지 선택창 대신 프로필 편집 전체 모달 — 랭킹에 노출될 닉네임/학년/지역/목표
+      // + 아바타 변경(카카오 사진 또는 이모지)을 한 화면에서 설정
+      profileAvatar.addEventListener('click', showProfileEditor);
       profileAvatar.style.cursor = 'pointer';
     }
 
@@ -850,6 +852,11 @@
     };
     const grades = ['초1','초2','초3','초4','초5','초6','중1','중2','중3','고1','고2','고3','기타'];
 
+    // 랭킹에 노출되는 책 권수 (myStats: weekBooks/monthBooks/yearBooks)
+    const rankWeek  = (myStats && typeof myStats.weekBooks  === 'number') ? myStats.weekBooks  : 0;
+    const rankMonth = (myStats && typeof myStats.monthBooks === 'number') ? myStats.monthBooks : 0;
+    const rankYear  = (myStats && typeof myStats.yearBooks  === 'number') ? myStats.yearBooks  : 0;
+
     const modal = document.createElement('div');
     modal.className = 'friend-modal';
     modal.innerHTML = `
@@ -863,6 +870,15 @@
             <div class="friend-stats">아바타·이름은 직접 클릭해서도 변경 가능</div>
           </div>
           <button class="friend-close" id="profEditClose">✕</button>
+        </div>
+
+        <div style="background:linear-gradient(135deg,#FFF8F0,#FFE8F0);border-radius:14px;padding:12px;margin-bottom:14px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:#8B8B8B;margin-bottom:8px">📊 랭킹에 노출되는 내 기록</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div style="text-align:center"><div style="font-size:11px;color:#8B8B8B">이번 주</div><div style="font-size:18px;font-weight:800;color:#FF7B7B">${rankWeek}<span style="font-size:11px;font-weight:600;margin-left:1px">권</span></div></div>
+            <div style="text-align:center"><div style="font-size:11px;color:#8B8B8B">이번 달</div><div style="font-size:18px;font-weight:800;color:#FF7B7B">${rankMonth}<span style="font-size:11px;font-weight:600;margin-left:1px">권</span></div></div>
+            <div style="text-align:center"><div style="font-size:11px;color:#8B8B8B">올해</div><div style="font-size:18px;font-weight:800;color:#FF7B7B">${rankYear}<span style="font-size:11px;font-weight:600;margin-left:1px">권</span></div></div>
+          </div>
         </div>
 
         <div id="profEditAuthBanner" style="display:none"></div>
@@ -932,8 +948,12 @@
         const importedName = meta.name || meta.full_name || meta.nickname || meta.preferred_username || '';
         const importedAvatar = meta.avatar_url || meta.picture || meta.profile_image || '';
         if (!importedName && !importedAvatar) return;
-        const label = provider === 'kakao' ? '💬 카카오 프로필 가져오기 (사진+닉네임)'
-                    : provider === 'google' ? '🅖 구글 프로필 가져오기 (사진+닉네임)'
+        // 이미 가져온 상태(현재 아바타가 그 URL이고 닉네임이 동일)면 버튼 노출 안 함
+        const curAvatar = localStorage.getItem('profileAvatar') || '';
+        const curName = localStorage.getItem('profileName') || '';
+        if (importedAvatar && curAvatar === importedAvatar && (!importedName || curName === importedName)) return;
+        const label = provider === 'kakao' ? '💬 카카오 프로필 가져오기'
+                    : provider === 'google' ? '🅖 구글 프로필 가져오기'
                     : '☁️ 계정 프로필 가져오기';
         importBtn.textContent = label;
         importBtn.style.display = 'block';

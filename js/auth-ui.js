@@ -90,6 +90,9 @@
 
     document.body.appendChild(btn);
     refresh();
+    // Supabase 세션 복원이 비동기로 늦게 완료되는 경우 INITIAL_SESSION 이벤트가
+    // 도착하기 전에 첫 refresh가 user=null로 끝나는 케이스가 있어 지연 retry 한 번 더.
+    setTimeout(refresh, 600);
   }
 
   async function refresh() {
@@ -223,8 +226,8 @@
       '<button id="apvClose" style="background:none;border:none;font-size:22px;cursor:pointer;color:#8B8B8B;padding:0;line-height:1" aria-label="닫기">×</button>',
       '</div>',
 
-      // 1. 카카오/구글 프로필 가져오기 — 상단
-      (importedName || importedAvatar) ?
+      // 1. 카카오/구글 프로필 가져오기 — 상단 (이미 가져온 상태면 숨김)
+      ((importedName || importedAvatar) && !(importedAvatar && cur.avatar === importedAvatar && (!importedName || cur.name === importedName))) ?
         '<button type="button" id="apvImport" style="width:100%;padding:12px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:' + (provider === 'kakao' ? '#FEE500' : '#fff') + ';color:#3C1E1E;border:' + (provider === 'kakao' ? 'none' : '1.5px solid #e0e0e0') + ';margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:10px">' +
           (importedAvatar ? '<img src="' + importedAvatar.replace(/"/g, '%22') + '" alt="" referrerpolicy="no-referrer" style="width:24px;height:24px;border-radius:50%;object-fit:cover;flex-shrink:0">' : '') +
           '<span>' + providerImportLabel + (importedName ? '<br><span style="font-size:11px;font-weight:500;opacity:0.7">' + htmlEscape(importedName) + '</span>' : '') + '</span>' +
