@@ -56,6 +56,25 @@
   function isUrl(v) { return v && /^https?:\/\//.test(v); }
   window.setAvatarEl = setAvatarEl; // share.js에서도 재사용
 
+  // localStorage 의 supabase auth token 직접 읽기 — getSession() 비동기 토큰 refresh
+  // 도중 일시적으로 null 반환하는 케이스를 우회하는 fast path.
+  function getStoredSupabaseUser() {
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (!key || key.indexOf('-auth-token') < 0) continue;
+        var raw = localStorage.getItem(key);
+        if (!raw) continue;
+        var parsed = JSON.parse(raw);
+        if (!parsed || !parsed.user || !parsed.expires_at) continue;
+        // expires_at(초) — 만료 30초 전부터 만료로 간주(여유)
+        if (parsed.expires_at * 1000 < Date.now() + 30000) continue;
+        return parsed.user;
+      }
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+
   function ensureAnim() {
     if (document.getElementById('authUiAnim')) return;
     var st = document.createElement('style');
@@ -138,8 +157,13 @@
     if (!btn) return;
     if (!window.SB || !window.SB.enabled) { btn.style.display = 'none'; return; }
 
-    var sess = await window.SB.getSession();
-    var user = sess && sess.user ? sess.user : null;
+    // Fast path: localStorage에서 supabase 토큰을 직접 읽어 user 즉시 결정
+    var user = getStoredSupabaseUser();
+    if (!user) {
+      // 토큰이 없거나 만료 임박 → 비동기 getSession 호출로 fallback
+      var sess = await window.SB.getSession();
+      user = sess && sess.user ? sess.user : null;
+    }
     if (user) {
       btn.title = '내 프로필';
       var avatar = localStorage.getItem('profileAvatar') || '👩';
@@ -164,8 +188,14 @@
   }
 
   async function onClick() {
-    var sess = window.SB ? await window.SB.getSession() : null;
-    if (sess && sess.user) {
+    // localStorage 빠른 경로 우선 — getSession 비동기 지연으로 잘못 로그인 모달
+    // 띄우는 케이스 방지
+    var user = getStoredSupabaseUser();
+    if (!user) {
+      var sess = window.SB ? await window.SB.getSession() : null;
+      user = sess && sess.user ? sess.user : null;
+    }
+    if (user) {
       showProfileViewer();
     } else {
       showLoginPicker();
