@@ -164,6 +164,10 @@
     .kinder-summary::-webkit-details-marker { display: none; }
     .kinder-chevron { transition: transform 0.2s ease; flex-shrink: 0; color: var(--text-mute, #999); }
     #kinderSection[open] .kinder-chevron { transform: rotate(180deg); }
+    /* 추천 페이지: 하단 select 바와 안 겹치도록 위로가기 버튼 더 올림 */
+    .scroll-top-btn {
+      bottom: calc(var(--nav-h) + 76px + env(safe-area-inset-bottom, 0px)) !important;
+    }
   </style>
 </head>
 <body>
