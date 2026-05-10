@@ -721,6 +721,8 @@
   }
 
   function attachCardListeners() {
+    // 더보기/재렌더링으로 새로 들어온 카드에도 보관된 선택 스타일 다시 적용
+    if (typeof reapplyRecSelectStyles === 'function') reapplyRecSelectStyles();
     document.querySelectorAll('.rec-browse-card').forEach(card => {
       if (card.dataset.listenerAttached) return;
       card.dataset.listenerAttached = 'true';
@@ -913,22 +915,52 @@
   }
 
   // ── 다중 선택 모드 (추천 → 내서재 [읽을 책] 일괄 담기) ────────────
+  // 선택 상태는 ISBN → book 객체 Map 으로 보관해 '더보기' 등으로 재렌더링되어도
+  // 보존되도록 함. DOM 스타일링은 매 렌더 후 reapplyRecSelectStyles() 가 다시 입힘.
+  const recSelected = new Map();
 
-  function toggleCardSelection(card) {
-    const isSel = card.classList.toggle('rec-selected');
-    if (isSel) {
+  function applyRecSelectedStyle(card, on) {
+    if (on) {
+      card.classList.add('rec-selected');
       card.style.outline = '3px solid #FF7B7B';
       card.style.outlineOffset = '2px';
       card.style.borderRadius = '12px';
     } else {
+      card.classList.remove('rec-selected');
       card.style.outline = '';
       card.style.outlineOffset = '';
+    }
+  }
+
+  function toggleCardSelection(card) {
+    let book;
+    try { book = JSON.parse(card.dataset.book); } catch { return; }
+    if (recSelected.has(book.isbn)) {
+      recSelected.delete(book.isbn);
+      applyRecSelectedStyle(card, false);
+    } else {
+      recSelected.set(book.isbn, book);
+      applyRecSelectedStyle(card, true);
     }
     updateRecSelectCount();
   }
 
+  // 카드가 DOM에 다시 그려진 직후(예: 더보기) 호출 — 보관된 선택을 다시 입힘
+  function reapplyRecSelectStyles() {
+    if (!recSelected.size) return;
+    document.querySelectorAll('.rec-browse-card').forEach(card => {
+      try {
+        const b = JSON.parse(card.dataset.book);
+        if (recSelected.has(b.isbn)) applyRecSelectedStyle(card, true);
+      } catch {}
+    });
+    updateRecSelectCount();
+  }
+  // 다른 함수에서 호출할 수 있게 노출
+  window.reapplyRecSelectStyles = reapplyRecSelectStyles;
+
   function updateRecSelectCount() {
-    const n = document.querySelectorAll('.rec-browse-card.rec-selected').length;
+    const n = recSelected.size;
     const lbl = document.getElementById('recSelectCount');
     if (lbl) lbl.textContent = `${n}권 선택됨`;
     const addBtn = document.getElementById('recSelectAddWant');
@@ -937,16 +969,12 @@
 
   function exitRecSelectMode() {
     window.__recSelectMode = false;
-    document.querySelectorAll('.rec-browse-card.rec-selected').forEach(c => {
-      c.classList.remove('rec-selected');
-      c.style.outline = '';
-      c.style.outlineOffset = '';
-    });
+    document.querySelectorAll('.rec-browse-card.rec-selected').forEach(c => applyRecSelectedStyle(c, false));
+    recSelected.clear();
     const idle = document.getElementById('recBarIdle');
     const picking = document.getElementById('recBarPicking');
     if (idle) idle.hidden = false;
     if (picking) picking.hidden = true;
-    // 위로가기 버튼 다시 보이게 (display 비움 → 기존 scroll handler가 토글)
     const top = document.getElementById('scrollTopBtn');
     if (top) top.style.display = '';
   }
@@ -957,7 +985,6 @@
     const picking = document.getElementById('recBarPicking');
     if (idle) idle.hidden = true;
     if (picking) picking.hidden = false;
-    // 위로가기 버튼 숨김 — 담기 버튼과 겹쳐 글자 가림
     const top = document.getElementById('scrollTopBtn');
     if (top) top.style.display = 'none';
     updateRecSelectCount();
@@ -973,15 +1000,11 @@
     if (cancelBtn) cancelBtn.addEventListener('click', exitRecSelectMode);
 
     if (addBtn) addBtn.addEventListener('click', () => {
-      const cards = document.querySelectorAll('.rec-browse-card.rec-selected');
-      if (!cards.length) return;
+      if (!recSelected.size) return;
       let added = 0, alreadyHave = 0;
-      cards.forEach(card => {
-        let book;
-        try { book = JSON.parse(card.dataset.book); } catch { return; }
+      recSelected.forEach(book => {
         const existing = Storage.getBookByIsbn ? Storage.getBookByIsbn(book.isbn) : null;
         if (existing) {
-          // 이미 서재에 있으면 status만 'want'로 갱신 (이미 'want'면 그대로)
           if (existing.status !== 'want') Storage.updateBook(existing.id, { status: 'want' });
           alreadyHave++;
           return;
@@ -1003,9 +1026,7 @@
       const parts = [];
       if (added) parts.push(`${added}권 새로 담음`);
       if (alreadyHave) parts.push(`${alreadyHave}권 이미 있음`);
-      const msg = '📚 ' + parts.join(' · ');
-      // 페이지 자체 토스트가 없으면 alert 대신 임시 div
-      simpleToast(msg);
+      simpleToast('📚 ' + parts.join(' · '));
       exitRecSelectMode();
     });
   }
