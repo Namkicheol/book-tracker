@@ -10,7 +10,8 @@
   function getPreferred() {
     const saved = localStorage.getItem(KEY);
     if (saved === 'dark' || saved === 'light') return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    // 핑크 밝음 모드가 기본 — 시스템 다크모드는 따라가지 않음
+    return 'light';
   }
 
   function apply(theme) {
@@ -22,11 +23,4 @@
 
   // Apply immediately (before paint) to avoid flash
   apply(getPreferred());
-
-  document.addEventListener('DOMContentLoaded', function () {
-    // Follow system changes if user hasn't set a manual preference
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
-      if (!localStorage.getItem(KEY)) apply(e.matches ? 'dark' : 'light');
-    });
-  });
 })();

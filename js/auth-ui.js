@@ -192,8 +192,8 @@
     var providerLabel = provider === 'kakao' ? '💬 카카오 계정'
                       : provider === 'google' ? '🅖 구글 계정'
                       : '☁️ 연결된 계정';
-    var providerImportLabel = provider === 'kakao' ? '💬 카카오 프로필 가져오기 (사진+닉네임)'
-                            : provider === 'google' ? '🅖 구글 프로필 가져오기 (사진+닉네임)'
+    var providerImportLabel = provider === 'kakao' ? '💬 카카오 프로필 가져오기'
+                            : provider === 'google' ? '🅖 구글 프로필 가져오기'
                             : '☁️ 계정 프로필 가져오기';
 
     var cur = {
