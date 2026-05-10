@@ -167,10 +167,21 @@
   </style>
 </head>
 <body>
-  <header class="rec-browse-header">
+  <header class="rec-browse-header" style="position:relative">
     <h1 class="rec-browse-title">📚 추천 도서</h1>
     <p class="rec-browse-subtitle">전문가들이 추천하는 초등 필독서</p>
+    <button id="recSelectBtn" type="button"
+      style="position:absolute;top:18px;right:14px;padding:6px 12px;font-size:12px;font-weight:700;border:1.5px solid rgba(255,255,255,0.55);background:rgba(255,255,255,0.18);color:#fff;border-radius:14px;cursor:pointer;backdrop-filter:blur(4px)">선택</button>
   </header>
+
+  <!-- 다중 선택 액션 바 (select mode 일 때만 노출) -->
+  <div id="recSelectBar" hidden
+    style="position:fixed;left:0;right:0;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));z-index:50;padding:10px 14px;background:#fff;border-top:1.5px solid rgba(255,184,198,0.5);box-shadow:0 -4px 16px rgba(255,158,158,0.15);display:flex;gap:8px;align-items:center">
+    <span id="recSelectCount" style="font-size:13px;font-weight:700;color:#FF6B6B">0권 선택됨</span>
+    <span style="flex:1"></span>
+    <button id="recSelectCancel" type="button" style="padding:9px 14px;font-size:13px;font-weight:700;border:1.5px solid #eee;background:#fff;color:#8B8B8B;border-radius:10px;cursor:pointer">취소</button>
+    <button id="recSelectAddWant" type="button" style="padding:9px 16px;font-size:13px;font-weight:800;border:none;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff;border-radius:10px;cursor:pointer">📚 내서재 [읽을 책]에 담기</button>
+  </div>
 
   <div class="rec-search-bar">
     <input type="search" id="recSearch" class="rec-search-input" placeholder="제목·저자 검색…" autocomplete="off">
@@ -267,6 +278,6 @@
   <script src="js/api.js?v=20260504d"></script>
   <script src="js/library-api.js?v=20260507b"></script>
   <script src="js/book-preview.js?v=20260510a"></script>
-  <script src="js/recommendations.js?v=20260510e"></script>
+  <script src="js/recommendations.js?v=20260510a"></script>
 </body>
 </html>

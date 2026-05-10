@@ -48,6 +48,7 @@
       attachSearchListener();
       attachBannerDelegation();
       attachSourceViewListeners();
+      attachRecSelectMode();
 
       // 책 미리보기 모달의 추천 기관 배지 → 추천 기관 전용 페이지 열기
       window.openSourceView = openSourceView;
@@ -724,7 +725,14 @@
       if (card.dataset.listenerAttached) return;
       card.dataset.listenerAttached = 'true';
 
-      card.addEventListener('click', () => {
+      card.addEventListener('click', (e) => {
+        // 선택 모드면 미리보기 대신 토글
+        if (window.__recSelectMode) {
+          e.preventDefault();
+          e.stopPropagation();
+          toggleCardSelection(card);
+          return;
+        }
         const bookData = JSON.parse(card.dataset.book);
 
         // 학년별 섹션이면 sectionState 캐시의 전체 filteredBooks를 사용
@@ -902,6 +910,115 @@
     document.querySelectorAll('.rec-browse-grid, .tb-grid, .kinder-book-grid').forEach(el => {
       el.classList.add('list-view');
     });
+  }
+
+  // ── 다중 선택 모드 (추천 → 내서재 [읽을 책] 일괄 담기) ────────────
+
+  function toggleCardSelection(card) {
+    const isSel = card.classList.toggle('rec-selected');
+    if (isSel) {
+      card.style.outline = '3px solid #FF7B7B';
+      card.style.outlineOffset = '2px';
+      card.style.borderRadius = '12px';
+    } else {
+      card.style.outline = '';
+      card.style.outlineOffset = '';
+    }
+    updateRecSelectCount();
+  }
+
+  function updateRecSelectCount() {
+    const n = document.querySelectorAll('.rec-browse-card.rec-selected').length;
+    const lbl = document.getElementById('recSelectCount');
+    if (lbl) lbl.textContent = `${n}권 선택됨`;
+    const addBtn = document.getElementById('recSelectAddWant');
+    if (addBtn) addBtn.disabled = n === 0;
+  }
+
+  function exitRecSelectMode() {
+    window.__recSelectMode = false;
+    document.querySelectorAll('.rec-browse-card.rec-selected').forEach(c => {
+      c.classList.remove('rec-selected');
+      c.style.outline = '';
+      c.style.outlineOffset = '';
+    });
+    const bar = document.getElementById('recSelectBar');
+    if (bar) bar.hidden = true;
+    const btn = document.getElementById('recSelectBtn');
+    if (btn) btn.textContent = '선택';
+  }
+
+  function enterRecSelectMode() {
+    window.__recSelectMode = true;
+    const bar = document.getElementById('recSelectBar');
+    if (bar) bar.hidden = false;
+    const btn = document.getElementById('recSelectBtn');
+    if (btn) btn.textContent = '✕ 닫기';
+    updateRecSelectCount();
+  }
+
+  function attachRecSelectMode() {
+    const btn = document.getElementById('recSelectBtn');
+    const cancelBtn = document.getElementById('recSelectCancel');
+    const addBtn = document.getElementById('recSelectAddWant');
+    if (!btn || !window.Storage) return;
+
+    btn.addEventListener('click', () => {
+      if (window.__recSelectMode) exitRecSelectMode();
+      else enterRecSelectMode();
+    });
+    if (cancelBtn) cancelBtn.addEventListener('click', exitRecSelectMode);
+
+    if (addBtn) addBtn.addEventListener('click', () => {
+      const cards = document.querySelectorAll('.rec-browse-card.rec-selected');
+      if (!cards.length) return;
+      let added = 0, alreadyHave = 0;
+      cards.forEach(card => {
+        let book;
+        try { book = JSON.parse(card.dataset.book); } catch { return; }
+        const existing = Storage.getBookByIsbn ? Storage.getBookByIsbn(book.isbn) : null;
+        if (existing) {
+          // 이미 서재에 있으면 status만 'want'로 갱신 (이미 'want'면 그대로)
+          if (existing.status !== 'want') Storage.updateBook(existing.id, { status: 'want' });
+          alreadyHave++;
+          return;
+        }
+        Storage.saveBook({
+          isbn: book.isbn,
+          title: book.title,
+          authors: book.authors || (book.author ? [book.author] : []),
+          publisher: book.publisher,
+          thumbnail: book.thumbnail,
+          contents: book.contents || '',
+          language: book.language || 'ko',
+          status: 'want',
+          categoryId: book.categoryId,
+          categoryName: book.categoryName,
+        });
+        added++;
+      });
+      const parts = [];
+      if (added) parts.push(`${added}권 새로 담음`);
+      if (alreadyHave) parts.push(`${alreadyHave}권 이미 있음`);
+      const msg = '📚 ' + parts.join(' · ');
+      // 페이지 자체 토스트가 없으면 alert 대신 임시 div
+      simpleToast(msg);
+      exitRecSelectMode();
+    });
+  }
+
+  function simpleToast(msg) {
+    let t = document.getElementById('recToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'recToast';
+      t.style.cssText = 'position:fixed;left:50%;top:80px;transform:translateX(-50%);z-index:10001;padding:12px 20px;background:#4A4A4A;color:#fff;border-radius:14px;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,0.2);transition:opacity .3s;opacity:0';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.style.opacity = '1';
+    clearTimeout(simpleToast._tid);
+    simpleToast._tid = setTimeout(() => { t.style.opacity = '0'; }, 2400);
   }
 
   // ── Scroll to Top ────────────────────────────────────────────
