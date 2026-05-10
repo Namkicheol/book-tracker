@@ -922,7 +922,7 @@
       city:   localStorage.getItem('profileCity')   || '',
       district: localStorage.getItem('profileDistrict') || '',
       school: localStorage.getItem('profileSchool') || '',
-      privacy: localStorage.getItem('profilePrivacy') || 'school',
+      privacy: localStorage.getItem('profilePrivacy') || 'public',
       // legacy free-text 지역 — city/district 미설정 시 fallback 표시
       region: localStorage.getItem('profileRegion') || '',
       goal:   parseInt(localStorage.getItem('monthlyGoal') || '20', 10),
@@ -1016,8 +1016,8 @@
             <span style="font-size:12px;font-weight:700;color:var(--text-gray)">공개 범위 <span style="font-weight:400;color:#B5B5B5">(누가 내 서재를 볼 수 있나요)</span></span>
             <select id="profEditPrivacy"
               style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
-              <option value="school"${cur.privacy==='school'?' selected':''}>👯 같은 학교 친구들에게만 (추천)</option>
-              <option value="public"${cur.privacy==='public'?' selected':''}>🌍 전체 공개 — 모든 엄마들에게</option>
+              <option value="public"${cur.privacy==='public'?' selected':''}>🌍 전체 공개 — 모든 엄마들에게 (기본)</option>
+              <option value="school"${cur.privacy==='school'?' selected':''}>👯 같은 학교 친구들에게만</option>
               <option value="private"${cur.privacy==='private'?' selected':''}>🔒 비공개 — 나만 보기</option>
             </select>
           </label>
