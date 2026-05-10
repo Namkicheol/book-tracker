@@ -973,18 +973,20 @@
     recSelected.clear();
     const idle = document.getElementById('recBarIdle');
     const picking = document.getElementById('recBarPicking');
-    if (idle) idle.hidden = false;
-    if (picking) picking.hidden = true;
+    // 인라인 style.display 가 [hidden] 속성을 무력화시키므로 직접 토글
+    if (idle) idle.style.display = 'flex';
+    if (picking) picking.style.display = 'none';
     const top = document.getElementById('scrollTopBtn');
     if (top) top.style.display = '';
+    updateRecSelectCount();
   }
 
   function enterRecSelectMode() {
     window.__recSelectMode = true;
     const idle = document.getElementById('recBarIdle');
     const picking = document.getElementById('recBarPicking');
-    if (idle) idle.hidden = true;
-    if (picking) picking.hidden = false;
+    if (idle) idle.style.display = 'none';
+    if (picking) picking.style.display = 'flex';
     const top = document.getElementById('scrollTopBtn');
     if (top) top.style.display = 'none';
     updateRecSelectCount();
