@@ -35,12 +35,18 @@
     return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>';
   }
 
+  // 외부 이미지 URL을 https 로 강제 (http://k.kakaocdn.net 등 mixed-content 차단 방지)
+  function toHttps(u) {
+    return typeof u === 'string' ? u.replace(/^http:\/\//, 'https://') : u;
+  }
+
   // avatar 값(URL 또는 emoji) → DOM 엘리먼트에 적절히 렌더
   function setAvatarEl(el, value) {
     if (!el) return;
     if (value && /^https?:\/\//.test(value)) {
       el.textContent = '';
-      el.innerHTML = '<img src="' + value.replace(/"/g, '%22') + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block">';
+      var safe = toHttps(value).replace(/"/g, '%22');
+      el.innerHTML = '<img src="' + safe + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block">';
     } else {
       el.innerHTML = '';
       el.textContent = value || '👩';
@@ -138,7 +144,8 @@
       btn.title = '내 프로필';
       var avatar = localStorage.getItem('profileAvatar') || '👩';
       if (isUrl(avatar)) {
-        btn.innerHTML = '<img src="' + avatar.replace(/"/g, '%22') + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block">';
+        var safe = toHttps(avatar).replace(/"/g, '%22');
+        btn.innerHTML = '<img src="' + safe + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block">';
         btn.style.padding = '0';
       } else {
         btn.innerHTML = '<span style="font-size:20px;line-height:1">' + avatar + '</span>';

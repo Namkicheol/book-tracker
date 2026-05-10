@@ -664,10 +664,17 @@
 
     function saveWithStatus(status) {
       const existing = Storage.getBookByIsbn ? Storage.getBookByIsbn(book.isbn) : null;
+      // 읽을 책/읽는 중은 추천 페이지에 머물러 여러 권 연속 담기 가능. 기록(status=null)은
+      // 별점·한줄평 이어 적도록 detail.html 로 이동.
+      const stayHere = status === 'want' || status === 'reading';
       if (existing) {
         if (status !== null) Storage.updateBook(existing.id, { status });
-        const label = status === 'want' ? '읽을 책으로 저장' : status === 'reading' ? '읽는 중으로 저장' : '이미 서재에 있어요';
+        const label = status === 'want' ? '✅ 읽을 책으로 저장' : status === 'reading' ? '📖 읽는 중으로 저장' : '이미 서재에 있어요';
         toast(label);
+        if (stayHere) {
+          closePreview(modal);
+          return;
+        }
         setTimeout(() => location.href = `detail.html?id=${encodeURIComponent(existing.id)}`, 600);
         return;
       }
@@ -683,9 +690,10 @@
         categoryId:   book.categoryId   || (window.API && API.extractCategoryId ? API.extractCategoryId(detail || {}) : undefined),
         categoryName: book.categoryName || (detail && detail.categoryName),
       });
-      const label = status === 'want' ? `"${book.title}" 읽을 책으로 저장` : status === 'reading' ? `"${book.title}" 읽는 중으로 저장` : `"${book.title}" 기록됨`;
+      const label = status === 'want' ? `✅ "${book.title}" 읽을 책으로 저장` : status === 'reading' ? `📖 "${book.title}" 읽는 중으로 저장` : `"${book.title}" 기록됨`;
       toast(label);
       closePreview(modal);
+      if (stayHere) return;
       setTimeout(() => location.href = `detail.html?id=${encodeURIComponent(saved.id)}&new=1`, 700);
     }
 
