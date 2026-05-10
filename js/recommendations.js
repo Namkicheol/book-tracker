@@ -119,8 +119,9 @@
 
     const grades = [
       { id: '유아',        icon: '🐣', name: '유치원 (5~7세)'        },
-      { id: '초등 저학년', icon: '📖', name: '초등 저학년 (1-3학년)' },
-      { id: '초등 고학년', icon: '📕', name: '초등 고학년 (4-6학년)' },
+      { id: '초등 저학년', icon: '📗', name: '초등 저학년 (1-2학년)' },
+      { id: '초등 중학년', icon: '📘', name: '초등 중학년 (3-4학년)' },
+      { id: '초등 고학년', icon: '📕', name: '초등 고학년 (5-6학년)' },
     ];
 
     const INITIAL_SHOW = 8;
@@ -320,7 +321,7 @@
 
   // ── 추천 기관 점프/전체 학년 ─────────────────────────────────
 
-  const ALL_GRADE_IDS = ['유아', '초등 저학년', '초등 고학년'];
+  const ALL_GRADE_IDS = ['유아', '초등 저학년', '초등 중학년', '초등 고학년'];
 
   function ensureSectionState(gradeId) {
     if (!sectionState[gradeId]) {
@@ -402,7 +403,8 @@
     const tabs = [
       { id: 'all',         label: '전체',  icon: '📚' },
       { id: '유아',         label: '유아',  icon: '🐣' },
-      { id: '초등 저학년',  label: '저학년', icon: '📖' },
+      { id: '초등 저학년',  label: '저학년', icon: '📗' },
+      { id: '초등 중학년',  label: '중학년', icon: '📘' },
       { id: '초등 고학년',  label: '고학년', icon: '📕' },
     ];
 
@@ -431,7 +433,7 @@
       books = books.filter(b => b.targetAge === sourceViewState.grade);
     }
     // 학년 → 인기순 정렬
-    const gradeOrder = { '유아': 0, '초등 저학년': 1, '초등 고학년': 2 };
+    const gradeOrder = { '유아': 0, '초등 저학년': 1, '초등 중학년': 2, '초등 고학년': 3 };
     books.sort((a, b) => {
       const ga = gradeOrder[a.targetAge] ?? 9;
       const gb = gradeOrder[b.targetAge] ?? 9;
