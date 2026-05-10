@@ -70,9 +70,13 @@
 
   async function signInWithKakao() {
     if (!client) { alert('로그인 기능이 비활성 상태입니다.'); return; }
+    // 카카오 이메일(account_email)은 비즈 앱 검수 필요 → 닉네임·프로필사진만 요청
     return client.auth.signInWithOAuth({
       provider: 'kakao',
-      options: { redirectTo: getRedirectTo() }
+      options: {
+        redirectTo: getRedirectTo(),
+        scopes: 'profile_nickname profile_image'
+      }
     });
   }
 
