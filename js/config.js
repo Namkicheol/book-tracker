@@ -34,3 +34,14 @@ var WORKER_URL = 'https://book-tracker-aladin.obangti.workers.dev';
  * 🔑 API 키를 받아오신 후 아래에 입력하세요:
  */
 var LIBRARY_API_KEY = 'b660ed963467358ba4bc5cbaf251dda8af7f50573bc69967d75f53ef5c281229';
+
+/**
+ * Supabase 백엔드 (Auth · DB · Storage)
+ *
+ * anon key는 클라이언트 노출 안전 — 진짜 방어는 Supabase RLS(Row Level Security)에서.
+ * service_role key는 절대 클라이언트·git에 두지 마세요 (관리자 전용).
+ *
+ * 비워두면 모든 Supabase 호출이 비활성화되고 앱은 localStorage 전용 모드로 동작합니다.
+ */
+var SUPABASE_URL = 'https://fjmiimpidlwuzuvnsduh.supabase.co';
+var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZqbWlpbXBpZGx3dXp1dm5zZHVoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzODgwNjIsImV4cCI6MjA5Mzk2NDA2Mn0.VPRGgbavB4w7SkH3jcOM9GTqXOPTJVRX9fPU_E-0w18';

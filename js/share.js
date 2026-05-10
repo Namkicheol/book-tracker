@@ -230,7 +230,105 @@
     renderBadges();
     renderRanking();
     wireEvents();
+    wireAuth();
     checkEncouragement();
+  }
+
+  // ── Auth (Supabase) ─────────────────────────────────────────
+  // 비로그인 상태도 정상 동작 — 로그인은 랭킹/소셜 기능 활성화용
+  function wireAuth() {
+    if (!window.SB || !window.SB.enabled) {
+      // Supabase 비활성: 로그인 버튼 자체를 숨김
+      const btn = document.getElementById('authBtn');
+      if (btn) btn.style.display = 'none';
+      return;
+    }
+
+    refreshAuthUI();
+
+    const btn = document.getElementById('authBtn');
+    if (btn) btn.addEventListener('click', onAuthBtnClick);
+
+    window.SB.onAuthChange(async (event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        if (window.Sync) {
+          const row = await window.Sync.syncProfileOnSignIn();
+          if (row) {
+            loadProfile();
+            myStats.goalTarget = row.monthly_goal || myStats.goalTarget;
+            renderGoal();
+          }
+        }
+        showToast('✅ 로그인 완료');
+      }
+      if (event === 'SIGNED_OUT') {
+        showToast('로그아웃 되었어요');
+      }
+      refreshAuthUI();
+    });
+  }
+
+  async function refreshAuthUI() {
+    const btn = document.getElementById('authBtn');
+    if (!btn) return;
+    const user = await window.SB.getUser();
+    if (user) {
+      btn.title = '로그아웃';
+      btn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>`;
+    } else {
+      btn.title = '로그인';
+      btn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+        </svg>`;
+    }
+  }
+
+  async function onAuthBtnClick() {
+    const user = await window.SB.getUser();
+    if (user) {
+      if (confirm('로그아웃 하시겠어요?')) await window.SB.signOut();
+      return;
+    }
+    showLoginPicker();
+  }
+
+  function showLoginPicker() {
+    const modal = document.createElement('div');
+    modal.className = 'friend-modal';
+    modal.innerHTML = `
+      <div class="friend-modal-content" style="max-width:340px;text-align:center">
+        <div class="friend-modal-header">
+          <div class="friend-info" style="text-align:center;flex:1">
+            <div class="friend-name">로그인</div>
+            <div class="friend-stats">기기 간 동기화·랭킹 참여</div>
+          </div>
+          <button class="friend-close" id="loginClose">✕</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
+          <button id="loginKakao" type="button"
+            style="padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;background:#FEE500;color:#3C1E1E">
+            💬 카카오로 시작하기
+          </button>
+          <button id="loginGoogle" type="button"
+            style="padding:14px;border:1.5px solid #ddd;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;background:#fff;color:#333">
+            <span style="color:#4285F4">G</span> 구글로 시작하기
+          </button>
+        </div>
+        <div style="margin-top:14px;font-size:11px;color:var(--text-gray);line-height:1.5">
+          기존 데이터(서재·폴더)는 그대로 유지되고<br>로그인 시 다른 기기와 동기화돼요
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    const close = () => modal.remove();
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
+    modal.querySelector('#loginClose').addEventListener('click', close);
+    modal.querySelector('#loginKakao').addEventListener('click', () => window.SB.signInWithKakao());
+    modal.querySelector('#loginGoogle').addEventListener('click', () => window.SB.signInWithGoogle());
   }
 
   // ── 프로필 로드 ──────────────────────────────────────────────
@@ -858,6 +956,17 @@
 
       close();
       showToast('✅ 프로필이 저장됐어요');
+
+      // 로그인 상태면 Supabase에도 저장 (실패해도 localStorage는 이미 반영됨)
+      if (window.SB && window.SB.enabled) {
+        window.SB.upsertProfile({
+          nickname: name,
+          avatar: localStorage.getItem('profileAvatar') || '👩',
+          grade: grade,
+          region: region,
+          monthly_goal: goal
+        }).catch(() => {});
+      }
     });
   }
 
