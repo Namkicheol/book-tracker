@@ -25,11 +25,13 @@
     '⭐ 우리반·또래 친구들의 인기책 둘러보기 <span style="color:#FF9E9E;font-weight:700">(곧)</span>'
   ];
 
+  // 로그인 화살표: 박스 밖 → 박스 안 (들어가는)
   function svgLogIn() {
     return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>';
   }
-  function svgUser() {
-    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+  // 로그아웃 화살표: 박스 안 → 박스 밖 (나가는)
+  function svgLogOut() {
+    return '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>';
   }
 
   function injectFloatingButton() {
@@ -73,7 +75,7 @@
     var user = sess && sess.user ? sess.user : null;
     if (user) {
       btn.title = '내 계정 (로그아웃)';
-      btn.innerHTML = svgUser();
+      btn.innerHTML = svgLogOut();
     } else {
       btn.title = '로그인';
       btn.innerHTML = svgLogIn();
