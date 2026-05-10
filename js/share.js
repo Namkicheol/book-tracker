@@ -846,11 +846,18 @@
     const cur = {
       name:   localStorage.getItem('profileName')   || '책읽는엄마',
       grade:  localStorage.getItem('profileGrade')  || '초5',
-      region: localStorage.getItem('profileRegion') || '강남구',
+      city:   localStorage.getItem('profileCity')   || '',
+      district: localStorage.getItem('profileDistrict') || '',
+      school: localStorage.getItem('profileSchool') || '',
+      // legacy free-text 지역 — city/district 미설정 시 fallback 표시
+      region: localStorage.getItem('profileRegion') || '',
       goal:   parseInt(localStorage.getItem('monthlyGoal') || '20', 10),
       avatar: localStorage.getItem('profileAvatar') || '👩',
     };
     const grades = ['초1','초2','초3','초4','초5','초6','중1','중2','중3','고1','고2','고3','기타'];
+    const REGIONS = window.REGIONS || {};
+    const cities = Object.keys(REGIONS);
+    const initialDistricts = (cur.city && REGIONS[cur.city]) ? REGIONS[cur.city] : [];
 
     // 랭킹에 노출되는 책 권수 (myStats: weekBooks/monthBooks/yearBooks)
     const rankWeek  = (myStats && typeof myStats.weekBooks  === 'number') ? myStats.weekBooks  : 0;
@@ -900,10 +907,31 @@
               ${grades.map(g => `<option value="${g}"${g===cur.grade?' selected':''}>${g}</option>`).join('')}
             </select>
           </label>
-          <label style="display:flex;flex-direction:column;gap:6px">
-            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">지역 (예: 강남구, 분당)</span>
-            <input id="profEditRegion" type="text" value="${escapeAttr(cur.region)}" maxlength="20"
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12px;font-weight:700;color:var(--text-gray)">시·도</span>
+              <select id="profEditCity"
+                style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
+                <option value="">선택</option>
+                ${cities.map(c => `<option value="${escapeAttr(c)}"${c===cur.city?' selected':''}>${c}</option>`).join('')}
+              </select>
+            </label>
+            <label style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-size:12px;font-weight:700;color:var(--text-gray)">시/군/구</span>
+              <select id="profEditDistrict"
+                style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff"${initialDistricts.length===0?' disabled':''}>
+                <option value="">${initialDistricts.length===0?'(해당 없음)':'선택'}</option>
+                ${initialDistricts.map(d => `<option value="${escapeAttr(d)}"${d===cur.district?' selected':''}>${d}</option>`).join('')}
+              </select>
+            </label>
+          </div>
+          ${(!cur.city && cur.region) ? `<div style="font-size:11px;color:#8B8B8B;margin-top:-6px">기존 지역 입력값: <span style="color:#FF7B7B;font-weight:700">${escapeAttr(cur.region)}</span> — 위에서 시·도/시군구를 선택해 주세요</div>` : ''}
+          <label style="display:flex;flex-direction:column;gap:6px;position:relative">
+            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">학교 / 유치원 <span style="font-weight:400;color:#B5B5B5">(선택, 같은 학교끼리 묶이려면 선택해 주세요)</span></span>
+            <input id="profEditSchool" type="text" value="${escapeAttr(cur.school)}" maxlength="40"
+              placeholder="예: 당감초등학교 (입력하면 검색 결과 표시)" autocomplete="off"
               style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
+            <div id="profEditSchoolList" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--border);border-radius:10px;margin-top:4px;max-height:240px;overflow-y:auto;z-index:10;box-shadow:0 6px 20px rgba(0,0,0,0.08)"></div>
           </label>
           <label style="display:flex;flex-direction:column;gap:6px">
             <span style="font-size:12px;font-weight:700;color:var(--text-gray)">이번 달 목표 (권)</span>
@@ -998,16 +1026,122 @@
       });
     }
 
-    modal.querySelector('#profEditSave').addEventListener('click', () => {
-      const name   = modal.querySelector('#profEditName').value.trim()   || cur.name;
-      const grade  = modal.querySelector('#profEditGrade').value         || cur.grade;
-      const region = modal.querySelector('#profEditRegion').value.trim() || cur.region;
-      const goal   = Math.max(1, parseInt(modal.querySelector('#profEditGoal').value, 10) || cur.goal);
+    // 시·도 변경 시 시/군/구 옵션 cascading 갱신
+    const citySel = modal.querySelector('#profEditCity');
+    const distSel = modal.querySelector('#profEditDistrict');
+    if (citySel && distSel) {
+      citySel.addEventListener('change', () => {
+        const city = citySel.value;
+        const list = (city && REGIONS[city]) ? REGIONS[city] : [];
+        distSel.innerHTML = `<option value="">${list.length===0?'(해당 없음)':'선택'}</option>` +
+          list.map(d => `<option value="${escapeAttr(d)}">${d}</option>`).join('');
+        distSel.disabled = list.length === 0;
+      });
+    }
 
-      localStorage.setItem('profileName',   name);
-      localStorage.setItem('profileGrade',  grade);
-      localStorage.setItem('profileRegion', region);
-      localStorage.setItem('monthlyGoal',   String(goal));
+    // 학교/유치원 자동완성 — 카카오 Local 키워드 검색 (debounced 300ms)
+    const schoolInput = modal.querySelector('#profEditSchool');
+    const schoolList = modal.querySelector('#profEditSchoolList');
+    if (schoolInput && schoolList && window.KAKAO_API_KEY) {
+      let debounceTimer = null;
+      let lastQuery = '';
+
+      const closeList = () => { schoolList.style.display = 'none'; schoolList.innerHTML = ''; };
+
+      schoolInput.addEventListener('input', () => {
+        const q = schoolInput.value.trim();
+        if (q.length < 2) { closeList(); return; }
+        if (q === lastQuery) return;
+        lastQuery = q;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => searchSchool(q), 300);
+      });
+
+      schoolInput.addEventListener('blur', () => {
+        // 클릭 이벤트가 처리될 시간을 줌
+        setTimeout(closeList, 200);
+      });
+
+      // 외부 클릭 시 닫기
+      modal.addEventListener('click', (e) => {
+        if (!schoolInput.contains(e.target) && !schoolList.contains(e.target)) closeList();
+      });
+
+      async function searchSchool(query) {
+        try {
+          // 학교(SC4) + 어린이집/유치원(PS3) 두 카테고리 병렬 검색, 합쳐서 표시
+          const headers = { 'Authorization': `KakaoAK ${window.KAKAO_API_KEY}` };
+          const url = (cat) => `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(query)}&category_group_code=${cat}&size=8`;
+          const fetchOne = (cat) => fetch(url(cat), { headers }).then(r => {
+            if (r.status === 401 || r.status === 403) {
+              console.warn('[school search] 카카오 Local API 권한 없음 — Kakao Developers > 내 앱 > 플랫폼에 현재 도메인 등록 + 카카오맵/로컬 활성 필요.');
+              return { __fail: true, documents: [] };
+            }
+            return r.ok ? r.json() : { documents: [] };
+          });
+          const [r1, r2] = await Promise.all([fetchOne('SC4'), fetchOne('PS3')]);
+          // API가 막혀 있으면 자동완성 dropdown 자체를 띄우지 않음 (free text 그대로 사용)
+          if (r1.__fail || r2.__fail) { closeList(); return; }
+          const docs = [...(r1.documents || []), ...(r2.documents || [])];
+          // 같은 시·도/시군구가 선택돼 있으면 그 지역 우선 정렬
+          const curCity = (citySel && citySel.value) || '';
+          const curDist = (distSel && distSel.value) || '';
+          docs.sort((a, b) => {
+            const aHere = (curCity && a.address_name && a.address_name.indexOf(curCity.replace(/(특별|광역|특별자치).*$/, '')) === 0) ? 1 : 0;
+            const bHere = (curCity && b.address_name && b.address_name.indexOf(curCity.replace(/(특별|광역|특별자치).*$/, '')) === 0) ? 1 : 0;
+            const aDist = (curDist && a.address_name && a.address_name.indexOf(curDist) >= 0) ? 1 : 0;
+            const bDist = (curDist && b.address_name && b.address_name.indexOf(curDist) >= 0) ? 1 : 0;
+            return (bHere + bDist) - (aHere + aDist);
+          });
+          if (docs.length === 0) {
+            schoolList.innerHTML = '<div style="padding:10px 12px;font-size:12px;color:#8B8B8B">검색 결과가 없어요. 직접 입력하셔도 돼요.</div>';
+            schoolList.style.display = 'block';
+            return;
+          }
+          schoolList.innerHTML = docs.slice(0, 12).map(d => {
+            const cat = d.category_group_code === 'PS3' ? '🧸' : '🏫';
+            return `<button type="button" class="school-pick" data-name="${escapeAttr(d.place_name)}"
+              style="display:block;width:100%;text-align:left;padding:10px 12px;border:none;background:#fff;cursor:pointer;border-bottom:1px solid #f0f0f0;font-family:inherit">
+              <div style="font-size:13px;font-weight:700;color:#4A4A4A">${cat} ${escapeAttr(d.place_name)}</div>
+              <div style="font-size:11px;color:#8B8B8B;margin-top:2px">${escapeAttr(d.address_name || d.road_address_name || '')}</div>
+            </button>`;
+          }).join('');
+          schoolList.style.display = 'block';
+          schoolList.querySelectorAll('.school-pick').forEach(btn => {
+            btn.addEventListener('click', () => {
+              schoolInput.value = btn.dataset.name;
+              closeList();
+            });
+          });
+        } catch (e) {
+          // 카카오 API 실패해도 자유 입력은 가능
+          console.warn('[school search]', e);
+        }
+      }
+    }
+
+    modal.querySelector('#profEditSave').addEventListener('click', () => {
+      const name     = modal.querySelector('#profEditName').value.trim()     || cur.name;
+      const grade    = modal.querySelector('#profEditGrade').value           || cur.grade;
+      const city     = modal.querySelector('#profEditCity').value            || '';
+      const district = modal.querySelector('#profEditDistrict').value        || '';
+      const school   = modal.querySelector('#profEditSchool').value.trim()   || '';
+      const goal     = Math.max(1, parseInt(modal.querySelector('#profEditGoal').value, 10) || cur.goal);
+
+      // 표시용 region: "부산 · 부산진구" 또는 단일/legacy fallback
+      const SHORT = window.REGION_SHORT || {};
+      let region = '';
+      if (city && district) region = `${SHORT[city] || city} · ${district}`;
+      else if (city)        region = SHORT[city] || city;
+      else                  region = cur.region || '';
+
+      localStorage.setItem('profileName',     name);
+      localStorage.setItem('profileGrade',    grade);
+      localStorage.setItem('profileCity',     city);
+      localStorage.setItem('profileDistrict', district);
+      localStorage.setItem('profileSchool',   school);
+      localStorage.setItem('profileRegion',   region); // 표시용 통일 문자열
+      localStorage.setItem('monthlyGoal',     String(goal));
 
       document.getElementById('profileName').textContent   = name;
       document.getElementById('profileGrade').textContent  = grade;
