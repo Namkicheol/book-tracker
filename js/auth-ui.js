@@ -69,7 +69,8 @@
     if (!btn) return;
     if (!window.SB || !window.SB.enabled) { btn.style.display = 'none'; return; }
 
-    var user = await window.SB.getUser();
+    var sess = await window.SB.getSession();
+    var user = sess && sess.user ? sess.user : null;
     if (user) {
       btn.title = '내 계정 (로그아웃)';
       btn.innerHTML = svgUser();
@@ -81,13 +82,13 @@
 
   async function isLoggedIn() {
     if (!window.SB || !window.SB.enabled) return false;
-    var u = await window.SB.getUser();
-    return !!u;
+    var s = await window.SB.getSession();
+    return !!(s && s.user);
   }
 
   async function onClick() {
-    var user = window.SB ? await window.SB.getUser() : null;
-    if (user) {
+    var sess = window.SB ? await window.SB.getSession() : null;
+    if (sess && sess.user) {
       if (confirm('로그아웃 하시겠어요?')) await window.SB.signOut();
     } else {
       showLoginPicker();
