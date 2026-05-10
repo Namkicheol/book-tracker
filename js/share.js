@@ -297,38 +297,9 @@
   }
 
   function showLoginPicker() {
-    const modal = document.createElement('div');
-    modal.className = 'friend-modal';
-    modal.innerHTML = `
-      <div class="friend-modal-content" style="max-width:340px;text-align:center">
-        <div class="friend-modal-header">
-          <div class="friend-info" style="text-align:center;flex:1">
-            <div class="friend-name">로그인</div>
-            <div class="friend-stats">기기 간 동기화·랭킹 참여</div>
-          </div>
-          <button class="friend-close" id="loginClose">✕</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;margin-top:14px">
-          <button id="loginKakao" type="button"
-            style="padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;background:#FEE500;color:#3C1E1E">
-            💬 카카오로 시작하기
-          </button>
-          <button id="loginGoogle" type="button"
-            style="padding:14px;border:1.5px solid #ddd;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;background:#fff;color:#333">
-            <span style="color:#4285F4">G</span> 구글로 시작하기
-          </button>
-        </div>
-        <div style="margin-top:14px;font-size:11px;color:var(--text-gray);line-height:1.5">
-          기존 데이터(서재·폴더)는 그대로 유지되고<br>로그인 시 다른 기기와 동기화돼요
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-    const close = () => modal.remove();
-    modal.addEventListener('click', e => { if (e.target === modal) close(); });
-    modal.querySelector('#loginClose').addEventListener('click', close);
-    modal.querySelector('#loginKakao').addEventListener('click', () => window.SB.signInWithKakao());
-    modal.querySelector('#loginGoogle').addEventListener('click', () => window.SB.signInWithGoogle());
+    if (window.AuthUI && window.AuthUI.showLoginPicker) {
+      window.AuthUI.showLoginPicker();
+    }
   }
 
   // ── 프로필 로드 ──────────────────────────────────────────────
@@ -720,15 +691,7 @@
 
     const profileName = document.getElementById('profileName');
     if (profileName) {
-      profileName.addEventListener('click', () => {
-        const current = localStorage.getItem('profileName') || '책읽는엄마';
-        const newName = prompt('닉네임을 입력하세요', current);
-        if (newName && newName.trim()) {
-          localStorage.setItem('profileName', newName.trim());
-          profileName.textContent = newName.trim();
-          showToast('✅ 닉네임이 변경되었어요!');
-        }
-      });
+      profileName.addEventListener('click', showProfileEditor);
       profileName.style.cursor = 'pointer';
       profileName.style.textDecoration = 'underline';
       profileName.style.textDecorationStyle = 'dotted';
@@ -892,6 +855,8 @@
           <button class="friend-close" id="profEditClose">✕</button>
         </div>
 
+        <div id="profEditAuthBanner" style="display:none"></div>
+
         <div style="display:flex;flex-direction:column;gap:14px">
           <label style="display:flex;flex-direction:column;gap:6px">
             <span style="font-size:12px;font-weight:700;color:var(--text-gray)">닉네임</span>
@@ -937,6 +902,31 @@
         avatarBtn.textContent = localStorage.getItem('profileAvatar') || '👩';
       });
     });
+
+    // 비로그인 상태면 모달 상단에 로그인 CTA 배너 노출
+    if (window.SB && window.SB.enabled) {
+      window.SB.getUser().then(user => {
+        if (user) return;
+        const banner = modal.querySelector('#profEditAuthBanner');
+        if (!banner) return;
+        banner.style.cssText = 'display:block;background:linear-gradient(135deg,#FFF8F0,#FFE8F0);border-radius:14px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.55;color:#4A4A4A';
+        banner.innerHTML = `
+          <div style="font-weight:800;color:#FF7B7B;margin-bottom:6px">💝 로그인하면 더 좋아요</div>
+          <div style="margin-bottom:10px">기기 바꿔도 같은 프로필·서재 그대로, 곧 다른 엄마들과 랭킹·인기책도 둘러볼 수 있어요</div>
+          <button type="button" id="profEditLoginBtn"
+            style="width:100%;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:#FFD1DC;color:#C2185B">
+            로그인 / 가입
+          </button>`;
+        const loginBtn = banner.querySelector('#profEditLoginBtn');
+        if (loginBtn && window.AuthUI) {
+          loginBtn.addEventListener('click', () => {
+            close();
+            window.AuthUI.showLoginPicker();
+          });
+        }
+      });
+    }
+
     modal.querySelector('#profEditSave').addEventListener('click', () => {
       const name   = modal.querySelector('#profEditName').value.trim()   || cur.name;
       const grade  = modal.querySelector('#profEditGrade').value         || cur.grade;
