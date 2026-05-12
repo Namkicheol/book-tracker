@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>추천 도서 | 書架</title>
-  <link rel="stylesheet" href="css/style.css?v=20260510a">
+  <link rel="stylesheet" href="css/style.css?v=20260508h">
   <style>
     .rec-browse-header {
       padding: 20px 16px;
@@ -164,10 +164,6 @@
     .kinder-summary::-webkit-details-marker { display: none; }
     .kinder-chevron { transition: transform 0.2s ease; flex-shrink: 0; color: var(--text-mute, #999); }
     #kinderSection[open] .kinder-chevron { transform: rotate(180deg); }
-    /* 추천 페이지: 하단 select 바와 안 겹치도록 위로가기 버튼 더 올림 */
-    .scroll-top-btn {
-      bottom: calc(var(--nav-h) + 76px + env(safe-area-inset-bottom, 0px)) !important;
-    }
   </style>
 </head>
 <body>
@@ -176,31 +172,18 @@
     <p class="rec-browse-subtitle">전문가들이 추천하는 초등 필독서</p>
   </header>
 
-  <!-- 항상 노출되는 하단 액션 바 — 기본 모드: 선택 진입 / 선택 모드: 취소 + 담기 -->
-  <div id="recSelectBar"
-    style="position:fixed;left:0;right:0;bottom:calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));z-index:50;padding:10px 14px;background:#fff;border-top:1.5px solid rgba(255,184,198,0.5);box-shadow:0 -4px 16px rgba(255,158,158,0.15);display:flex;gap:8px;align-items:center">
-    <!-- 기본 모드 -->
-    <div id="recBarIdle" style="display:flex;flex:1;gap:8px;align-items:center">
-      <span style="flex:1;font-size:12px;color:#8B8B8B;line-height:1.45">📚 여러 권을 한번에 [읽을 책]으로 담을 수 있어요</span>
-      <button id="recSelectBtn" type="button" style="padding:9px 18px;font-size:13px;font-weight:800;border:none;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff;border-radius:10px;cursor:pointer">선택</button>
-    </div>
-    <!-- 선택 모드 -->
-    <div id="recBarPicking" style="display:none;flex:1;gap:8px;align-items:center">
-      <span id="recSelectCount" style="font-size:13px;font-weight:700;color:#FF6B6B">0권 선택됨</span>
-      <span style="flex:1"></span>
-      <button id="recSelectCancel" type="button" style="padding:9px 14px;font-size:13px;font-weight:700;border:1.5px solid #eee;background:#fff;color:#8B8B8B;border-radius:10px;cursor:pointer">취소</button>
-      <button id="recSelectAddWant" type="button" style="padding:9px 14px;font-size:13px;font-weight:800;border:none;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff;border-radius:10px;cursor:pointer">📚 내서재에 담기</button>
-    </div>
-  </div>
-
   <div class="rec-search-bar">
     <input type="search" id="recSearch" class="rec-search-input" placeholder="제목·저자 검색…" autocomplete="off">
   </div>
 
-  <!-- 모드 탭 -->
+  <!-- 모드 탭 + 뷰 토글 -->
   <div id="modeTabs" style="display:flex;gap:0;border-bottom:2px solid #e0e0e0;background:#fff;position:sticky;top:56px;z-index:9;align-items:center">
     <button id="modeAll" class="mode-tab mode-tab-active" style="flex:1;padding:10px 0;font-size:13px;font-weight:600;border:none;background:transparent;color:#FF6B6B;border-bottom:2px solid #FF6B6B;margin-bottom:-2px;cursor:pointer">전체 추천</button>
     <button id="modeTextbook" class="mode-tab" style="flex:1;padding:10px 0;font-size:13px;font-weight:600;border:none;background:transparent;color:#999;cursor:pointer">📖 교과서 학년별</button>
+    <button id="recViewToggleBtn" style="flex-shrink:0;padding:8px 12px;border:none;background:transparent;color:#999;cursor:pointer;display:flex;align-items:center" title="보기 전환">
+      <svg class="icon-list" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      <svg class="icon-grid" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    </button>
   </div>
 
   <div id="searchResults" class="rec-search-results" hidden>
@@ -208,23 +191,8 @@
     <div class="rec-browse-grid" id="searchGrid"></div>
   </div>
 
-  <div id="gradeContent" style="padding-bottom:120px">
+  <div id="gradeContent" style="padding-bottom:40px">
     <!-- Dynamically populated with grade sections -->
-  </div>
-
-  <!-- 추천 기관 전용 페이지 (배지 클릭 시 표시) -->
-  <div id="sourceView" hidden style="padding-bottom:120px">
-    <div id="sourceViewHeader" style="padding:20px 16px 16px;color:#fff;position:relative">
-      <button id="sourceBackBtn" aria-label="뒤로" style="position:absolute;top:14px;left:12px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)">←</button>
-      <div style="padding-left:44px">
-        <div id="sourceViewBadge" style="display:inline-block;padding:4px 10px;background:rgba(255,255,255,0.22);border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.06em;margin-bottom:6px"></div>
-        <h1 id="sourceViewTitle" style="font-family:var(--font-han);font-size:22px;font-weight:700;margin:0 0 4px 0"></h1>
-        <p id="sourceViewDesc" style="font-size:12px;opacity:0.92;margin:0;line-height:1.45"></p>
-        <div id="sourceViewCount" style="font-size:11px;opacity:0.85;margin-top:8px;font-weight:600"></div>
-      </div>
-    </div>
-    <div id="sourceGradeTabs" style="display:flex;gap:6px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-bottom:1px solid #f0f0f0;background:#fff;position:sticky;top:0;z-index:9"></div>
-    <div class="rec-browse-grid list-view" id="sourceGrid" style="padding:0 16px"></div>
   </div>
 
   <!-- Scroll to top -->
@@ -279,15 +247,12 @@
     </a>
   </nav>
 
-  <script src="js/theme.js?v=20260510a"></script>
+  <script src="js/theme.js?v=20260508a"></script>
   <script src="js/config.js?v=20260504d"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=20260510b"></script>
-  <script src="js/auth-ui.js?v=20260510o"></script>
   <script src="js/storage.js?v=20260504d"></script>
   <script src="js/api.js?v=20260504d"></script>
-  <script src="js/library-api.js?v=20260507b"></script>
-  <script src="js/book-preview.js?v=20260510a"></script>
-  <script src="js/recommendations.js?v=20260510d"></script>
+  <script src="js/library-api.js?v=20260512a"></script>
+  <script src="js/book-preview.js?v=20260512a"></script>
+  <script src="js/recommendations.js?v=20260512a"></script>
 </body>
 </html>

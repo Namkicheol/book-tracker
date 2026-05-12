@@ -31,6 +31,10 @@
 
   const LibraryAPI = {
 
+    getRegionOptions() {
+      return REGION_BOUNDS.map(r => ({ code: r.sido, name: r.name }));
+    },
+
     /**
      * ISBN + 지역코드로 소장 도서관 목록 조회 (libSrchByBook)
      * region 필수 — GPS로 추정 후 전달.
@@ -99,7 +103,9 @@
 
       if (!region) return { libraries: [], regionName: null, needsRegion: true };
 
-      const cacheKey = `libsearch_${cleanIsbn}_${region}`;
+      const latKey = Math.round(userLat * 100);
+      const lngKey = Math.round(userLng * 100);
+      const cacheKey = `libsearch_nearby_${cleanIsbn}_${region}_${latKey}_${lngKey}`;
       const cached = this._getCache(cacheKey);
       if (cached) return cached;
 
@@ -136,6 +142,44 @@
         if (a.available === true && b.available !== true) return -1;
         if (b.available === true && a.available !== true) return 1;
         return a.distance - b.distance;
+      });
+
+      const result = { libraries: withAvail, regionName };
+      this._setCache(cacheKey, result);
+      return result;
+    },
+
+    async findLibrariesByRegion(isbn, region) {
+      const cleanIsbn = String(isbn).replace(/\D/g, '');
+      if (!cleanIsbn || !region) return { libraries: [], regionName: null, needsRegion: true };
+
+      const regionInfo = REGION_BOUNDS.find(r => r.sido === region);
+      const regionName = regionInfo ? regionInfo.name : null;
+      const cacheKey = `libsearch_region_${cleanIsbn}_${region}`;
+      const cached = this._getCache(cacheKey);
+      if (cached) return cached;
+
+      const libraries = await this.searchLibraries(cleanIsbn, { region, pageSize: 20 });
+      if (!libraries.length) {
+        const result = { libraries: [], regionName };
+        this._setCache(cacheKey, result);
+        return result;
+      }
+
+      const top5 = libraries.slice(0, 5);
+      const withAvail = await Promise.all(top5.map(async lib => {
+        try {
+          const avail = await this.checkAvailability(cleanIsbn, lib.libCode);
+          return { ...lib, distance: null, ...avail };
+        } catch {
+          return { ...lib, distance: null, available: null };
+        }
+      }));
+
+      withAvail.sort((a, b) => {
+        if (a.available === true && b.available !== true) return -1;
+        if (b.available === true && a.available !== true) return 1;
+        return 0;
       });
 
       const result = { libraries: withAvail, regionName };

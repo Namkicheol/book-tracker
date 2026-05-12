@@ -26,14 +26,9 @@ var KAKAO_API_KEY = '2d06d393fabebae4fab202af55a80379';
 var WORKER_URL = 'https://book-tracker-aladin.obangti.workers.dev';
 
 /**
- * 도서관정보나루 API 키
- *
- * 발급: https://www.data4library.kr/ (무료, 회원가입 후 즉시 발급)
- * 사용: 소장 도서관 검색, 대출 가능 여부 조회
- *
- * 🔑 API 키를 받아오신 후 아래에 입력하세요:
+ * 도서관정보나루 API 키는 Cloudflare Worker secret(LIBRARY_API_KEY)으로만 관리합니다.
+ * 브라우저 클라이언트에는 노출하지 않습니다.
  */
-var LIBRARY_API_KEY = 'b660ed963467358ba4bc5cbaf251dda8af7f50573bc69967d75f53ef5c281229';
 
 /**
  * Supabase 백엔드 (Auth · DB · Storage)
