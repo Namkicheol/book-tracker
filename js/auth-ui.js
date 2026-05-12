@@ -43,12 +43,19 @@
   // avatar 값(URL 또는 emoji) → DOM 엘리먼트에 적절히 렌더
   function setAvatarEl(el, value) {
     if (!el) return;
+    el.innerHTML = '';
     if (value && /^https?:\/\//.test(value)) {
-      el.textContent = '';
-      var safe = toHttps(value).replace(/"/g, '%22');
-      el.innerHTML = '<img src="' + safe + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block">';
+      var img = document.createElement('img');
+      img.src = toHttps(value);
+      img.alt = '';
+      img.referrerPolicy = 'no-referrer';
+      img.style.cssText = 'width:100%;height:100%;border-radius:50%;object-fit:cover;display:block';
+      img.addEventListener('error', function () {
+        el.innerHTML = '';
+        el.textContent = '👩';
+      }, { once: true });
+      el.appendChild(img);
     } else {
-      el.innerHTML = '';
       el.textContent = value || '👩';
     }
   }
@@ -73,6 +80,13 @@
       }
     } catch (e) { /* ignore */ }
     return null;
+  }
+
+  async function getCurrentUser() {
+    var user = getStoredSupabaseUser();
+    if (user) return user;
+    var sess = window.SB ? await window.SB.getSession() : null;
+    return sess && sess.user ? sess.user : null;
   }
 
   function ensureAnim() {
@@ -158,24 +172,16 @@
     if (!window.SB || !window.SB.enabled) { btn.style.display = 'none'; return; }
 
     // Fast path: localStorage에서 supabase 토큰을 직접 읽어 user 즉시 결정
-    var user = getStoredSupabaseUser();
-    if (!user) {
-      // 토큰이 없거나 만료 임박 → 비동기 getSession 호출로 fallback
-      var sess = await window.SB.getSession();
-      user = sess && sess.user ? sess.user : null;
-    }
+    var user = await getCurrentUser();
     if (user) {
       btn.title = '내 프로필';
+      btn.setAttribute('aria-label', '내 프로필');
       var avatar = localStorage.getItem('profileAvatar') || '👩';
-      if (isUrl(avatar)) {
-        var safe = toHttps(avatar).replace(/"/g, '%22');
-        btn.innerHTML = '<img src="' + safe + '" alt="" referrerpolicy="no-referrer" style="width:100%;height:100%;border-radius:50%;object-fit:cover;display:block">';
-        btn.style.padding = '0';
-      } else {
-        btn.innerHTML = '<span style="font-size:20px;line-height:1">' + avatar + '</span>';
-      }
+      setAvatarEl(btn, avatar);
+      btn.style.padding = '0';
     } else {
       btn.title = '로그인';
+      btn.setAttribute('aria-label', '로그인');
       btn.innerHTML = svgLogIn();
     }
     // share.html 헤더의 #authBtn은 share.js가 별도로 관리
@@ -190,11 +196,7 @@
   async function onClick() {
     // localStorage 빠른 경로 우선 — getSession 비동기 지연으로 잘못 로그인 모달
     // 띄우는 케이스 방지
-    var user = getStoredSupabaseUser();
-    if (!user) {
-      var sess = window.SB ? await window.SB.getSession() : null;
-      user = sess && sess.user ? sess.user : null;
-    }
+    var user = await getCurrentUser();
     if (user) {
       showProfileViewer();
     } else {
@@ -254,11 +256,11 @@
     if (document.getElementById('authProfileModal')) return;
     ensureAnim();
 
-    var sess = await window.SB.getSession();
-    if (!sess || !sess.user) { showLoginPicker(); return; }
+    var user = await getCurrentUser();
+    if (!user) { showLoginPicker(); return; }
 
-    var meta = sess.user.user_metadata || {};
-    var provider = (sess.user.app_metadata && sess.user.app_metadata.provider) || '';
+    var meta = user.user_metadata || {};
+    var provider = (user.app_metadata && user.app_metadata.provider) || '';
     var importedName = meta.name || meta.full_name || meta.nickname || meta.preferred_username || '';
     var importedAvatar = meta.avatar_url || meta.picture || meta.profile_image || '';
     var providerLabel = provider === 'kakao' ? '💬 카카오 계정'
@@ -337,7 +339,14 @@
       // 5. 앱 설정 + 로그아웃 — 맨 아래 (50/50, 둘 다 톤다운)
       '<div style="display:flex;gap:8px;margin-top:10px">',
       '<a href="settings.html" style="flex:1;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#bbb;text-align:center;text-decoration:none">⚙️ 앱 설정</a>',
-      '<button id="apvLogout" type="button" style="flex:1;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#bbb">🚪 로그아웃</button>',
+      '<button id="apvLogout" type="button" style="flex:1;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;background:transparent;color:#bbb;display:flex;align-items:center;justify-content:center;gap:6px">' +
+        '<svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">' +
+          '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>' +
+          '<path d="M16 17l5-5-5-5"></path>' +
+          '<path d="M21 12H9"></path>' +
+        '</svg>' +
+        '<span>로그아웃</span>' +
+      '</button>',
       '</div>',
 
       '</div>'
