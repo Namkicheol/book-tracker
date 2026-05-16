@@ -1,7 +1,7 @@
-# book-tracker Codex 작업 가이드
+# book-tracker — AGENTS.md (Codex)
 
-> 이 파일이 이 레포의 canonical agent instruction이다. Codex는 작업 시작 시 이 파일을 우선 참고한다.
-> 기존 `CLAUDE.md`의 내용과 Claude handoff의 핵심 운영 정보를 Codex 환경에 맞게 합친 버전이다.
+> 이 파일이 이 레포의 canonical agent instruction이다. Codex는 작업 시작 시 이 파일을 우선 참고한다. Claude Code 진입 문서는 `CLAUDE.md`이고, 두 파일은 도구 framing만 다르고 섹션·순서·규칙은 동일하다.
+> 새 규칙은 양쪽 모두 갱신한다.
 
 ## 프로젝트 개요
 
@@ -125,7 +125,7 @@ HTML에서 JS/CSS 참조를 바꿀 때는 다음 형식을 유지한다.
 
 ## Codex 환경 메모
 
-- Codex에서는 이 `AGENTS.md`가 우선 지침이다. `CLAUDE.md`는 호환용 안내 파일로만 둔다.
+- Codex 진입 문서는 이 `AGENTS.md`다. `CLAUDE.md`는 Claude Code용 parallel 문서.
 - 로컬 웹 확인이 필요하면 정적 서버를 띄운 뒤 Browser/Playwright 계열 도구로 확인한다.
 - 플러그인/스킬은 실제 가치가 있을 때만 사용한다. 단순 조회나 소규모 수정에는 강제 적용하지 않는다.
 - 네트워크가 필요한 `gh`, `wrangler`, Vercel 확인 등은 sandbox/승인이 필요할 수 있다. 실패하면 승인 요청 후 재시도한다.
