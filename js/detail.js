@@ -57,8 +57,24 @@
 
     if (book.language === 'en' && !book.ar) tryFetchAR();
 
+    // 작은 뷰포트(660 전후)에서 별점 row가 fixed nav 영역과 겹쳐
+    // 클릭이 nav 링크에 가로채지는 회귀가 있었음. 해당 케이스만 한 번 스크롤.
+    requestAnimationFrame(ensureFormVisible);
+
     // Lazy-load recommendations
     setTimeout(loadRecommendations, 100);
+  }
+
+  function ensureFormVisible() {
+    const stars = document.getElementById('starRating');
+    const nav = document.querySelector('.bottom-nav');
+    if (!stars || !nav) return;
+    const sr = stars.getBoundingClientRect();
+    const nr = nav.getBoundingClientRect();
+    if (sr.bottom > nr.top && sr.top < nr.bottom) {
+      const targetTop = Math.max(120, window.innerHeight * 0.3);
+      window.scrollBy({ top: sr.top - targetTop, behavior: 'smooth' });
+    }
   }
 
   // ── Status ───────────────────────────────────────────────────
