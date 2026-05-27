@@ -202,14 +202,64 @@
 
   // ── Review ───────────────────────────────────────────────────
 
+  // 리뷰 본문은 사용자가 contenteditable + 툴바로 입력하는 제한 HTML.
+  // localStorage 또는 Supabase에서 읽어 innerHTML로 주입하므로,
+  // 허용되지 않은 태그·이벤트 핸들러는 반드시 제거해야 한다.
+  const ALLOWED_TAGS = new Set(['B','STRONG','U','BR','SPAN','DIV','P']);
+  const REMOVE_TAGS = new Set(['SCRIPT','STYLE','IFRAME','OBJECT','EMBED','LINK','META','SVG']);
+  const ALLOWED_STYLE_PROPS = new Set(['color','background-color']);
+  function sanitizeReviewHtml(html) {
+    if (!html) return '';
+    const doc = new DOMParser().parseFromString(String(html), 'text/html');
+    walk(doc.body);
+    return doc.body.innerHTML;
+
+    function walk(node) {
+      const children = [...node.childNodes];
+      for (const child of children) {
+        if (child.nodeType === 3) continue;  // text node — keep
+        if (child.nodeType !== 1) { child.remove(); continue; }
+        if (REMOVE_TAGS.has(child.tagName)) {
+          child.remove();
+          continue;
+        }
+        if (!ALLOWED_TAGS.has(child.tagName)) {
+          // unwrap unknown tags — keep their text content
+          while (child.firstChild) node.insertBefore(child.firstChild, child);
+          child.remove();
+          continue;
+        }
+        // strip all attributes except a sanitized style
+        const allowedStyle = sanitizeStyle(child.getAttribute('style'));
+        [...child.attributes].forEach(a => child.removeAttribute(a.name));
+        if (allowedStyle) child.setAttribute('style', allowedStyle);
+        walk(child);
+      }
+    }
+    function sanitizeStyle(value) {
+      if (!value) return '';
+      return String(value).split(';').map(d => d.trim()).filter(Boolean)
+        .map(d => {
+          const i = d.indexOf(':');
+          if (i < 0) return null;
+          const prop = d.slice(0, i).trim().toLowerCase();
+          const val = d.slice(i + 1).trim();
+          if (!ALLOWED_STYLE_PROPS.has(prop)) return null;
+          // accept only color keywords / hex / rgb()
+          if (!/^(#[0-9a-f]{3,8}|[a-z]+|rgb\([^)]+\)|rgba\([^)]+\))$/i.test(val)) return null;
+          return `${prop}: ${val}`;
+        }).filter(Boolean).join('; ');
+    }
+  }
+
   function renderReview() {
     const editor       = document.getElementById('reviewInput');
     const counter      = document.getElementById('reviewCounter');
     const preview      = document.getElementById('reviewPreview');
     const previewText  = document.getElementById('reviewPreviewText');
 
-    // Load existing review (HTML)
-    editor.innerHTML = book.review || '';
+    // Load existing review (sanitized — strips disallowed tags/attributes)
+    editor.innerHTML = sanitizeReviewHtml(book.review);
     update();
 
     editor.addEventListener('input', update);
@@ -241,7 +291,7 @@
         counter.style.color = len > 270 ? 'var(--wine)' : 'var(--text-mute)';
       }
       if (plain.trim()) {
-        previewText.innerHTML = editor.innerHTML;
+        previewText.innerHTML = sanitizeReviewHtml(editor.innerHTML);
         preview.style.display = 'block';
       } else {
         preview.style.display = 'none';
@@ -419,7 +469,7 @@
   function save(e) {
     e.preventDefault();
     const editor = document.getElementById('reviewInput');
-    const reviewHtml = editor.innerText.trim() ? editor.innerHTML : '';
+    const reviewHtml = editor.innerText.trim() ? sanitizeReviewHtml(editor.innerHTML) : '';
 
     book = Storage.updateBook(book.id, {
       rating: selectedRating,
