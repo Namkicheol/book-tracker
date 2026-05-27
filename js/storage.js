@@ -217,11 +217,11 @@
 
   function deleteFolder(id) {
     const folders = getAllFolders();
-    const next = folders.filter(f => f.id !== id);
-    if (next.length === folders.length) return false;
-    writeJSON(KEYS.FOLDERS, next);
+    const nextFolders = folders.filter(f => f.id !== id);
+    if (nextFolders.length === folders.length) return false;
 
-    // Remove this folder ID from every book that referenced it
+    // Update books FIRST so they never reference a folder that no longer exists.
+    // If books write fails, folders is untouched and state stays consistent.
     const books = getAllBooks();
     let touched = false;
     const nextBooks = books.map(b => {
@@ -232,6 +232,7 @@
       return b;
     });
     if (touched) writeJSON(KEYS.BOOKS, nextBooks);
+    writeJSON(KEYS.FOLDERS, nextFolders);
     return true;
   }
 
