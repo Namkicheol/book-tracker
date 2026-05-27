@@ -23,9 +23,8 @@
 
   document.addEventListener('DOMContentLoaded', loadBook);
 
-  // Load recommendation database
-  fetch('data/book-recommendations.json')
-    .then(res => res.json())
+  // Load recommendation database (shared RecsCache)
+  (window.RecsCache ? window.RecsCache.load() : fetch('data/book-recommendations.json').then(r => r.json()))
     .then(data => {
       recommendationData = data;
       if (window.BookPreview) BookPreview.setRecData(data);

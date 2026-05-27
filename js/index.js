@@ -36,10 +36,9 @@
     title:  '제목 순',
   };
 
-  // Load recommendation database
+  // Load recommendation database (shared RecsCache memoizes — same data not fetched 3x in session)
   let recommendationData = null;
-  fetch('data/book-recommendations.json')
-    .then(res => res.json())
+  (window.RecsCache ? window.RecsCache.load() : fetch('data/book-recommendations.json').then(r => r.json()))
     .then(data => {
       recommendationData = data;
       if (window.BookPreview) BookPreview.setRecData(data);

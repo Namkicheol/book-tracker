@@ -17,13 +17,15 @@
 
   async function init() {
     try {
-      const [res, kinderRes] = await Promise.all([
-        fetch('data/book-recommendations.json'),
+      // Shared RecsCache — same data not fetched 3x across pages
+      const [data, kinderRes] = await Promise.all([
+        window.RecsCache
+          ? window.RecsCache.load()
+          : fetch('data/book-recommendations.json').then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
         fetch('data/kindergarten-curated.json').catch(() => null),
       ]);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      recommendationData = await res.json();
+      recommendationData = data;
       if (window.BookPreview) BookPreview.setRecData(recommendationData);
 
       // Convert books object to array
