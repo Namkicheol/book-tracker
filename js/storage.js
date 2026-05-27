@@ -79,8 +79,14 @@
 
   // ── Books ────────────────────────────────────────────────────
 
-  function getAllBooks() {
+  function getAllBooksRaw() {
+    // 동기화 레이어 전용 — soft-deleted 포함 전체 리턴
     return readJSON(KEYS.BOOKS, []);
+  }
+
+  function getAllBooks() {
+    // 일반 호출자용 — soft-deleted 제외
+    return getAllBooksRaw().filter(b => !b.deletedAt);
   }
 
   function getBook(id) {
@@ -94,19 +100,26 @@
   }
 
   function saveBook(book) {
-    const books = getAllBooks();
+    // soft-deleted 항목과 동일한 id가 들어오면 그 행을 in-place로 부활시켜야
+    // 중복 row가 생기지 않으므로 getAllBooksRaw 위에서 동작한다.
+    const books = getAllBooksRaw();
     const now = nowIso();
 
     if (book.id) {
       const idx = books.findIndex(b => b.id === book.id);
       if (idx === -1) {
-        // id supplied but not found → treat as new
         const fresh = normalizeBook({ ...book, createdAt: now, updatedAt: now });
         books.push(fresh);
         writeJSON(KEYS.BOOKS, books);
         return fresh;
       }
-      const updated = normalizeBook({ ...books[idx], ...book, updatedAt: now });
+      // 부활: deletedAt 명시적으로 null로 클리어 (caller가 안 보내도)
+      const updated = normalizeBook({
+        ...books[idx],
+        ...book,
+        deletedAt: book.deletedAt !== undefined ? book.deletedAt : null,
+        updatedAt: now,
+      });
       books[idx] = updated;
       writeJSON(KEYS.BOOKS, books);
       return updated;
@@ -130,11 +143,24 @@
   }
 
   function deleteBook(id) {
-    const books = getAllBooks();
-    const next = books.filter(b => b.id !== id);
-    if (next.length === books.length) return false;
-    writeJSON(KEYS.BOOKS, next);
+    // soft-delete: deletedAt만 표시. 동기화가 켜진 상태에서 다른 디바이스도
+    // 이 시점 이후 같이 지움. 30일 지난 항목은 별도로 청소.
+    const books = getAllBooksRaw();
+    const idx = books.findIndex(b => b.id === id);
+    if (idx === -1) return false;
+    const now = nowIso();
+    books[idx] = normalizeBook({ ...books[idx], deletedAt: now, updatedAt: now });
+    writeJSON(KEYS.BOOKS, books);
     return true;
+  }
+
+  function purgeOldDeletedBooks(maxAgeDays) {
+    // 30일 이상 지난 soft-deleted 항목 영구 삭제
+    const cutoff = Date.now() - (maxAgeDays || 30) * 86400000;
+    const books = getAllBooksRaw();
+    const next = books.filter(b => !b.deletedAt || Date.parse(b.deletedAt) >= cutoff);
+    if (next.length !== books.length) writeJSON(KEYS.BOOKS, next);
+    return books.length - next.length;
   }
 
   function getBooksByFolder(folderId) {
@@ -174,14 +200,19 @@
       status:    ['want', 'reading'].includes(b.status) ? b.status : null,
       createdAt: b.createdAt,
       updatedAt: b.updatedAt,
+      deletedAt: b.deletedAt || null,
     };
   }
 
   // ── Folders ──────────────────────────────────────────────────
 
+  function getAllFoldersRaw() {
+    return readJSON(KEYS.FOLDERS, []);
+  }
+
   function getAllFolders() {
-    const folders = readJSON(KEYS.FOLDERS, []);
-    return [...folders].sort((a, b) => (a.order || 0) - (b.order || 0));
+    const folders = getAllFoldersRaw().filter(f => !f.deletedAt);
+    return folders.sort((a, b) => (a.order || 0) - (b.order || 0));
   }
 
   function getFolder(id) {
@@ -189,26 +220,29 @@
   }
 
   function saveFolder(folder) {
-    const folders = getAllFolders();
+    const folders = getAllFoldersRaw();
     const now = nowIso();
 
     if (folder.id) {
       const idx = folders.findIndex(f => f.id === folder.id);
       if (idx !== -1) {
-        const updated = { ...folders[idx], ...folder };
+        const updated = { ...folders[idx], ...folder, updatedAt: now };
         folders[idx] = updated;
         writeJSON(KEYS.FOLDERS, folders);
         return updated;
       }
     }
 
+    const visibleCount = folders.filter(f => !f.deletedAt).length;
     const fresh = {
       id: uid(),
       name: folder.name || '새 폴더',
       emoji: folder.emoji || null,
       color: folder.color || null,
-      order: folder.order != null ? folder.order : folders.length,
+      order: folder.order != null ? folder.order : visibleCount,
       createdAt: now,
+      updatedAt: now,
+      deletedAt: null,
     };
     folders.push(fresh);
     writeJSON(KEYS.FOLDERS, folders);
@@ -216,24 +250,34 @@
   }
 
   function deleteFolder(id) {
-    const folders = getAllFolders();
-    const nextFolders = folders.filter(f => f.id !== id);
-    if (nextFolders.length === folders.length) return false;
+    const folders = getAllFoldersRaw();
+    const idx = folders.findIndex(f => f.id === id && !f.deletedAt);
+    if (idx === -1) return false;
+    const now = nowIso();
 
-    // Update books FIRST so they never reference a folder that no longer exists.
-    // If books write fails, folders is untouched and state stays consistent.
-    const books = getAllBooks();
+    // Books FIRST: 책에서 폴더 참조 제거하고 updatedAt 갱신해 동기화 신호 보냄.
+    const books = getAllBooksRaw();
     let touched = false;
     const nextBooks = books.map(b => {
       if (Array.isArray(b.folders) && b.folders.includes(id)) {
         touched = true;
-        return { ...b, folders: b.folders.filter(fid => fid !== id) };
+        return normalizeBook({ ...b, folders: b.folders.filter(fid => fid !== id), updatedAt: now });
       }
       return b;
     });
     if (touched) writeJSON(KEYS.BOOKS, nextBooks);
-    writeJSON(KEYS.FOLDERS, nextFolders);
+
+    folders[idx] = { ...folders[idx], deletedAt: now, updatedAt: now };
+    writeJSON(KEYS.FOLDERS, folders);
     return true;
+  }
+
+  function purgeOldDeletedFolders(maxAgeDays) {
+    const cutoff = Date.now() - (maxAgeDays || 30) * 86400000;
+    const folders = getAllFoldersRaw();
+    const next = folders.filter(f => !f.deletedAt || Date.parse(f.deletedAt) >= cutoff);
+    if (next.length !== folders.length) writeJSON(KEYS.FOLDERS, next);
+    return folders.length - next.length;
   }
 
   function reorderFolders(orderedIds) {
@@ -410,11 +454,13 @@
   window.Storage = {
     // books
     getAllBooks,
+    getAllBooksRaw,
     getBook,
     getBookByIsbn,
     saveBook,
     updateBook,
     deleteBook,
+    purgeOldDeletedBooks,
     getBooksByFolder,
     getBooksByStatus(status) {
       if (status === null) return getAllBooks().filter(b => !b.status);
@@ -423,9 +469,11 @@
     searchBooks,
     // folders
     getAllFolders,
+    getAllFoldersRaw,
     getFolder,
     saveFolder,
     deleteFolder,
+    purgeOldDeletedFolders,
     reorderFolders,
     // stats
     getStats,
@@ -434,6 +482,7 @@
     importData,
     clearAll,
     seedDemo,
+    normalizeBook,
     // constants
     _KEYS: KEYS,
   };
