@@ -203,9 +203,9 @@
     overlay.className = 'friend-modal';
     overlay.innerHTML = `
       <div class="encouragement-popup">
-        <div class="encouragement-icon">${data.icon}</div>
-        <div class="encouragement-title">${data.title}</div>
-        <div class="encouragement-message">${data.message}</div>
+        <div class="encouragement-icon">${escapeHtml(data.icon)}</div>
+        <div class="encouragement-title">${escapeHtml(data.title)}</div>
+        <div class="encouragement-message">${escapeHtml(data.message)}</div>
         <button class="encouragement-btn">좋아요!</button>
       </div>
     `;
@@ -284,7 +284,7 @@
     listEl.innerHTML = friends.map(f => {
       const display = (f.nickname && f.nickname.trim()) ? f.nickname.trim() : `친구 #${shortId(f.id)}`;
       const avatarHtml = (f.avatar && /^https?:\/\//.test(f.avatar))
-        ? `<img src="${String(f.avatar).replace(/"/g,'%22')}" alt="" referrerpolicy="no-referrer" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0">`
+        ? `<img src="${escapeAttr(f.avatar)}" alt="" referrerpolicy="no-referrer" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0">`
         : `<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFE0EC,#FFD1DC);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${escapeAttr(f.avatar || '👩')}</div>`;
       return `
         <button type="button" class="friend-row" data-fid="${escapeAttr(f.id)}" style="display:flex;align-items:center;gap:12px;padding:12px;background:#fff;border:1.5px solid rgba(255,184,198,0.2);border-radius:14px;cursor:pointer;text-align:left;width:100%;font-family:inherit">
