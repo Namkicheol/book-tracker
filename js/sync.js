@@ -28,7 +28,7 @@
     if (row.avatar)       localStorage.setItem('profileAvatar', row.avatar);
     if (row.grade)        localStorage.setItem('profileGrade',  row.grade);
     if (row.region)       localStorage.setItem('profileRegion', row.region);
-    if (row.monthly_goal) localStorage.setItem('monthlyGoal',   String(row.monthly_goal));
+    if (row.monthly_goal != null) localStorage.setItem('monthlyGoal', String(row.monthly_goal));
   }
 
   // 카카오/구글 OAuth 메타데이터에서 닉네임을 추출

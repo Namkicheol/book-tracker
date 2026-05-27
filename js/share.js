@@ -405,9 +405,10 @@
     const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
     const yearAgo = new Date(now.getFullYear(), 0, 1);
 
-    const thisWeek = books.filter(b => new Date(b.readDate) >= weekAgo).length;
-    const thisMonth = books.filter(b => new Date(b.readDate) >= monthAgo).length;
-    const thisYear = books.filter(b => new Date(b.readDate) >= yearAgo).length;
+    const dated = books.filter(b => b.readDate);
+    const thisWeek = dated.filter(b => new Date(b.readDate) >= weekAgo).length;
+    const thisMonth = dated.filter(b => new Date(b.readDate) >= monthAgo).length;
+    const thisYear = dated.filter(b => new Date(b.readDate) >= yearAgo).length;
 
     // 연속 독서일 계산
     const streak = calculateStreak(books);
@@ -447,8 +448,9 @@
   }
 
   function calculateStreak(books) {
-    if (books.length === 0) return 0;
-    const sorted = books.map(b => new Date(b.readDate).setHours(0,0,0,0))
+    const dated = books.filter(b => b.readDate);
+    if (dated.length === 0) return 0;
+    const sorted = dated.map(b => new Date(b.readDate).setHours(0,0,0,0))
       .sort((a, b) => b - a);
 
     let streak = 1;
