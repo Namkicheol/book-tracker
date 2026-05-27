@@ -4,6 +4,12 @@
 (function () {
   'use strict';
 
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   document.addEventListener('DOMContentLoaded', render);
 
   function render() {
@@ -143,7 +149,7 @@
           <div class="report-icon">📂</div>
           <div class="report-body">
             <div class="report-label">이번 달 주력 폴더</div>
-            <div class="report-value">${topFolder}</div>
+            <div class="report-value">${escapeHtml(topFolder)}</div>
           </div>
         </div>` : ''}
         ${monthAvg ? `<div class="report-item">
@@ -157,7 +163,7 @@
           <div class="report-icon">🏆</div>
           <div class="report-body">
             <div class="report-label">이번 달 최고 책</div>
-            <div class="report-value" style="font-size:12px;line-height:1.3">${topBook.title}</div>
+            <div class="report-value" style="font-size:12px;line-height:1.3">${escapeHtml(topBook.title)}</div>
           </div>
         </div>` : ''}
       </div>
@@ -432,8 +438,8 @@
             return `<div class="cal-detail-book">
               <span style="font-size:16px;line-height:1.2">📖</span>
               <div>
-                <div style="font-weight:600">${b.title}</div>
-                ${b.authors?.length ? `<div style="font-size:11px;color:var(--text-soft);margin-top:1px">${b.authors[0]}</div>` : ''}
+                <div style="font-weight:600">${escapeHtml(b.title)}</div>
+                ${b.authors?.length ? `<div style="font-size:11px;color:var(--text-soft);margin-top:1px">${escapeHtml(b.authors[0])}</div>` : ''}
                 ${stars ? `<div style="font-size:11px;color:#e8a000;margin-top:2px;letter-spacing:-0.5px">${stars}</div>` : ''}
               </div>
             </div>`;

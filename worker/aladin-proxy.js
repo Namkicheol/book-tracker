@@ -18,10 +18,40 @@ const LIBRARY_BASE = 'https://www.data4library.kr/api';
 
 const ALLOWED_ORIGINS = [
   'https://namkicheol.github.io',
+  'https://book-tracker-git-main-namkicheols-projects.vercel.app',
   'http://localhost:8080',
   'http://127.0.0.1:8080',
   'http://localhost:5173',
 ];
+
+const IMAGE_HOST_ALLOWLIST = [
+  'image.aladin.co.kr',
+  'img1.daumcdn.net',
+  't1.kakaocdn.net',
+  'k.kakaocdn.net',
+  'dn.kakaocdn.net',
+];
+
+function isOriginAllowed(origin) {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.includes(origin)) return true;
+  // Vercel preview deployments: *.vercel.app under namkicheols-projects
+  try {
+    const u = new URL(origin);
+    if (u.protocol === 'https:' && u.hostname.endsWith('.vercel.app')) return true;
+  } catch (_) { /* invalid origin */ }
+  return false;
+}
+
+function isImageHostAllowed(rawUrl) {
+  try {
+    const u = new URL(rawUrl);
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+    return IMAGE_HOST_ALLOWLIST.includes(u.hostname);
+  } catch (_) {
+    return false;
+  }
+}
 
 const PARAM_ALLOWLIST = [
   'ItemId', 'ItemIdType',
@@ -47,6 +77,7 @@ export default {
     if (url.pathname === '/image-proxy') {
       const imageUrl = url.searchParams.get('url');
       if (!imageUrl) return errorResponse(400, 'missing_url_param', origin);
+      if (!isImageHostAllowed(imageUrl)) return errorResponse(403, 'image_host_not_allowed', origin);
       return handleImageProxy(imageUrl, ctx, origin);
     }
 
@@ -194,9 +225,10 @@ function buildLibraryUrl(endpoint, params, apiKey) {
 }
 
 function corsHeaders(origin) {
-  // 개발 중에는 모든 origin 허용
+  const allowed = isOriginAllowed(origin);
   return {
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': allowed ? origin : ALLOWED_ORIGINS[0],
+    'Vary': 'Origin',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Max-Age': '86400',
