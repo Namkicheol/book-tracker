@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastUpdated": "2026-05-10",
+    "lastUpdated": "2026-05-29",
     "sources": [
       {
         "id": "chaektase",
@@ -2047,7 +2047,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 10,
-      "lists": [],
+      "lists": [
+        "moonji-award"
+      ],
       "why": "알라딘 베스트셀러 10위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791130676227": {
@@ -2297,6 +2299,7 @@
       "lists": [
         "jeondokse",
         "kclw",
+        "moonji-award",
         "textbook"
       ],
       "why": "알라딘 베스트셀러 36위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다.",
@@ -2326,7 +2329,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 38,
-      "lists": [],
+      "lists": [
+        "bir-award"
+      ],
       "why": "알라딘 베스트셀러 38위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791167742865": {
@@ -2759,7 +2764,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 75,
-      "lists": [],
+      "lists": [
+        "moonji-award"
+      ],
       "why": "알라딘 베스트셀러 75위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9788949139999": {
@@ -2777,18 +2784,19 @@
     },
     "9791141608880": {
       "isbn": "9791141608880",
-      "title": "어느 날 문이 사라졌다 - 제25회 문학동네어린이문학상 수상작",
-      "author": "김은영 (지은이), 메 (그림)",
+      "title": "어느 날 문이 사라졌다",
+      "author": "김은영, 메",
       "publisher": "문학동네",
       "thumbnail": "https://image.aladin.co.kr/product/35706/26/cover200/k982036027_1.jpg",
       "year": 2025,
-      "targetAge": "초등 고학년",
-      "genre": "교양",
+      "targetAge": "초등 중학년",
+      "genre": "동화",
       "bestRank": 77,
       "lists": [
-        "morning-reading",
+        "bookstart",
         "childbook",
-        "bookstart"
+        "moonji-award",
+        "morning-reading"
       ],
       "why": "알라딘 베스트셀러 77위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
@@ -3129,7 +3137,9 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "bestRank": 107,
-      "lists": [],
+      "lists": [
+        "changbi-award"
+      ],
       "why": "알라딘 베스트셀러 107위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791168343252": {
@@ -3629,7 +3639,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 144,
-      "lists": [],
+      "lists": [
+        "moonji-award"
+      ],
       "why": "알라딘 베스트셀러 144위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791130654546": {
@@ -3681,7 +3693,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 148,
-      "lists": [],
+      "lists": [
+        "bir-award"
+      ],
       "why": "알라딘 베스트셀러 148위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791157855506": {
@@ -4267,7 +4281,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 199,
-      "lists": [],
+      "lists": [
+        "moonji-award"
+      ],
       "why": "알라딘 베스트셀러 199위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791130667546": {
@@ -4642,16 +4658,17 @@
     },
     "9791141612306": {
       "isbn": "9791141612306",
-      "title": "컵라면은 절대로 불어선 안 돼 - 제26회 문학동네어린이문학상 대상 수상작",
-      "author": "김지완 (지은이), 김지형 (그림)",
+      "title": "컵라면은 절대로 불어선 안 돼",
+      "author": "김지완, 김지형",
       "publisher": "문학동네",
       "thumbnail": "https://image.aladin.co.kr/product/37020/84/cover200/k642030523_1.jpg",
       "year": 2025,
-      "targetAge": "초등 고학년",
-      "genre": "교양",
+      "targetAge": "초등 저학년",
+      "genre": "동화",
       "bestRank": 238,
       "lists": [
-        "childbook"
+        "childbook",
+        "moonji-award"
       ],
       "why": "알라딘 베스트셀러 238위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
@@ -6135,6 +6152,7 @@
       "genre": "동화",
       "bestRank": 367,
       "lists": [
+        "bir-award",
         "textbook"
       ],
       "why": "알라딘 베스트셀러 367위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다.",
@@ -6165,6 +6183,7 @@
       "genre": "교양",
       "bestRank": 369,
       "lists": [
+        "bir-award",
         "morning-reading",
         "nlcy"
       ],
@@ -25183,6 +25202,7 @@
       "targetAge": "초등 저학년",
       "genre": "문학",
       "lists": [
+        "changbi-award",
         "kclw"
       ],
       "why": "한국어린이문학협의회 우수 창작 도서로 선정된 책입니다."
@@ -28782,6 +28802,7 @@
       "author": "차영아",
       "publisher": "",
       "lists": [
+        "moonji-award",
         "textbook"
       ],
       "year": 2022,
@@ -29190,6 +29211,7 @@
       "author": "이분희",
       "publisher": "",
       "lists": [
+        "bir-award",
         "textbook"
       ],
       "year": 2022,
@@ -36511,8 +36533,9 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading",
-        "childbook"
+        "childbook",
+        "moonji-award",
+        "morning-reading"
       ],
       "why": "2024 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -54323,8 +54346,9 @@
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [
-        "morning-reading",
-        "bookstart"
+        "bir-award",
+        "bookstart",
+        "morning-reading"
       ],
       "why": "2026 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -58377,15 +58401,16 @@
     },
     "9791169813938": {
       "isbn": "9791169813938",
-      "title": "현진에게 - 제5회 사계절어린이문학상 수상작",
-      "author": "이수진 (지은이), 양양 (그림)",
+      "title": "현진에게",
+      "author": "이수진, 양양",
       "publisher": "사계절",
       "thumbnail": "https://image.aladin.co.kr/product/37322/64/cover200/k622031854_1.jpg",
       "year": 2025,
-      "targetAge": "초등 고학년",
+      "targetAge": "초등 중학년",
       "genre": "문학",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "sagyejeol-award"
       ],
       "why": "2026 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -71193,19 +71218,703 @@
       ],
       "why": "2023 사계절어린이문학상 수상작입니다."
     },
-    "9791136299574": {
-      "isbn": "9791136299574",
-      "title": "하이큐!! 45 - 완결, 도전자들",
-      "author": "후루다테 하루이치 (지은이)",
-      "publisher": "대원씨아이(만화)",
-      "thumbnail": "https://image.aladin.co.kr/product/29586/60/cover200/k962838461_1.jpg",
+    "9788932016283": {
+      "isbn": "9788932016283",
+      "title": "겨울 해바라기",
+      "author": "유영소",
+      "publisher": "문학과지성사",
+      "lists": [
+        "maehaesong-award"
+      ],
+      "year": 2005,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "마해송문학상 수상(제1회). 겨울 속 해바라기처럼 꿋꿋이 자라는 아이의 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F497641%3Ftimestamp%3D20220810175544"
+    },
+    "9788932041568": {
+      "isbn": "9788932041568",
+      "title": "나 혼자 사춘기",
+      "author": "오늘",
+      "publisher": "문학과지성사",
+      "lists": [
+        "maehaesong-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "마해송문학상 수상(제19회). 혼자 사춘기를 보내는 아이의 내면 성장기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6363204%3Ftimestamp%3D20250124151211"
+    },
+    "9788936414016": {
+      "isbn": "9788936414016",
+      "title": "내 모자야",
+      "author": "임선영",
+      "publisher": "창비",
+      "lists": [
+        "changbi-award"
+      ],
+      "year": 2014,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "창비 좋은어린이책 대상. 자기 것에 대한 집착과 나눔을 배우는 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F532043%3Ftimestamp%3D20251101110749"
+    },
+    "9788936442712": {
+      "isbn": "9788936442712",
+      "title": "기호 3번 안석뽕",
+      "author": "진형민",
+      "publisher": "창비",
+      "lists": [
+        "changbi-award"
+      ],
+      "year": 2013,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "창비 좋은어린이책 대상. 학급 선거에 뛰어든 엉뚱한 후보의 선거 도전기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F532849%3Ftimestamp%3D20260403110813"
+    },
+    "9788936442767": {
+      "isbn": "9788936442767",
+      "title": "앵무새 돌려주기 대작전",
+      "author": "임지윤",
+      "publisher": "창비",
+      "lists": [
+        "changbi-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "창비 좋은어린이책 대상. 앵무새를 돌려주기 위한 유쾌한 소동 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F533066%3Ftimestamp%3D20231124170357"
+    },
+    "9788936443030": {
+      "isbn": "9788936443030",
+      "title": "우주로 가는 계단",
+      "author": "전수경",
+      "publisher": "창비",
+      "lists": [
+        "changbi-award"
+      ],
+      "year": 2019,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "창비 좋은어린이책 대상. 우주를 꿈꾸는 소녀의 계단 하나하나 오르는 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F4912968%3Ftimestamp%3D20260130123958"
+    },
+    "9788936443177": {
+      "isbn": "9788936443177",
+      "title": "마지막 레벨 업",
+      "author": "윤영주",
+      "publisher": "창비",
+      "lists": [
+        "changbi-award"
+      ],
+      "year": 2021,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "창비 좋은어린이책 대상. 게임 속 마지막 레벨을 향해 달리는 아이들의 성장.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5625515%3Ftimestamp%3D20260414120319"
+    },
+    "9788936443238": {
+      "isbn": "9788936443238",
+      "title": "루호",
+      "author": "채은하",
+      "publisher": "창비",
+      "lists": [
+        "changbi-award"
+      ],
+      "year": 2022,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "창비 좋은어린이책 대상. 특별한 능력을 가진 아이의 정체성과 우정.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6043502%3Ftimestamp%3D20260520123048"
+    },
+    "9788936451332": {
+      "isbn": "9788936451332",
+      "title": "엄마 사용법",
+      "author": "김성진",
+      "publisher": "창비",
+      "lists": [
+        "changbi-award"
+      ],
+      "year": 2012,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "창비 좋은어린이책 대상. 엄마를 다루는 법을 고민하는 아이의 유머러스한 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F533200%3Ftimestamp%3D20260528110940"
+    },
+    "9788936451516": {
+      "isbn": "9788936451516",
+      "title": "지우개 똥 쪼물이",
+      "author": "조규영",
+      "publisher": "창비",
+      "lists": [
+        "changbi-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "창비 좋은어린이책 대상. 지우개 똥으로 만든 캐릭터와 벌어지는 재미있는 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F533228%3Ftimestamp%3D20260404110637"
+    },
+    "9788949100401": {
+      "isbn": "9788949100401",
+      "title": "바람 부는 날",
+      "author": "정순희",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 1996,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 바람 부는 날 아이들의 일상을 따뜻하게 그린 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F613931%3Ftimestamp%3D20240907112407"
+    },
+    "9788949100487": {
+      "isbn": "9788949100487",
+      "title": "이모의 결혼식",
+      "author": "선현경",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2009,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 이모 결혼식 준비 과정에서 가족의 따뜻함을 배우는 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F613936%3Ftimestamp%3D20251017110314"
+    },
+    "9788949101538": {
+      "isbn": "9788949101538",
+      "title": "어처구니 이야기",
+      "author": "박연철",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 옛이야기 속 어처구니들의 유쾌하고 신나는 모험.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614028%3Ftimestamp%3D20240907112359"
+    },
+    "9788949101583": {
+      "isbn": "9788949101583",
+      "title": "입이 똥꼬에게",
+      "author": "박경효",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 몸속 기관들의 엉뚱한 대화로 배우는 유머 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614418%3Ftimestamp%3D20240907112417"
+    },
+    "9788949101620": {
+      "isbn": "9788949101620",
+      "title": "진짜 나무가 된다면",
+      "author": "김진철",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2010,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 나무가 되고 싶은 아이의 상상력을 담은 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614238%3Ftimestamp%3D20240907112407"
+    },
+    "9788949101644": {
+      "isbn": "9788949101644",
+      "title": "비야, 안녕!",
+      "author": "한자영",
+      "publisher": "",
+      "lists": [
+        "bir-award"
+      ],
+      "year": null,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 비와 아이의 따뜻한 만남을 그린 그림책."
+    },
+    "9788949101705": {
+      "isbn": "9788949101705",
+      "title": "행복한 두더지",
+      "author": "김명석",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2012,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 두더지의 소소한 일상에서 찾는 행복 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F615040%3Ftimestamp%3D20240907112417"
+    },
+    "9788949101743": {
+      "isbn": "9788949101743",
+      "title": "양들을 부탁해",
+      "author": "김세진",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 양 떼를 지키는 목동 소년의 책임감 성장기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614436%3Ftimestamp%3D20240907112400"
+    },
+    "9788949101842": {
+      "isbn": "9788949101842",
+      "title": "벽",
+      "author": "정진호",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2016,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 벽이라는 소재로 편견과 경계를 이야기하는 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614267%3Ftimestamp%3D20250806110225"
+    },
+    "9788949101873": {
+      "isbn": "9788949101873",
+      "title": "차마고도를 넘어",
+      "author": "유재숙",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2017,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 차마고도 역사 배경의 소년 성장 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614056%3Ftimestamp%3D20240907112408"
+    },
+    "9788949101903": {
+      "isbn": "9788949101903",
+      "title": "사소한 소원만 들어주는 두꺼비",
+      "author": "전금자",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2017,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 작은 소원만 들어주는 두꺼비와 아이의 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F615179%3Ftimestamp%3D20260320110633"
+    },
+    "9788949102511": {
+      "isbn": "9788949102511",
+      "title": "이상한 하루",
+      "author": "연수",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2019,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 일상 속 이상한 일들을 유머러스하게 담은 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5005042%3Ftimestamp%3D20250617125356"
+    },
+    "9788949102528": {
+      "isbn": "9788949102528",
+      "title": "보이니?",
+      "author": "김은영",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2020,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 숨바꼭질처럼 찾아보는 재미있는 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5477511%3Ftimestamp%3D20240907145310"
+    },
+    "9788949102542": {
+      "isbn": "9788949102542",
+      "title": "그들은 결국 브레멘에 가지 못했다",
+      "author": "루리",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2020,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 브레멘 음악대 이야기를 비튼 위트 넘치는 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5511579%3Ftimestamp%3D20240907145351"
+    },
+    "9788949102559": {
+      "isbn": "9788949102559",
+      "title": "친구를 만지지 않아요",
+      "author": "육월식",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2021,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 경계와 배려를 자연스럽게 알려주는 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5732912%3Ftimestamp%3D20240907150928"
+    },
+    "9788949102603": {
+      "isbn": "9788949102603",
+      "title": "일곱 할머니와 놀이터",
+      "author": "구돌",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2022,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "황금도깨비상 그림책 대상. 놀이터를 둘러싼 할머니들의 유쾌한 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6148088%3Ftimestamp%3D20250621145107"
+    },
+    "9788949120188": {
+      "isbn": "9788949120188",
+      "title": "흐린 후 차차 갬",
+      "author": "김선희",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2001,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 흐린 날처럼 복잡한 감정을 풀어가는 아이 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F615809%3Ftimestamp%3D20250409113719"
+    },
+    "9788949121062": {
+      "isbn": "9788949121062",
+      "title": "건방진 도도군",
+      "author": "강정연",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2007,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 거만한 척하지만 속은 여린 도도군의 성장기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614869%3Ftimestamp%3D20250521180928"
+    },
+    "9788949121482": {
+      "isbn": "9788949121482",
+      "title": "으랏차차 뚱보 클럽",
+      "author": "전현정",
+      "publisher": "",
+      "lists": [
+        "bir-award"
+      ],
+      "year": null,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 체중 때문에 속상한 아이들이 함께 성장하는 유쾌한 동화."
+    },
+    "9788949121819": {
+      "isbn": "9788949121819",
+      "title": "바꿔!",
+      "author": "박상기",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 서로 바꾸고 싶은 두 아이의 엉뚱한 실험.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F615879%3Ftimestamp%3D20250408113550"
+    },
+    "9788949121925": {
+      "isbn": "9788949121925",
+      "title": "강남 사장님",
+      "author": "이지음",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
       "year": 2020,
       "targetAge": "초등 중학년",
-      "genre": "문학",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 아파트 단지 꼬마 사장님의 좌충우돌 창업기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5421452%3Ftimestamp%3D20260116140614"
+    },
+    "9788949121949": {
+      "isbn": "9788949121949",
+      "title": "일곱 번째 노란 벤치",
+      "author": "은영",
+      "publisher": "비룡소",
       "lists": [
-        "sagyejeol-award"
+        "bir-award"
       ],
-      "why": "2025 사계절어린이문학상 수상작입니다."
+      "year": 2021,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 공원 벤치에서 시작되는 이웃과의 작은 연결.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5807848%3Ftimestamp%3D20250618175954"
+    },
+    "9788949121963": {
+      "isbn": "9788949121963",
+      "title": "단어의 여왕",
+      "author": "신영배",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2022,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 단어를 모으는 소녀의 상상력 가득한 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5960875%3Ftimestamp%3D20240907152749"
+    },
+    "9788949121994": {
+      "isbn": "9788949121994",
+      "title": "천하제일 치킨쇼",
+      "author": "이희정",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 치킨 가게를 둘러싼 동네 아이들의 유쾌한 경쟁기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6257905%3Ftimestamp%3D20250620150802"
+    },
+    "9788949122038": {
+      "isbn": "9788949122038",
+      "title": "핼러윈 마을에 캐럴이 울리면",
+      "author": "성요셉",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 핼러윈과 크리스마스가 뒤섞인 마을의 유머러스한 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6500318%3Ftimestamp%3D20241119161527"
+    },
+    "9788949180199": {
+      "isbn": "9788949180199",
+      "title": "영모가 사라졌다",
+      "author": "공지희",
+      "publisher": "비룡소",
+      "lists": [
+        "bir-award"
+      ],
+      "year": 2003,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "황금도깨비상 동화 대상. 갑자기 사라진 친구 영모를 찾는 과정의 심리 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F616062%3Ftimestamp%3D20250612113700"
+    },
+    "9788954604048": {
+      "isbn": "9788954604048",
+      "title": "내 가슴에 해마가 산다",
+      "author": "김려령",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2007,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 기억과 감정을 상징하는 해마를 통한 성장 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F689973%3Ftimestamp%3D20260213111001"
+    },
+    "9788954613668": {
+      "isbn": "9788954613668",
+      "title": "곰의 아이들",
+      "author": "류화선",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2010,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 곰 아이들과 함께하는 신비로운 숲 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F690858%3Ftimestamp%3D20241030114201"
+    },
+    "9788954617352": {
+      "isbn": "9788954617352",
+      "title": "열세 번째 아이",
+      "author": "이은용",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2012,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 열세 번째로 태어난 아이의 특별한 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F691302%3Ftimestamp%3D20260427110559"
+    },
+    "9788954617895": {
+      "isbn": "9788954617895",
+      "title": "몬스터 바이러스 도시",
+      "author": "최양선",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2012,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 도시를 위협하는 바이러스 몬스터에 맞선 아이들.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F691427%3Ftimestamp%3D20241210113348"
+    },
+    "9788954620260": {
+      "isbn": "9788954620260",
+      "title": "시간 가게",
+      "author": "이나영",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2013,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 시간을 파는 가게에서 벌어지는 판타지 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F691707%3Ftimestamp%3D20260430110839"
+    },
+    "9788954622004": {
+      "isbn": "9788954622004",
+      "title": "방학 탐구 생활",
+      "author": "김선정",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2013,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 방학을 탐구하듯 보내는 아이의 일상 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F691587%3Ftimestamp%3D20221011175729"
+    },
+    "9788954623742": {
+      "isbn": "9788954623742",
+      "title": "삼백이의 칠일장 1: 얘야 아무개야 거시기야",
+      "author": "천효정",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 개 삼백이와 함께한 칠 일간의 소중한 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F691659%3Ftimestamp%3D20260511110656"
+    },
+    "9788954634748": {
+      "isbn": "9788954634748",
+      "title": "노잣돈 갚기 프로젝트",
+      "author": "김진희",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 할머니 노잣돈을 갚기 위한 아이의 따뜻한 프로젝트.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F692581%3Ftimestamp%3D20260325110824"
+    },
+    "9788954638111": {
+      "isbn": "9788954638111",
+      "title": "여름이 반짝",
+      "author": "김수빈",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 잊지 못할 여름의 순간들을 담은 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F692367%3Ftimestamp%3D20250508120719"
+    },
+    "9788954642958": {
+      "isbn": "9788954642958",
+      "title": "제후의 선택",
+      "author": "김태호",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2016,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 중요한 결정 앞에 선 소년의 성장 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F693748%3Ftimestamp%3D20230519172800"
+    },
+    "9788954649957": {
+      "isbn": "9788954649957",
+      "title": "와우의 첫 책",
+      "author": "주미경",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2018,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "문학동네어린이문학상 수상. 책을 처음 만나는 아이의 설렘을 담은 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F693994%3Ftimestamp%3D20250202114023"
+    },
+    "9788954653503": {
+      "isbn": "9788954653503",
+      "title": "순재와 키완",
+      "author": "오하림",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 한국 아이와 에티오피아 아이의 우정 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F4806659%3Ftimestamp%3D20260307114418"
+    },
+    "9788954690188": {
+      "isbn": "9788954690188",
+      "title": "마스크 요정과 꼬마꽃벌",
+      "author": "정범종",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2022,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 마스크 쓴 요정과 꽃벌의 우정을 담은 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6225437%3Ftimestamp%3D20260108151822"
+    },
+    "9788978132404": {
+      "isbn": "9788978132404",
+      "title": "나비도감",
+      "author": "최현진",
+      "publisher": "문학동네",
+      "lists": [
+        "moonji-award"
+      ],
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "문학동네어린이문학상 수상. 나비를 채집하며 떠나는 과학과 성장의 여정.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6935369%3Ftimestamp%3D20250919142729"
     }
   },
   "awards": {
