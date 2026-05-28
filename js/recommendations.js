@@ -10,6 +10,8 @@
   let textbookMode = false;
   let recView = localStorage.getItem('recView') || 'grid';
   let kinderData = null;
+  let kinderOpen = false;     // 유치원 특선 토글 상태 (기본 닫힘)
+  let pendingScrollGrade = null; // URL 파라미터로 이동할 학년
 
   // ── Load data ────────────────────────────────────────────────
 
@@ -40,11 +42,36 @@
       }
 
       console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
+
+      // URL 파라미터 처리 — book-preview의 출처 배지 클릭이 ?source=&grade=로 이동시킴
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const sourceParam = params.get('source');
+        const gradeParam = params.get('grade');
+        if (sourceParam && gradeParam) {
+          sectionState[gradeParam] = sectionState[gradeParam] || {
+            sort: 'popularity', genre: 'all', source: 'all', current: 8, open: false
+          };
+          sectionState[gradeParam].source = sourceParam;
+          sectionState[gradeParam].open = true;
+          pendingScrollGrade = gradeParam;
+        }
+      } catch (e) { /* ignore */ }
+
       attachModeTabListeners();
       attachViewToggle();
       attachScrollTop();
       renderGradeSections();
       attachSearchListener();
+
+      // URL 파라미터로 지정된 학년 섹션으로 스크롤
+      if (pendingScrollGrade) {
+        requestAnimationFrame(() => {
+          const target = document.querySelector(`details.grade-section[data-grade-id="${pendingScrollGrade}"]`);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          pendingScrollGrade = null;
+        });
+      }
     } catch (err) {
       console.error('[recommendations] 데이터 로드 실패:', err);
       const content = document.getElementById('gradeContent');
@@ -206,6 +233,9 @@
       if (kinderSection) {
         attachCardListeners();
         backfillThumbnails(kinderSection);
+        kinderSection.addEventListener('toggle', () => {
+          kinderOpen = kinderSection.open;
+        });
       }
     }
 
@@ -302,7 +332,7 @@
       </div>`;
     }).join('');
 
-    return `<details id="kinderSection" open style="border-bottom:2px solid var(--border);margin-bottom:8px">
+    return `<details id="kinderSection"${kinderOpen ? ' open' : ''} style="border-bottom:2px solid var(--border);margin-bottom:8px">
       <summary class="kinder-summary">
         <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
           <span style="font-size:20px">🌸</span>
