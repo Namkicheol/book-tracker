@@ -11,7 +11,8 @@
   let recView = localStorage.getItem('recView') || 'grid';
   let kinderData = null;
   let kinderOpen = false;     // 유치원 특선 토글 상태 (기본 닫힘)
-  let pendingScrollGrade = null; // URL 파라미터로 이동할 학년
+
+  const ALL_GRADE_IDS = ['유아', '초등 저학년', '초등 중학년', '초등 고학년', '청소년'];
 
   // ── Load data ────────────────────────────────────────────────
 
@@ -42,35 +43,22 @@
       }
 
       console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
-
-      // URL 파라미터 처리 — book-preview의 출처 배지 클릭이 ?source=&grade=로 이동시킴
-      try {
-        const params = new URLSearchParams(window.location.search);
-        const sourceParam = params.get('source');
-        const gradeParam = params.get('grade');
-        if (sourceParam && gradeParam) {
-          sectionState[gradeParam] = sectionState[gradeParam] || {
-            sort: 'popularity', genre: 'all', source: 'all', current: 8, open: false
-          };
-          sectionState[gradeParam].source = sourceParam;
-          sectionState[gradeParam].open = true;
-          pendingScrollGrade = gradeParam;
-        }
-      } catch (e) { /* ignore */ }
-
       attachModeTabListeners();
       attachViewToggle();
       attachScrollTop();
       renderGradeSections();
       attachSearchListener();
+      attachSourceViewListeners();
 
-      // URL 파라미터로 지정된 학년 섹션으로 스크롤
-      if (pendingScrollGrade) {
-        requestAnimationFrame(() => {
-          const target = document.querySelector(`details.grade-section[data-grade-id="${pendingScrollGrade}"]`);
-          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          pendingScrollGrade = null;
-        });
+      // book-preview의 추천 기관 배지 → sourceView 열기
+      window.openSourceView = openSourceView;
+
+      // ?source=...&grade=... 쿼리스트링으로 진입 시 자동으로 sourceView 열기
+      const params = new URLSearchParams(window.location.search);
+      const querySource = params.get('source');
+      const queryGrade = params.get('grade') || 'all';
+      if (querySource) {
+        setTimeout(() => openSourceView(querySource, queryGrade), 80);
       }
     } catch (err) {
       console.error('[recommendations] 데이터 로드 실패:', err);
@@ -301,6 +289,121 @@
         renderSectionBooks(gradeId, current + LOAD_MORE);
       });
     }
+  }
+
+  // ── 추천 기관 전용 페이지 (sourceView) ─────────────────────────
+
+  let sourceViewState = { active: false, sourceId: null, grade: 'all' };
+
+  function openSourceView(sourceId, initialGrade) {
+    if (!recommendationData) return;
+    const sourceObj = recommendationData.meta.sources.find(s => s.id === sourceId);
+    if (!sourceObj) return;
+
+    sourceViewState.active = true;
+    sourceViewState.sourceId = sourceId;
+    sourceViewState.grade = ALL_GRADE_IDS.includes(initialGrade) ? initialGrade : 'all';
+
+    toggleMainView(false);
+
+    const c = sourceObj.badge.color;
+    const header = document.getElementById('sourceViewHeader');
+    if (header) header.style.background = `linear-gradient(135deg, ${c} 0%, ${c}d0 100%)`;
+
+    document.getElementById('sourceViewBadge').textContent = sourceObj.badge.text;
+    document.getElementById('sourceViewTitle').textContent = sourceObj.fullName || sourceObj.name;
+    document.getElementById('sourceViewDesc').textContent = sourceObj.description || '';
+
+    const allFromSource = allBooks.filter(b => (b.lists || []).includes(sourceId));
+    document.getElementById('sourceViewCount').textContent = `총 ${allFromSource.length}권`;
+
+    const sv = document.getElementById('sourceView');
+    if (sv) sv.hidden = false;
+    renderSourceGradeTabs();
+    renderSourceGrid();
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+
+  function closeSourceView() {
+    sourceViewState.active = false;
+    const sv = document.getElementById('sourceView');
+    if (sv) sv.hidden = true;
+    toggleMainView(true);
+    // URL 파라미터 정리 — 뒤로 가서 다시 sourceView 안 열리게
+    if (window.location.search) {
+      history.replaceState(null, '', window.location.pathname);
+    }
+  }
+
+  function toggleMainView(show) {
+    const els = [
+      document.querySelector('.rec-search-bar'),
+      document.getElementById('modeTabs'),
+      document.getElementById('searchResults'),
+      document.getElementById('gradeContent'),
+    ];
+    els.forEach(el => { if (el) el.style.display = show ? '' : 'none'; });
+  }
+
+  function renderSourceGradeTabs() {
+    const wrap = document.getElementById('sourceGradeTabs');
+    if (!wrap || !sourceViewState.sourceId) return;
+    const sourceObj = recommendationData.meta.sources.find(s => s.id === sourceViewState.sourceId);
+    const c = sourceObj ? sourceObj.badge.color : '#FF6B6B';
+    const sourceBooks = allBooks.filter(b => (b.lists || []).includes(sourceViewState.sourceId));
+
+    const tabs = [
+      { id: 'all',          label: '전체',   icon: '📚' },
+      { id: '유아',         label: '유아',   icon: '🐣' },
+      { id: '초등 저학년', label: '저학년', icon: '📗' },
+      { id: '초등 중학년', label: '중학년', icon: '📘' },
+      { id: '초등 고학년', label: '고학년', icon: '📕' },
+      { id: '청소년',       label: '청소년', icon: '📖' },
+    ];
+
+    wrap.innerHTML = tabs.map(t => {
+      const count = t.id === 'all' ? sourceBooks.length : sourceBooks.filter(b => b.targetAge === t.id).length;
+      if (count === 0 && t.id !== 'all') return '';
+      const active = sourceViewState.grade === t.id;
+      return `<button class="source-grade-tab" data-grade="${escapeAttr(t.id)}" style="flex-shrink:0;padding:8px 14px;border:1.5px solid ${active ? c : '#e0e0e0'};border-radius:18px;background:${active ? c : '#fff'};color:${active ? '#fff' : '#666'};font-size:13px;font-weight:${active ? 700 : 500};cursor:pointer;white-space:nowrap">${t.icon} ${t.label} (${count})</button>`;
+    }).filter(Boolean).join('');
+
+    wrap.querySelectorAll('.source-grade-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sourceViewState.grade = btn.dataset.grade;
+        renderSourceGradeTabs();
+        renderSourceGrid();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
+  function renderSourceGrid() {
+    const grid = document.getElementById('sourceGrid');
+    if (!grid || !sourceViewState.sourceId) return;
+    let books = allBooks.filter(b => (b.lists || []).includes(sourceViewState.sourceId));
+    if (sourceViewState.grade !== 'all') {
+      books = books.filter(b => b.targetAge === sourceViewState.grade);
+    }
+    const gradeOrder = { '유아': 0, '초등 저학년': 1, '초등 중학년': 2, '초등 고학년': 3, '청소년': 4 };
+    books.sort((a, b) => {
+      const ga = gradeOrder[a.targetAge] ?? 9;
+      const gb = gradeOrder[b.targetAge] ?? 9;
+      if (ga !== gb) return ga - gb;
+      return (b.lists || []).length - (a.lists || []).length;
+    });
+
+    if (books.length === 0) {
+      grid.innerHTML = `<p style="text-align:center;padding:40px 16px;color:#999">이 학년에는 추천 도서가 없어요.</p>`;
+      return;
+    }
+    grid.innerHTML = books.map(b => renderCard(b)).join('');
+    attachCardListeners();
+    backfillThumbnails(grid);
+  }
+
+  function attachSourceViewListeners() {
+    document.getElementById('sourceBackBtn')?.addEventListener('click', closeSourceView);
   }
 
   // ── Kindergarten Curated Section ──────────────────────────────

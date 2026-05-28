@@ -195,6 +195,21 @@
     <!-- Dynamically populated with grade sections -->
   </div>
 
+  <!-- 추천 기관 전용 페이지 (배지 클릭 시 표시) -->
+  <div id="sourceView" hidden style="padding-bottom:40px">
+    <div id="sourceViewHeader" style="padding:20px 16px 16px;color:#fff;position:relative">
+      <button id="sourceBackBtn" aria-label="뒤로" style="position:absolute;top:14px;left:12px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)">←</button>
+      <div style="padding-left:44px">
+        <div id="sourceViewBadge" style="display:inline-block;padding:4px 10px;background:rgba(255,255,255,0.22);border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.06em;margin-bottom:6px"></div>
+        <h1 id="sourceViewTitle" style="font-family:var(--font-han);font-size:22px;font-weight:700;margin:0 0 4px 0"></h1>
+        <p id="sourceViewDesc" style="font-size:12px;opacity:0.92;margin:0;line-height:1.45"></p>
+        <div id="sourceViewCount" style="font-size:11px;opacity:0.85;margin-top:8px;font-weight:600"></div>
+      </div>
+    </div>
+    <div id="sourceGradeTabs" style="display:flex;gap:6px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-bottom:1px solid #f0f0f0;background:#fff;position:sticky;top:0;z-index:9"></div>
+    <div class="rec-browse-grid" id="sourceGrid" style="padding:16px"></div>
+  </div>
+
   <!-- Scroll to top -->
   <button id="scrollTopBtn" class="scroll-top-btn" aria-label="맨 위로">
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
@@ -258,6 +273,6 @@
   <script src="js/library-api.js?v=20260512a"></script>
   <script src="js/book-preview.js?v=20260512a"></script>
   <script src="js/recs-cache.js?v=20260527d"></script>
-  <script src="js/recommendations.js?v=20260528a"></script>
+  <script src="js/recommendations.js?v=20260528c"></script>
 </body>
 </html>
