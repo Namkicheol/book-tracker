@@ -109,6 +109,18 @@ create policy "folders update own"
 -- public.users는 set_updated_at 트리거가 있지만 books/folders는 클라가 권위.
 -- 트리거 달면 동기화 충돌 시 "서버에 늦게 도착한 쪽"이 이겨서 사용자 의도 깨짐.
 
+-- ── Data API GRANT (Supabase 2026-05-30 신규 정책 대응) ─────
+-- 2026-10-30부터 기존 프로젝트에도 새 테이블의 명시 GRANT가 강제됨.
+-- RLS가 행 단위 권한을 책임지므로 테이블 단위 GRANT는 SELECT/INSERT/UPDATE만.
+-- DELETE는 GRANT 안 함 — soft-delete 정책과 일관됨 (정책 일치 + 방어 깊이).
+grant usage on schema public to authenticated;
+grant select, insert, update on public.books   to authenticated;
+grant select, insert, update on public.folders to authenticated;
+
+-- anon 키(비로그인 사용자)는 books/folders 접근 불허. supabase-js가 로그인
+-- 안 된 상태에서 호출해도 RLS auth.uid() = user_id가 NULL이라 막히지만,
+-- GRANT 자체를 안 주는 게 정책의 명시적 의도와 일치.
+
 -- ── 30일 정리 (선택, 수동 실행 또는 Edge Function) ─────────
 -- delete from public.books   where deleted_at is not null and deleted_at < now() - interval '30 days';
 -- delete from public.folders where deleted_at is not null and deleted_at < now() - interval '30 days';
