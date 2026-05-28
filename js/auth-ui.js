@@ -446,10 +446,81 @@
     });
   }
 
+  // ── 첫 로그인 동기화 동의 + 재로그인 pull ──────────────────────
+
+  function showSyncConsentDialog(userId, bookCount) {
+    if (document.getElementById('syncConsentModal')) return;
+    ensureAnim();
+    var modal = document.createElement('div');
+    modal.id = 'syncConsentModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10001;padding:20px;animation:authFadeIn .18s ease';
+    modal.innerHTML = [
+      '<div style="background:#fff;border-radius:20px;padding:24px;max-width:340px;width:100%;box-shadow:0 16px 48px rgba(0,0,0,0.2);animation:authPop .22s cubic-bezier(.2,.8,.2,1);text-align:center">',
+      '<div style="font-size:40px;margin-bottom:12px">☁️</div>',
+      '<div style="font-size:18px;font-weight:800;color:#4A4A4A;margin-bottom:8px">서재를 클라우드에 올릴까요?</div>',
+      '<div style="font-size:14px;color:#8B8B8B;line-height:1.6;margin-bottom:20px">',
+      '이 기기에 <strong>' + bookCount + '권</strong>이 있어요.<br>',
+      '클라우드에 올리면 다른 기기에서도<br>같은 서재를 쓸 수 있어요.',
+      '</div>',
+      '<div style="display:flex;gap:8px">',
+      '<button id="syncConsentLater" style="flex:1;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:#8B8B8B">나중에</button>',
+      '<button id="syncConsentOk" style="flex:2;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff">올리기</button>',
+      '</div>',
+      '</div>'
+    ].join('');
+    document.body.appendChild(modal);
+
+    modal.querySelector('#syncConsentLater').addEventListener('click', function () {
+      modal.remove();
+    });
+
+    modal.querySelector('#syncConsentOk').addEventListener('click', async function () {
+      var btn = modal.querySelector('#syncConsentOk');
+      btn.disabled = true;
+      btn.textContent = '올리는 중…';
+      try {
+        await window.Sync.uploadAll();
+        await window.Sync.pullBooks();
+        await window.Sync.pullFolders();
+        localStorage.setItem('_syncUploaded_' + userId, '1');
+      } catch (e) { /* ignore */ }
+      modal.remove();
+    });
+  }
+
+  async function handleSignIn(user) {
+    if (!window.Sync || !window.Storage) return;
+    var uploadedKey = '_syncUploaded_' + user.id;
+    if (localStorage.getItem(uploadedKey)) {
+      // 이미 동기화 동의한 사용자 — 조용히 pull
+      try {
+        await window.Sync.pullBooks();
+        await window.Sync.pullFolders();
+      } catch (e) { /* ignore */ }
+      return;
+    }
+    var books = window.Storage.getAllBooks();
+    if (!books.length) {
+      // 책 없으면 그냥 pull + flag 세팅
+      localStorage.setItem(uploadedKey, '1');
+      try {
+        await window.Sync.pullBooks();
+        await window.Sync.pullFolders();
+      } catch (e) { /* ignore */ }
+      return;
+    }
+    showSyncConsentDialog(user.id, books.length);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     injectTopRightCircle();
     if (window.SB && window.SB.enabled) {
-      window.SB.onAuthChange(function () { refresh(); });
+      window.SB.onAuthChange(function (event, session) {
+        refresh();
+        if (event === 'SIGNED_IN' && session && session.user) {
+          handleSignIn(session.user);
+        }
+      });
     }
   });
 
