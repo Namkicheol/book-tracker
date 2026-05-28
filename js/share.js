@@ -121,7 +121,7 @@
     notifications.push({
       id: 'rank_change',
       icon: '📈',
-      text: '우리 반 랭킹이 3위로 올라갔어요!',
+      text: '우리 학교 랭킹이 3위로 올라갔어요!',
       time: '어제',
       unread: false,
       timestamp: now - 24 * 3600000,
