@@ -111,6 +111,7 @@
         const fresh = normalizeBook({ ...book, createdAt: now, updatedAt: now });
         books.push(fresh);
         writeJSON(KEYS.BOOKS, books);
+        if (window.Sync) window.Sync.pushBook(fresh);
         return fresh;
       }
       // 부활: deletedAt 명시적으로 null로 클리어 (caller가 안 보내도)
@@ -122,6 +123,7 @@
       });
       books[idx] = updated;
       writeJSON(KEYS.BOOKS, books);
+      if (window.Sync) window.Sync.pushBook(updated);
       return updated;
     }
 
@@ -133,6 +135,7 @@
     });
     books.push(fresh);
     writeJSON(KEYS.BOOKS, books);
+    if (window.Sync) window.Sync.pushBook(fresh);
     return fresh;
   }
 
@@ -151,6 +154,7 @@
     const now = nowIso();
     books[idx] = normalizeBook({ ...books[idx], deletedAt: now, updatedAt: now });
     writeJSON(KEYS.BOOKS, books);
+    if (window.Sync) window.Sync.pushBook(books[idx]);
     return true;
   }
 
@@ -229,6 +233,7 @@
         const updated = { ...folders[idx], ...folder, updatedAt: now };
         folders[idx] = updated;
         writeJSON(KEYS.FOLDERS, folders);
+        if (window.Sync) window.Sync.pushFolder(updated);
         return updated;
       }
     }
@@ -246,6 +251,7 @@
     };
     folders.push(fresh);
     writeJSON(KEYS.FOLDERS, folders);
+    if (window.Sync) window.Sync.pushFolder(fresh);
     return fresh;
   }
 
@@ -267,8 +273,13 @@
     });
     if (touched) writeJSON(KEYS.BOOKS, nextBooks);
 
-    folders[idx] = { ...folders[idx], deletedAt: now, updatedAt: now };
+    const deletedFolder = { ...folders[idx], deletedAt: now, updatedAt: now };
+    folders[idx] = deletedFolder;
     writeJSON(KEYS.FOLDERS, folders);
+    if (window.Sync) {
+      window.Sync.pushFolder(deletedFolder);
+      if (touched) nextBooks.forEach(function(b) { if (b.updatedAt === now) window.Sync.pushBook(b); });
+    }
     return true;
   }
 
