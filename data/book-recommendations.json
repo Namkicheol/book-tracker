@@ -188,6 +188,17 @@
           "text": "한국출판문화상",
           "color": "#34495e"
         }
+      },
+      {
+        "id": "caldecott-award",
+        "name": "칼데콧상",
+        "fullName": "칼데콧상 (Caldecott Medal/Honor) 한국어판",
+        "url": "https://www.aladin.co.kr/shop/book/Recommend2010/award.aspx?awardtype=4&awardid=36",
+        "description": "미국도서관협회(ALA) 선정 그림책 최고 권위상의 한국어 번역본",
+        "badge": {
+          "text": "칼데콧",
+          "color": "#b8860b"
+        }
       }
     ]
   },
@@ -30717,8 +30728,9 @@
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [
-        "morning-reading",
-        "childbook"
+        "caldecott-award",
+        "childbook",
+        "morning-reading"
       ],
       "why": "2024 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -42177,6 +42189,7 @@
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [
+        "caldecott-award",
         "morning-reading"
       ],
       "why": "2025 행복한아침독서 추천도서로 선정된 책입니다."
@@ -42607,6 +42620,7 @@
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [
+        "caldecott-award",
         "morning-reading"
       ],
       "why": "2025 행복한아침독서 추천도서로 선정된 책입니다."
@@ -55006,6 +55020,7 @@
       "targetAge": "초등 저학년",
       "genre": "문학",
       "lists": [
+        "caldecott-award",
         "morning-reading"
       ],
       "why": "2026 행복한아침독서 추천도서로 선정된 책입니다."
@@ -65509,6 +65524,7 @@
       "targetAge": "초등 저학년",
       "genre": "문학",
       "lists": [
+        "caldecott-award",
         "nlcy"
       ],
       "why": "2025 국립어린이청소년도서관 사서추천 도서로 선정된 책입니다."
@@ -71915,6 +71931,577 @@
       "genre": "동화",
       "why": "문학동네어린이문학상 수상. 나비를 채집하며 떠나는 과학과 성장의 여정.",
       "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6935369%3Ftimestamp%3D20250919142729"
+    },
+    "9788925569383": {
+      "isbn": "9788925569383",
+      "title": "우리들의 호수",
+      "author": "앤지 강",
+      "publisher": "주니어RHK",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2026,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 잔잔한 호수처럼 평화롭고 따뜻한 세계를 담았다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F7226118%3Ftimestamp%3D20260528150828"
+    },
+    "9788901270197": {
+      "isbn": "9788901270197",
+      "title": "모두가 축복이에요",
+      "author": "말라 프레이지",
+      "publisher": "웅진주니어",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2023,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 세상 모든 생명이 축복이라는 따뜻한 메시지를 전한다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6387402%3Ftimestamp%3D20250501192123"
+    },
+    "9788965466796": {
+      "isbn": "9788965466796",
+      "title": "모두 타 버린 것은 아니야",
+      "author": "제이슨 레이놀즈",
+      "publisher": "밝은미래",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 슬픔 속에서도 희망의 불씨를 찾는 시적인 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6480521%3Ftimestamp%3D20260512122309"
+    },
+    "9788949105543": {
+      "isbn": "9788949105543",
+      "title": "올빼미 기사",
+      "author": "크리스토퍼 데니스",
+      "publisher": "비룡소",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 밤을 지키는 올빼미 기사의 용기 있는 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6336088%3Ftimestamp%3D20260508151219"
+    },
+    "9788979381535": {
+      "isbn": "9788979381535",
+      "title": "물냉이",
+      "author": "안드레아 왕",
+      "publisher": "다산기획",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2022,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 이민 가정의 식탁에 담긴 정체성과 가족의 온기를 담았다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6061282%3Ftimestamp%3D20240803151527"
+    },
+    "9788983097224": {
+      "isbn": "9788983097224",
+      "title": "꽃을 보았니?",
+      "author": "숀 해리스",
+      "publisher": "지양어린이",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2023,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 흑인 소녀의 일상을 밝고 따뜻하게 그린 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5654409%3Ftimestamp%3D20250121144319"
+    },
+    "9788979381412": {
+      "isbn": "9788979381412",
+      "title": "자연이 우리에게 손짓해!",
+      "author": "데보라 언더우드",
+      "publisher": "다산기획",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2020,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 자연이 우리를 부르는 소리를 감각적인 그림으로 전한다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5493603%3Ftimestamp%3D20250715134936"
+    },
+    "9788939572201": {
+      "isbn": "9788939572201",
+      "title": "워터 프로텍터",
+      "author": "캐롤 린드스트롬",
+      "publisher": "대교북스 주니어",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2021,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 물을 지키려는 원주민 소녀의 용기 있는 행동을 담았다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5849952%3Ftimestamp%3D20240128153742"
+    },
+    "9788949114033": {
+      "isbn": "9788949114033",
+      "title": "행복한 고양이 아저씨",
+      "author": "아이린 래섬, 카림 샴시-바샤",
+      "publisher": "비룡소",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2021,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 고양이를 사랑하는 아저씨의 따뜻하고 유쾌한 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5654281%3Ftimestamp%3D20250813143708"
+    },
+    "9788961707978": {
+      "isbn": "9788961707978",
+      "title": "우리는 패배하지 않아",
+      "author": "콰미 알렉산더",
+      "publisher": "보물창고",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2020,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 시와 그림이 어우러진 힘찬 메시지를 담은 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5544258%3Ftimestamp%3D20260515120710"
+    },
+    "9788962471823": {
+      "isbn": "9788962471823",
+      "title": "할머니의 식탁",
+      "author": "오게 모라",
+      "publisher": "위즈덤하우스",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2019,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 할머니 손맛 가득한 식탁에서 나누는 가족의 사랑.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F4993302%3Ftimestamp%3D20260415113410"
+    },
+    "9788979381344": {
+      "isbn": "9788979381344",
+      "title": "나의 이야기, 알마",
+      "author": "후아나 마르티네즈-닐",
+      "publisher": "다산기획",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2019,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 이름 하나에 담긴 가족 역사와 자신만의 이야기를 찾아가는 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5115258%3Ftimestamp%3D20260318115552"
+    },
+    "9788965463528": {
+      "isbn": "9788965463528",
+      "title": "망가진 정원",
+      "author": "브라이언 라이스",
+      "publisher": "밝은미래",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2020,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 망가진 정원을 함께 일구는 공동체의 회복 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5174696%3Ftimestamp%3D20251030130945"
+    },
+    "9788961707114": {
+      "isbn": "9788961707114",
+      "title": "달케이크",
+      "author": "그레이스 린",
+      "publisher": "보물창고",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2019,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 달을 재료로 케이크를 만드는 판타지 가득한 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F4928553%3Ftimestamp%3D20230714175005"
+    },
+    "9788965463184": {
+      "isbn": "9788965463184",
+      "title": "또 다른 연못",
+      "author": "바오 파이",
+      "publisher": "밝은미래",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 베트남 출신 소년의 기억과 가족을 연결하는 시적 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F4836681%3Ftimestamp%3D20250612125149"
+    },
+    "9788914020512": {
+      "isbn": "9788914020512",
+      "title": "크라운",
+      "author": "데릭 반스",
+      "publisher": "삼성당",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2021,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 흑인 소년의 자부심과 왕관 같은 헤어를 담은 자존감 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5889232%3Ftimestamp%3D20250222144608"
+    },
+    "9788952786555": {
+      "isbn": "9788952786555",
+      "title": "큰 고양이, 작은 고양이",
+      "author": "엘리샤 쿠퍼",
+      "publisher": "시공주니어",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2018,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 크고 작음이 어우러지는 고양이들의 유쾌한 일상.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F648200%3Ftimestamp%3D20251119111028"
+    },
+    "9788949113692": {
+      "isbn": "9788949113692",
+      "title": "세상에서 가장 용감한 소녀",
+      "author": "매튜 코델",
+      "publisher": "비룡소",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2018,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 자신만의 방식으로 용감함을 정의하는 소녀의 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614849%3Ftimestamp%3D20260110110811"
+    },
+    "9788965462965": {
+      "isbn": "9788965462965",
+      "title": "콩고 광장의 자유",
+      "author": "캐럴 보스턴 위더포드",
+      "publisher": "밝은미래",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 미국 흑인 음악의 뿌리와 자유를 담은 역사 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F915329%3Ftimestamp%3D20241119114504"
+    },
+    "9788901218878": {
+      "isbn": "9788901218878",
+      "title": "홀라홀라 추추추",
+      "author": "카슨 엘리스",
+      "publisher": "웅진주니어",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2017,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 알 수 없는 언어로 나누는 낯선 생명체들의 교감.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F351021%3Ftimestamp%3D20221011183118"
+    },
+    "9788937844133": {
+      "isbn": "9788937844133",
+      "title": "날 좀 그냥 내버려 둬!",
+      "author": "베라 브로스골",
+      "publisher": "미래엔",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2017,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 혼자만의 시간을 원하는 곰의 솔직한 감정을 담았다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F546608%3Ftimestamp%3D20251122110801"
+    },
+    "9788967814632": {
+      "isbn": "9788967814632",
+      "title": "어떤 고양이가 보이니?",
+      "author": "브랜든 웬젤",
+      "publisher": "애플비북스",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2016,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 보는 이에 따라 달라지는 고양이를 통해 다양한 시선을 배운다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F938726%3Ftimestamp%3D20240724112358"
+    },
+    "9788994449814": {
+      "isbn": "9788994449814",
+      "title": "트롬본 쇼티",
+      "author": "트로이 앤드류스",
+      "publisher": "담푸스",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2017,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 뉴올리언스 재즈 뮤지션의 어린 시절 꿈과 음악 열정.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1418968%3Ftimestamp%3D20240425114232"
+    },
+    "9788949112657": {
+      "isbn": "9788949112657",
+      "title": "행복을 나르는 버스",
+      "author": "맷 데 라 페냐",
+      "publisher": "비룡소",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2016,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 버스 안에서 할머니와 손자가 나누는 따뜻한 행복의 의미.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F614819%3Ftimestamp%3D20240920113924"
+    },
+    "9788974997755": {
+      "isbn": "9788974997755",
+      "title": "도시에 사는 우리 할머니",
+      "author": "로렌 카스티요",
+      "publisher": "재능교육",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2015,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 도시 할머니와 손녀가 함께 발견하는 도시의 아름다움.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1050675%3Ftimestamp%3D20250626113107"
+    },
+    "9788994449708": {
+      "isbn": "9788994449708",
+      "title": "프리다 칼로 나는 살아 있어요",
+      "author": "유이 모랄레스",
+      "publisher": "",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 프리다 칼로의 삶과 예술 정신을 아이 눈높이로 담았다."
+    },
+    "9788962474343": {
+      "isbn": "9788962474343",
+      "title": "소리 나는 물감 상자",
+      "author": "바브 로젠스톡",
+      "publisher": "",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 색을 소리로 느꼈던 화가 세자르 플레이슈만의 이야기."
+    },
+    "9788952780331": {
+      "isbn": "9788952780331",
+      "title": "샘과 데이브가 땅을 팠어요",
+      "author": "맥 바넷",
+      "publisher": "시공주니어",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2020,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 땅을 파고 또 파도 목적지를 못 찾는 유머러스한 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F646078%3Ftimestamp%3D20251106110948"
+    },
+    "9788901166421": {
+      "isbn": "9788901166421",
+      "title": "머나먼 여행",
+      "author": "에런 베커",
+      "publisher": "웅진주니어",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2014,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 글 없이 그림만으로 마법 같은 모험을 펼치는 판타지 걸작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F351692%3Ftimestamp%3D20240501112647"
+    },
+    "9788949112510": {
+      "isbn": "9788949112510",
+      "title": "이봐요, 까망 씨!",
+      "author": "데이비드 위즈너",
+      "publisher": "",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2014,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 개구리 탐험대와 고양이의 우연한 만남을 그린 유머 그림책."
+    },
+    "9788994407753": {
+      "isbn": "9788994407753",
+      "title": "증기기관차 대륙을 달리다",
+      "author": "브라이언 플로카",
+      "publisher": "너머학교",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2020,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 미국 최초의 대륙횡단 철도 개통을 역동적으로 담았다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5331834%3Ftimestamp%3D20221108001204"
+    },
+    "9791199561854": {
+      "isbn": "9791199561854",
+      "title": "불꽃놀이",
+      "author": "매슈 버제스",
+      "publisher": "신나는원숭이",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2026,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 축제의 불꽃처럼 화려한 색채가 어린이 마음을 환하게 밝힌다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F7222687%3Ftimestamp%3D20260522122134"
+    },
+    "9791169942874": {
+      "isbn": "9791169942874",
+      "title": "나의 특별한 도시락",
+      "author": "체리 모",
+      "publisher": "오늘책",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 도시락 한 통에 담긴 가족의 사랑과 문화 자부심을 그렸다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6972313%3Ftimestamp%3D20260226121602"
+    },
+    "9791197780769": {
+      "isbn": "9791197780769",
+      "title": "열매의 노래",
+      "author": "미카엘라 고드",
+      "publisher": "파랑서재",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2023,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 자연과 공동체의 연결을 아름다운 그림으로 풀어낸다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6221637%3Ftimestamp%3D20240618152402"
+    },
+    "9791158711931": {
+      "isbn": "9791158711931",
+      "title": "나 진짜 궁금해!",
+      "author": "미카 아처",
+      "publisher": "나무의말",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2022,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 끝없이 호기심을 품는 아이의 질문이 상상력을 키운다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6040595%3Ftimestamp%3D20250328154154"
+    },
+    "9791168250383": {
+      "isbn": "9791168250383",
+      "title": "간다아아!",
+      "author": "코리 R. 테이버",
+      "publisher": "오늘책",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2022,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 쿵쾅거리며 어디론가 달려가는 에너지 넘치는 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6036854%3Ftimestamp%3D20260226120944"
+    },
+    "9791188240838": {
+      "isbn": "9791188240838",
+      "title": "위대한 가족의 고향",
+      "author": "켈리 스탈링 라이언스",
+      "publisher": "꿈터",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2021,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 대이동 시대 흑인 가족의 희망 여정을 담은 역사 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5579536%3Ftimestamp%3D20260211121104"
+    },
+    "9791170440239": {
+      "isbn": "9791170440239",
+      "title": "곰이 강을 따라갔을 때",
+      "author": "리처드 T 모리스",
+      "publisher": "소원나무",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2020,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 강을 따라 여행하는 곰의 아름다운 계절 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5328972%3Ftimestamp%3D20251122135404"
+    },
+    "9791186621097": {
+      "isbn": "9791186621097",
+      "title": "위니를 찾아서",
+      "author": "린지 매틱",
+      "publisher": "미디어창비",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2016,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 곰 인형 위니와 밀른 부자의 실화를 담은 감동 그림책.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1636045%3Ftimestamp%3D20250927110333"
+    },
+    "9791185786353": {
+      "isbn": "9791185786353",
+      "title": "비클의 모험",
+      "author": "댄 샌탯",
+      "publisher": "아르볼",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 무서움을 극복하고 날아오르는 고양이의 용감한 모험.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1619698%3Ftimestamp%3D20230919174148"
+    },
+    "9791166340659": {
+      "isbn": "9791166340659",
+      "title": "그랜드 캐니언",
+      "author": "제이슨 친",
+      "publisher": "봄의정원",
+      "lists": [
+        "caldecott-award"
+      ],
+      "year": 2025,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "칼데콧상 수상 그림책. 광대한 자연 유산 그랜드 캐니언을 과학과 예술로 담았다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6793305%3Ftimestamp%3D20250823141417"
     }
   },
   "awards": {
