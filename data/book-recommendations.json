@@ -210,6 +210,17 @@
           "text": "뉴베리",
           "color": "#2e7d32"
         }
+      },
+      {
+        "id": "wjjunior-award",
+        "name": "웅진주니어 문학상",
+        "fullName": "웅진주니어 문학상 수상작",
+        "url": "https://www.wjjunior.co.kr/competition/winner/",
+        "description": "웅진주니어가 주관하는 어린이 창작동화 공모 수상작",
+        "badge": {
+          "text": "웅진주니어상",
+          "color": "#0a8f5b"
+        }
       }
     ]
   },
@@ -6225,7 +6236,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 370,
-      "lists": [],
+      "lists": [
+        "wjjunior-award"
+      ],
       "why": "알라딘 베스트셀러 370위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791130657875": {
@@ -16047,7 +16060,8 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "wjjunior-award"
       ],
       "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
     },
@@ -16188,7 +16202,8 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "wjjunior-award"
       ],
       "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
     },
@@ -16231,7 +16246,8 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "wjjunior-award"
       ],
       "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
     },
@@ -16761,7 +16777,8 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "wjjunior-award"
       ],
       "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
     },
@@ -16817,7 +16834,8 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "wjjunior-award"
       ],
       "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
     },
@@ -17016,7 +17034,8 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "wjjunior-award"
       ],
       "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
     },
@@ -17437,7 +17456,8 @@
       "targetAge": "초등 저학년",
       "genre": "교양",
       "lists": [
-        "slj"
+        "slj",
+        "wjjunior-award"
       ],
       "why": "학교도서관저널 추천위원회가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
     },
@@ -47580,7 +47600,8 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "wjjunior-award"
       ],
       "why": "2025 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -65196,7 +65217,8 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "nlcy"
+        "nlcy",
+        "wjjunior-award"
       ],
       "why": "2024 국립어린이청소년도서관 사서추천 도서로 선정된 책입니다."
     },
@@ -70077,7 +70099,8 @@
       "targetAge": "초등 중학년",
       "genre": "문학",
       "lists": [
-        "arko-lit"
+        "arko-lit",
+        "wjjunior-award"
       ],
       "why": "2024 ARKO·KPIPA 우수문학도서 아동·청소년 부문으로 선정된 책입니다."
     },
@@ -73142,6 +73165,384 @@
       "genre": "동화",
       "why": "뉴베리상 수상작. 고대 왕국 음모 속 소년 도둑의 재치와 반전이 돋보이는 판타지 동화.",
       "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1366312%3Ftimestamp%3D20230728154748"
+    },
+    "9788901090078": {
+      "isbn": "9788901090078",
+      "title": "일주일 짝꿍 3-165",
+      "author": "김나연",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2008,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 1회 장편 대상. 『일주일 짝꿍 3-165』은 '꿈꾸는 장난감' 이라는 장난감 대여점의 장난감들의 이야기입니다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F347445%3Ftimestamp%3D20230207204931"
+    },
+    "9788901114385": {
+      "isbn": "9788901114385",
+      "title": "학교 가기 싫은 아이들이 다니는 학교",
+      "author": "송미경",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2010,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 2회 장편 우수. 제2회 웅진주니어 문학상 수상작품.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F348191%3Ftimestamp%3D20240403114559"
+    },
+    "9788901107660": {
+      "isbn": "9788901107660",
+      "title": "토끼 앞니",
+      "author": "이주미",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2010,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 3회 신인 장편 대상. 초등학교 저학년 아이들에게 문학의 즐거움과 감동을 전해주는 「작은 책마을」 제26권 『토끼 앞니』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F348257%3Ftimestamp%3D20240220175602"
+    },
+    "9788901124513": {
+      "isbn": "9788901124513",
+      "title": "무에타이 할아버지와 태권 손자",
+      "author": "김리라",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2011,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 4회 기성 장편 대상. 『무에타이 할아버지와 태권 손자』는 다문화 가정의 아이가 할아버지를 만나면서 자신의 정체성과 가족의 참의미를 체험해 나가는 따뜻한 이야기다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F348999%3Ftimestamp%3D20260501111033"
+    },
+    "9788901124445": {
+      "isbn": "9788901124445",
+      "title": "달팽이의 성",
+      "author": "임제다",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2011,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 4회 신인 장편 대상. 제4회 웅진주니어 문학상 신인 부문 대상 수상작 『달팽이의 성』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F348996%3Ftimestamp%3D20240220152855"
+    },
+    "9788901146416": {
+      "isbn": "9788901146416",
+      "title": "잃어버린 미투리 한 짝",
+      "author": "윤영선",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2012,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 5회 장편 대상. 『잃어버린 미투리 한 짝』은 혼의 세계에 사는 칠복이가 의식 속 이승 세계로 내려와 왕의 신발을 찾는 영화 같은 구성을 취한 작품이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F349985%3Ftimestamp%3D20260501111034"
+    },
+    "9788901145259": {
+      "isbn": "9788901145259",
+      "title": "내 이름은 모험을 끝내는 법",
+      "author": "윤아린, 안수연, 유수현",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2012,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 5회 단편 대상. 초등학교 저학년 아이들에게 문학의 즐거움과 감동을 전해주는 「작은 책마을」 제34권 『내 이름은 모험을 끝내는 법』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F349927%3Ftimestamp%3D20240220164055"
+    },
+    "9788901156576": {
+      "isbn": "9788901156576",
+      "title": "거꾸로 세계",
+      "author": "안성훈",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2013,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 6회 장편 대상. 국내ㆍ외 우수 동화를 소개하여 초등학생 아이들에게 책 읽기의 즐거움을 주는 「웅진책마을」 시리즈 『거꾸로 세계』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F349934%3Ftimestamp%3D20240731112901"
+    },
+    "9788901156262": {
+      "isbn": "9788901156262",
+      "title": "살색 별에서 온 외계인 친구",
+      "author": "장한애",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2013,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 6회 단편 대상. 초등학교 저학년 아이들에게 문학의 즐거움과 감동을 전해주는 「작은 책마을」 제38권 『살색 별에서 온 외계인 친구』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F350192%3Ftimestamp%3D20250412113940"
+    },
+    "9788901165141": {
+      "isbn": "9788901165141",
+      "title": "엄마의 크레파스",
+      "author": "이종혁",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 7회 장편 대상. 『엄마의 크레파스』는 작가의 자전적인 이야기로, 두 엄마를 잃은 한 아이의 성장통을 묵직하지만 따뜻한 시선으로 그린 작품이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F351568%3Ftimestamp%3D20250701110133"
+    },
+    "9788901165158": {
+      "isbn": "9788901165158",
+      "title": "도플갱어를 잡아라!",
+      "author": "이윤",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 7회 단편 대상. 『도플갱어를 잡아라!』는 현실 문제들을 날카롭게 포착하여 독특한 유머로 풀어낸 네 가지의 이야기를 담은 단편집이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F350583%3Ftimestamp%3D20250426113141"
+    },
+    "9788901166780": {
+      "isbn": "9788901166780",
+      "title": "아래층 마귀할멈",
+      "author": "박지혜, 윤선아, 황종금",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 7회 단편 우수. 『아래층 마귀할멈』은 제7회 웅진주니어 문학상 단편 부문 우수상을 받은 세 편의 작품으로 구성된 단편 동화집이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F350707%3Ftimestamp%3D20240828112905"
+    },
+    "9788901204031": {
+      "isbn": "9788901204031",
+      "title": "땅속 괴물 몽테크리스토",
+      "author": "허가람",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 8회 장편 대상. 제8회 웅진주니어 문학상 장편 부문 대상을 수상한 『땅속 괴물 몽테크리스토』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F350539%3Ftimestamp%3D20250416120232"
+    },
+    "9788901204901": {
+      "isbn": "9788901204901",
+      "title": "할머니 가출 작전",
+      "author": "황지영",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 8회 단편 대상. 제8회 웅진주니어 문학상 수상작을 엮은 단편동화집 『할머니 가출작전』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F350826%3Ftimestamp%3D20220805184556"
+    },
+    "9788901205311": {
+      "isbn": "9788901205311",
+      "title": "사라진 소녀와 그림 도둑",
+      "author": "임선영",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 8회 단편 우수. 제8회 웅진주니어 문학상 단편 부문 우수상 『사라진 소녀와 그림 도둑』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F350768%3Ftimestamp%3D20250919110241"
+    },
+    "9788901215181": {
+      "isbn": "9788901215181",
+      "title": "말주머니",
+      "author": "박가연, 김점선, 이현정, 김임지, 황성진",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2017,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 9회 단편 대상. 제9회 웅진주니어 문학상 단편 수상작 모음집『말주머니』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F350679%3Ftimestamp%3D20240806112240"
+    },
+    "9788901222783": {
+      "isbn": "9788901222783",
+      "title": "걸어서 할머니 집",
+      "author": "강경숙",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 10회 장편 대상. 우수한 아동문학 작품과 역량 있는 작가 발굴을 위해 달려온 웅진주니어 문학상이 올해로 10회를 맞이했다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F352171%3Ftimestamp%3D20240430112704"
+    },
+    "9788901225647": {
+      "isbn": "9788901225647",
+      "title": "빨래는 지겨워",
+      "author": "하서찬",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 10회 단편 대상. 초등 어린이를 위한 한국 창작동화의 생생한 상상력.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F351158%3Ftimestamp%3D20240430112701"
+    },
+    "9788901250991": {
+      "isbn": "9788901250991",
+      "title": "모두가 원하는 아이",
+      "author": "위해준",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2021,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 12회 장편 우수. ★웅진주니어 문학상 장편 부문 우수상 수상작★    제12회 웅진주니어 문학상 장편 부문 우수상 수상작 〈모두가 원하는 아이〉가 출간되었다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5690290%3Ftimestamp%3D20260524120629"
+    },
+    "9788901262031": {
+      "isbn": "9788901262031",
+      "title": "경성 기억 극장",
+      "author": "최연숙",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2022,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 13회 장편 우수. 열두 살 덕구는 이상한 할아버지와 마주친 일을 계기로 ‘경성 기억 극장’에 취직한다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6139502%3Ftimestamp%3D20250422154711"
+    },
+    "9788901272597": {
+      "isbn": "9788901272597",
+      "title": "갈림길",
+      "author": "윤슬빛",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 14회 단편 대상. 초등 어린이를 위한 한국 창작동화의 생생한 상상력.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6388810%3Ftimestamp%3D20250223131523"
+    },
+    "9788901282831": {
+      "isbn": "9788901282831",
+      "title": "꿀풍단의 비밀",
+      "author": "이향지",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2024,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 15회 단편 대상. 제15회 웅진주니어 문학상 단편 부문 대상 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6728776%3Ftimestamp%3D20260409124434"
+    },
+    "9788901299051": {
+      "isbn": "9788901299051",
+      "title": "오늘은 캣치하이킹",
+      "author": "서율",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2026,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 16회 장편 대상. 캣짱은 눈빛과 방귀만으로 길고양이 세계를 재패하고, 스트레이 캣 ‘스캣’ 무리를 거느리는 최강 고양이이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F7124533%3Ftimestamp%3D20260514122446"
+    },
+    "9788901289304": {
+      "isbn": "9788901289304",
+      "title": "여름, 첫눈",
+      "author": "오늘",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 16회 장편 우수. 제16회 웅진주니어 문학상 장편 우수상 수상작&nbsp;  5학년이 된 열매는 같은 반 부회장 최한빛과 연애를 시작했다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6946936%3Ftimestamp%3D20251218153507"
+    },
+    "9788901295442": {
+      "isbn": "9788901295442",
+      "title": "숭숭이와 나",
+      "author": "지윤경",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 16회 단편 대상. 줄거리 『숭숭이와 나』 검정색을 좋아해 별명까지 ‘찐다크’인 13살 도진원에게는 취향까지 빗겨간 비밀 친구가 있다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6974478%3Ftimestamp%3D20260524121704"
+    },
+    "9788901082356": {
+      "isbn": "9788901082356",
+      "title": "전교 네명 머시기가 간다",
+      "author": "김해등",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2008,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 1회 장편 우수. 초등 어린이를 위한 한국 창작동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F346923%3Ftimestamp%3D20250618144913"
+    },
+    "9788901096445": {
+      "isbn": "9788901096445",
+      "title": "도와줘요 닥터꽁치",
+      "author": "박설연",
+      "publisher": "웅진주니어",
+      "lists": [
+        "wjjunior-award"
+      ],
+      "year": 2009,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "웅진주니어 문학상 2회 장편 대상. 초등 어린이를 위한 한국 창작동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F347474%3Ftimestamp%3D20250704110159"
     }
   },
   "awards": {
