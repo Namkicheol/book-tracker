@@ -25081,7 +25081,8 @@
       "genre": "그림책",
       "lists": [
         "childbook",
-        "kclw"
+        "kclw",
+        "chaektase"
       ],
       "why": "어린이도서연구회가 선정한 권장도서입니다."
     },
@@ -73936,6 +73937,76 @@
       "genre": "그림책",
       "why": "눈높이아동문학상 20회 그림책 당선. 대교 주관 어린이 창작 그림책 수상작.",
       "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F558575%3Ftimestamp%3D20220114161413"
+    },
+    "9788958284055": {
+      "isbn": "9788958284055",
+      "title": "눈물바다",
+      "author": "서현",
+      "publisher": "사계절",
+      "lists": [
+        "chaektase"
+      ],
+      "year": 2009,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "아이의 억울함과 슬픔을 과장 없이 담아낸 그림책. 감정을 이름 붙여주는 데 탁월해요.",
+      "thumbnail": "https://image.aladin.co.kr/product/486/37/cover200/8958284056_1.jpg"
+    },
+    "9788950987367": {
+      "isbn": "9788950987367",
+      "title": "동의 : 너와 나 사이 무엇보다 중요한 것!",
+      "author": "레이첼 브라이언",
+      "publisher": "아울북",
+      "lists": [
+        "chaektase"
+      ],
+      "year": 2020,
+      "targetAge": "초등 저학년",
+      "genre": "사회",
+      "why": "신체 결정권과 상호 존중을 어린이 눈높이로 쉽고 유머러스하게 설명하는 그림 가이드북이에요.",
+      "thumbnail": "https://image.aladin.co.kr/product/24779/65/cover200/8950987368_1.jpg"
+    },
+    "9788962471793": {
+      "isbn": "9788962471793",
+      "title": "우리 할아버지는 열다섯 살 소년병입니다",
+      "author": "박혜선",
+      "publisher": "위즈덤하우스",
+      "lists": [
+        "chaektase"
+      ],
+      "year": 2019,
+      "targetAge": "초등 저학년",
+      "genre": "그림책",
+      "why": "한국전쟁을 치매 할아버지의 시선으로 그린 그림책. 역사와 가족 이야기를 자연스럽게 나눌 수 있어요.",
+      "thumbnail": "https://image.aladin.co.kr/product/19216/82/cover200/8962471795_2.jpg"
+    },
+    "9788961770316": {
+      "isbn": "9788961770316",
+      "title": "완벽한 가족",
+      "author": "로드리고 무뇨스 아비아",
+      "publisher": "다림",
+      "lists": [
+        "chaektase"
+      ],
+      "year": 2010,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "why": "너무 완벽해서 오히려 불편해진 가족 이야기. 완벽함보다 있는 그대로가 더 행복하다는 메시지를 유머로 풀었어요.",
+      "thumbnail": "https://image.aladin.co.kr/product/645/28/cover200/8961770314_2.jpg"
+    },
+    "9788932034713": {
+      "isbn": "9788932034713",
+      "title": "리얼 마래",
+      "author": "황지영",
+      "publisher": "문학과지성사",
+      "lists": [
+        "chaektase"
+      ],
+      "year": 2018,
+      "targetAge": "초등 중학년",
+      "genre": "문학",
+      "why": "마해송 문학상 수상작. SNS에 공개된 육아일기의 주인공이 된 아이의 이야기로 아이의 목소리를 정면으로 담았어요.",
+      "thumbnail": "https://image.aladin.co.kr/product/16869/70/cover200/8932034710_2.jpg"
     }
   },
   "awards": {
