@@ -199,6 +199,17 @@
           "text": "칼데콧",
           "color": "#b8860b"
         }
+      },
+      {
+        "id": "newbery-award",
+        "name": "뉴베리상",
+        "fullName": "뉴베리상 (Newbery Medal/Honor) 한국어판",
+        "url": "https://www.aladin.co.kr/shop/book/Recommend2010/award.aspx?awardtype=4&awardid=35",
+        "description": "미국도서관협회(ALA) 선정 아동문학 최고 권위상의 한국어 번역본",
+        "badge": {
+          "text": "뉴베리",
+          "color": "#2e7d32"
+        }
       }
     ]
   },
@@ -3443,7 +3454,8 @@
       "genre": "교양",
       "bestRank": 129,
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "newbery-award"
       ],
       "why": "알라딘 베스트셀러 129위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
@@ -5272,7 +5284,9 @@
       "targetAge": "초등 고학년",
       "genre": "교양",
       "bestRank": 292,
-      "lists": [],
+      "lists": [
+        "newbery-award"
+      ],
       "why": "알라딘 베스트셀러 292위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다."
     },
     "9791193650257": {
@@ -5533,10 +5547,11 @@
       "publisher": "시공주니어",
       "thumbnail": "https://image.aladin.co.kr/product/17163/92/cover200/8952787595_1.jpg",
       "year": 2018,
-      "targetAge": "초등 고학년",
+      "targetAge": "초등 저학년",
       "genre": "소설",
       "bestRank": 314,
       "lists": [
+        "newbery-award",
         "textbook"
       ],
       "why": "알라딘 베스트셀러 314위 안에 드는 인기 도서예요. 많은 아이들이 선택한 책입니다.",
@@ -36561,7 +36576,8 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "newbery-award"
       ],
       "why": "2024 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -36819,7 +36835,8 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "newbery-award"
       ],
       "why": "2024 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -47318,7 +47335,8 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "newbery-award"
       ],
       "why": "2025 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -47590,9 +47608,10 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading",
         "childbook",
-        "jeondokse"
+        "jeondokse",
+        "morning-reading",
+        "newbery-award"
       ],
       "why": "2025 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -47761,8 +47780,9 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
+        "childbook",
         "morning-reading",
-        "childbook"
+        "newbery-award"
       ],
       "why": "2025 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -47804,8 +47824,9 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
+        "childbook",
         "morning-reading",
-        "childbook"
+        "newbery-award"
       ],
       "why": "2025 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -58354,7 +58375,8 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "newbery-award"
       ],
       "why": "2026 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -58410,7 +58432,8 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading"
+        "morning-reading",
+        "newbery-award"
       ],
       "why": "2026 행복한아침독서 추천도서로 선정된 책입니다."
     },
@@ -62691,7 +62714,8 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "childbook"
+        "childbook",
+        "newbery-award"
       ],
       "why": "2024 어린이도서연구회 권장도서로 선정된 책입니다."
     },
@@ -72502,6 +72526,622 @@
       "genre": "그림책",
       "why": "칼데콧상 수상 그림책. 광대한 자연 유산 그랜드 캐니언을 과학과 예술로 담았다.",
       "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6793305%3Ftimestamp%3D20250823141417"
+    },
+    "9788961707596": {
+      "isbn": "9788961707596",
+      "title": "뉴 키드",
+      "author": "Jerry Craft",
+      "publisher": "보물창고",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2020,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 1922년 뉴베리 상이 제정된 이래로 100여 년 역사상 최초로 ‘뉴베리 대상(Newbery Medal Winner)’을 수상한 그래픽노블 『뉴 키드』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5249619%3Ftimestamp%3D20250926124531"
+    },
+    "9788965463429": {
+      "isbn": "9788965463429",
+      "title": "머시 수아레스, 기어를 바꾸다",
+      "author": "메그 메디나",
+      "publisher": "밝은미래",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2019,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 머시 수아레스는 명문 사립학교, 시워드 아카데미에서 5학년을 마치고 막 중학생이 된 소녀다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5077693%3Ftimestamp%3D20250530131409"
+    },
+    "9788965463108": {
+      "isbn": "9788965463108",
+      "title": "안녕, 우주",
+      "author": "에린 엔트라다 켈리",
+      "publisher": "밝은미래",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 2018년 뉴베리 대상 수상작 『안녕, 우주』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F3756207%3Ftimestamp%3D20240601112938"
+    },
+    "9788963722320": {
+      "isbn": "9788963722320",
+      "title": "달빛 마신 소녀",
+      "author": "켈리 반힐",
+      "publisher": "양철북",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2017,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 슬픔을 이겨내는 마음에 관한 가장 아름답고 환상적인 이야기 『달빛 마신 소녀』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F891046%3Ftimestamp%3D20240718113210"
+    },
+    "9788949171173": {
+      "isbn": "9788949171173",
+      "title": "초능력 다람쥐 율리시스",
+      "author": "케이트 디카밀로",
+      "publisher": "비룡소",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 《생쥐 기사 데스페로》, 《에드워드 툴레인의 신기한 여행》 등을 통해 현재는 영미권 아동문학을 대표하는 작가로 자리매김한 케이트 디카밀로의 신작 『초능력 다람쥐 율리시스』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F615815%3Ftimestamp%3D20250423113353"
+    },
+    "9788992711036": {
+      "isbn": "9788992711036",
+      "title": "세상에 단 하나뿐인 아이반",
+      "author": "캐서린 애플게이트",
+      "publisher": "다른",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2013,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 미국 동화작가 캐서린 애플게이트가 실화에서 영감을 얻어 창작한 『세상에 단 하나뿐인 아이반』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1376837%3Ftimestamp%3D20230728201703"
+    },
+    "9788961705301": {
+      "isbn": "9788961705301",
+      "title": "그레이브야드 북",
+      "author": "닐 게이먼",
+      "publisher": "에프(F)",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2016,
+      "targetAge": "초등 고학년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. 닐 게이먼의 장편소설『그레이브야드 북』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F856167%3Ftimestamp%3D20250404114039"
+    },
+    "9788952754578": {
+      "isbn": "9788952754578",
+      "title": "존경하는 신사 숙녀 여러분",
+      "author": "로라 에이미 슐리츠",
+      "publisher": "시공주니어",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2009,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 2008년 뉴베리상 수상작   중세 마을 아이들이 들려주는 이야기    2008 뉴베리상 수상작 『존경하는 신사 숙녀 여러분!』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F644252%3Ftimestamp%3D20240528113324"
+    },
+    "9788952789167": {
+      "isbn": "9788952789167",
+      "title": "내 친구 윈딕시",
+      "author": "케이트 디카밀로",
+      "publisher": "시공주니어",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2019,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 10살짜리 소녀 인디아 오팔 불로니는 목사인 아빠를 따라 플로리다 주 나오미로 이사를 왔다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F4930001%3Ftimestamp%3D20260529114952"
+    },
+    "9788961708265": {
+      "isbn": "9788961708265",
+      "title": "프리스비 부인과 니임의 쥐들",
+      "author": "로버트 오브라이언",
+      "publisher": "보물창고",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2021,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 반려동물을 키우는 국내 인구가 1,000만 명을 넘어서며 이제 반려동물을 가족처럼 여기는 시대가 왔다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5697565%3Ftimestamp%3D20250125144245"
+    },
+    "9788964808726": {
+      "isbn": "9788964808726",
+      "title": "비밀의 숲 테라비시아",
+      "author": "캐서린 패터슨",
+      "publisher": "사파리",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2018,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 어린이들과 청소년들에게 풍부한 감수성과 냉철한 지성을 안겨주는 「Masterpiece」 시리즈 『비밀의 숲 테라비시아』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F906347%3Ftimestamp%3D20250813110352"
+    },
+    "9788932026770": {
+      "isbn": "9788932026770",
+      "title": "청동 활",
+      "author": "엘리자베스 조지 스피어",
+      "publisher": "문학과지성사",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 『청동 활』은 로마에 빼앗긴 나라를 되찾겠다는 애국심에 불타오르는 한 소년 인생과 성장을 담은 역사 소설이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F495352%3Ftimestamp%3D20220111154756"
+    },
+    "9788992711494": {
+      "isbn": "9788992711494",
+      "title": "서툴러도 괜찮아",
+      "author": "카렌 쿠시맨",
+      "publisher": "다른",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2011,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 미국을 대표하는 아동ㆍ청소년 작가 카렌 쿠시맨의 『서툴러도 괜찮아』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1378803%3Ftimestamp%3D20240707112313"
+    },
+    "9788943305550": {
+      "isbn": "9788943305550",
+      "title": "헨쇼 선생님께",
+      "author": "비벌리 클리어리",
+      "publisher": "보림",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2009,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 뉴베리 상을 수상한 작품으로, 초등학생 아이의 가슴 시린 성장기를 편지와 일기 형식으로 담은 사실주의 소년소설이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F590200%3Ftimestamp%3D20241122114059"
+    },
+    "9788949120669": {
+      "isbn": "9788949120669",
+      "title": "나의 산에서",
+      "author": "진 크레이그헤드 조지",
+      "publisher": "비룡소",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 1995년 출간된 스테디셀러『나의 산에서』개정판.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F615539%3Ftimestamp%3D20241220113522"
+    },
+    "9788957369333": {
+      "isbn": "9788957369333",
+      "title": "줄리와 늑대",
+      "author": "진 크레이그헤드 조지",
+      "publisher": "가나출판사",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2017,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 에스키모 이름은 미약스, 영어 이름은 줄리인 13살 소녀.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F757629%3Ftimestamp%3D20221025142940"
+    },
+    "9788963724294": {
+      "isbn": "9788963724294",
+      "title": "별을 헤아리며",
+      "author": "로이스 로리",
+      "publisher": "양철북",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2024,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. 인간의 존엄과 자부심은 어떤 영웅이 지켜 주지 않는다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6598099%3Ftimestamp%3D20260228122049"
+    },
+    "9788949190129": {
+      "isbn": "9788949190129",
+      "title": "클로디아의 비밀",
+      "author": "E. L. 코닉스버그",
+      "publisher": "비룡소",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2000,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 『클로디아의 비밀』은 열두 살 소녀 클로디아와 동생 제이미가 미국 내에서 가장 큰 미술관 중 하나인 메트로폴리탄 미술관으로 가출한 이야기를 그린 작품이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F616155%3Ftimestamp%3D20240618113614"
+    },
+    "9788961705073": {
+      "isbn": "9788961705073",
+      "title": "퀴즈 왕들의 비밀",
+      "author": "E L 코닉스버그",
+      "publisher": "보물창고",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2015,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 초등 5~6학년이 도전하기 좋은 영미 아동문학의 정수.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F856205%3Ftimestamp%3D20260326110719"
+    },
+    "9788931907384": {
+      "isbn": "9788931907384",
+      "title": "두 개의 달을 걸어 볼 때까지",
+      "author": "샤론 크리치",
+      "publisher": "지경사",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 1998,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 초등 5~6학년이 도전하기 좋은 영미 아동문학의 정수.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F493617%3Ftimestamp%3D20190123131408"
+    },
+    "9788961700054": {
+      "isbn": "9788961700054",
+      "title": "루비 홀러",
+      "author": "샤론 크리치",
+      "publisher": "보물창고",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2007,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. 섬세함과 유머, 부드러움을 갖춘 사랑과 자아 발견에 관한 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F857136%3Ftimestamp%3D20220630103110"
+    },
+    "9788995296974": {
+      "isbn": "9788995296974",
+      "title": "천둥아 내 외침을 들어라",
+      "author": "밀드레드 테일러",
+      "publisher": "내인생의책",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2004,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 인종차별에 대한 저항의식을 그려낸 동화 『천둥아, 내 외침을 들어라』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1434159%3Ftimestamp%3D20260211111147"
+    },
+    "9788954603065": {
+      "isbn": "9788954603065",
+      "title": "파퍼 씨의 12마리 펭귄",
+      "author": "리처드 앳워터, 플로렌스 앳워터",
+      "publisher": "문학동네",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2017,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 『파퍼 씨의 12마리 펭귄』은 70여 년 동안 많은 독자들의 사랑을 받은 미국 어린이 문학의 고전으로, 펭귄을 정말 사랑하는 파퍼 씨와 12마리 펭귄이 이야기입니다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F689724%3Ftimestamp%3D20230604141447"
+    },
+    "9788958760078": {
+      "isbn": "9788958760078",
+      "title": "아프리카 소녀 나모",
+      "author": "낸시 파머",
+      "publisher": "느림보",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2005,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. '뉴베리 상'을 세 번이나 수상한 작가, 낸시 파머의 수상 작품 중 하나인 &lt;아프리카 소녀 나모&gt;.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F787165%3Ftimestamp%3D20230728201135"
+    },
+    "9788958280835": {
+      "isbn": "9788958280835",
+      "title": "그리운 메이 아줌마",
+      "author": "신시아 라일런트",
+      "publisher": "사계절",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2005,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. 중학생 수준의 영미 아동문학의 정수.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F776060%3Ftimestamp%3D20220915020145"
+    },
+    "9788991780323": {
+      "isbn": "9788991780323",
+      "title": "프린세스 아카데미",
+      "author": "섀넌 헤일",
+      "publisher": "책그릇",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2007,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 초등 5~6학년이 도전하기 좋은 영미 아동문학의 정수.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1357635%3Ftimestamp%3D20230728190357"
+    },
+    "9788925531144": {
+      "isbn": "9788925531144",
+      "title": "수요일의 전쟁",
+      "author": "게리 D. 슈미트",
+      "publisher": "주니어랜덤",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2008,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 『수요일의 전쟁』은 '2008 뉴베리 아너 상' 등 10여 개의 권위 있는 기관에서 최우수 도서로 선정된 성장소설입니다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F412738%3Ftimestamp%3D20221025114631"
+    },
+    "9788934928119": {
+      "isbn": "9788934928119",
+      "title": "마법에 걸린 엘라",
+      "author": "게일 카슨 레빈",
+      "publisher": "주니어김영사",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2008,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. &lt;뉴베리 수상작&gt; 시리즈 제8권 『마법에 걸린 엘라』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F517974%3Ftimestamp%3D20230728174231"
+    },
+    "9788992263016": {
+      "isbn": "9788992263016",
+      "title": "소녀 발칙하다",
+      "author": "캐런 쿠시먼",
+      "publisher": "생각과느낌",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2007,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 초등 5~6학년이 도전하기 좋은 영미 아동문학의 정수.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1371772%3Ftimestamp%3D20221025125114"
+    },
+    "9788952787965": {
+      "isbn": "9788952787965",
+      "title": "둘리틀 선생의 바다 여행",
+      "author": "휴 로프팅",
+      "publisher": "시공주니어",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2019,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 초등 3~4학년 수준의 영미 아동문학의 정수.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F4945515%3Ftimestamp%3D20251118124838"
+    },
+    "9788925535388": {
+      "isbn": "9788925535388",
+      "title": "밉스 가족의 특별한 비밀",
+      "author": "인그리드 로",
+      "publisher": "주니어랜덤",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2010,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 가족애가 돋보이는 가슴 뭉클한 성장 소설.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F413339%3Ftimestamp%3D20230728161602"
+    },
+    "9788901066301": {
+      "isbn": "9788901066301",
+      "title": "엄마가 수놓은 길",
+      "author": "재클린 우드슨",
+      "publisher": "웅진주니어",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2007,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 초등 5~6학년이 도전하기 좋은 영미 아동문학의 정수.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F346339%3Ftimestamp%3D20210904210321"
+    },
+    "9788967340148": {
+      "isbn": "9788967340148",
+      "title": "엄마라고 불러도 될까요?",
+      "author": "패트리샤 매클라클랜",
+      "publisher": "풀빛미디어",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2014,
+      "targetAge": "초등 저학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 세계 유명 문학상 수상작 중에서 어린이에게 책 읽는 참맛을 느끼게 해줄 감동적인 작품을 엄선하여 소개하는「그래요 책이 좋아요」 제1권『엄마라고 불러도 될까요?』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F935757%3Ftimestamp%3D20251119111047"
+    },
+    "9788934928096": {
+      "isbn": "9788934928096",
+      "title": "그래도 내일은 희망",
+      "author": "조앤 바우어",
+      "publisher": "주니어김영사",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2008,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. '뉴베리 수상작' 시리즈 제6권 『그래도 내일은 희망』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F517966%3Ftimestamp%3D20240122193921"
+    },
+    "9788949120744": {
+      "isbn": "9788949120744",
+      "title": "기억 전달자",
+      "author": "로이스 로리",
+      "publisher": "비룡소",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2007,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. 미국 청소년 문학의 대표 작가라 불리는 로이스 로리 장편소설.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F615571%3Ftimestamp%3D20250424113419"
+    },
+    "9788971967867": {
+      "isbn": "9788971967867",
+      "title": "손도끼",
+      "author": "게리 폴슨",
+      "publisher": "사계절",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2001,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. 캐나다 북부 삼림지대의 고립무원에 홀로 내던져진 한 소년의 54일간의 생존기록.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F994268%3Ftimestamp%3D20260517111319"
+    },
+    "9788961703970": {
+      "isbn": "9788961703970",
+      "title": "홀리스 우즈의 그림들",
+      "author": "패트리샤 레일리 기프",
+      "publisher": "보물창고",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2014,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. 패트리샤 레일리 기프의 성장소설 『홀리스 우즈의 그림들』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F857306%3Ftimestamp%3D20220820170228"
+    },
+    "9788936456023": {
+      "isbn": "9788936456023",
+      "title": "구덩이",
+      "author": "루이스 새커",
+      "publisher": "창비",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2023,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. ‘아동청소년도서계의 노벨문학상’으로 불리는 뉴베리상 수상작 『구덩이』(창비청소년문학 2)가 교보문고 단독 특별 한정판으로 독자들을 만난다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F533701%3Ftimestamp%3D20260529111217"
+    },
+    "9791168124295": {
+      "isbn": "9791168124295",
+      "title": "마지막 이야기 전달자",
+      "author": "도나 바르바 이게라",
+      "publisher": "위즈덤하우스",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2022,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 멕시코계 소녀가 마을의 비밀을 풀며 자신의 목소리를 찾는 초등 고학년 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6171233%3Ftimestamp%3D20260511120623"
+    },
+    "9791191438024": {
+      "isbn": "9791191438024",
+      "title": "호랑이를 덫에 가두면",
+      "author": "태 켈러",
+      "publisher": "돌베개",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2021,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 한국계 소녀가 할머니의 한국 민담을 통해 가족과 정체성을 이해하는 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5647940%3Ftimestamp%3D20251107143452"
+    },
+    "9791186490938": {
+      "isbn": "9791186490938",
+      "title": "나를 통째로 삼켜 버린 소녀",
+      "author": "게리 D. 슈미트",
+      "publisher": "책과콩나무",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2018,
+      "targetAge": "청소년",
+      "genre": "소설",
+      "why": "뉴베리상 수상작. 초등 고학년~중학교 수준의 성장 소설.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F3755896%3Ftimestamp%3D20241008114217"
+    },
+    "9791169238342": {
+      "isbn": "9791169238342",
+      "title": "사금파리 한 조각 1",
+      "author": "린다 수 박",
+      "publisher": "서울문화사",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 고려청자를 만들기 위한 조선 소년의 여정을 담은 역사 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6524414%3Ftimestamp%3D20251111153404"
+    },
+    "9788925546445": {
+      "isbn": "9788925546445",
+      "title": "매니페스토의 푸른 달빛",
+      "author": "클레어 밴더풀",
+      "publisher": "주니어RHK",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2012,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 1930년대 대공황 시대 소년의 우정과 용기를 그린 초등 고학년 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F414499%3Ftimestamp%3D20211219164429"
+    },
+    "9788992026406": {
+      "isbn": "9788992026406",
+      "title": "도둑",
+      "author": "메건 웨일런 터너",
+      "publisher": "봄나무",
+      "lists": [
+        "newbery-award"
+      ],
+      "year": 2009,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "뉴베리상 수상작. 고대 왕국 음모 속 소년 도둑의 재치와 반전이 돋보이는 판타지 동화.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F1366312%3Ftimestamp%3D20230728154748"
     }
   },
   "awards": {
