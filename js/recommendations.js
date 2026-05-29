@@ -8,6 +8,7 @@
   let recommendationData = null;
   let allBooks = [];
   let textbookMode = false;
+  let originalMode = false;   // 영어 원서 탭
   let recView = localStorage.getItem('recView') || 'grid';
   let kinderData = null;
   let kinderOpen = false;     // 유치원 특선 토글 상태 (기본 닫힘)
@@ -75,18 +76,24 @@
   // ── Mode Tabs ────────────────────────────────────────────────
 
   function attachModeTabListeners() {
-    const btnAll = document.getElementById('modeAll');
-    const btnTB  = document.getElementById('modeTextbook');
+    const btnAll  = document.getElementById('modeAll');
+    const btnOrig = document.getElementById('modeOriginal');
+    const btnTB   = document.getElementById('modeTextbook');
     if (!btnAll || !btnTB) return;
 
-    function setMode(tb) {
-      textbookMode = tb;
-      btnAll.style.color = tb ? '#999' : '#FF6B6B';
-      btnAll.style.borderBottom = tb ? 'none' : '2px solid #FF6B6B';
-      btnAll.style.marginBottom = tb ? '' : '-2px';
-      btnTB.style.color  = tb ? '#27ae60' : '#999';
-      btnTB.style.borderBottom = tb ? '2px solid #27ae60' : 'none';
-      btnTB.style.marginBottom = tb ? '-2px' : '';
+    function style(btn, active, color) {
+      if (!btn) return;
+      btn.style.color = active ? color : '#999';
+      btn.style.borderBottom = active ? '2px solid ' + color : 'none';
+      btn.style.marginBottom = active ? '-2px' : '';
+    }
+
+    function setMode(mode) { // 'all' | 'original' | 'textbook'
+      textbookMode = mode === 'textbook';
+      originalMode = mode === 'original';
+      style(btnAll,  mode === 'all',      '#FF6B6B');
+      style(btnOrig, mode === 'original', '#4A90E2');
+      style(btnTB,   mode === 'textbook', '#27ae60');
 
       // 검색 상태 초기화 + gradeContent 강제 표시
       const searchInput = document.getElementById('recSearch');
@@ -99,8 +106,9 @@
       renderGradeSections();
     }
 
-    btnAll.addEventListener('click', () => setMode(false));
-    btnTB.addEventListener('click', () => setMode(true));
+    btnAll.addEventListener('click', () => setMode('all'));
+    if (btnOrig) btnOrig.addEventListener('click', () => setMode('original'));
+    btnTB.addEventListener('click', () => setMode('textbook'));
   }
 
   // ── Grade Sections ───────────────────────────────────────────
@@ -109,6 +117,7 @@
   const sectionState = {};
 
   function renderGradeSections() {
+    if (originalMode) { renderOriginalSections(); return; }
     if (textbookMode) { renderTextbookSections(); return; }
 
     const content = document.getElementById('gradeContent');
@@ -547,6 +556,64 @@
     });
   }
 
+  // ── 영어 원서 (AR 지수 밴드) ─────────────────────────────────
+  const AR_BANDS = [
+    { key: 'b01', label: 'AR 0~1 · 영어 첫걸음',  min: 0, max: 1,  icon: '🐣' },
+    { key: 'b12', label: 'AR 1~2 · 그림책 입문',  min: 1, max: 2,  icon: '🌱' },
+    { key: 'b23', label: 'AR 2~3 · 리더스',       min: 2, max: 3,  icon: '📗' },
+    { key: 'b34', label: 'AR 3~4 · 챕터북 입문',  min: 3, max: 4,  icon: '📘' },
+    { key: 'b4',  label: 'AR 4+ · 영어 동화',     min: 4, max: 99, icon: '📕' },
+  ];
+  const originalState = {};
+
+  function renderOriginalSections() {
+    const content = document.getElementById('gradeContent');
+    const enBooks = allBooks.filter(b => b.language === 'en');
+
+    if (!enBooks.length) {
+      content.innerHTML = `<p style="text-align:center;padding:60px 16px;color:#999">영어 원서 목록을 준비 중이에요.</p>`;
+      return;
+    }
+
+    function inBand(b, band) {
+      return typeof b.ar === 'number' && b.ar >= band.min && b.ar < band.max;
+    }
+
+    const sections = AR_BANDS.map(band => {
+      const books = enBooks.filter(b => inBand(b, band));
+      if (!books.length) return '';
+      if (!originalState[band.key]) originalState[band.key] = { open: true };
+      return `
+        <details class="grade-section og-section" data-og="${band.key}" ${originalState[band.key].open ? 'open' : ''} style="margin-bottom:16px;border:1px solid #cfe0f5;border-radius:8px;overflow:hidden">
+          <summary style="padding:16px;cursor:pointer;background:#f2f7fd;display:flex;justify-content:space-between;align-items:center;user-select:none">
+            <h2 class="grade-title" style="margin:0;color:#2c6cb0">${band.icon} ${band.label}</h2>
+            <span class="grade-count" style="color:#4A90E2">${books.length}권</span>
+          </summary>
+          <div style="padding:16px"><div class="og-grid" data-og="${band.key}"></div></div>
+        </details>`;
+    }).filter(Boolean).join('');
+
+    content.innerHTML = `
+      <p style="padding:14px 16px 4px;color:#888;font-size:12px;line-height:1.55">🌍 AR 지수로 분류한 영어 원서예요. 아이 수준에 맞는 단계부터 시작해 보세요.</p>
+      ${sections}`;
+
+    AR_BANDS.forEach(band => {
+      const grid = document.querySelector(`.og-grid[data-og="${band.key}"]`);
+      if (!grid) return;
+      const books = enBooks.filter(b => inBand(b, band)).sort((a, b) => a.ar - b.ar);
+      grid.innerHTML = books.map(b => renderCard(b)).join('');
+    });
+    attachCardListeners();
+    backfillThumbnails(content);
+    document.querySelectorAll('details.og-section').forEach(d => {
+      d.addEventListener('toggle', () => {
+        const k = d.dataset.og;
+        if (originalState[k]) originalState[k].open = d.open;
+      });
+    });
+    applyRecView();
+  }
+
   function attachSectionListeners() {
     // details 열림/닫힘 상태 보존
     document.querySelectorAll('details.grade-section').forEach(d => {
@@ -737,6 +804,7 @@
     const norm = s => (s || '').toLowerCase().replace(/\s+/g, '');
     const q = norm(query);
     const matches = allBooks.filter(b => {
+      if (b.language === 'en') return false; // 원서는 전용 탭에서만
       return norm(b.title).includes(q) || norm(b.author).includes(q);
     }).slice(0, 60);
 
