@@ -221,6 +221,17 @@
           "text": "웅진주니어상",
           "color": "#0a8f5b"
         }
+      },
+      {
+        "id": "daekyo-award",
+        "name": "눈높이아동문학상",
+        "fullName": "눈높이아동문학상 수상작",
+        "url": "https://www.aladin.co.kr/search/wsearchresult.aspx?SearchTarget=Book&SearchWord=%EB%88%88%EB%86%92%EC%9D%B4%EC%95%84%EB%8F%99%EB%AC%B8%ED%95%99%EC%83%81",
+        "description": "대교가 주관하는 어린이 동화·그림책·판타지 공모 수상작",
+        "badge": {
+          "text": "눈높이아동문학상",
+          "color": "#e67e22"
+        }
       }
     ]
   },
@@ -16460,8 +16471,9 @@
       "thumbnail": "https://image.aladin.co.kr/product/38346/40/cover200/k452135165_1.jpg",
       "year": 2026,
       "targetAge": "초등 저학년",
-      "genre": "교양",
+      "genre": "동화",
       "lists": [
+        "daekyo-award",
         "morning-reading"
       ],
       "why": "전국 아침독서 프로그램가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
@@ -17553,8 +17565,9 @@
       "thumbnail": "https://image.aladin.co.kr/product/37083/8/cover200/k422030059_1.jpg",
       "year": 2025,
       "targetAge": "초등 고학년",
-      "genre": "교양",
+      "genre": "동화",
       "lists": [
+        "daekyo-award",
         "slj"
       ],
       "why": "학교도서관저널 추천위원회가 선정한 추천도서입니다. 교육 전문가들이 직접 검증한 양서예요."
@@ -66779,7 +66792,8 @@
       "targetAge": "유아",
       "genre": "그림책",
       "lists": [
-        "bookstart"
+        "bookstart",
+        "daekyo-award"
       ],
       "why": "2025 북스타트 책꾸러미로 선정된 책입니다."
     },
@@ -73543,6 +73557,384 @@
       "genre": "동화",
       "why": "웅진주니어 문학상 2회 장편 대상. 초등 어린이를 위한 한국 창작동화.",
       "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F347474%3Ftimestamp%3D20250704110159"
+    },
+    "9788968306020": {
+      "isbn": "9788968306020",
+      "title": "마음으로 새기는 글자, 직지",
+      "author": "조경희",
+      "publisher": "개암나무",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2020,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 15회 장편 대상. 직지는 현재까지 전해지는 전 세계에서 가장 오래된 금속 활자본으로 상권은 전하지 않고 있으며, 하권만 프랑스 국립 도서관에 보관되어 있습니다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5429502%3Ftimestamp%3D20250923132527"
+    },
+    "9788939532687": {
+      "isbn": "9788939532687",
+      "title": "별통 아저씨의 선물",
+      "author": "박현정",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2012,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 19회 당선. 눈높이아동문학대전 수상작을 모은 「눈높이아동문학상」 제27권 『별통 아저씨의 선물』.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F558470%3Ftimestamp%3D20220114161012"
+    },
+    "9788939536234": {
+      "isbn": "9788939536234",
+      "title": "비밀 씨앗 공방",
+      "author": "김윤경",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2013,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 20회 장편 당선. 『비밀 씨앗 공방』은 제20회 눈높이아동문학상 장편동화 부문 당선작으로 비밀을 찾아가며 성장하는 은세의 이야기를 다루고 있다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F558654%3Ftimestamp%3D20260401110849"
+    },
+    "9791168250987": {
+      "isbn": "9791168250987",
+      "title": "재오비 수사대",
+      "author": "이순미",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2013,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 20회 당선. 『재오비 수사대』는 동심을 가득 담은 단편동화 여섯 편을 모은 동화집이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6084028%3Ftimestamp%3D20260226120950"
+    },
+    "9788939570665": {
+      "isbn": "9788939570665",
+      "title": "수몽조의 특별한 선물",
+      "author": "박상기",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2017,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 24회 장편 대상. 대교 눈높이아동문학상은 아동문학의 새로운 기틀을 다지고, 역량 있는 아동문학가를 발굴하고자 제정되었다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F558688%3Ftimestamp%3D20260513110453"
+    },
+    "9791168252141": {
+      "isbn": "9791168252141",
+      "title": "까칠한 아이",
+      "author": "남찬숙",
+      "publisher": "대교북스 주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2022,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 25회 장편 대상. 사춘기 소녀와 고양이가 공감과 소통을 통해 동반 성장해 가는 이야기이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6077251%3Ftimestamp%3D20260226120952"
+    },
+    "9788939571426": {
+      "isbn": "9788939571426",
+      "title": "혹부리 영감이 도깨비를 고소했대",
+      "author": "공수경",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2019,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 26회 장편 대상. 대교 주관 어린이 창작 동화 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5058596%3Ftimestamp%3D20260226113940"
+    },
+    "9788939571495": {
+      "isbn": "9788939571495",
+      "title": "마법이 필요한 순간",
+      "author": "김두를빛",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2019,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 26회 동화 우수. 대교 주관 어린이 창작 동화 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5117479%3Ftimestamp%3D20250621131529"
+    },
+    "9788939571754": {
+      "isbn": "9788939571754",
+      "title": "우투리 숲으로 간 아이들",
+      "author": "양정화",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2020,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 27회 동화 우수. 대교 눈높이아동문학상은 아동문학의 새로운 기틀을 다지고, 역량 있는 아동문학가를 발굴하고자 제정되었다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5421468%3Ftimestamp%3D20260226115711"
+    },
+    "9791168250529": {
+      "isbn": "9791168250529",
+      "title": "좋아, 하는",
+      "author": "김화요",
+      "publisher": "대교북스 주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2021,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 28회 대상. 키 172센티미터에 운동 만능에 미소년을 닮은 쿨한 정지수.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6041617%3Ftimestamp%3D20260226120941"
+    },
+    "9788939572096": {
+      "isbn": "9788939572096",
+      "title": "닐스 바이러스",
+      "author": "한여름",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2021,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 28회 동화 우수. 대교 눈높이아동문학상은 아동문학의 새로운 기틀을 다지고, 역량 있는 아동문학가를 발굴하고자 제정되었다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F5801070%3Ftimestamp%3D20260226120434"
+    },
+    "9791168252769": {
+      "isbn": "9791168252769",
+      "title": "붉은 눈의 라엘",
+      "author": "손민지",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2024,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 28회 동화 우수2. 대교 눈높이아동문학상은 아동문학의 새로운 기틀을 다지고, 역량 있는 아동문학가를 발굴하고자 제정되었다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6532015%3Ftimestamp%3D20260226121451"
+    },
+    "9791168252882": {
+      "isbn": "9791168252882",
+      "title": "눈물 파는 아이, 곡비",
+      "author": "김연진",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2022,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 29회 대상. 대교 주관 어린이 창작 동화 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6151676%3Ftimestamp%3D20260226121045"
+    },
+    "9791168254121": {
+      "isbn": "9791168254121",
+      "title": "진홍이 아니라 분홍",
+      "author": "정현혜",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2022,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 29회 동화 우수. 대교 주관 어린이 창작 동화 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6174845%3Ftimestamp%3D20260226121106"
+    },
+    "9791168252790": {
+      "isbn": "9791168252790",
+      "title": "끼였네 끼였어",
+      "author": "박보라",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2022,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "눈높이아동문학상 29회 그림책 대상. 대교문화재단 눈높이아동문학대전은 아동문학의 새로운 기틀을 다지고, 역량 있는 아동문학가 발굴을 위해 1993년 시작되었습니다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6123054%3Ftimestamp%3D20260226121043"
+    },
+    "9791168252875": {
+      "isbn": "9791168252875",
+      "title": "이안의 멋진 집",
+      "author": "박준엽",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2022,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "눈높이아동문학상 29회 그림책 우수. 대교 주관 어린이 창작 그림책 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6148411%3Ftimestamp%3D20260226121042"
+    },
+    "9791169941433": {
+      "isbn": "9791169941433",
+      "title": "라곰 패밀리",
+      "author": "김다해",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 30회 동화 우수. 국기원 태권도 시범단이 꿈인 평범한 5학년 수아, 어느 날 시골에서 올라온 할머니와 아빠가 들려준 놀라운 이야기.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6408849%3Ftimestamp%3D20260226121422"
+    },
+    "9791169941464": {
+      "isbn": "9791169941464",
+      "title": "그림자 낚시",
+      "author": "키키유",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 30회 우수. 초승달이 뜬 밤하늘에 망태기를 메고 낚싯대를 든 노인이 조각배를 타고 등장한다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6464090%3Ftimestamp%3D20260226121433"
+    },
+    "9791169941457": {
+      "isbn": "9791169941457",
+      "title": "복희의 키친",
+      "author": "양세호",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2023,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "눈높이아동문학상 30회 그림책 대상. 하늘 높이 두둥실 떠 있는 맛 구름에서 다양한 맛 송이들이 만들어지던 어느 날, 꼬마 요리사 복희는 새로운 우주의 맛을 만들기로 결심합니다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6459044%3Ftimestamp%3D20260226121428"
+    },
+    "9791169942003": {
+      "isbn": "9791169942003",
+      "title": "훼야의 춤",
+      "author": "황규섭",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2023,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 30회 판타지 대상. 〈훼야의 춤〉은 나비를 닮은 훼야들이 사는 나라, 훼야국을 배경으로 펼쳐지는 신비로운 이야기다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6501571%3Ftimestamp%3D20260226121453"
+    },
+    "9791169942485": {
+      "isbn": "9791169942485",
+      "title": "시간을 묻는 소년, 모나리자",
+      "author": "이보리",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2024,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 31회 동화 대상. 『시간을 묻는 소년, 모나리자』는 제31회 눈높이아동문학상 동화 대상에 빛나는 작품이다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6712573%3Ftimestamp%3D20260226121459"
+    },
+    "9791169942522": {
+      "isbn": "9791169942522",
+      "title": "벽란도의 마로, 변경에 가다",
+      "author": "김하영",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2024,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 31회 동화 우수. 고려 벽란도에 살고 있는 소년 마로는 아버지가 남긴 초록 돌이 달린 목걸이를 보며 아버지를 그리워한다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6757189%3Ftimestamp%3D20260226121512"
+    },
+    "9791169942515": {
+      "isbn": "9791169942515",
+      "title": "악당을 지켜라",
+      "author": "김우주(고은설)",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2024,
+      "targetAge": "초등 고학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 31회 판타지 우수. 개 동구는 길목집 식당을 운영하는 할아버지와 손자 동이와 함께 살고 있다.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6733972%3Ftimestamp%3D20260226121524"
+    },
+    "9791169942973": {
+      "isbn": "9791169942973",
+      "title": "내 친구가 하고 싶은 말",
+      "author": "박하잎",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2025,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "눈높이아동문학상 32회 그림책 대상. 집으로 돌아온 도윤이는 가장 먼저 어항 앞으로 달려가 금붕어들에게 인사해요.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F6985950%3Ftimestamp%3D20260521123206"
+    },
+    "9791169946674": {
+      "isbn": "9791169946674",
+      "title": "돌 머리 돌석구 돌 잔치",
+      "author": "둥둥",
+      "publisher": "오늘책",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2025,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 32회 우수. 제32회 눈높이아동문학상 우수상 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F7009144%3Ftimestamp%3D20260226121556"
+    },
+    "9788939530928": {
+      "isbn": "9788939530928",
+      "title": "꼬리빵즈",
+      "author": "신지은",
+      "publisher": "대교",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2011,
+      "targetAge": "초등 중학년",
+      "genre": "동화",
+      "why": "눈높이아동문학상 13회. 대교 주관 어린이 창작 동화 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F558439%3Ftimestamp%3D20250924110450"
+    },
+    "9788939536265": {
+      "isbn": "9788939536265",
+      "title": "악어가 쿵 작은 새가 포르르",
+      "author": "이은경",
+      "publisher": "대교북스주니어",
+      "lists": [
+        "daekyo-award"
+      ],
+      "year": 2013,
+      "targetAge": "유아",
+      "genre": "그림책",
+      "why": "눈높이아동문학상 20회 그림책 당선. 대교 주관 어린이 창작 그림책 수상작.",
+      "thumbnail": "https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F558575%3Ftimestamp%3D20220114161413"
     }
   },
   "awards": {
