@@ -36462,9 +36462,10 @@
       "targetAge": "초등 고학년",
       "genre": "문학",
       "lists": [
-        "morning-reading",
+        "arko-lit",
         "childbook",
-        "arko-lit"
+        "morning-reading",
+        "slj"
       ],
       "why": "2024 행복한아침독서 추천도서로 선정된 책입니다."
     },
