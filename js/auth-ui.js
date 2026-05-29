@@ -333,7 +333,7 @@
       // 4. 액션 버튼들 — 저장/취소 50/50
       '<div style="display:flex;gap:8px;margin-top:18px">',
       '<button id="apvCancel" type="button" style="flex:1;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:#8B8B8B">취소</button>',
-      '<button id="apvSave" type="button" disabled style="flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:default;background:#eee;color:#bbb;transition:background .15s ease,color .15s ease">저장됨</button>',
+      '<button id="apvSave" type="button" style="flex:1;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff;transition:background .15s ease,color .15s ease">✏️ 수정</button>',
       '</div>',
 
       // 5. 앱 설정 + 로그아웃 — 맨 아래 (50/50, 둘 다 톤다운)
@@ -354,22 +354,29 @@
 
     document.body.appendChild(modal);
 
-    // 저장 버튼 dirty tracking — 변경이 생기면 '저장됨'(비활성) → '저장'(활성)
+    // 보기/편집 모드 토글 — 평소엔 필드 잠금 + '✏️ 수정', 수정 누르면 편집 + '저장'
     var saveBtn = modal.querySelector('#apvSave');
-    function markDirty() {
-      if (!saveBtn || saveBtn.dataset.saved === '1' || !saveBtn.disabled) return;
+    var editFields = ['#apvName', '#apvGrade', '#apvRegion', '#apvGoal'].map(function (s) { return modal.querySelector(s); });
+    var avatarDetails = modal.querySelector('details');
+    var editing = false;
+    function setEditing(on) {
+      editing = on;
+      editFields.forEach(function (el) { if (el) el.disabled = !on; });
+      if (avatarDetails) {
+        avatarDetails.style.opacity = on ? '1' : '0.5';
+        avatarDetails.style.pointerEvents = on ? '' : 'none';
+        if (!on) avatarDetails.open = false;
+      }
+      var imp = modal.querySelector('#apvImport');
+      if (imp) imp.style.display = on ? '' : 'none';
+      saveBtn.dataset.saved = '';
       saveBtn.disabled = false;
-      saveBtn.textContent = '저장';
       saveBtn.style.cursor = 'pointer';
       saveBtn.style.background = 'linear-gradient(135deg,#FF9E9E,#E8C5FF)';
       saveBtn.style.color = '#fff';
+      saveBtn.textContent = on ? '저장' : '✏️ 수정';
     }
-    ['#apvName', '#apvRegion', '#apvGoal'].forEach(function (sel) {
-      var el = modal.querySelector(sel);
-      if (el) el.addEventListener('input', markDirty);
-    });
-    var gradeSel = modal.querySelector('#apvGrade');
-    if (gradeSel) gradeSel.addEventListener('change', markDirty);
+    setEditing(false); // 초기엔 보기 모드
 
     // 초기 avatar 렌더 (URL이면 img, emoji면 텍스트)
     setAvatarEl(modal.querySelector('#apvAvatarShow'), cur.avatar);
@@ -393,7 +400,6 @@
         b.style.background = '#FFE0EC';
         setAvatarEl(modal.querySelector('#apvAvatarPreview'), emo);
         setAvatarEl(modal.querySelector('#apvAvatarShow'), emo);
-        markDirty();
       });
       grid.appendChild(b);
     });
@@ -421,12 +427,19 @@
             x.style.background = '#fff';
           });
         }
-        markDirty();
       });
     }
 
     saveBtn.addEventListener('click', async function () {
-      if (saveBtn.disabled) return;
+      if (saveBtn.dataset.saved === '1') return;
+      // 보기 모드: '✏️ 수정' 클릭 → 편집 모드 진입
+      if (!editing) {
+        setEditing(true);
+        var nf = modal.querySelector('#apvName');
+        if (nf) nf.focus();
+        return;
+      }
+      // 편집 모드: '저장' 클릭 → 저장
       var name   = modal.querySelector('#apvName').value.trim() || cur.name;
       var grade  = modal.querySelector('#apvGrade').value;
       var region = modal.querySelector('#apvRegion').value.trim() || cur.region;
