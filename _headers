@@ -1,0 +1,19 @@
+# Cloudflare Pages 응답 헤더 (Vercel은 이 파일을 무시하므로 양쪽 배포에 안전)
+# CSP는 외부 스크립트(폰트·supabase CDN·kakao 등)와 인라인 스타일을 다수 사용하므로
+# 깨짐 방지를 위해 의도적으로 넣지 않음.
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# 버전 쿼리(?v=)로 캐시버스팅하는 정적 자산 → 장기 캐시
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 데이터·HTML은 항상 최신 확인(추천 데이터 갱신·캐시버스터 반영)
+/data/*
+  Cache-Control: public, max-age=0, must-revalidate
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
