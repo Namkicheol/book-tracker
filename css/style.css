@@ -1285,7 +1285,8 @@ body.folder-sheet-open {
   gap: 6px;
 }
 .rec-browse-grid.list-view .rec-browse-card,
-.tb-grid.list-view .rec-browse-card {
+.tb-grid.list-view .rec-browse-card,
+.kinder-book-grid.list-view .rec-browse-card {
   flex-direction: row;
   align-items: center;
   gap: 12px;
@@ -1296,19 +1297,22 @@ body.folder-sheet-open {
   width: 100%;
 }
 .rec-browse-grid.list-view .rec-browse-cover,
-.tb-grid.list-view .rec-browse-cover {
+.tb-grid.list-view .rec-browse-cover,
+.kinder-book-grid.list-view .rec-browse-cover {
   width: 46px;
   flex-shrink: 0;
   border-radius: 6px;
 }
 .rec-browse-grid.list-view .rec-browse-info,
-.tb-grid.list-view .rec-browse-info {
+.tb-grid.list-view .rec-browse-info,
+.kinder-book-grid.list-view .rec-browse-info {
   margin-top: 0;
   flex: 1;
   min-width: 0;
 }
 .rec-browse-grid.list-view .rec-browse-book-title,
-.tb-grid.list-view .rec-browse-book-title {
+.tb-grid.list-view .rec-browse-book-title,
+.kinder-book-grid.list-view .rec-browse-book-title {
   font-size: 13px;
 }
 
@@ -1340,6 +1344,35 @@ body.folder-sheet-open {
 }
 .og-grid .rec-browse-book-title {
   font-size: 13px;
+}
+
+/* ── 유아 큐레이션 중첩 토글(Kindergarten curated nested toggle) ── */
+.kinder-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  background: var(--bg-paper);
+  border-radius: 8px;
+}
+.kinder-summary::-webkit-details-marker { display: none; }
+.kinder-chevron {
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: transform 0.2s;
+  color: var(--text-mute);
+}
+#kinderSection[open] .kinder-chevron { transform: rotate(180deg); }
+.kinder-book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  padding: 0 16px;
+}
+.kinder-book-grid.list-view {
+  grid-template-columns: 1fr;
+  gap: 6px;
 }
 
 /* ── Scroll to top ── */
