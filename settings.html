@@ -188,6 +188,19 @@
       </div>
     </div>
 
+    <div class="settings-section" id="accountSection" style="display:none">
+      <p class="settings-section-title">계정</p>
+      <div class="settings-list">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">회원 탈퇴</div>
+            <div class="settings-row-desc">계정과 서버에 저장된 모든 데이터(서재·프로필 등)를 삭제합니다. 되돌릴 수 없어요.</div>
+          </div>
+          <button type="button" id="deleteAccountBtn" style="flex-shrink:0;padding:8px 14px;border:1.5px solid #E5484D;border-radius:8px;background:transparent;color:#E5484D;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">탈퇴</button>
+        </div>
+      </div>
+    </div>
+
     <p class="settings-version">맘스북스 · 2026</p>
 
   </main>
@@ -285,6 +298,36 @@
           location.href = 'index.html';
         });
       }
+
+      // ── 회원 탈퇴 (로그인 시) ─────────────────────────────────
+      (async function initAccount() {
+        if (!(window.SB && window.SB.enabled)) return;
+        let user = null;
+        try { user = await window.SB.getUser(); } catch (e) {}
+        if (!user) return;
+        const sec = document.getElementById('accountSection');
+        if (sec) sec.style.display = '';
+        const delBtn = document.getElementById('deleteAccountBtn');
+        if (!delBtn) return;
+        delBtn.addEventListener('click', async function () {
+          const ok = confirm('정말 회원 탈퇴할까요?\n계정과 서버에 저장된 모든 데이터가 삭제되며 되돌릴 수 없어요.');
+          if (!ok) return;
+          delBtn.disabled = true;
+          delBtn.textContent = '처리 중…';
+          try {
+            const { error } = await window.SB.client.functions.invoke('delete-account');
+            if (error) throw error;
+            try { localStorage.clear(); } catch (e) {}
+            try { await window.SB.signOut(); } catch (e) {}
+            alert('회원 탈퇴가 완료됐어요. 그동안 이용해 주셔서 감사합니다.');
+            location.href = 'index.html';
+          } catch (e) {
+            delBtn.disabled = false;
+            delBtn.textContent = '탈퇴';
+            alert('탈퇴 처리에 실패했어요. 잠시 후 다시 시도하거나 obangti1@gmail.com 으로 문의해 주세요.');
+          }
+        });
+      })();
     });
   </script>
 </body>
