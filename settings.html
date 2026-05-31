@@ -154,6 +154,40 @@
       </div>
     </div>
 
+    <div class="settings-section">
+      <p class="settings-section-title">약관 및 정책</p>
+      <div class="settings-list">
+        <a href="privacy.html" class="settings-row" style="text-decoration:none;color:inherit">
+          <div class="settings-row-label">개인정보 처리방침</div>
+          <span style="color:var(--text-mute);font-size:18px">›</span>
+        </a>
+        <a href="terms.html" class="settings-row" style="text-decoration:none;color:inherit">
+          <div class="settings-row-label">이용약관</div>
+          <span style="color:var(--text-mute);font-size:18px">›</span>
+        </a>
+        <a href="mailto:obangti1@gmail.com" class="settings-row" style="text-decoration:none;color:inherit">
+          <div>
+            <div class="settings-row-label">문의하기</div>
+            <div class="settings-row-desc">obangti1@gmail.com</div>
+          </div>
+          <span style="color:var(--text-mute);font-size:18px">›</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <p class="settings-section-title">데이터</p>
+      <div class="settings-list">
+        <div class="settings-row">
+          <div>
+            <div class="settings-row-label">이 기기에서 데이터 삭제</div>
+            <div class="settings-row-desc">이 브라우저에 저장된 내 서재·프로필·설정을 모두 지웁니다. 로그인 계정 데이터는 삭제되지 않아요.</div>
+          </div>
+          <button type="button" id="clearLocalBtn" style="flex-shrink:0;padding:8px 14px;border:1.5px solid #FFB8C6;border-radius:8px;background:transparent;color:#FF7B7B;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit">삭제</button>
+        </div>
+      </div>
+    </div>
+
     <p class="settings-version">맘스북스 · 2026</p>
 
   </main>
@@ -239,6 +273,18 @@
           window.SB.upsertProfile({ privacy: v }).catch(() => {});
         }
       });
+
+      // ── 이 기기에서 데이터 삭제 ──────────────────────────────
+      const clearBtn = document.getElementById('clearLocalBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+          const ok = confirm('이 기기에 저장된 내 서재·프로필·설정을 모두 삭제할까요?\n(로그인 계정 데이터는 삭제되지 않습니다. 되돌릴 수 없어요.)');
+          if (!ok) return;
+          try { localStorage.clear(); } catch (e) {}
+          alert('이 기기의 데이터를 삭제했어요.');
+          location.href = 'index.html';
+        });
+      }
     });
   </script>
 </body>
