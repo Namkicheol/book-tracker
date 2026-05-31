@@ -95,6 +95,10 @@
       style(btnOrig, mode === 'original', '#4A90E2');
       style(btnTB,   mode === 'textbook', '#27ae60');
 
+      // 영어 원서는 목록형 고정 → 보기 토글 버튼 숨김
+      const viewToggleBtn = document.getElementById('recViewToggleBtn');
+      if (viewToggleBtn) viewToggleBtn.style.display = (mode === 'original') ? 'none' : '';
+
       // 검색 상태 초기화 + gradeContent 강제 표시
       const searchInput = document.getElementById('recSearch');
       if (searchInput) searchInput.value = '';
