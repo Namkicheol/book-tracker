@@ -1416,6 +1416,44 @@ body.folder-sheet-open {
   white-space: nowrap;
 }
 
+/* ── Store links (알라딘 / YES24 / 교보문고) — book preview & detail ── */
+.shop-links {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+.shop-link {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-paper);
+  color: var(--text);
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+  white-space: nowrap;
+}
+.shop-link:hover {
+  background: var(--bg-soft, rgba(0,0,0,0.03));
+  border-color: var(--text-mute);
+}
+.shop-link:active {
+  transform: translateY(1px);
+}
+.shop-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 3px;
+}
+
 /* ===== BOOK PREVIEW MODAL ===== */
 .book-preview-modal[hidden] { display: none; }
 .book-preview-modal {
