@@ -1,7 +1,6 @@
-# book-tracker — AGENTS.md (Codex)
+# book-tracker
 
-> 이 파일이 이 레포의 canonical agent instruction이다. Codex는 작업 시작 시 이 파일을 우선 참고한다. Claude Code 진입 문서는 `CLAUDE.md`이고, 두 파일은 도구 framing만 다르고 섹션·순서·규칙은 동일하다.
-> 새 규칙은 양쪽 모두 갱신한다.
+> 이 파일이 canonical 작업 지침이다. `CLAUDE.md`(Claude Code)와 `AGENTS.md`(Codex)는 같은 파일이다(symlink). Claude Code·Codex 공통.
 
 ## 프로젝트 개요
 
@@ -117,18 +116,22 @@ HTML에서 JS/CSS 참조를 바꿀 때는 다음 형식을 유지한다.
 1. `git status`, `git diff`로 변경 범위를 확인한다.
 2. 의도한 파일만 `git add path/to/file`로 stage한다.
 3. `main` 직접 push는 정책상 막힐 수 있으므로 PR 경로를 기본으로 한다.
-4. feature 브랜치를 만들 때 Codex 기본 prefix는 `codex/`를 사용한다.
+4. feature 브랜치 prefix는 사용하는 도구 관례를 따른다 (Claude Code: `claude/`, Codex: `codex/`).
 5. `git push -u origin <branch>`, `gh pr create`, `gh pr merge` 순서로 main에 반영한다.
 6. Vercel 배포는 production deployment SHA가 main HEAD와 일치하고 state가 READY인지 확인한다.
 
 충돌이나 미동기화 WIP가 보이면 먼저 사용자 변경을 보호한다. destructive 명령은 명시 요청 없이는 쓰지 않는다.
 
-## Codex 환경 메모
+커밋 트레일러(`Co-Authored-By: Claude…`)는 도구 기본 동작을 따르되 강제하지 않는다. Codex 커밋에는 넣지 않는다.
 
-- Codex 진입 문서는 이 `AGENTS.md`다. `CLAUDE.md`는 Claude Code용 parallel 문서.
-- 로컬 웹 확인이 필요하면 정적 서버를 띄운 뒤 Browser/Playwright 계열 도구로 확인한다.
+## 에이전트 환경 메모
+
+- 로컬 웹 확인이 필요하면 정적 서버를 띄운 뒤 Playwright/Browser 계열 도구로 확인한다.
+- 파일 검색: rg/Grep 계열 도구를 사용한다.
+- 파일 수정: apply_patch/Edit·Write 계열 도구를 사용한다.
 - 플러그인/스킬은 실제 가치가 있을 때만 사용한다. 단순 조회나 소규모 수정에는 강제 적용하지 않는다.
-- 네트워크가 필요한 `gh`, `wrangler`, Vercel 확인 등은 sandbox/승인이 필요할 수 있다. 실패하면 승인 요청 후 재시도한다.
+- 네트워크가 필요한 `gh`, `wrangler`, Vercel 확인 등은 권한 승인이 필요할 수 있다. 실패하면 사용자에게 알린 뒤 재시도한다.
+- 전역 지침은 `~/.claude/CLAUDE.md`(Claude Code) / `~/.codex/AGENTS.md`(Codex)를 참고한다.
 
 ## 개인정보 / 표시 정책
 
@@ -170,6 +173,7 @@ HTML에서 JS/CSS 참조를 바꿀 때는 다음 형식을 유지한다.
 - 비로그인 상태에서는 localStorage만 유지
 - `js/sync.js`는 첫 로그인 시 books/folders도 업로드
 - 충돌 해결은 `updated_at` 기준 last-write-wins
+- 마이그레이션: `migrations/2026-05-27_books_folders_sync.sql` 적용됨
 
 ### D. 실제 랭킹
 
