@@ -29,7 +29,7 @@
 
 ## 4) repo 반영 (코드 — 완료)
 - `_headers` 추가됨(캐시·보안 헤더). Vercel은 이 파일을 무시하므로 양쪽 안전.
-- 옮긴 뒤 `CLAUDE.md`의 Production URL 표기를 새 도메인으로 갱신.
+- 옮긴 뒤 `AGENTS.md`의 Production URL 표기를 새 도메인으로 갱신.
 
 ## 참고: 어디서 Vercel 상업제한이 실제로 걸리나
 - **앱스토어(Capacitor)·앱인토스**: 웹 자산이 앱에 번들 → 런타임에 Vercel이 안 서빙 → 상업제한 무관(개발/프리뷰는 Vercel Hobby 계속 사용 가능).
