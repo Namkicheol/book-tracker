@@ -17,3 +17,4 @@ node_modules/
 /*.jpg
 /*.jpeg
 /*.webp
+.omc/
