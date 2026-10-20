@@ -11,7 +11,7 @@
   const milestones = [0,1,3,5,10,20];
   const labels = ['씨앗','새싹','어린 나무','튼튼한 나무','꽃이 핀 나무','친구들이 사는 나무'];
   const TREES_KEY = 'bookTracker.garden.trees.v1';
-  let expanded = false;
+  let expanded = true;
   function identity(book) {
     const isbns = String(book.isbn || '').trim().split(/\s+/).filter(Boolean);
     const isbn = isbns.find(value => /^\d{13}$/.test(value)) || isbns[0];
