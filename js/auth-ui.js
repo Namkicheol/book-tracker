@@ -26,7 +26,7 @@
   ];
 
   function svgPerson() {
-    return '<svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-1a7 7 0 0 1 14 0v1"/></svg>';
+    return '<svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-1a7 7 0 0 1 14 0v1"/></svg>';
   }
 
   function ensureAuthButtonStyles() {
@@ -34,9 +34,9 @@
     var st = document.createElement('style');
     st.id = 'authUiButtonStyles';
     st.textContent = [
-      '#authBtnGlobal{box-sizing:border-box;width:44px;height:44px;min-width:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:6px;padding:0;border:0;border-radius:50%;background:transparent;color:#b94465;box-shadow:none;font-size:22px;line-height:1;cursor:pointer;transition:color .15s ease,background-color .15s ease}',
+      '#authBtnGlobal{box-sizing:border-box;width:44px;height:44px;min-width:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:6px;padding:0;border:0;border-radius:50%;background:transparent;color:#c9899d;box-shadow:none;font-size:22px;line-height:1;cursor:pointer;transition:color .15s ease,background-color .15s ease}',
       '#authBtnGlobal:hover{background-color:rgba(185,68,101,.07)}',
-      '#authBtnGlobal:focus-visible{outline:2px solid #b94465;outline-offset:2px}',
+      '#authBtnGlobal:focus-visible{outline:2px solid #c9899d;outline-offset:2px}',
       '#authBtnGlobal svg{display:block;width:24px;height:24px}',
       '#authBtnGlobal img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}'
     ].join('');
@@ -120,18 +120,22 @@
     // masthead는 액션 줄에, 그 외 페이지는 page-header의 마지막 항목으로 배치.
     // 헤더가 없는 페이지에서는 기존처럼 화면 우측 상단에 안전하게 fallback.
     var slimHeader = document.querySelector('.page-header:not(.page-header-masthead)');
+    var browseHeader = document.querySelector('.rec-browse-header');
     var mastheadActions = document.querySelector('.page-header-masthead .hdr-actions');
     if (mastheadActions) {
       mastheadActions.appendChild(btn);
     } else if (slimHeader) {
       slimHeader.appendChild(btn);
+    } else if (browseHeader) {
+      btn.style.cssText = 'position:absolute;top:20px;right:14px';
+      browseHeader.appendChild(btn);
     } else {
       btn.style.cssText = [
         'position:fixed', 'top:14px', 'right:14px',
         'z-index:990', 'box-sizing:border-box',
         'width:44px', 'height:44px', 'min-width:44px',
         'border:0', 'border-radius:50%', 'background:transparent',
-        'color:#b94465', 'box-shadow:none', 'cursor:pointer',
+        'color:#c9899d', 'box-shadow:none', 'cursor:pointer',
         'display:flex', 'align-items:center', 'justify-content:center',
         'font-size:22px', 'line-height:1', 'padding:0'
       ].join(';');
