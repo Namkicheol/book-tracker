@@ -291,6 +291,7 @@
       color: var(--text);
     }
   </style>
+  <link rel="stylesheet" href="css/app.css?v=20261020h">
 </head>
 <body>
 
@@ -307,10 +308,12 @@
     <div class="chapter-glyph">計</div>
     <span class="chapter-no">Reading Stats</span>
     <h1 class="chapter-title">독서 <em>통계</em></h1>
-    <p class="chapter-sub">한 해의 독서 흐름을 한눈에.</p>
+    <p class="chapter-sub">읽은 책과 직접 기록한 읽은 날짜로 독서 흐름을 살펴봐요.</p>
   </section>
 
   <main class="content">
+
+    <section id="journalExport" class="journal-export" aria-label="독서 기록 내보내기"></section>
 
     <div class="stat-grid">
       <div class="stat-card" data-glyph="冊">
@@ -406,8 +409,8 @@
 
     <div class="empty-state hidden" id="statsEmpty">
       <div class="empty-state-glyph">計</div>
-      <p class="empty-state-title">아직 데이터가 없어요</p>
-      <p class="empty-state-desc">책을 기록하면 통계가 나타납니다.</p>
+      <p class="empty-state-title">아직 다 읽은 책이 없어요</p>
+      <p class="empty-state-desc">책을 다 읽으면 독서 통계가 나타나요.<br>읽은 날짜를 남기면 달력과 월별 기록도 채워져요.</p>
       <a href="scan.html" class="btn btn-primary">첫 책 기록하기</a>
     </div>
 
@@ -447,7 +450,7 @@
         <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
         <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
       </svg>
-      랭킹
+      이웃 서재
     </a>
   </nav>
 
@@ -457,10 +460,13 @@
   <script src="js/theme.js?v=20260510a"></script>
   <script src="js/config.js?v=20260510a"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=20260510b"></script>
-  <script src="js/auth-ui.js?v=20260530a"></script>
-  <script src="js/storage.js?v=20260527c"></script>
-  <script src="js/sync.js?v=20260528a"></script>
-  <script src="js/stats.js?v=20260527a"></script>
+  <script src="js/supabase.js?v=20261020h"></script>
+  <script src="js/regions.js?v=20261020a"></script>
+  <script src="js/auth-ui.js?v=20261021f"></script>
+  <script src="js/storage.js?v=20261020h"></script>
+  <script src="js/sync.js?v=20261020h"></script>
+  <link rel="stylesheet" href="css/journal-export.css?v=20261020h">
+  <script src="js/journal-export.js?v=20261020h"></script>
+  <script src="js/stats.js?v=20261020h"></script>
 </body>
 </html>

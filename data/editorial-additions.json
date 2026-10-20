@@ -1,0 +1,362 @@
+[
+  {
+    "isbn": "9791169814249",
+    "title": "갯벌, 무슨 일이 일어나고 있을까? - 2026년 개정판",
+    "author": "이혜영",
+    "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B2964&type=publishing",
+    "note": "갯벌이 만들어지는 과정과 그곳에 사는 생물, 사람의 생활을 함께 살펴보는 초등 과학 읽기입니다.",
+    "activity": "생물 하나를 골라 갯벌이 사라지면 그 생물의 하루가 어떻게 달라질지 그림과 문장으로 표현해 보세요.",
+    "ages": [
+      "초등 중학년",
+      "초등 고학년"
+    ],
+    "topics": [
+      "과학",
+      "자연",
+      "환경"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "사계절 도서 소개",
+        "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B2964&type=publishing",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "사계절 공식 서지에서 제목·저자·ISBN과 자연과학/갯벌 주제를 확인. 출판사는 어린이 눈높이에 맞춘 책이라고 소개하며 숫자 연령은 따로 제시하지 않아 초등 중·고학년으로 분류했습니다."
+    ],
+    "publisher": "사계절",
+    "thumbnail": "https://image.aladin.co.kr/product/38716/7/cover200/k512136636_1.jpg"
+  },
+  {
+    "isbn": "9788958281795",
+    "title": "초등학생이 읽는 지질학의 첫걸음",
+    "author": "프랑스와 미셸",
+    "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B0725&type=publishing",
+    "note": "돌과 땅의 변화를 관찰하며 지질학의 질문을 생활 주변에서 시작하는 어린이 과학책입니다.",
+    "activity": "집 주변의 돌 하나를 살펴 색·무늬·촉감을 스케치하고, 어디서 왔을지 궁금한 점을 세 가지 적어 보세요.",
+    "ages": [
+      "초등 중학년",
+      "초등 고학년"
+    ],
+    "topics": [
+      "과학",
+      "지질학",
+      "지구"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "사계절 도서 소개",
+        "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B0725&type=publishing",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "사계절 공식 서지에서 제목·지은이·ISBN·자연과학 지학 분류를 확인. 책 제목과 편집자 소개가 초등학생을 위한 입문서로 명시하며, 옮긴이는 장순근입니다.",
+      "동일 저자 François Michel의 한국어 표기가 출판사 프랑소와 미셸 / 도서 API 프랑스와 미셸로 달라, 화면 조회 일치를 위해 API 표기를 사용함."
+    ],
+    "publisher": "사계절",
+    "thumbnail": "https://image.aladin.co.kr/product/68/25/cover200/8958281790_2.jpg"
+  },
+  {
+    "isbn": "9791190896054",
+    "title": "초등 1학년이 꼭 알아야 할 수학",
+    "author": "케이티 데이니스",
+    "source": "https://bir.co.kr/book/129487/",
+    "note": "초등 수학의 기초 개념을 그림과 문제로 함께 확인할 수 있는 입문서입니다.",
+    "activity": "책에서 찾은 수학 개념 하나를 집 안 물건이나 하루 일과에서 찾아 사진 대신 간단한 그림으로 기록해 보세요.",
+    "ages": [
+      "초등 저학년"
+    ],
+    "topics": [
+      "수학",
+      "기초 개념",
+      "교과 연계"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "비룡소 도서 소개",
+        "source": "https://bir.co.kr/book/129487/",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 7세 이상을 확인했습니다. 출판사는 초등학교 수학 교과와 연결된 내용으로 소개합니다."
+    ],
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/27839/43/cover200/k752734787_1.jpg"
+  },
+  {
+    "isbn": "9791190896511",
+    "title": "초등학생이 알아야 할 참 쉬운 수학",
+    "author": "사라 헐",
+    "source": "https://bir.co.kr/book/138557/",
+    "note": "수와 도형에서 그래프와 수학 모델까지, 수학이 생활 속에서 쓰이는 모습을 폭넓게 살펴봅니다.",
+    "activity": "책에서 흥미로웠던 수학 활용 사례를 골라, 그 원리를 친구에게 설명하는 한 컷 그림을 만들어 보세요.",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "수학",
+      "생활 속 지식",
+      "문제 해결"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "비룡소 도서 소개",
+        "source": "https://bir.co.kr/book/138557/",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 8세 이상을 확인했습니다. 출판사는 초등 수학 교양 입문서로 분류합니다."
+    ],
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/30875/45/cover200/k292831187_2.jpg"
+  },
+  {
+    "isbn": "9788949125039",
+    "title": "거꾸로 읽는 한국사 - 옛날 사람들은 어떻게 살았을까?",
+    "author": "이흔",
+    "source": "https://bir.co.kr/book/134211/",
+    "note": "우리나라 이름과 역사의 흐름을 짚으며 초등 한국사에 들어가는 어린이 교양서입니다.",
+    "activity": "책에서 다룬 국호를 시대 순으로 적고, 각 이름이 쓰인 배경을 한 문장씩 덧붙여 보세요.",
+    "ages": [
+      "초등 중학년",
+      "초등 고학년"
+    ],
+    "topics": [
+      "역사",
+      "한국사"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "비룡소 도서 소개",
+        "source": "https://bir.co.kr/book/134211/",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "비룡소 공식 서지에서 제목·글쓴이·ISBN과 연령 9세 이상을 확인했습니다. ‘사회는 쉽다!’ 개정판 시리즈의 한국사 편입니다."
+    ],
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/29756/79/cover200/894912503x_1.jpg"
+  },
+  {
+    "isbn": "9788958283768",
+    "title": "키워드 한국사 6 - 근대",
+    "author": "김성환",
+    "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B1185&type=publishing",
+    "note": "근대사의 인물과 사건을 키워드 사이의 연결로 살피며 시대의 큰 흐름을 잡아 봅니다.",
+    "activity": "읽으며 눈에 들어온 인물·사건·제도 키워드 세 개를 골라 원인과 결과를 화살표로 연결해 보세요.",
+    "ages": [
+      "초등 고학년"
+    ],
+    "topics": [
+      "역사",
+      "한국사",
+      "근대"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "사계절 도서 소개",
+        "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B1185&type=publishing",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "사계절 공식 서지에서 제목·김성환·ISBN과 역사 분류를 확인했습니다. 출판사는 초등 교과 핵심 키워드를 중학교 과정과 연결해 설명한다고 안내해 상급 초등 연령으로 분류했습니다."
+    ],
+    "publisher": "사계절",
+    "thumbnail": "https://image.aladin.co.kr/product/4277/11/cover200/8958283769_1.jpg"
+  },
+  {
+    "isbn": "9791186872956",
+    "title": "초등학생이 알아야 할 참 쉬운 정치",
+    "author": "알렉스 프리스",
+    "source": "https://bir.co.kr/book/111483/",
+    "note": "정치 제도와 민주 시민의 참여를 초등학생이 이해할 수 있는 사례와 그림으로 소개합니다.",
+    "activity": "학교나 동아리에서 함께 정하고 싶은 규칙 하나를 골라, 서로 다른 입장의 이유를 적고 합의안을 만들어 보세요.",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "사회",
+      "정치",
+      "민주주의"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "비룡소 도서 소개",
+        "source": "https://bir.co.kr/book/111483/",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 8세 이상을 확인했습니다. 출판사는 초등 사회 심화용 정치 입문서로 소개합니다."
+    ],
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/13649/52/cover200/k082532217_2.jpg"
+  },
+  {
+    "isbn": "9788949125138",
+    "title": "법과 우리 생활",
+    "author": "홍경의",
+    "source": "https://bir.co.kr/book/138071/",
+    "note": "생활 속 규칙과 법이 어떤 역할을 하는지 초등 사회 교과와 연결해 생각해 봅니다.",
+    "activity": "책에서 본 규칙 한 가지를 골라 그 규칙이 필요한 이유와 바뀐다면 생길 점을 각각 적어 보세요.",
+    "ages": [
+      "초등 중학년",
+      "초등 고학년"
+    ],
+    "topics": [
+      "사회",
+      "법",
+      "생활"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "비룡소 도서 소개",
+        "source": "https://bir.co.kr/book/138071/",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "비룡소 공식 서지에서 홍경의·ISBN과 연령 9세 이상을 확인했습니다. 출판사는 초등 사회 교과 개념과 사회 이슈를 다루는 책으로 소개합니다."
+    ],
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/30745/60/cover200/8949125137_1.jpg"
+  },
+  {
+    "isbn": "9788949133492",
+    "title": "르네 마그리트",
+    "author": "사라 바르테르",
+    "source": "https://bir.co.kr/book/139268/",
+    "note": "마그리트의 대표작과 삶을 따라가며 그림이 현실과 상상을 섞는 방식을 살펴봅니다.",
+    "activity": "일상 물건 하나를 엉뚱한 장소에 그려 넣고, 그림을 본 사람이 떠올릴 질문을 한 줄 덧붙여 보세요.",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "예술",
+      "미술",
+      "상상"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "비룡소 도서 소개",
+        "source": "https://bir.co.kr/book/139268/",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "비룡소 공식 서지에서 글쓴이·ISBN과 연령 7세 이상을 확인했습니다. ‘어린이를 위한 아트 슈퍼스타’ 시리즈의 미술 인물 소개입니다."
+    ],
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/31216/62/cover200/8949133490_1.jpg"
+  },
+  {
+    "isbn": "9788949133423",
+    "title": "프리다 칼로",
+    "author": "사라 바르테르",
+    "source": "https://bir.co.kr/book/135376/",
+    "note": "프리다 칼로의 삶과 작품을 함께 보며 자화상에 담긴 색과 상징을 감상합니다.",
+    "activity": "오늘의 기분을 색 세 가지와 상징 하나로 표현해 나만의 자화상 초안을 그려 보세요.",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "예술",
+      "미술",
+      "인물"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "비룡소 도서 소개",
+        "source": "https://bir.co.kr/book/135376/",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "비룡소 공식 서지에서 글쓴이·ISBN과 연령 7세 이상을 확인했습니다. ‘어린이를 위한 아트 슈퍼스타’ 시리즈의 미술 인물 소개입니다."
+    ],
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/30067/19/cover200/8949133423_1.jpg"
+  },
+  {
+    "isbn": "9791169813600",
+    "title": "소년의 사생활, 더 멋진 내가 되는 법",
+    "author": "주봄",
+    "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B2885&type=publishing",
+    "note": "일상 속 고민을 살펴보고 자기 생각과 감정을 돌보는 방법을 찾아보는 실용 교양서입니다.",
+    "activity": "공감되는 상황 하나를 고르고, 내가 실제로 해 볼 수 있는 대처 방법을 세 단계로 적어 보세요.",
+    "ages": [
+      "초등 고학년",
+      "청소년"
+    ],
+    "topics": [
+      "초등 비문학",
+      "생활",
+      "마음",
+      "관계"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "사계절 도서 소개",
+        "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B2885&type=publishing",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "사계절 공식 서지에서 제목·주봄·ISBN과 사회과학/교육학 분류를 확인했습니다. 출판사는 10대 초반의 일상 고민을 다루는 책으로 소개합니다."
+    ],
+    "publisher": "사계절",
+    "thumbnail": "https://image.aladin.co.kr/product/36144/97/cover200/k052038676_1.jpg"
+  },
+  {
+    "isbn": "9791160948936",
+    "title": "지식을 불태우는 매운맛 시사 상식 사전",
+    "author": "채현기",
+    "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B2428&type=publishing",
+    "note": "과학·역사·환경·문화·정치 등 여러 주제를 짧은 키워드로 두루 살펴보는 어린이 시사 교양서입니다.",
+    "activity": "읽고 싶은 키워드 하나를 고른 뒤, 책의 설명을 덮고 자기 말로 풀이해 가족에게 전해 보세요.",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년",
+      "초등 고학년"
+    ],
+    "topics": [
+      "초등 비문학",
+      "시사",
+      "지식"
+    ],
+    "provenance": [
+      {
+        "kind": "publisher",
+        "label": "사계절 도서 소개",
+        "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B2428&type=publishing",
+        "checkedAt": "2026-10-21"
+      }
+    ],
+    "evidenceNotes": [
+      "사계절 공식 서지에서 채현기·ISBN과 백과사전 분류를 확인했습니다. 출판사는 초등 저학년도 이해하기 쉬운 말로 과학기술·역사·예술·사회 등 125개 키워드를 다룬다고 설명합니다."
+    ],
+    "publisher": "사계절",
+    "thumbnail": "https://image.aladin.co.kr/product/29716/46/cover200/k482838990_1.jpg"
+  }
+]

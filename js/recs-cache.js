@@ -1,60 +1,36 @@
 /**
- * 추천 도서 DB 공유 캐시.
- *
- * data/book-recommendations.json은 ~3MB. index/detail/recommendations 페이지가
- * 각각 fetch하면 한 세션에 같은 파일 3번 받음. sessionStorage + in-memory promise로
- * 한 번만 받고 모두가 공유.
- *
- * 사용:
- *   const data = await RecsCache.load();         // recommendations DB
- *   const data = await RecsCache.load('kindergarten-curated');  // 다른 파일도 캐시
+ * Compatibility facade for pages that still expect recommendation metadata.
+ * Curated lists are no longer served from the static JSON files.
  */
 (function () {
   'use strict';
 
-  const FILES = {
-    'book-recommendations': 'data/book-recommendations.json',
-    'kindergarten-curated': 'data/kindergarten-curated.json',
-  };
+  const EMPTY_DATA = Object.freeze({
+    meta: Object.freeze({ sources: Object.freeze([]) }),
+    books: Object.freeze({}),
+    awards: Object.freeze({}),
+  });
+  const LEGACY_CACHE_KEYS = [
+    'recsCache.book-recommendations',
+    'recsCache.kindergarten-curated',
+  ];
 
-  const memo = new Map();  // name → Promise<data>
+  function clearLegacyCache() {
+    LEGACY_CACHE_KEYS.forEach(key => {
+      try { sessionStorage.removeItem(key); } catch (_) {}
+    });
+  }
 
   function load(name) {
-    const key = name || 'book-recommendations';
-    if (memo.has(key)) return memo.get(key);
-
-    const promise = (async () => {
-      // sessionStorage 1차 조회 — 같은 세션에서 페이지 이동 시 재사용
-      try {
-        const cached = sessionStorage.getItem('recsCache.' + key);
-        if (cached) return JSON.parse(cached);
-      } catch (_) { /* quota/JSON 오류 무시 */ }
-
-      const path = FILES[key];
-      if (!path) throw new Error(`Unknown recs cache key: ${key}`);
-
-      const res = await fetch(path);
-      if (!res.ok) throw new Error(`Recs fetch failed: HTTP ${res.status}`);
-      const data = await res.json();
-
-      // sessionStorage에도 저장 (실패 무시 — 5MB quota 한도)
-      try {
-        sessionStorage.setItem('recsCache.' + key, JSON.stringify(data));
-      } catch (_) { /* 용량 초과 시 in-memory만 */ }
-
-      return data;
-    })();
-
-    memo.set(key, promise);
-    promise.catch(() => memo.delete(key));  // 실패 시 다음 호출은 재시도
-    return promise;
+    clearLegacyCache();
+    if (name && name !== 'book-recommendations') {
+      return Promise.reject(new Error(`Unknown recs cache key: ${name}`));
+    }
+    return Promise.resolve(EMPTY_DATA);
   }
 
   function clear() {
-    memo.clear();
-    Object.keys(FILES).forEach(k => {
-      try { sessionStorage.removeItem('recsCache.' + k); } catch (_) {}
-    });
+    clearLegacyCache();
   }
 
   window.RecsCache = { load, clear };

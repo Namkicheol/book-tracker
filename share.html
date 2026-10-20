@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>맘스북스 — 독서 랭킹</title>
+  <title>맘스북스 — 함께 보는 서재</title>
   <link rel="stylesheet" href="css/style.css?v=20260531c">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#FF9E9E">
@@ -879,6 +879,7 @@
       box-shadow: 0 6px 16px rgba(255, 158, 158, 0.5);
     }
   </style>
+  <link rel="stylesheet" href="css/app.css?v=20261020h">
 </head>
 <body>
 
@@ -888,13 +889,13 @@
         <path d="M15 18l-6-6 6-6"/>
       </svg>
     </a>
-    <span class="page-header-mini">Ranking</span>
+    <span class="page-header-mini">Community</span>
   </header>
 
   <section class="chapter">
-    <div class="chapter-glyph">競</div>
-    <span class="chapter-no">Ranking · 競</span>
-    <h1 class="chapter-title">독서 <em>랭킹</em></h1>
+    <div class="chapter-glyph">書</div>
+    <span class="chapter-no">Community · 書</span>
+    <h1 class="chapter-title">함께 보는 <em>서재</em></h1>
   </section>
 
   <main class="content">
@@ -906,12 +907,11 @@
         <div class="profile-info">
           <div class="profile-name">
             <span id="profileName">책읽는엄마</span>
-            <span class="badge" id="profileBadge">독서왕 🏆</span>
+            <span class="badge" id="profileBadge">나의 독서 기록</span>
           </div>
           <div class="profile-meta">
-            <span id="profileGrade">초5</span>
-            <span>·</span>
-            <span id="profileRegion">강남구</span>
+            <span id="profileGrade" hidden></span>
+            <span id="profileRegion">지역 선택 안 함</span>
           </div>
         </div>
         <button id="shareCardBtn" aria-label="독서 기록 공유" title="공유 카드"
@@ -928,17 +928,17 @@
       <div class="stats-grid">
         <div class="stat-box">
           <div class="stat-label">이번 주</div>
-          <div class="stat-value" id="statWeek">5</div>
-          <div class="stat-change">📈 +2</div>
+          <div class="stat-value" id="statWeek">0</div>
+          <div class="stat-change"></div>
         </div>
         <div class="stat-box">
           <div class="stat-label">이번 달</div>
-          <div class="stat-value" id="statMonth">18</div>
+          <div class="stat-value" id="statMonth">0</div>
           <div class="stat-change">🔥</div>
         </div>
         <div class="stat-box">
           <div class="stat-label">올해</div>
-          <div class="stat-value" id="statYear">127</div>
+          <div class="stat-value" id="statYear">0</div>
           <div class="stat-change">⭐</div>
         </div>
       </div>
@@ -973,23 +973,9 @@
       </div>
     </div>
 
-    <!-- 우리 학교 친구들 -->
-    <section id="schoolFriendsSection" style="display:none;margin-bottom:20px">
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px;padding:0 4px">
-        <h3 style="font-size:15px;font-weight:800;color:var(--text-dark)">👯 우리 학교 친구들</h3>
-        <span id="schoolFriendsLabel" style="font-size:11px;color:var(--text-gray)"></span>
-      </div>
-      <div id="schoolFriendsList" style="display:flex;flex-direction:column;gap:8px"></div>
-    </section>
-
-    <!-- 탭 -->
-    <div class="rank-tabs">
-      <button class="rank-tab active" data-tab="class">우리 학교</button>
-      <button class="rank-tab" data-tab="region">우리 동네</button>
-      <button class="rank-tab" data-tab="national">전국 TOP 100</button>
-    </div>
-
-    <!-- 랭킹 리스트 -->
+    <section aria-label="공개 서재 안내"><h2>다른 부모들의 서재</h2><p>공개에 동의한 서재의 책만 볼 수 있어요. 내 서재 공개는 설정에서 선택해 주세요.</p></section>
+    <div class="rank-tabs"><button class="rank-tab active" data-tab="all">모든 공개 서재</button><button class="rank-tab" data-tab="region">우리 동네</button></div>
+    <!-- 공개 서재 목록 -->
     <div class="rank-list" id="rankList"></div>
 
   </main>
@@ -1028,7 +1014,7 @@
         <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
         <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
       </svg>
-      랭킹
+      이웃 서재
     </a>
   </nav>
 
@@ -1037,11 +1023,11 @@
   <script src="js/theme.js?v=20260510a"></script>
   <script src="js/config.js?v=20260510a"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=20260510c"></script>
-  <script src="js/auth-ui.js?v=20260530a"></script>
-  <script src="js/sync.js?v=20260527a"></script>
-  <script src="js/storage.js?v=20260527c"></script>
-  <script src="js/regions.js?v=20260510a"></script>
-  <script src="js/share.js?v=20260528b"></script>
+  <script src="js/supabase.js?v=20261020h"></script>
+  <script src="js/auth-ui.js?v=20261021f"></script>
+  <script src="js/storage.js?v=20261020h"></script>
+  <script src="js/sync.js?v=20261020h"></script>
+  <script src="js/regions.js?v=20261020a"></script>
+  <script src="js/share.js?v=20261020i"></script>
 </body>
 </html>

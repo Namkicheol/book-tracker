@@ -46,6 +46,134 @@
     FOLDERS: 'bookTracker.folders.v1',
   };
 
+  const SCOPE_PREFIX = 'bookTracker.localScope.v1.';
+  const SCOPE_KEYS = [
+    KEYS.BOOKS, KEYS.FOLDERS,
+    'profileName', 'profileAvatar', 'profileCity', 'profileDistrict',
+    'profileLibraryPublic', 'profilePrivacy', 'monthlyGoal',
+    'bookTracker.garden.v1', 'bookTracker.garden.watered.v1', 'bookTracker.garden.trees.v1',
+  ];
+  const ACTIVE_OWNER_KEY = SCOPE_PREFIX + 'active-owner';
+
+  function readActiveOwner() {
+    const value = localStorage.getItem(ACTIVE_OWNER_KEY);
+    if (value === 'guest' || value == null) return null;
+    if (value.indexOf('user.') === 0) {
+      try { return decodeURIComponent(value.slice(5)); }
+      catch (e) { return null; }
+    }
+    return null;
+  }
+
+  function writeActiveOwner(ownerId) {
+    localStorage.setItem(ACTIVE_OWNER_KEY, ownerId == null ? 'guest' : 'user.' + encodeURIComponent(String(ownerId)));
+  }
+
+  function isOwnerCurrent() {
+    return readActiveOwner() === activeOwnerId;
+  }
+
+  let reloadScheduled = false;
+  function scheduleScopeReload() {
+    if (reloadScheduled) return;
+    reloadScheduled = true;
+    if (window.location && typeof window.location.reload === 'function') window.location.reload();
+  }
+
+  function ownerIsCurrent() {
+    if (isOwnerCurrent()) return true;
+    scheduleScopeReload();
+    return false;
+  }
+
+  if (typeof window.addEventListener === 'function') {
+    window.addEventListener('storage', function(event) {
+      if ((!event.key || event.key === ACTIVE_OWNER_KEY) && !isOwnerCurrent()) scheduleScopeReload();
+    });
+  }
+
+  // The base keys persist as the active owner's view across page reloads.
+  let activeOwnerId = readActiveOwner();
+
+  function scopeName(ownerId) {
+    return ownerId == null ? 'guest' : 'user.' + encodeURIComponent(String(ownerId));
+  }
+
+  function scopeDataKey(key, ownerId) {
+    return SCOPE_PREFIX + scopeName(ownerId) + '.' + key;
+  }
+
+  function scopeMarkerKey(ownerId) {
+    return SCOPE_PREFIX + scopeName(ownerId) + '.ready';
+  }
+
+  function readScopedJSON(key, fallback, ownerId) {
+    const scope = arguments.length >= 3 ? ownerId : activeOwnerId;
+    const raw = scope === activeOwnerId ? localStorage.getItem(key) : localStorage.getItem(scopeDataKey(key, scope));
+    if (!raw) return fallback;
+    try { return JSON.parse(raw) ?? fallback; }
+    catch (e) { console.warn('[Storage] scoped parse error for', key, e); return fallback; }
+  }
+
+  function hasScope(ownerId) {
+    const scope = arguments.length ? ownerId : activeOwnerId;
+    if (localStorage.getItem(scopeMarkerKey(scope)) === '1') return true;
+    if (scope === activeOwnerId) return SCOPE_KEYS.some(key => localStorage.getItem(key) != null);
+    return SCOPE_KEYS.some(key => localStorage.getItem(scopeDataKey(key, scope)) != null);
+  }
+
+  // The base keys are an active view buffer for legacy callers. Each switch first
+  // snapshots that buffer, then restores only the selected guest/account scope.
+  function setOwner(ownerId) {
+    const nextOwnerId = ownerId == null ? null : String(ownerId);
+    const persistedOwnerId = readActiveOwner();
+    const externalSwitch = persistedOwnerId !== activeOwnerId;
+    if (externalSwitch) activeOwnerId = persistedOwnerId;
+    if (nextOwnerId === activeOwnerId) return externalSwitch;
+
+    const previousOwnerId = activeOwnerId;
+    let previousSnapshotComplete = false;
+    try {
+      SCOPE_KEYS.forEach(key => {
+        const value = localStorage.getItem(key);
+        if (value == null) localStorage.removeItem(scopeDataKey(key, previousOwnerId));
+        else localStorage.setItem(scopeDataKey(key, previousOwnerId), value);
+      });
+      localStorage.setItem(scopeMarkerKey(previousOwnerId), '1');
+      previousSnapshotComplete = true;
+
+      SCOPE_KEYS.forEach(key => localStorage.removeItem(key));
+      activeOwnerId = nextOwnerId;
+      SCOPE_KEYS.forEach(key => {
+        const value = localStorage.getItem(scopeDataKey(key, nextOwnerId));
+        if (value != null) localStorage.setItem(key, value);
+      });
+      localStorage.setItem(scopeMarkerKey(nextOwnerId), '1');
+      writeActiveOwner(nextOwnerId);
+      return true;
+    } catch (e) {
+      // Recover the previous active view if a storage write fails mid-switch.
+      if (previousSnapshotComplete) {
+        SCOPE_KEYS.forEach(key => localStorage.removeItem(key));
+        activeOwnerId = previousOwnerId;
+        SCOPE_KEYS.forEach(key => {
+          const value = localStorage.getItem(scopeDataKey(key, previousOwnerId));
+          if (value != null) localStorage.setItem(key, value);
+        });
+      }
+      try { writeActiveOwner(previousOwnerId); } catch (ignored) {}
+      throw e;
+    }
+  }
+
+  function clearCurrentScope() {
+    if (!ownerIsCurrent()) return false;
+    SCOPE_KEYS.forEach(key => localStorage.removeItem(key));
+    SCOPE_KEYS.forEach(key => localStorage.removeItem(scopeDataKey(key, activeOwnerId)));
+    localStorage.setItem(scopeMarkerKey(activeOwnerId), '1');
+    return true;
+  }
+
   // ── Internal helpers ──────────────────────────────────────────
 
   function uid() {
@@ -56,6 +184,7 @@
   function nowIso() { return new Date().toISOString(); }
 
   function readJSON(key, fallback) {
+    if (!ownerIsCurrent()) return fallback;
     try {
       const raw = localStorage.getItem(key);
       if (!raw) return fallback;
@@ -68,6 +197,7 @@
   }
 
   function writeJSON(key, value) {
+    if (!ownerIsCurrent()) return false;
     try {
       localStorage.setItem(key, JSON.stringify(value));
       return true;
@@ -81,12 +211,15 @@
 
   function getAllBooksRaw() {
     // 동기화 레이어 전용 — soft-deleted 포함 전체 리턴
-    return readJSON(KEYS.BOOKS, []);
+    if (!ownerIsCurrent()) return [];
+    const ownerId = arguments.length ? arguments[0] : activeOwnerId;
+    if (ownerId === activeOwnerId) return readJSON(KEYS.BOOKS, []);
+    return readScopedJSON(KEYS.BOOKS, [], ownerId);
   }
 
-  function getAllBooks() {
+  function getAllBooks(ownerId) {
     // 일반 호출자용 — soft-deleted 제외
-    return getAllBooksRaw().filter(b => !b.deletedAt);
+    return (arguments.length ? getAllBooksRaw(ownerId) : getAllBooksRaw()).filter(b => !b.deletedAt);
   }
 
   function getBook(id) {
@@ -100,6 +233,7 @@
   }
 
   function saveBook(book) {
+    if (!ownerIsCurrent()) return null;
     // soft-deleted 항목과 동일한 id가 들어오면 그 행을 in-place로 부활시켜야
     // 중복 row가 생기지 않으므로 getAllBooksRaw 위에서 동작한다.
     const books = getAllBooksRaw();
@@ -146,6 +280,7 @@
   }
 
   function deleteBook(id) {
+    if (!ownerIsCurrent()) return false;
     // soft-delete: deletedAt만 표시. 동기화가 켜진 상태에서 다른 디바이스도
     // 이 시점 이후 같이 지움. 30일 지난 항목은 별도로 청소.
     const books = getAllBooksRaw();
@@ -159,6 +294,7 @@
   }
 
   function purgeOldDeletedBooks(maxAgeDays) {
+    if (!ownerIsCurrent()) return 0;
     // 30일 이상 지난 soft-deleted 항목 영구 삭제
     const cutoff = Date.now() - (maxAgeDays || 30) * 86400000;
     const books = getAllBooksRaw();
@@ -211,11 +347,15 @@
   // ── Folders ──────────────────────────────────────────────────
 
   function getAllFoldersRaw() {
-    return readJSON(KEYS.FOLDERS, []);
+    if (!ownerIsCurrent()) return [];
+    const ownerId = arguments.length ? arguments[0] : activeOwnerId;
+    if (ownerId === activeOwnerId) return readJSON(KEYS.FOLDERS, []);
+    return readScopedJSON(KEYS.FOLDERS, [], ownerId);
   }
 
-  function getAllFolders() {
-    const folders = getAllFoldersRaw().filter(f => !f.deletedAt);
+  function getAllFolders(ownerId) {
+    const raw = arguments.length ? getAllFoldersRaw(ownerId) : getAllFoldersRaw();
+    const folders = raw.filter(f => !f.deletedAt);
     return folders.sort((a, b) => (a.order || 0) - (b.order || 0));
   }
 
@@ -224,6 +364,7 @@
   }
 
   function saveFolder(folder) {
+    if (!ownerIsCurrent()) return null;
     const folders = getAllFoldersRaw();
     const now = nowIso();
 
@@ -256,6 +397,7 @@
   }
 
   function deleteFolder(id) {
+    if (!ownerIsCurrent()) return false;
     const folders = getAllFoldersRaw();
     const idx = folders.findIndex(f => f.id === id && !f.deletedAt);
     if (idx === -1) return false;
@@ -284,6 +426,7 @@
   }
 
   function purgeOldDeletedFolders(maxAgeDays) {
+    if (!ownerIsCurrent()) return 0;
     const cutoff = Date.now() - (maxAgeDays || 30) * 86400000;
     const folders = getAllFoldersRaw();
     const next = folders.filter(f => !f.deletedAt || Date.parse(f.deletedAt) >= cutoff);
@@ -292,6 +435,7 @@
   }
 
   function reorderFolders(orderedIds) {
+    if (!ownerIsCurrent()) return [];
     const folders = getAllFolders();
     const map = new Map(folders.map(f => [f.id, f]));
     const next = orderedIds
@@ -367,6 +511,7 @@
   }
 
   function importData(jsonString, opts = { merge: false }) {
+    if (!ownerIsCurrent()) return false;
     try {
       const data = JSON.parse(jsonString);
       if (!data || typeof data !== 'object') return false;
@@ -395,8 +540,11 @@
   }
 
   function clearAll() {
+    if (!ownerIsCurrent()) return false;
     localStorage.removeItem(KEYS.BOOKS);
     localStorage.removeItem(KEYS.FOLDERS);
+    localStorage.removeItem(scopeDataKey(KEYS.BOOKS, activeOwnerId));
+    localStorage.removeItem(scopeDataKey(KEYS.FOLDERS, activeOwnerId));
   }
 
   // ── Demo seeding (for testing) ───────────────────────────────
@@ -492,6 +640,11 @@
     exportData,
     importData,
     clearAll,
+    clearCurrentScope,
+    getOwner() { return activeOwnerId; },
+    isOwnerCurrent,
+    setOwner,
+    hasScope,
     seedDemo,
     normalizeBook,
     // constants

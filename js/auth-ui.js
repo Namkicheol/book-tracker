@@ -1,12 +1,12 @@
 /**
- * 공통 auth UI — 우측상단 원형 프로필 버튼 + 로그인 모달 + 프로필 뷰어
+ * 공통 auth UI — 헤더 우측 프로필 버튼 + 로그인 모달 + 프로필 뷰어
  *
  * 의존: js/supabase.js (window.SB)
  *
  * 동작:
  *  - SB.enabled가 false면 조용히 비활성
- *  - 모든 페이지 우측상단에 40px 원형 버튼 자동 주입
- *    · 로그아웃: 로그인 화살표 → 클릭 시 로그인 모달
+ *  - 모든 페이지 헤더 우측에 프로필 버튼 자동 주입
+ *    · 로그아웃: outline person icon → 클릭 시 로그인 모달
  *    · 로그인: 사용자 emoji 아바타 → 클릭 시 프로필 뷰어
  *
  * window.AuthUI:
@@ -18,21 +18,29 @@
 (function () {
   'use strict';
 
-  var BENEFITS = [
-    '☁️ 어떤 기기에서도 같은 프로필·목표',
-    '📚 폰·태블릿 서재 자동 동기화 <span style="color:#FF9E9E;font-weight:700">(곧)</span>',
-    '🏆 다른 엄마들과 독서 랭킹 비교 <span style="color:#FF9E9E;font-weight:700">(곧)</span>',
-    '👀 다른 엄마의 서재도 확인할 수 있어요 <span style="color:#FF9E9E;font-weight:700">(곧)</span>',
-    '⭐ 우리반·또래 친구들의 인기책 둘러보기 <span style="color:#FF9E9E;font-weight:700">(곧)</span>'
-  ];
+  var BENEFITS = ['☁️ 기기를 바꿔도 같은 서재', '📚 공개에 동의한 다른 부모들의 책 둘러보기', '🔒 내 서재는 기본 비공개'];
 
   var AVATAR_EMOJIS = [
     '👩','🧑','👨','👧','👦','🧑‍🎓','👩‍🎓','👨‍🎓','🦊','🐰',
     '🐱','🐶','🐻','🐼','🐯','🦁','🐨','🐸','🐧','🦄'
   ];
 
-  function svgLogIn() {
-    return '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>';
+  function svgPerson() {
+    return '<svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-1a7 7 0 0 1 14 0v1"/></svg>';
+  }
+
+  function ensureAuthButtonStyles() {
+    if (document.getElementById('authUiButtonStyles')) return;
+    var st = document.createElement('style');
+    st.id = 'authUiButtonStyles';
+    st.textContent = [
+      '#authBtnGlobal{box-sizing:border-box;width:44px;height:44px;min-width:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:6px;padding:0;border:0;border-radius:50%;background:transparent;color:#b94465;box-shadow:none;font-size:22px;line-height:1;cursor:pointer;transition:color .15s ease,background-color .15s ease}',
+      '#authBtnGlobal:hover{background-color:rgba(185,68,101,.07)}',
+      '#authBtnGlobal:focus-visible{outline:2px solid #b94465;outline-offset:2px}',
+      '#authBtnGlobal svg{display:block;width:24px;height:24px}',
+      '#authBtnGlobal img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover}'
+    ].join('');
+    document.head.appendChild(st);
   }
 
   // 외부 이미지 URL을 https 로 강제 (http://k.kakaocdn.net 등 mixed-content 차단 방지)
@@ -97,57 +105,39 @@
     document.head.appendChild(st);
   }
 
-  function injectTopRightCircle() {
+  function injectHeaderProfileButton() {
     if (!window.SB || !window.SB.enabled) return;
     if (document.getElementById('authBtnGlobal')) return;
 
+    ensureAuthButtonStyles();
     var btn = document.createElement('button');
     btn.id = 'authBtnGlobal';
     btn.type = 'button';
     btn.title = '로그인';
     btn.setAttribute('aria-label', '로그인');
-    btn.innerHTML = svgLogIn();
+    btn.innerHTML = svgPerson();
 
-    // 슬림 page-header가 있으면 헤더 내부 우측에 inline으로 배치 (z-index 충돌 방지).
-    // 마스트헤드(index.html)나 헤더가 없는 페이지는 fixed top-right로 fallback.
+    // masthead는 액션 줄에, 그 외 페이지는 page-header의 마지막 항목으로 배치.
+    // 헤더가 없는 페이지에서는 기존처럼 화면 우측 상단에 안전하게 fallback.
     var slimHeader = document.querySelector('.page-header:not(.page-header-masthead)');
-    if (slimHeader) {
-      btn.style.cssText = [
-        'width:34px', 'height:34px',
-        'border-radius:50%',
-        'border:2px solid #fff',
-        'background:linear-gradient(135deg,#FF9E9E,#E8C5FF)',
-        'color:#fff',
-        'box-shadow:0 3px 10px rgba(255,158,158,0.35)',
-        'cursor:pointer',
-        'display:flex', 'align-items:center', 'justify-content:center',
-        'flex-shrink:0',
-        'transition:transform .15s ease',
-        'padding:0',
-        'margin-left:6px'
-      ].join(';');
+    var mastheadActions = document.querySelector('.page-header-masthead .hdr-actions');
+    if (mastheadActions) {
+      mastheadActions.appendChild(btn);
+    } else if (slimHeader) {
       slimHeader.appendChild(btn);
     } else {
       btn.style.cssText = [
         'position:fixed', 'top:14px', 'right:14px',
-        'width:40px', 'height:40px',
-        'border-radius:50%',
-        'border:2px solid #fff',
-        'background:linear-gradient(135deg,#FF9E9E,#E8C5FF)',
-        'color:#fff',
-        'box-shadow:0 4px 14px rgba(255,158,158,0.35)',
-        'cursor:pointer',
+        'z-index:990', 'box-sizing:border-box',
+        'width:44px', 'height:44px', 'min-width:44px',
+        'border:0', 'border-radius:50%', 'background:transparent',
+        'color:#b94465', 'box-shadow:none', 'cursor:pointer',
         'display:flex', 'align-items:center', 'justify-content:center',
-        'z-index:990',
-        'font-size:20px',
-        'transition:transform .15s ease',
-        'padding:0'
+        'font-size:22px', 'line-height:1', 'padding:0'
       ].join(';');
       document.body.appendChild(btn);
     }
 
-    btn.addEventListener('mouseenter', function () { btn.style.transform = 'scale(1.08)'; });
-    btn.addEventListener('mouseleave', function () { btn.style.transform = 'scale(1)'; });
     btn.addEventListener('click', onClick);
 
     // Supabase 세션 복원/토큰 refresh가 늦게 끝나는 경우를 위해 폴링.
@@ -182,7 +172,7 @@
     } else {
       btn.title = '로그인';
       btn.setAttribute('aria-label', '로그인');
-      btn.innerHTML = svgLogIn();
+      btn.innerHTML = svgPerson();
     }
     // share.html 헤더의 #authBtn은 share.js가 별도로 관리
   }
@@ -261,7 +251,7 @@
 
     var meta = user.user_metadata || {};
     var provider = (user.app_metadata && user.app_metadata.provider) || '';
-    var importedName = meta.name || meta.full_name || meta.nickname || meta.preferred_username || '';
+    var importedName = ''; // 계정 실명을 닉네임으로 가져오지 않는다.
     var importedAvatar = meta.avatar_url || meta.picture || meta.profile_image || '';
     var providerLabel = provider === 'kakao' ? '💬 카카오 계정'
                       : provider === 'google' ? '🅖 구글 계정'
@@ -271,13 +261,13 @@
                             : '☁️ 계정 프로필 가져오기';
 
     var cur = {
-      name:   localStorage.getItem('profileName')   || importedName || '책읽는엄마',
-      grade:  localStorage.getItem('profileGrade')  || '초5',
-      region: localStorage.getItem('profileRegion') || '강남구',
+      name:   localStorage.getItem('profileName') || '책읽는엄마',
+      city: localStorage.getItem('profileCity') || '',
+      district: localStorage.getItem('profileDistrict') || '',
       goal:   parseInt(localStorage.getItem('monthlyGoal') || '20', 10) || 20,
       avatar: localStorage.getItem('profileAvatar') || '👩'
     };
-    var grades = ['초1','초2','초3','초4','초5','초6','중1','중2','중3','고1','고2','고3','기타'];
+    var regions = window.REGIONS || {};
 
     var modal = document.createElement('div');
     modal.id = 'authProfileModal';
@@ -311,12 +301,9 @@
       '<div style="display:flex;flex-direction:column;gap:12px">',
       '<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;color:#8B8B8B">닉네임</span>',
       '<input id="apvName" type="text" value="' + htmlEscape(cur.name) + '" maxlength="20" style="padding:10px 12px;border:1.5px solid #eee;border-radius:10px;font-size:14px;background:#fff"></label>',
-      '<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;color:#8B8B8B">학년</span>',
-      '<select id="apvGrade" style="padding:10px 12px;border:1.5px solid #eee;border-radius:10px;font-size:14px;background:#fff">',
-      grades.map(function (g) { return '<option value="' + g + '"' + (g === cur.grade ? ' selected' : '') + '>' + g + '</option>'; }).join(''),
-      '</select></label>',
-      '<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;color:#8B8B8B">지역 (예: 강남구, 분당)</span>',
-      '<input id="apvRegion" type="text" value="' + htmlEscape(cur.region) + '" maxlength="20" style="padding:10px 12px;border:1.5px solid #eee;border-radius:10px;font-size:14px;background:#fff"></label>',
+      '<p style="font-size:12px;color:#8B8B8B">아이 이름·생년월일·학교·반·상세 주소는 입력하지 마세요. 지역은 선택이에요.</p>',
+      '<label>시·도 (선택)<select id="apvCity" style="width:100%;padding:10px"><option value="">선택 안 함</option>' + Object.keys(regions).map(function(c) { return '<option' + (c === cur.city ? ' selected' : '') + '>' + htmlEscape(c) + '</option>'; }).join('') + '</select></label>',
+      '<label>시·군·구 (선택)<select id="apvDistrict" style="width:100%;padding:10px"></select></label>',
       '<label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:700;color:#8B8B8B">이번 달 목표 (권)</span>',
       '<input id="apvGoal" type="number" min="1" max="200" value="' + cur.goal + '" style="padding:10px 12px;border:1.5px solid #eee;border-radius:10px;font-size:14px;background:#fff"></label>',
       '</div>',
@@ -356,7 +343,7 @@
 
     // 보기/편집 모드 토글 — 평소엔 필드 잠금 + '✏️ 수정', 수정 누르면 편집 + '저장'
     var saveBtn = modal.querySelector('#apvSave');
-    var editFields = ['#apvName', '#apvGrade', '#apvRegion', '#apvGoal'].map(function (s) { return modal.querySelector(s); });
+    var editFields = ['#apvName', '#apvCity', '#apvDistrict', '#apvGoal'].map(function (s) { return modal.querySelector(s); });
     var avatarDetails = modal.querySelector('details');
     var editing = false;
     function setEditing(on) {
@@ -376,6 +363,10 @@
       saveBtn.style.color = '#fff';
       saveBtn.textContent = on ? '저장' : '✏️ 수정';
     }
+    function updateDistrict() {
+      modal.querySelector('#apvDistrict').innerHTML = '<option value="">선택 안 함</option>' + (regions[modal.querySelector('#apvCity').value] || []).map(function(d) { return '<option' + (d === cur.district ? ' selected' : '') + '>' + htmlEscape(d) + '</option>'; }).join('');
+    }
+    updateDistrict(); modal.querySelector('#apvCity').addEventListener('change', updateDistrict);
     setEditing(false); // 초기엔 보기 모드
 
     // 초기 avatar 렌더 (URL이면 img, emoji면 텍스트)
@@ -432,6 +423,10 @@
 
     saveBtn.addEventListener('click', async function () {
       if (saveBtn.dataset.saved === '1') return;
+      if (window.Storage && typeof window.Storage.isOwnerCurrent === 'function' && !window.Storage.isOwnerCurrent()) {
+        window.location.reload();
+        return;
+      }
       // 보기 모드: '✏️ 수정' 클릭 → 편집 모드 진입
       if (!editing) {
         setEditing(true);
@@ -441,14 +436,14 @@
       }
       // 편집 모드: '저장' 클릭 → 저장
       var name   = modal.querySelector('#apvName').value.trim() || cur.name;
-      var grade  = modal.querySelector('#apvGrade').value;
-      var region = modal.querySelector('#apvRegion').value.trim() || cur.region;
+      var city = modal.querySelector('#apvCity').value;
+      var district = modal.querySelector('#apvDistrict').value;
       var goal   = Math.max(1, parseInt(modal.querySelector('#apvGoal').value, 10) || cur.goal);
       var avatar = cur.avatar;
 
       localStorage.setItem('profileName',   name);
-      localStorage.setItem('profileGrade',  grade);
-      localStorage.setItem('profileRegion', region);
+      localStorage.setItem('profileCity', city);
+      localStorage.setItem('profileDistrict', district);
       localStorage.setItem('monthlyGoal',   String(goal));
       localStorage.setItem('profileAvatar', avatar);
 
@@ -464,9 +459,9 @@
       var nameEl = document.getElementById('profileName');
       if (nameEl) nameEl.textContent = name;
       var gradeEl = document.getElementById('profileGrade');
-      if (gradeEl) gradeEl.textContent = grade;
+      if (gradeEl) gradeEl.textContent = '';
       var regionEl = document.getElementById('profileRegion');
-      if (regionEl) regionEl.textContent = region;
+      if (regionEl) regionEl.textContent = [city, district].filter(Boolean).join(' ');
       setAvatarEl(document.getElementById('profileAvatar'), avatar);
 
       refresh(); // top-right 버튼 emoji 갱신
@@ -475,7 +470,7 @@
       // Supabase upsert (피드백/닫힘과 독립적으로 진행)
       try {
         await window.SB.upsertProfile({
-          nickname: name, avatar: avatar, grade: grade, region: region, monthly_goal: goal
+          nickname: name, avatar: avatar, city: city || null, district: district || null, monthly_goal: goal
         });
       } catch (e) { /* fail silently — localStorage는 이미 저장됨 */ }
     });
@@ -489,7 +484,7 @@
 
   // ── 첫 로그인 동기화 동의 + 재로그인 pull ──────────────────────
 
-  function showSyncConsentDialog(userId, bookCount) {
+  function showSyncConsentDialog(userId, bookCount, sourceOwnerId) {
     if (document.getElementById('syncConsentModal')) return;
     ensureAnim();
     var modal = document.createElement('div');
@@ -503,6 +498,7 @@
       '이 기기에 <strong>' + bookCount + '권</strong>이 있어요.<br>',
       '클라우드에 올리면 다른 기기에서도<br>같은 서재를 쓸 수 있어요.',
       '</div>',
+      '<p id="syncConsentError" role="alert" style="min-height:0;margin:0 0 12px;color:#b42318;font-size:12px;line-height:1.5"></p>',
       '<div style="display:flex;gap:8px">',
       '<button id="syncConsentLater" style="flex:1;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:#8B8B8B">나중에</button>',
       '<button id="syncConsentOk" style="flex:2;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff">올리기</button>',
@@ -520,48 +516,80 @@
       btn.disabled = true;
       btn.textContent = '올리는 중…';
       try {
-        await window.Sync.uploadAll();
-        await window.Sync.pullBooks();
-        await window.Sync.pullFolders();
+        var upload = await window.Sync.uploadAll({ sourceOwnerId: sourceOwnerId });
+        if (!upload || upload.complete !== true) throw new Error('upload');
+        var booksOk = await window.Sync.pullBooks();
+        var foldersOk = await window.Sync.pullFolders();
+        if (booksOk !== true || foldersOk !== true) throw new Error('pull');
         localStorage.setItem('_syncUploaded_' + userId, '1');
-      } catch (e) { /* ignore */ }
-      modal.remove();
+        localStorage.removeItem('_syncLegacyGuestPending_' + userId);
+        await window.Sync.flushOutbox();
+        modal.remove();
+      } catch (e) {
+        btn.disabled = false;
+        btn.textContent = '다시 시도';
+        var error = modal.querySelector('#syncConsentError');
+        if (error) error.textContent = '일부 데이터를 확인하지 못했어요. 서재는 이 기기에 남아 있어요. 다시 시도해 주세요.';
+      }
     });
   }
 
+  var activeSignInUser = null;
   async function handleSignIn(user) {
-    if (!window.Sync || !window.Storage) return;
-    var uploadedKey = '_syncUploaded_' + user.id;
-    if (localStorage.getItem(uploadedKey)) {
-      // 이미 동기화 동의한 사용자 — 조용히 pull
-      try {
+    if (!window.Sync || !window.Storage || activeSignInUser === user.id) return;
+    activeSignInUser = user.id;
+    try {
+      if (typeof window.Sync.setOwner === 'function' && window.Sync.setOwner(user.id)) {
+        window.location.reload();
+        return;
+      }
+      await window.Sync.syncProfileOnSignIn();
+      var uploadedKey = '_syncUploaded_' + user.id;
+      var pendingGuestImport = localStorage.getItem('_syncLegacyGuestPending_' + user.id) === '1';
+      var guestBooks = window.Storage.getAllBooksRaw(null);
+      var guestFolders = window.Storage.getAllFoldersRaw(null);
+      if (pendingGuestImport && (guestBooks.length || guestFolders.length)) {
+        showSyncConsentDialog(user.id, guestBooks.length, null);
         await window.Sync.pullBooks();
         await window.Sync.pullFolders();
-      } catch (e) { /* ignore */ }
-      return;
-    }
-    var books = window.Storage.getAllBooks();
-    if (!books.length) {
-      // 책 없으면 그냥 pull + flag 세팅
-      localStorage.setItem(uploadedKey, '1');
-      try {
-        await window.Sync.pullBooks();
-        await window.Sync.pullFolders();
-      } catch (e) { /* ignore */ }
-      return;
-    }
-    showSyncConsentDialog(user.id, books.length);
+        return;
+      }
+      if (localStorage.getItem(uploadedKey)) {
+        // 이미 동기화 동의한 사용자 — 조용히 pull
+        try {
+          await window.Sync.pullBooks();
+          await window.Sync.pullFolders();
+          await window.Sync.flushOutbox();
+        } catch (e) { /* ignore */ }
+        return;
+      }
+      var books = window.Storage.getAllBooks();
+      var folders = window.Storage.getAllFolders();
+      if (books.length || folders.length) {
+        showSyncConsentDialog(user.id, books.length, user.id);
+        return;
+      }
+      // Empty account scope: pull first and set the flag only after both reads succeed.
+      var booksOk = await window.Sync.pullBooks();
+      var foldersOk = await window.Sync.pullFolders();
+      if (booksOk === true && foldersOk === true) {
+        localStorage.setItem(uploadedKey, '1');
+        await window.Sync.flushOutbox();
+      }
+    } finally { activeSignInUser = null; }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    injectTopRightCircle();
+    injectHeaderProfileButton();
     if (window.SB && window.SB.enabled) {
       window.SB.onAuthChange(function (event, session) {
         refresh();
-        if (event === 'SIGNED_IN' && session && session.user) {
+        if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session && session.user) {
           handleSignIn(session.user);
         }
       });
+      // Session restoration can finish before DOMContentLoaded subscribes.
+      window.SB.getUser().then(function (user) { if (user) return handleSignIn(user); }).catch(function () {});
     }
   });
 

@@ -24,7 +24,7 @@
   document.addEventListener('DOMContentLoaded', loadBook);
 
   // Load recommendation database (shared RecsCache)
-  (window.RecsCache ? window.RecsCache.load() : fetch('data/book-recommendations.json').then(r => r.json()))
+  (window.RecsCache ? window.RecsCache.load() : Promise.resolve({ books: {}, sources: {} }))
     .then(data => {
       recommendationData = data;
       if (window.BookPreview) BookPreview.setRecData(data);
@@ -459,10 +459,8 @@
       instagramBtn.addEventListener('click', shareToInstagram);
     }
 
-    // 이미 리뷰가 있으면 Instagram 공유 버튼 표시
-    if (book.review) {
-      document.getElementById('shareRow').style.display = 'flex';
-    }
+    // A saved book can become a card even before a review is written.
+    document.getElementById('shareRow').style.display = 'flex';
   }
 
   function save(e) {
@@ -493,199 +491,78 @@
   }
 
   async function shareToInstagram() {
-    const btn = document.getElementById('instagramShareBtn');
-    const originalText = btn.innerHTML;
-
+    const button = document.getElementById('instagramShareBtn');
+    button.disabled = true;
     try {
-      btn.disabled = true;
-      btn.innerHTML = '🎨 생성 중...';
-
-      console.log('[Detail] Starting template generation...');
-
-      // 책 데이터 준비
-      const bookData = {
-        title: book.title || '제목 없음',
-        author: (book.authors || []).join(', ') || '저자 미상',
-        publisher: book.publisher || '출판사 미상',
-        cover: book.thumbnail ? `https://book-tracker-aladin.obangti.workers.dev/image-proxy?url=${encodeURIComponent(book.thumbnail)}` : null
-      };
-
-      console.log('[Detail] Book data:', bookData);
-
-      const review = document.getElementById('reviewInput').innerHTML;
+      const bookData = { title: book.title, author: (book.authors || []).join(', '), cover: book.thumbnail ? `https://book-tracker-aladin.obangti.workers.dev/image-proxy?url=${encodeURIComponent(book.thumbnail)}` : null };
+      const review = document.getElementById('reviewInput').innerText;
       const rating = selectedRating || 0;
-
-      console.log('[Detail] Review length:', review.length, 'Rating:', rating);
-
-      // 템플릿 생성 (기본: 스티커북)
       const canvas = await generateInstagramTemplate(bookData, review, rating, 1);
-
-      console.log('[Detail] Canvas created, showing modal...');
-
-      // 모달에 캔버스 표시
       showInstagramModal(canvas, bookData, review, rating);
-
-    } catch (err) {
-      console.error('[Detail] Instagram 공유 실패:', err);
-      showToast(`이미지 생성 실패: ${err.message || '알 수 없는 오류'}`);
-      alert(`디버그 정보:\n${err.stack || err.message}`);
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = originalText;
-    }
+    } catch (error) { showToast(error.message || '독서 카드를 만들지 못했어요. 다시 시도해 주세요.'); }
+    finally { button.disabled = false; }
   }
 
   function showInstagramModal(initialCanvas, bookData, review, rating) {
     const modal = document.getElementById('instagramModal');
-    const previewCanvas = document.getElementById('sharePreviewCanvas');
+    const preview = document.getElementById('sharePreviewCanvas');
+    const download = document.getElementById('shareDownloadBtn');
+    const share = document.getElementById('shareAllBtn');
     let currentCanvas = initialCanvas;
-    let currentTemplateId = 1;
-
-    // 캔버스를 미리보기에 복사
-    function updatePreview(canvas) {
-      previewCanvas.width = canvas.width;
-      previewCanvas.height = canvas.height;
-      const ctx = previewCanvas.getContext('2d');
-      ctx.drawImage(canvas, 0, 0);
-      currentCanvas = canvas;
-    }
-
-    updatePreview(initialCanvas);
-
-    // 모달 표시
-    modal.removeAttribute('hidden');
-
-    // 템플릿 선택 버튼
-    const templateButtons = modal.querySelectorAll('.template-btn');
-    templateButtons.forEach(btn => {
-      const newBtn = btn.cloneNode(true);
-      btn.parentNode.replaceChild(newBtn, btn);
-
-      newBtn.addEventListener('click', async () => {
-        const templateId = parseInt(newBtn.dataset.template);
-        if (templateId === currentTemplateId) return;
-
-        // 버튼 스타일 업데이트 (매번 새로 조회)
-        modal.querySelectorAll('.template-btn').forEach(b => {
-          b.style.borderColor = '#E0E0E0';
-          b.style.background = '#fff';
-        });
-        newBtn.style.borderColor = '#FFB8C6';
-        newBtn.style.background = '#FFF8F0';
-
-        // 로딩 표시
-        newBtn.innerHTML = '⏳ 생성중...';
-        newBtn.disabled = true;
-
+    let request = 0;
+    const returnFocus = document.getElementById('instagramShareBtn');
+    const close = () => {
+      ++request;
+      modal.hidden = true;
+      document.removeEventListener('keydown', onModalKeydown);
+      returnFocus?.focus();
+    };
+    const onModalKeydown = event => {
+      if (modal.hidden) return;
+      if (event.key === 'Escape') { event.preventDefault(); close(); return; }
+      if (event.key !== 'Tab') return;
+      const items = [...modal.querySelectorAll('button:not(:disabled), a[href]')].filter(el => el.getClientRects().length);
+      const first = items[0], last = items[items.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+    };
+    document.addEventListener('keydown', onModalKeydown);
+    const apply = canvas => { preview.width = canvas.width; preview.height = canvas.height; preview.getContext('2d').drawImage(canvas, 0, 0); currentCanvas = canvas; };
+    const busy = value => { download.disabled = value; share.disabled = value; preview.setAttribute('aria-busy', String(value)); };
+    apply(initialCanvas); busy(false); modal.hidden = false;
+    modal.querySelector('button[data-close-instagram]')?.focus();
+    const buttons = modal.querySelectorAll('.template-btn');
+    buttons.forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.template === '1'));
+      button.onclick = async () => {
+        const token = ++request;
+        busy(true);
         try {
-          const newCanvas = await generateInstagramTemplate(bookData, review, rating, templateId);
-          updatePreview(newCanvas);
-          currentTemplateId = templateId;
-        } catch (err) {
-          console.error('Template generation failed:', err);
-          showToast('템플릿 생성 실패');
-        } finally {
-          const templateTexts = {
-            '1': '🌸 소프트 핑크',
-            '2': '🍑 피치 코랄',
-            '3': '🌿 민트 파스텔',
-            '4': '☕ 크림 베이지',
-            '5': '📖 코지 독서',
-            '6': '☕ 북카페',
-            '7': '✍️ 손글씨 노트',
-            '8': '👧 책 읽는 아이',
-            '9': '🐻 동물 친구',
-            '10': '🚀 우주 탐험',
-            '11': '🦊 숲속 동화',
-            '12': '✨ 스티커북',
-            '13': '💕 포토카드',
-            '14': '📝 일기장'
-          };
-          newBtn.innerHTML = templateTexts[newBtn.dataset.template] || '✨ 스티커북';
-          newBtn.disabled = false;
-        }
-      });
+          const canvas = await generateInstagramTemplate(bookData, review, rating, Number(button.dataset.template));
+          if (token !== request || modal.hidden) return;
+          apply(canvas);
+          buttons.forEach(b => b.setAttribute('aria-pressed', String(b === button)));
+        } catch (_) { if (token === request) showToast('카드를 만들지 못했어요. 다른 스타일을 골라 주세요.'); }
+        finally { if (token === request) busy(false); }
+      };
     });
-
-    // 다운로드 버튼
-    const downloadBtn = document.getElementById('shareDownloadBtn');
-    const newDownloadBtn = downloadBtn.cloneNode(true);
-    downloadBtn.parentNode.replaceChild(newDownloadBtn, downloadBtn);
-
-    newDownloadBtn.addEventListener('click', async () => {
-      const filename = `맘스북스_${bookData.title.replace(/[^가-힣a-zA-Z0-9]/g, '_')}_${Date.now()}.png`;
-      console.log('[Detail] Download button clicked, filename:', filename);
-
-      newDownloadBtn.disabled = true;
-      newDownloadBtn.innerHTML = '⏳ 다운로드 중...';
-
+    const filename = `독서기록_${String(bookData.title || '책').replace(/[^가-힣a-zA-Z0-9]/g, '_').slice(0,70)}.png`;
+    download.onclick = async () => {
+      busy(true);
+      try { await downloadCanvas(currentCanvas, filename); showToast('독서 카드 저장을 시작했어요.'); }
+      catch (_) { showToast('저장하지 못했어요. 다시 시도해 주세요.'); }
+      finally { busy(false); }
+    };
+    share.onclick = async () => {
+      busy(true);
       try {
-        await downloadCanvas(currentCanvas, filename);
-        showToast('이미지 다운로드 완료! 📥');
-        console.log('[Detail] Download success');
-      } catch (err) {
-        console.error('[Detail] Download failed:', err);
-        showToast('다운로드 실패: ' + err.message);
-      } finally {
-        newDownloadBtn.disabled = false;
-        newDownloadBtn.innerHTML = `
-          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-            <polyline points="7 10 12 15 17 10"></polyline>
-            <line x1="12" y1="15" x2="12" y2="3"></line>
-          </svg>
-          저장
-        `;
-      }
-    });
-
-    // 일반 공유 버튼 (모든 앱)
-    const shareAllBtn = document.getElementById('shareAllBtn');
-    if (shareAllBtn) {
-      const newShareAllBtn = shareAllBtn.cloneNode(true);
-      shareAllBtn.parentNode.replaceChild(newShareAllBtn, shareAllBtn);
-
-      newShareAllBtn.addEventListener('click', async () => {
-        const filename = `맘스북스_${bookData.title.replace(/[^가-힣a-zA-Z0-9]/g, '_')}.png`;
-        newShareAllBtn.disabled = true;
-        newShareAllBtn.innerHTML = '⏳ 공유 중...';
-
-        try {
-          const result = await window.shareToAll(currentCanvas, filename, bookData.title);
-          if (result.success) {
-            showToast('공유 완료! 📤');
-            modal.setAttribute('hidden', '');
-          } else if (!result.cancelled) {
-            // Web Share API 미지원 - 다운로드로 폴백
-            await downloadCanvas(currentCanvas, filename);
-            showToast('이미지를 저장했어요! 📱 사진 앱에서 원하는 앱으로 공유하세요');
-          }
-        } catch (err) {
-          console.error('Share failed:', err);
-          showToast('공유 실패: ' + err.message);
-        } finally {
-          newShareAllBtn.disabled = false;
-          newShareAllBtn.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-              <polyline points="16 6 12 2 8 6"></polyline>
-              <line x1="12" y1="2" x2="12" y2="15"></line>
-            </svg>
-            공유
-          `;
-        }
-      });
-    }
-
-    // 모달 닫기
-    const closeButtons = modal.querySelectorAll('[data-close-instagram]');
-    closeButtons.forEach(btn => {
-      const newBtn = btn.cloneNode(true);
-      btn.parentNode.replaceChild(newBtn, btn);
-      newBtn.addEventListener('click', () => {
-        modal.setAttribute('hidden', '');
-      });
-    });
+        const result = await window.shareToAll(currentCanvas, filename, bookData.title);
+        if (!result.success && !result.cancelled) { await downloadCanvas(currentCanvas, filename); showToast('이미지를 저장한 뒤 원하는 앱에서 공유해 주세요.'); }
+        if (result.success) close();
+      } catch (_) { showToast('공유하지 못했어요. 이미지 저장을 이용해 주세요.'); }
+      finally { busy(false); }
+    };
+    modal.querySelectorAll('[data-close-instagram]').forEach(button => button.onclick = close);
   }
 
   // ── AR fetch (English books only) ────────────────────────────
@@ -749,7 +626,7 @@
    *   #1 같은 작가          : ItemSearch(Author, CategoryId)
    *   #2 같은 단계 책        : ItemList(Bestseller, leaf CategoryId)
    *   #3 이 책도 좋아요       : Aladin similarBookList → 비어있으면 부모 categoryId Bestseller
-   *   #4 다음 단계 추천책     : 분야+다음 학년 키워드 search → fallback 부모 categoryId
+   *   #4 다른 분야의 책     : 분야+다음 학년 키워드 search → fallback 부모 categoryId
    *                            (UI에서 <details>로 접힘)
    */
   async function loadRecommendations() {
@@ -795,63 +672,13 @@
     // 영어책 + AR Level 감지
     const isEnglishAR = book.language === 'en' && book.ar;
 
-    // AR Level 범위 내 책 검색 (영어 전용)
-    // 1순위: 사용자 서재의 영어책, 2순위: Google Books API
+    // 저장된 AR 값이 있는 서재 책만 범위별로 보여 준다.
     async function searchARLevel(arMin, arMax) {
-      const curIsbn = String(book.isbn).replace(/\D/g, '');
-      const userBooks = Storage.getBooks()
-        .filter(b => b.language === 'en' && b.ar != null)
-        .filter(b => String(b.isbn).replace(/\D/g, '') !== curIsbn)
-        .filter(b => b.ar >= arMin && b.ar <= arMax)
-        .map(b => ({
-          isbn: b.isbn,
-          title: b.title,
-          authors: b.authors || [],
-          thumbnail: b.thumbnail || '',
-          publisher: b.publisher || '',
-          salesPoint: (b.rating || 1) * 100,
-          bestRank: 0,
-          pubDate: b.readDate || '',
-        }));
-
-      if (userBooks.length >= 6) return userBooks;
-
-      const arMid = (arMin + arMax) / 2;
-      // AR 수준에 따라 적절한 Google Books 카테고리로 매핑
-      const subject = arMid < 3 ? 'subject:juvenile+fiction+beginning+readers'
-                    : arMid < 6 ? 'subject:juvenile+fiction'
-                    : 'subject:young+adult+fiction';
-      try {
-        const url = `https://www.googleapis.com/books/v1/volumes?q=${subject}&maxResults=20&printType=books&langRestrict=en&orderBy=relevance`;
-        const res = await fetch(url, { signal: AbortSignal.timeout(6000) });
-        if (res.ok) {
-          const data = await res.json();
-          const seen = new Set(userBooks.map(b => String(b.isbn).replace(/\D/g, '')));
-          const gbBooks = (data.items || []).map(item => {
-            const vi = item.volumeInfo || {};
-            const isbnObj = (vi.industryIdentifiers || []).find(i => i.type === 'ISBN_13') ||
-                            (vi.industryIdentifiers || []).find(i => i.type === 'ISBN_10');
-            const thumb = ((vi.imageLinks || {}).thumbnail || (vi.imageLinks || {}).smallThumbnail || '').replace('http://', 'https://');
-            return {
-              isbn: isbnObj ? isbnObj.identifier : '',
-              title: vi.title || '',
-              authors: vi.authors || [],
-              thumbnail: thumb,
-              publisher: vi.publisher || '',
-              salesPoint: 50,
-              bestRank: 0,
-              pubDate: vi.publishedDate || '',
-            };
-          }).filter(b => b.title && b.isbn && !seen.has(String(b.isbn).replace(/\D/g, '')));
-          const merged = [...userBooks];
-          for (const b of gbBooks) {
-            const k = String(b.isbn).replace(/\D/g, '');
-            if (k && !seen.has(k)) { merged.push(b); seen.add(k); }
-          }
-          return merged.slice(0, 12);
-        }
-      } catch (e) { /* Google Books 실패 시 서재 결과만 반환 */ }
-      return userBooks;
+      const currentIsbn = String(book.isbn).replace(/\D/g, '');
+      return Storage.getAllBooks()
+        .filter(item => item.language === 'en' && item.ar != null)
+        .filter(item => String(item.isbn).replace(/\D/g, '') !== currentIsbn)
+        .filter(item => item.ar >= arMin && item.ar <= arMax);
     }
 
     const arSameLevelPromise = isEnglishAR
@@ -1017,7 +844,7 @@
       if (r2title)   r2title.textContent   = `AR ${(book.ar - 0.5).toFixed(1)}~${(book.ar + 0.5).toFixed(1)} 비슷한 책`;
       renderRail('recPublisher', filterCurrent(arSameBooks), {
         reason: `AR ${book.ar.toFixed(1)} 비슷한 수준`,
-        why: `AR 수준 ${(book.ar - 0.5).toFixed(1)}~${(book.ar + 0.5).toFixed(1)} 범위의 영어책입니다. 지금 읽은 책과 비슷한 어휘·문장 수준이에요.`,
+        why: `AR 수준 ${(book.ar - 0.5).toFixed(1)}~${(book.ar + 0.5).toFixed(1)} 범위로 서재에 기록한 영어책입니다. 저장된 AR 값을 기준으로 보여 드려요.`,
       });
     } else {
       if (r2eyebrow) r2eyebrow.textContent = series ? '시리즈' : '유사한 책';
@@ -1045,12 +872,12 @@
       if (r3title)   r3title.textContent   = `AR ${(book.ar + 0.3).toFixed(1)}~${(book.ar + 1.5).toFixed(1)} 다음 단계`;
       renderRail('recSimilar', filterCurrent(arNextBooks), {
         reason: '다음 AR 단계',
-        why: `AR ${(book.ar + 0.3).toFixed(1)}~${(book.ar + 1.5).toFixed(1)} 범위의 책입니다. 지금 읽은 책보다 한 단계 어려운 영어책으로, 어휘력을 자연스럽게 넓힐 수 있어요.`,
+        why: `AR ${(book.ar + 0.3).toFixed(1)}~${(book.ar + 1.5).toFixed(1)} 범위로 서재에 기록한 책입니다. 저장된 AR 값을 기준으로 보여 드려요.`,
       });
     } else {
       renderRail('recSimilar', filterCurrent(nextLevelBooks), {
-        reason: '다음 단계 추천책',
-        why: `『${currentBookTitle}』보다 어휘 수준이나 주제 깊이가 한 단계 높은 책으로 골랐습니다. 지금 읽은 책이 쉽게 느껴지기 시작했다면 이 리스트에서 다음 책을 골라보세요.`,
+        reason: '다른 분야의 책',
+        why: `『${currentBookTitle}』보다 관련 분류에서 찾은 책입니다. 내용과 독서 수준은 책별로 확인해 주세요.`,
       });
     }
     attachRailSortListeners();

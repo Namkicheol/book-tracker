@@ -1,10 +1,10 @@
 // 맘스북스 서비스워커 — 보수적 캐싱(설치형 PWA + 오프라인 기본)
 // 전략:
-//   - 데이터(JSON, /data/) : network-first (추천 데이터 갱신 즉시 반영, 오프라인 시 캐시)
+//   - 기존 /data/ 추천 수집본: 404 (이용 근거 미확인 목록 제공 중단)
 //   - 정적 자산(css/js/png/svg): cache-first (?v= 캐시버스팅으로 안전)
 //   - HTML/네비게이션      : network-first (캐시버스터·콘텐츠 최신, 오프라인 폴백)
 //   - 교차출처(API·폰트·Supabase 등): 가로채지 않음(브라우저 기본)
-const CACHE = 'momsbooks-v1';
+const CACHE = 'momsbooks-20261021h';
 
 self.addEventListener('install', () => self.skipWaiting());
 
@@ -22,7 +22,13 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // 교차출처는 손대지 않음
 
-  if (url.pathname.startsWith('/data/') || url.pathname.endsWith('.json')) {
+  // Retired third-party compilations must not survive in offline caches.
+  if (url.pathname.startsWith('/data/')) {
+    event.respondWith(Promise.resolve(new Response('Not found', { status: 404 })));
+    return;
+  }
+
+  if (url.pathname.endsWith('.json')) {
     event.respondWith(networkFirst(req));
   } else if (/\.(css|js|png|svg|ico|webp)$/.test(url.pathname)) {
     event.respondWith(cacheFirst(req));

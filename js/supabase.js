@@ -68,25 +68,21 @@
     } catch (e) { return null; }
   }
 
-  async function signInWithKakao() {
-    if (!client) { alert('로그인 기능이 비활성 상태입니다.'); return; }
-    // 카카오 이메일(account_email)은 비즈 앱 검수 필요 → 닉네임·프로필사진만 요청
-    return client.auth.signInWithOAuth({
-      provider: 'kakao',
-      options: {
-        redirectTo: getRedirectTo(),
-        scopes: 'profile_nickname profile_image'
-      }
-    });
+  async function signIn(provider) {
+    if (!client) { alert('로그인 연결을 확인해 주세요.'); return null; }
+    try {
+      const options = { redirectTo: getRedirectTo() };
+      if (provider === 'kakao') options.scopes = 'profile_nickname profile_image';
+      const result = await client.auth.signInWithOAuth({ provider: provider, options: options });
+      if (result.error) throw result.error;
+      return result;
+    } catch (e) {
+      alert(provider === 'google' ? '구글 로그인을 시작하지 못했어요. 잠시 후 다시 시도해 주세요. 카카오 로그인이나 로그인 없이도 서재를 사용할 수 있어요.' : '로그인을 시작하지 못했어요. 잠시 후 다시 시도해 주세요.');
+      return null;
+    }
   }
-
-  async function signInWithGoogle() {
-    if (!client) { alert('로그인 기능이 비활성 상태입니다.'); return; }
-    return client.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: getRedirectTo() }
-    });
-  }
+  function signInWithKakao() { return signIn('kakao'); }
+  function signInWithGoogle() { return signIn('google'); }
 
   async function signOut() {
     if (!client) return;
@@ -95,14 +91,25 @@
 
   function onAuthChange(cb) {
     if (!client) return { data: { subscription: { unsubscribe: function () {} } } };
-    return client.auth.onAuthStateChange(cb);
+    return client.auth.onAuthStateChange(function (event, session) {
+      // Release the auth lock before listeners call getUser/getSession or sync.
+      setTimeout(function () {
+        Promise.resolve().then(function () { return cb(event, session); }).catch(function () {
+          console.warn('[supabase] 세션 변경 후 동기화를 완료하지 못했습니다.');
+        });
+      }, 0);
+    });
   }
 
   async function upsertProfile(profile) {
     if (!client) return null;
     var user = await getUser();
     if (!user) return null;
-    var row = Object.assign({ id: user.id, updated_at: new Date().toISOString() }, profile);
+    var row = { id: user.id, updated_at: new Date().toISOString() };
+    ['nickname', 'avatar', 'city', 'district', 'monthly_goal', 'library_public'].forEach(function (field) {
+      if (Object.prototype.hasOwnProperty.call(profile, field)) row[field] = profile[field];
+    });
+    if (typeof row.library_public === 'boolean') row.privacy = row.library_public ? 'public' : 'private';
     var r = await client.from('users').upsert(row, { onConflict: 'id' }).select().single();
     if (r.error) {
       console.warn('[supabase] upsertProfile error:', r.error);
@@ -119,7 +126,7 @@
       if (!u) return null;
       id = u.id;
     }
-    var r = await client.from('users').select('*').eq('id', id).maybeSingle();
+    var r = await client.from('users').select('id,nickname,avatar,city,district,monthly_goal,library_public').eq('id', id).maybeSingle();
     if (r.error) {
       console.warn('[supabase] getProfile error:', r.error);
       return null;
@@ -127,25 +134,16 @@
     return r.data;
   }
 
-  // 같은 학교 친구 조회 — RLS가 자동으로 privacy != 'private' AND
-  //   (privacy='public' OR same school as auth.uid()) 필터링
-  async function getSchoolFriends() {
+  async function getPublicLibraries(city, district) {
     if (!client) return [];
-    var u = await getUser();
-    if (!u) return [];
-    var me = await getProfile(u.id);
-    if (!me || !me.school) return [];
-    var r = await client
-      .from('users')
-      .select('id, nickname, avatar, grade, school, city, district, privacy')
-      .eq('school', me.school)
-      .neq('id', u.id)
-      .neq('privacy', 'private')
-      .limit(50);
-    if (r.error) {
-      console.warn('[supabase] getSchoolFriends error:', r.error);
-      return [];
-    }
+    var r = await client.rpc('list_public_libraries', {filter_city: city || null, filter_district: district || null});
+    if (r.error) throw r.error;
+    return r.data || [];
+  }
+  async function getPublicLibraryBooks(ownerId) {
+    if (!client) return [];
+    var r = await client.rpc('get_public_library_books', {owner: ownerId});
+    if (r.error) throw r.error;
     return r.data || [];
   }
 
@@ -160,6 +158,7 @@
     onAuthChange: onAuthChange,
     upsertProfile: upsertProfile,
     getProfile: getProfile,
-    getSchoolFriends: getSchoolFriends
+    getPublicLibraries: getPublicLibraries,
+    getPublicLibraryBooks: getPublicLibraryBooks
   };
 })();
