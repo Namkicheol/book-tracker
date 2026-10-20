@@ -1,0 +1,14 @@
+/* Functional refinements only; visual identity and fonts stay in style.css. */
+[hidden] { display:none!important; }
+:focus-visible { outline:3px solid #c76180; outline-offset:3px; }
+button,a,input,textarea,select { touch-action:manipulation; }
+.hdr-action { white-space:nowrap; }
+input:not([type=checkbox]):not([type=radio]),select,textarea { font-size:16px; }
+@media(max-width:360px) {
+  .content { padding-left:14px; padding-right:14px; }
+  .content .folder-bar,.content .rec-rail { margin-left:-14px; margin-right:-14px; padding-left:14px; padding-right:14px; }
+  .hdr-action { gap:3px; padding-left:6px; padding-right:6px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+}

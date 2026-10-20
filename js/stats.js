@@ -13,8 +13,12 @@
   document.addEventListener('DOMContentLoaded', render);
 
   function render() {
-    const books = Storage.getAllBooks();
+    const allBooks = Storage.getAllBooks();
+    const books = allBooks.filter(book => !book.status);
     const folders = (typeof Storage.getAllFolders === 'function') ? Storage.getAllFolders() : [];
+
+    renderTopCards(books, folders);
+    renderStatusCards(allBooks);
 
     if (books.length === 0) {
       document.getElementById('statsEmpty')?.classList.remove('hidden');
@@ -22,8 +26,6 @@
       return;
     }
 
-    renderTopCards(books, folders);
-    renderStatusCards(books);
     renderMonthlyReport(books, folders);
     renderMonthlyChart(books);
     renderFolderChart(books, folders);
@@ -32,7 +34,14 @@
   }
 
   function readDateOf(book) {
-    return book.readDate || (book.createdAt ? book.createdAt.slice(0, 10) : null);
+    const date = String(book.readDate || '');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+    const parsed = new Date(date + 'T12:00:00');
+    return !Number.isNaN(parsed.getTime()) && localDateKey(parsed) === date ? date : null;
+  }
+
+  function localDateKey(date) {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
 
   function renderTopCards(books, folders) {
@@ -99,7 +108,7 @@
     thisMonthBooks.forEach(b => {
       const d = readDateOf(b);
       if (!d) return;
-      const dow = new Date(d).getDay();
+      const dow = new Date(d + 'T12:00:00').getDay();
       dowCounts[dow]++;
     });
     const maxDow = dowCounts.indexOf(Math.max(...dowCounts));
@@ -272,11 +281,11 @@
     if (allDates.length === 0) return;
 
     // Current streak (consecutive days ending today or yesterday)
-    const todayStr = new Date().toISOString().slice(0, 10);
+    const todayStr = localDateKey(new Date());
     let currentStreak = 0;
-    let cursor = new Date(todayStr);
+    let cursor = new Date(todayStr + 'T12:00:00');
     while (true) {
-      const key = cursor.toISOString().slice(0, 10);
+      const key = localDateKey(cursor);
       if (dateBooksMap[key]) {
         currentStreak++;
         cursor.setDate(cursor.getDate() - 1);
@@ -284,7 +293,7 @@
         // Allow yesterday as "active" start — if today has no entry, check if yesterday does
         if (currentStreak === 0) {
           cursor.setDate(cursor.getDate() - 1);
-          const yKey = cursor.toISOString().slice(0, 10);
+          const yKey = localDateKey(cursor);
           if (dateBooksMap[yKey]) {
             currentStreak++;
             cursor.setDate(cursor.getDate() - 1);

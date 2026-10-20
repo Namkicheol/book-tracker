@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  let currentTab = 'class';
+  let currentTab = 'all';
   let notifications = [];
 
   // ── 뱃지 정의 ────────────────────────────────────────────────
@@ -25,30 +25,6 @@
     { id: 'thick', emoji: '🌟', name: '두꺼운 책', condition: (stats) => stats.thickBooks >= 3 },
     { id: 'genre', emoji: '⭐', name: '장르 마스터', condition: (stats) => stats.genreBooks >= 10 },
   ];
-
-  // ── 더미 랭킹 데이터 (MVP용) ──────────────────────────────────
-  const MOCK_RANKINGS = {
-    class: [
-      { rank: 1, name: '김○○', books: 32, trend: '⬆️ 3', recent: '해리포터 7, 나의 라임오렌지나무' },
-      { rank: 2, name: '박○○', books: 28, trend: '⬇️ 1', recent: '어린왕자, 채식주의자' },
-      { rank: 3, name: '우리 아이', books: 27, trend: '➡️ 0', recent: '순례 주택, 리얼 마래', isMe: true },
-      { rank: 4, name: '이○○', books: 25, trend: '⬆️ 1', recent: '완득이, 소년이 온다' },
-      { rank: 5, name: '정○○', books: 23, trend: '➡️ 0', recent: '참을 수 없는 존재의 가벼움' },
-    ],
-    region: [
-      { rank: 1, name: '서○○', books: 45, trend: '⬆️ 2', recent: '도둑맞은 집중력, 총균쇠' },
-      { rank: 2, name: '최○○', books: 38, trend: '⬆️ 5', recent: '사피엔스, 코스모스' },
-      { rank: 3, name: '우리 아이', books: 27, trend: '⬇️ 1', recent: '순례 주택, 리얼 마래', isMe: true },
-      { rank: 4, name: '강○○', books: 26, trend: '➡️ 0', recent: '이기적 유전자, 침묵의 봄' },
-      { rank: 5, name: '윤○○', books: 24, trend: '⬆️ 3', recent: '정의란 무엇인가, 국가' },
-    ],
-    national: [
-      { rank: 1, name: '서울 박○○', books: 156, trend: '⬆️ 1', recent: '전쟁과 평화, 카라마조프 가의 형제들' },
-      { rank: 2, name: '경기 김○○', books: 142, trend: '⬇️ 1', recent: '율리시스, 잃어버린 시간을 찾아서' },
-      { rank: 3, name: '부산 최○○', books: 138, trend: '➡️ 0', recent: '마의 산, 파우스트' },
-      { rank: 17, name: '우리 아이', books: 27, trend: '⬆️ 12', recent: '순례 주택, 리얼 마래', isMe: true },
-    ],
-  };
 
   // ── 알림 생성 (듀오링고 스타일) ─────────────────────────────
   function generateNotifications() {
@@ -78,22 +54,6 @@
         });
       }
     }
-
-    // 2. 친구 활동 (더미)
-    const friends = [
-      { name: '김○○', action: '3권을 읽었어요' },
-      { name: '박○○', action: '목표를 달성했어요' },
-    ];
-    friends.forEach((f, i) => {
-      notifications.push({
-        id: `friend_${i}`,
-        icon: '👥',
-        text: `${f.name}님이 ${f.action}!`,
-        time: `${i + 2}시간 전`,
-        unread: i === 0,
-        timestamp: now - (i + 2) * 3600000,
-      });
-    });
 
     // 3. 목표 진행
     const percent = Math.round((myStats.monthBooks / myStats.goalTarget) * 100);
@@ -232,7 +192,6 @@
     wireEvents();
     wireAuth();
     checkEncouragement();
-    renderSchoolFriends();
   }
 
   // ── 짧은 ID — UUID 앞 6자, 닉네임 미설정 시 표시용 ──────────────
@@ -241,67 +200,77 @@
     return String(uuid).replace(/-/g, '').slice(0, 6).toUpperCase();
   }
 
-  // ── 우리 학교 친구 리스트 (별명 + 짧은 ID + 아바타만 노출, 실명 비노출) ──
-  async function renderSchoolFriends() {
-    const section = document.getElementById('schoolFriendsSection');
-    const listEl = document.getElementById('schoolFriendsList');
-    const label = document.getElementById('schoolFriendsLabel');
-    if (!section || !listEl) return;
-    if (!window.SB || !window.SB.enabled) return;
-
-    const sess = await window.SB.getSession();
-    if (!sess || !sess.user) return; // 비로그인 시 섹션 자체 숨김
-
-    const mySchool = localStorage.getItem('profileSchool');
-    if (!mySchool) {
-      section.style.display = 'block';
-      label.textContent = '';
-      listEl.innerHTML = `
-        <div style="background:#FFF8F0;border-radius:14px;padding:14px;font-size:13px;color:var(--text-gray);text-align:center">
-          학교를 선택하면 같은 학교 친구 엄마들의 닉네임이 여기에 보여요.<br>
-          <button id="goSetSchool" type="button" style="margin-top:10px;padding:8px 14px;border:none;border-radius:10px;background:linear-gradient(135deg,#FFB8C6,#E8C5FF);color:#fff;font-weight:700;cursor:pointer">학교 설정하기</button>
-        </div>`;
-      const goBtn = document.getElementById('goSetSchool');
-      if (goBtn) goBtn.addEventListener('click', showProfileEditor);
+  // 공개에 동의한 서재만 서버의 제한된 조회 함수로 읽는다.
+  async function renderPublicLibraries() {
+    const list = document.getElementById('rankList');
+    if (!list) return;
+    list.textContent = '공개 서재를 불러오는 중이에요…';
+    if (!window.SB || !window.SB.enabled) {
+      list.textContent = '공개 서재 연결을 준비 중이에요. 내 독서 기록은 이 기기에 안전하게 남아 있어요.';
       return;
     }
-
-    let friends;
-    try { friends = await window.SB.getSchoolFriends(); } catch (e) { friends = []; }
-
-    if (!friends || friends.length === 0) {
-      section.style.display = 'block';
-      label.textContent = mySchool;
-      listEl.innerHTML = `
-        <div style="background:#FFF8F0;border-radius:14px;padding:14px;font-size:13px;color:var(--text-gray);text-align:center">
-          아직 같은 학교 친구가 없어요. 새 친구가 가입하면 여기에 나타납니다.
-        </div>`;
-      return;
-    }
-
-    section.style.display = 'block';
-    label.textContent = `${mySchool} · ${friends.length}명`;
-    listEl.innerHTML = friends.map(f => {
-      const display = (f.nickname && f.nickname.trim()) ? f.nickname.trim() : `친구 #${shortId(f.id)}`;
-      const avatarHtml = (f.avatar && /^https?:\/\//.test(f.avatar))
-        ? `<img src="${escapeAttr(f.avatar)}" alt="" referrerpolicy="no-referrer" style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0">`
-        : `<div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#FFE0EC,#FFD1DC);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${escapeAttr(f.avatar || '👩')}</div>`;
-      return `
-        <button type="button" class="friend-row" data-fid="${escapeAttr(f.id)}" style="display:flex;align-items:center;gap:12px;padding:12px;background:#fff;border:1.5px solid rgba(255,184,198,0.2);border-radius:14px;cursor:pointer;text-align:left;width:100%;font-family:inherit">
-          ${avatarHtml}
-          <div style="flex:1;min-width:0">
-            <div style="font-size:14px;font-weight:700;color:var(--text-dark);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeAttr(display)}</div>
-            <div style="font-size:11px;color:var(--text-gray);margin-top:2px">${escapeAttr(f.grade || '')}${f.grade && f.district ? ' · ' : ''}${escapeAttr(f.district || '')}</div>
-          </div>
-          <span style="font-size:12px;color:#B5B5B5">서재 보기 →</span>
-        </button>`;
-    }).join('');
-
-    listEl.querySelectorAll('.friend-row').forEach(btn => {
-      btn.addEventListener('click', () => {
-        showToast('🚧 친구 서재 보기는 곧 도착! (책 동기화 후 활성화)');
+    try {
+      if (!await window.SB.getUser()) {
+        list.textContent = '로그인하면 공개에 동의한 다른 부모들의 서재를 둘러볼 수 있어요.';
+        const login = document.createElement('button'); login.type = 'button'; login.textContent = '로그인';
+        login.addEventListener('click', showLoginPicker); list.appendChild(login); return;
+      }
+      const city = currentTab === 'region' ? localStorage.getItem('profileCity') : '';
+      if (currentTab === 'region' && !city) {
+        list.textContent = '동네 서재를 보려면 프로필에서 시·도를 선택해 주세요. 지역 입력은 선택이에요.';
+        return;
+      }
+      const libraries = await window.SB.getPublicLibraries(city || null,
+        currentTab === 'region' ? localStorage.getItem('profileDistrict') || null : null);
+      list.innerHTML = '';
+      if (!libraries.length) {
+        list.textContent = '아직 공개한 서재가 없어요. 설정에서 내 서재 공개 여부를 직접 선택할 수 있어요.';
+        return;
+      }
+      libraries.forEach(library => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'rank-item';
+        button.style.cssText = 'width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer';
+        // 서버에서 사용자 별명을 확인하기 전에는 계정 실명 대신 축약 ID만 표시.
+        button.innerHTML = `<span aria-hidden="true">📚</span><span class="rank-info"><span class="rank-name">서재 #${escapeHtml(shortId(library.owner_id))}</span><br><span class="rank-books">${Number(library.book_count) || 0}권 · ${escapeHtml([library.city, library.district].filter(Boolean).join(' ') || '지역 미선택')}</span></span><span>둘러보기 →</span>`;
+        button.addEventListener('click', () => showPublicLibrary(library));
+        list.appendChild(button);
       });
-    });
+    } catch (e) {
+      list.textContent = '공개 서재를 연결하지 못했어요. 잠시 후 다시 시도해 주세요.';
+      const retry = document.createElement('button');
+      retry.type = 'button'; retry.textContent = '다시 시도';
+      retry.addEventListener('click', renderPublicLibraries); list.appendChild(retry);
+    }
+  }
+
+  async function showPublicLibrary(library) {
+    const modal = document.createElement('div');
+    modal.className = 'friend-modal';
+    modal.innerHTML = `<div class="friend-modal-content"><div class="friend-modal-header"><h2>서재 #${escapeHtml(shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><p class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</p></div>`;
+    modal.querySelector('button').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    document.body.appendChild(modal);
+    const content = modal.querySelector('.public-library-books');
+    try {
+      const books = await window.SB.getPublicLibraryBooks(library.owner_id);
+      content.textContent = '';
+      if (!books.length) content.textContent = '아직 공유한 책이 없거나 비공개로 전환된 서재예요.';
+      books.forEach(book => {
+        const row = document.createElement('div');
+        row.style.cssText = 'padding:12px 0;border-bottom:1px solid var(--border)';
+        const title = document.createElement('strong'); title.textContent = book.title;
+        const author = document.createElement('p'); author.textContent = (book.authors || []).join(', ');
+        const add = document.createElement('button'); add.type = 'button'; add.textContent = '내 서재에 담기';
+        add.addEventListener('click', () => {
+          if ((book.isbn && Storage.getBookByIsbn(book.isbn)) || (!book.isbn && Storage.getAllBooks().some(b => b.title === book.title && JSON.stringify(b.authors) === JSON.stringify(book.authors)))) { showToast('이미 내 서재에 있는 책이에요'); return; }
+          Storage.saveBook({isbn:book.isbn || '',title:book.title,authors:book.authors || [],publisher:book.publisher || '',thumbnail:book.thumbnail || '',status:'want',readDate:''});
+          add.disabled = true; add.textContent = '담았어요'; showToast('내 서재에 담았어요');
+        });
+        row.append(title, author, add); content.appendChild(row);
+      });
+    } catch (e) { content.textContent = '서재를 불러오지 못했어요. 닫은 뒤 다시 시도해 주세요.'; }
   }
 
   // ── Auth (Supabase) ─────────────────────────────────────────
@@ -332,12 +301,11 @@
           }
         }
         if (event === 'SIGNED_IN') showToast('✅ 로그인 완료');
-        renderSchoolFriends();
+        renderPublicLibraries();
       }
       if (event === 'SIGNED_OUT') {
         showToast('로그아웃 되었어요');
-        const sec = document.getElementById('schoolFriendsSection');
-        if (sec) sec.style.display = 'none';
+        renderPublicLibraries();
       }
       refreshAuthUI();
     });
@@ -382,8 +350,8 @@
   function loadProfile() {
     const avatar = localStorage.getItem('profileAvatar') || '👩';
     const name = localStorage.getItem('profileName') || '책읽는엄마';
-    const grade = localStorage.getItem('profileGrade') || '초5';
-    const region = localStorage.getItem('profileRegion') || '강남구';
+    const grade = '';
+    const region = [localStorage.getItem('profileCity'), localStorage.getItem('profileDistrict')].filter(Boolean).join(' ');
 
     if (window.setAvatarEl) {
       window.setAvatarEl(document.getElementById('profileAvatar'), avatar);
@@ -392,7 +360,7 @@
     }
     document.getElementById('profileName').textContent = name;
     document.getElementById('profileGrade').textContent = grade;
-    document.getElementById('profileRegion').textContent = region;
+    document.getElementById('profileRegion').textContent = region || '지역 선택 안 함';
   }
 
   // ── 내 통계 계산 (로컬 스토리지에서) ─────────────────────────
@@ -416,11 +384,11 @@
     // 매주 독서 체크
     const weeksInRow = calculateWeeksInRow(books);
 
-    // 두꺼운 책 (페이지 수 300 이상 - 더미로 임의 계산)
-    const thickBooks = Math.floor(books.length * 0.15);
+    // 페이지/장르 통계는 실제 근거가 생길 때까지 뱃지를 부여하지 않는다.
+    const thickBooks = 0;
 
-    // 장르별 최다 (더미)
-    const genreBooks = Math.floor(thisYear * 0.4);
+
+    const genreBooks = 0;
 
     myStats = {
       total: books.length,
@@ -431,7 +399,7 @@
       weeksInRow,
       thickBooks,
       genreBooks,
-      rank: 3, // 더미
+      rank: null,
       goalTarget: parseInt(localStorage.getItem('monthlyGoal') || '20'),
       goalAchievedEarly: false, // TODO: 실제 계산
     };
@@ -440,11 +408,6 @@
     document.getElementById('statMonth').textContent = thisMonth;
     document.getElementById('statYear').textContent = thisYear;
 
-    // 더미 데이터 업데이트 (내 실제 수치 반영)
-    ['class', 'region', 'national'].forEach(tab => {
-      const me = MOCK_RANKINGS[tab].find(r => r.isMe);
-      if (me) me.books = thisMonth;
-    });
   }
 
   function calculateStreak(books) {
@@ -568,156 +531,7 @@
   }
 
   // ── 랭킹 렌더링 ──────────────────────────────────────────────
-  function renderRanking() {
-    const list = document.getElementById('rankList');
-    const data = MOCK_RANKINGS[currentTab];
-
-    if (!data || data.length === 0) {
-      list.innerHTML = `
-        <div class="empty-rank">
-          <div class="empty-rank-icon">📚</div>
-          <p>아직 랭킹 데이터가 없어요</p>
-        </div>
-      `;
-      return;
-    }
-
-    list.innerHTML = data.map(renderRankItem).join('');
-
-    // 클릭 이벤트
-    list.querySelectorAll('.rank-item').forEach((item, idx) => {
-      item.addEventListener('click', () => {
-        if (data[idx].isMe) {
-          location.href = 'index.html';
-        } else {
-          showFriendActions(data[idx]);
-        }
-      });
-    });
-  }
-
-  // ── 친구 액션 모달 ────────────────────────────────────────────
-  function showFriendActions(friend) {
-    const modal = document.createElement('div');
-    modal.className = 'friend-modal';
-    modal.innerHTML = `
-      <div class="friend-modal-content">
-        <div class="friend-modal-header">
-          <div class="friend-avatar">👤</div>
-          <div class="friend-info">
-            <div class="friend-name">${escapeHtml(friend.name)}</div>
-            <div class="friend-stats">${friend.books}권 읽음</div>
-          </div>
-          <button class="friend-close">✕</button>
-        </div>
-        <div class="friend-actions">
-          <button class="friend-action-btn" data-action="cheer">
-            💌 응원하기
-          </button>
-          <button class="friend-action-btn" data-action="follow">
-            ➕ 친구 추가
-          </button>
-          <button class="friend-action-btn" data-action="library">
-            📚 서재 구경
-          </button>
-        </div>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    modal.querySelector('.friend-close').addEventListener('click', () => {
-      modal.remove();
-    });
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.remove();
-    });
-
-    modal.querySelectorAll('.friend-action-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const action = btn.dataset.action;
-        if (action === 'cheer') {
-          showCheerMessages(friend);
-        } else if (action === 'follow') {
-          showToast(`✅ ${friend.name}님을 친구로 추가했어요!`);
-          modal.remove();
-        } else if (action === 'library') {
-          showToast(`📚 ${friend.name}님의 서재 (준비 중)`);
-          modal.remove();
-        }
-      });
-    });
-  }
-
-  // ── 응원 메시지 ──────────────────────────────────────────────
-  function showCheerMessages(friend) {
-    const messages = [
-      '📚 화이팅! 우리 아이도 따라잡을게요!',
-      '👏 대단해요! 어떤 책 읽으셨어요?',
-      '🔥 저도 열심히 읽을게요!',
-      '💪 함께 독서왕 도전해요!',
-      '✨ 꾸준한 독서 습관 부러워요!',
-      '🎯 목표 달성 축하드려요!',
-    ];
-
-    const modal = document.createElement('div');
-    modal.className = 'friend-modal';
-    modal.innerHTML = `
-      <div class="friend-modal-content">
-        <div class="cheer-header">
-          <span class="cheer-icon">💌</span>
-          <span class="cheer-title">${escapeHtml(friend.name)}님께 응원 보내기</span>
-        </div>
-        <div class="cheer-messages">
-          ${messages.map(msg => `
-            <button class="cheer-msg-btn">${escapeHtml(msg)}</button>
-          `).join('')}
-        </div>
-        <button class="cheer-cancel">취소</button>
-      </div>
-    `;
-
-    document.body.appendChild(modal);
-
-    modal.querySelector('.cheer-cancel').addEventListener('click', () => {
-      modal.remove();
-    });
-
-    modal.querySelectorAll('.cheer-msg-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        showToast(`💌 ${friend.name}님께 응원을 보냈어요!`);
-        modal.remove();
-      });
-    });
-
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.remove();
-    });
-  }
-
-  function renderRankItem(r) {
-    const medal = r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : '';
-    const meClass = r.isMe ? 'me' : '';
-
-    return `
-      <div class="rank-item ${meClass}">
-        <div class="rank-number ${medal ? 'medal' : ''}">
-          ${medal || r.rank}
-        </div>
-        <div class="rank-info">
-          <div class="rank-name">${escapeHtml(r.name)}</div>
-          <div class="rank-books">이번 달 ${r.books}권</div>
-          <div class="rank-recent">최근: ${escapeHtml(r.recent)}</div>
-        </div>
-        <div class="rank-count">
-          <div class="rank-count-num">${r.books}</div>
-          <div class="rank-count-label">권</div>
-          <div class="rank-trend">${r.trend}</div>
-        </div>
-      </div>
-    `;
-  }
+  function renderRanking() { renderPublicLibraries(); }
 
   // ── 탭 전환 ──────────────────────────────────────────────────
   function wireEvents() {
@@ -757,6 +571,7 @@
         const current = myStats.goalTarget;
         const newGoal = prompt(`이번 달 목표 권수를 입력하세요 (현재: ${current}권)`, current);
         if (newGoal && !isNaN(newGoal) && newGoal > 0) {
+          if (window.Storage?.isOwnerCurrent && !Storage.isOwnerCurrent()) { location.reload(); return; }
           localStorage.setItem('monthlyGoal', newGoal);
           myStats.goalTarget = parseInt(newGoal);
           renderGoal();
@@ -767,7 +582,7 @@
 
     const profileAvatar = document.getElementById('profileAvatar');
     if (profileAvatar) {
-      // 단순 이모지 선택창 대신 프로필 편집 전체 모달 — 랭킹에 노출될 닉네임/학년/지역/목표
+      // 프로필 편집 — 닉네임·선택 지역·목표
       // + 아바타 변경(카카오 사진 또는 이모지)을 한 화면에서 설정
       profileAvatar.addEventListener('click', showProfileEditor);
       profileAvatar.style.cursor = 'pointer';
@@ -883,6 +698,7 @@
     modal.querySelectorAll('.avatar-picker-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const emoji = btn.textContent;
+        if (window.Storage?.isOwnerCurrent && !Storage.isOwnerCurrent()) { location.reload(); return; }
         localStorage.setItem('profileAvatar', emoji);
         const mainAvatar = document.getElementById('profileAvatar');
         if (mainAvatar) {
@@ -918,337 +734,29 @@
 
   // ── 프로필 편집 모달 ──────────────────────────────────────────
   function showProfileEditor() {
-    const cur = {
-      name:   localStorage.getItem('profileName')   || '책읽는엄마',
-      grade:  localStorage.getItem('profileGrade')  || '초5',
-      city:   localStorage.getItem('profileCity')   || '',
-      district: localStorage.getItem('profileDistrict') || '',
-      school: localStorage.getItem('profileSchool') || '',
-      privacy: localStorage.getItem('profilePrivacy') || 'public',
-      // legacy free-text 지역 — city/district 미설정 시 fallback 표시
-      region: localStorage.getItem('profileRegion') || '',
-      goal:   parseInt(localStorage.getItem('monthlyGoal') || '20', 10),
-      avatar: localStorage.getItem('profileAvatar') || '👩',
-    };
-    const grades = ['초1','초2','초3','초4','초5','초6','중1','중2','중3','고1','고2','고3','기타'];
-    const REGIONS = window.REGIONS || {};
-    const cities = Object.keys(REGIONS);
-    const initialDistricts = (cur.city && REGIONS[cur.city]) ? REGIONS[cur.city] : [];
-
-    // 랭킹에 노출되는 책 권수 (myStats: weekBooks/monthBooks/yearBooks)
-    const rankWeek  = (myStats && typeof myStats.weekBooks  === 'number') ? myStats.weekBooks  : 0;
-    const rankMonth = (myStats && typeof myStats.monthBooks === 'number') ? myStats.monthBooks : 0;
-    const rankYear  = (myStats && typeof myStats.yearBooks  === 'number') ? myStats.yearBooks  : 0;
-
-    const modal = document.createElement('div');
-    modal.className = 'friend-modal';
-    modal.innerHTML = `
-      <div class="friend-modal-content" style="max-width:360px">
-        <div class="friend-modal-header">
-          <button class="friend-avatar" id="profEditAvatar" type="button"
-            style="background:linear-gradient(135deg,#FFE0EC,#FFD1DC);border:none;cursor:pointer;overflow:hidden"
-            title="아바타 변경"></button>
-          <div class="friend-info">
-            <div class="friend-name">프로필 편집</div>
-            <div class="friend-stats">아바타·이름은 직접 클릭해서도 변경 가능</div>
-          </div>
-          <button class="friend-close" id="profEditClose">✕</button>
-        </div>
-
-        <div style="background:linear-gradient(135deg,#FFF8F0,#FFE8F0);border-radius:14px;padding:12px;margin-bottom:14px">
-          <div style="font-size:11px;font-weight:700;letter-spacing:0.04em;color:#8B8B8B;margin-bottom:8px">📊 랭킹에 노출되는 내 기록</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-            <div style="text-align:center"><div style="font-size:11px;color:#8B8B8B">이번 주</div><div style="font-size:18px;font-weight:800;color:#FF7B7B">${rankWeek}<span style="font-size:11px;font-weight:600;margin-left:1px">권</span></div></div>
-            <div style="text-align:center"><div style="font-size:11px;color:#8B8B8B">이번 달</div><div style="font-size:18px;font-weight:800;color:#FF7B7B">${rankMonth}<span style="font-size:11px;font-weight:600;margin-left:1px">권</span></div></div>
-            <div style="text-align:center"><div style="font-size:11px;color:#8B8B8B">올해</div><div style="font-size:18px;font-weight:800;color:#FF7B7B">${rankYear}<span style="font-size:11px;font-weight:600;margin-left:1px">권</span></div></div>
-          </div>
-        </div>
-
-        <div id="profEditAuthBanner" style="display:none"></div>
-
-        <button type="button" id="profEditKakaoImport" style="display:none;margin-bottom:14px;width:100%;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:#FEE500;color:#3C1E1E">
-          💬 카카오 프로필 가져오기
-        </button>
-
-        <div style="display:flex;flex-direction:column;gap:14px">
-          <label style="display:flex;flex-direction:column;gap:6px">
-            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">닉네임</span>
-            <input id="profEditName" type="text" value="${escapeAttr(cur.name)}" maxlength="20"
-              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
-          </label>
-          <label style="display:flex;flex-direction:column;gap:6px">
-            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">학년</span>
-            <select id="profEditGrade"
-              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
-              ${grades.map(g => `<option value="${g}"${g===cur.grade?' selected':''}>${g}</option>`).join('')}
-            </select>
-          </label>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-            <label style="display:flex;flex-direction:column;gap:6px">
-              <span style="font-size:12px;font-weight:700;color:var(--text-gray)">시·도</span>
-              <select id="profEditCity"
-                style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
-                <option value="">선택</option>
-                ${cities.map(c => `<option value="${escapeAttr(c)}"${c===cur.city?' selected':''}>${c}</option>`).join('')}
-              </select>
-            </label>
-            <label style="display:flex;flex-direction:column;gap:6px">
-              <span style="font-size:12px;font-weight:700;color:var(--text-gray)">시/군/구</span>
-              <select id="profEditDistrict"
-                style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff"${initialDistricts.length===0?' disabled':''}>
-                <option value="">${initialDistricts.length===0?'(해당 없음)':'선택'}</option>
-                ${initialDistricts.map(d => `<option value="${escapeAttr(d)}"${d===cur.district?' selected':''}>${d}</option>`).join('')}
-              </select>
-            </label>
-          </div>
-          ${(!cur.city && cur.region) ? `<div style="font-size:11px;color:#8B8B8B;margin-top:-6px">기존 지역 입력값: <span style="color:#FF7B7B;font-weight:700">${escapeAttr(cur.region)}</span> — 위에서 시·도/시군구를 선택해 주세요</div>` : ''}
-          <label style="display:flex;flex-direction:column;gap:6px;position:relative">
-            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">학교 / 유치원 <span style="font-weight:400;color:#B5B5B5">(선택, 같은 학교끼리 묶이려면 선택해 주세요)</span></span>
-            <input id="profEditSchool" type="text" value="${escapeAttr(cur.school)}" maxlength="40"
-              placeholder="예: 당감초등학교 (입력하면 검색 결과 표시)" autocomplete="off"
-              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
-            <div id="profEditSchoolList" style="display:none;position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--border);border-radius:10px;margin-top:4px;max-height:240px;overflow-y:auto;z-index:10;box-shadow:0 6px 20px rgba(0,0,0,0.08)"></div>
-          </label>
-          <label style="display:flex;flex-direction:column;gap:6px">
-            <span style="font-size:12px;font-weight:700;color:var(--text-gray)">이번 달 목표 (권)</span>
-            <input id="profEditGoal" type="number" min="1" max="200" value="${cur.goal}"
-              style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:#fff">
-          </label>
-        </div>
-        <div style="margin-top:14px;padding:10px 12px;background:#FFF8F0;border-radius:10px;font-size:12px;color:#8B8B8B;line-height:1.55">
-          🔧 공개 범위(전체 공개·같은 학교만·비공개)는 <a href="settings.html" style="color:#FF7B7B;font-weight:700;text-decoration:none">앱 설정 →</a>에서 변경할 수 있어요.
-          ${cur.privacy === 'private' ? '<br><span style="color:#FF7B7B;font-weight:700">⚠️ 현재 비공개 상태 — 다른 사람의 서재도 볼 수 없어요.</span>' : ''}
-        </div>
-
-        <div style="display:flex;gap:8px;margin-top:18px">
-          <button id="profEditCancel" class="cheer-cancel" style="flex:1;margin:0">취소</button>
-          <button id="profEditSave" class="encouragement-btn" style="flex:1;margin:0">저장</button>
-        </div>
-      </div>
-    `;
+    const modal = document.createElement('div'); modal.className = 'friend-modal';
+    const regions = window.REGIONS || {};
+    const city = localStorage.getItem('profileCity') || '';
+    const district = localStorage.getItem('profileDistrict') || '';
+    modal.innerHTML = `<form class="friend-modal-content" style="display:flex;flex-direction:column;gap:14px"><h2>프로필 편집</h2><label>닉네임<input name="nickname" maxlength="20" value="${escapeAttr(localStorage.getItem('profileName') || '책읽는엄마')}" style="width:100%"></label><p>아이 이름·생년월일·학교·반·상세 주소를 입력하지 마세요.</p><label>시·도 (선택)<select name="city" style="width:100%"><option value="">선택 안 함</option>${Object.keys(regions).map(c => `<option${c === city ? ' selected' : ''}>${escapeHtml(c)}</option>`).join('')}</select></label><label>시·군·구 (선택)<select name="district" style="width:100%"></select></label><label>이번 달 목표 (권)<input type="number" name="goal" min="1" max="200" value="${myStats.goalTarget || 20}"></label><a href="settings.html">내 서재 공개 설정</a><div style="display:flex;gap:10px"><button type="button" id="profileCancel">취소</button><button type="submit">저장</button></div></form>`;
     document.body.appendChild(modal);
-
-    const close = () => modal.remove();
-    modal.addEventListener('click', e => { if (e.target === modal) close(); });
-    modal.querySelector('#profEditClose').addEventListener('click', close);
-    modal.querySelector('#profEditCancel').addEventListener('click', close);
-
-    const avatarBtn = modal.querySelector('#profEditAvatar');
-    if (window.setAvatarEl) window.setAvatarEl(avatarBtn, cur.avatar);
-    else avatarBtn.textContent = cur.avatar;
-    avatarBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      showAvatarPicker(() => {
-        const v = localStorage.getItem('profileAvatar') || '👩';
-        if (window.setAvatarEl) window.setAvatarEl(avatarBtn, v);
-        else avatarBtn.textContent = v;
-      });
-    });
-
-    // 로그인 상태면 "카카오 프로필 가져오기" 버튼 활성화
-    if (window.SB && window.SB.enabled) {
-      window.SB.getSession().then(sess => {
-        if (!sess || !sess.user) return;
-        const importBtn = modal.querySelector('#profEditKakaoImport');
-        if (!importBtn) return;
-        const meta = sess.user.user_metadata || {};
-        const provider = (sess.user.app_metadata && sess.user.app_metadata.provider) || '';
-        const importedName = meta.name || meta.full_name || meta.nickname || meta.preferred_username || '';
-        const importedAvatar = meta.avatar_url || meta.picture || meta.profile_image || '';
-        if (!importedName && !importedAvatar) return;
-        // 이미 가져온 상태(현재 아바타가 그 URL이고 닉네임이 동일)면 버튼 노출 안 함
-        const curAvatar = localStorage.getItem('profileAvatar') || '';
-        const curName = localStorage.getItem('profileName') || '';
-        if (importedAvatar && curAvatar === importedAvatar && (!importedName || curName === importedName)) return;
-        const label = provider === 'kakao' ? '💬 카카오 프로필 가져오기'
-                    : provider === 'google' ? '🅖 구글 프로필 가져오기'
-                    : '☁️ 계정 프로필 가져오기';
-        importBtn.textContent = label;
-        importBtn.style.display = 'block';
-        importBtn.addEventListener('click', () => {
-          if (importedName) {
-            const nameInput = modal.querySelector('#profEditName');
-            if (nameInput) nameInput.value = importedName;
-          }
-          if (importedAvatar) {
-            localStorage.setItem('profileAvatar', importedAvatar);
-            const avatarBtnInModal = modal.querySelector('#profEditAvatar');
-            if (avatarBtnInModal && window.setAvatarEl) window.setAvatarEl(avatarBtnInModal, importedAvatar);
-            const mainAv = document.getElementById('profileAvatar');
-            if (mainAv && window.setAvatarEl) window.setAvatarEl(mainAv, importedAvatar);
-          }
-          showToast(`✨ 프로필을 가져왔어요`);
-        });
-      });
+    const form = modal.querySelector('form');
+    function updateDistrict() {
+      form.elements.district.innerHTML = '<option value="">선택 안 함</option>' + (regions[form.elements.city.value] || []).map(d => `<option${d === district ? ' selected' : ''}>${escapeHtml(d)}</option>`).join('');
     }
-
-    // 비로그인 상태면 모달 상단에 로그인 CTA 배너 노출
-    if (window.SB && window.SB.enabled) {
-      window.SB.getSession().then(sess => {
-        if (sess && sess.user) return;
-        const banner = modal.querySelector('#profEditAuthBanner');
-        if (!banner) return;
-        banner.style.cssText = 'display:block;background:linear-gradient(135deg,#FFF8F0,#FFE8F0);border-radius:14px;padding:14px;margin-bottom:14px;font-size:13px;line-height:1.55;color:#4A4A4A';
-        banner.innerHTML = `
-          <div style="font-weight:800;color:#FF7B7B;margin-bottom:6px">💝 로그인하면 더 좋아요</div>
-          <div style="margin-bottom:10px">기기 바꿔도 같은 프로필·서재 그대로, 곧 다른 엄마들과 랭킹·인기책도 둘러볼 수 있어요</div>
-          <button type="button" id="profEditLoginBtn"
-            style="width:100%;padding:10px;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;background:#FFD1DC;color:#C2185B">
-            로그인 / 가입
-          </button>`;
-        const loginBtn = banner.querySelector('#profEditLoginBtn');
-        if (loginBtn && window.AuthUI) {
-          loginBtn.addEventListener('click', () => {
-            close();
-            window.AuthUI.showLoginPicker();
-          });
-        }
-      });
-    }
-
-    // 시·도 변경 시 시/군/구 옵션 cascading 갱신
-    const citySel = modal.querySelector('#profEditCity');
-    const distSel = modal.querySelector('#profEditDistrict');
-    if (citySel && distSel) {
-      citySel.addEventListener('change', () => {
-        const city = citySel.value;
-        const list = (city && REGIONS[city]) ? REGIONS[city] : [];
-        distSel.innerHTML = `<option value="">${list.length===0?'(해당 없음)':'선택'}</option>` +
-          list.map(d => `<option value="${escapeAttr(d)}">${d}</option>`).join('');
-        distSel.disabled = list.length === 0;
-      });
-    }
-
-    // 학교/유치원 자동완성 — 카카오 Local 키워드 검색 (debounced 300ms)
-    const schoolInput = modal.querySelector('#profEditSchool');
-    const schoolList = modal.querySelector('#profEditSchoolList');
-    if (schoolInput && schoolList && window.KAKAO_API_KEY) {
-      let debounceTimer = null;
-      let lastQuery = '';
-
-      const closeList = () => { schoolList.style.display = 'none'; schoolList.innerHTML = ''; };
-
-      schoolInput.addEventListener('input', () => {
-        const q = schoolInput.value.trim();
-        if (q.length < 2) { closeList(); return; }
-        if (q === lastQuery) return;
-        lastQuery = q;
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => searchSchool(q), 300);
-      });
-
-      schoolInput.addEventListener('blur', () => {
-        // 클릭 이벤트가 처리될 시간을 줌
-        setTimeout(closeList, 200);
-      });
-
-      // 외부 클릭 시 닫기
-      modal.addEventListener('click', (e) => {
-        if (!schoolInput.contains(e.target) && !schoolList.contains(e.target)) closeList();
-      });
-
-      async function searchSchool(query) {
-        try {
-          // 학교(SC4) + 어린이집/유치원(PS3) 두 카테고리 병렬 검색, 합쳐서 표시
-          const headers = { 'Authorization': `KakaoAK ${window.KAKAO_API_KEY}` };
-          const url = (cat) => `https://dapi.kakao.com/v2/local/search/keyword.json?query=${encodeURIComponent(query)}&category_group_code=${cat}&size=8`;
-          const fetchOne = (cat) => fetch(url(cat), { headers }).then(r => {
-            if (r.status === 401 || r.status === 403) {
-              console.warn('[school search] 카카오 Local API 권한 없음 — Kakao Developers > 내 앱 > 플랫폼에 현재 도메인 등록 + 카카오맵/로컬 활성 필요.');
-              return { __fail: true, documents: [] };
-            }
-            return r.ok ? r.json() : { documents: [] };
-          });
-          const [r1, r2] = await Promise.all([fetchOne('SC4'), fetchOne('PS3')]);
-          // API가 막혀 있으면 자동완성 dropdown 자체를 띄우지 않음 (free text 그대로 사용)
-          if (r1.__fail || r2.__fail) { closeList(); return; }
-          const docs = [...(r1.documents || []), ...(r2.documents || [])];
-          // 같은 시·도/시군구가 선택돼 있으면 그 지역 우선 정렬
-          const curCity = (citySel && citySel.value) || '';
-          const curDist = (distSel && distSel.value) || '';
-          docs.sort((a, b) => {
-            const aHere = (curCity && a.address_name && a.address_name.indexOf(curCity.replace(/(특별|광역|특별자치).*$/, '')) === 0) ? 1 : 0;
-            const bHere = (curCity && b.address_name && b.address_name.indexOf(curCity.replace(/(특별|광역|특별자치).*$/, '')) === 0) ? 1 : 0;
-            const aDist = (curDist && a.address_name && a.address_name.indexOf(curDist) >= 0) ? 1 : 0;
-            const bDist = (curDist && b.address_name && b.address_name.indexOf(curDist) >= 0) ? 1 : 0;
-            return (bHere + bDist) - (aHere + aDist);
-          });
-          if (docs.length === 0) {
-            schoolList.innerHTML = '<div style="padding:10px 12px;font-size:12px;color:#8B8B8B">검색 결과가 없어요. 직접 입력하셔도 돼요.</div>';
-            schoolList.style.display = 'block';
-            return;
-          }
-          schoolList.innerHTML = docs.slice(0, 12).map(d => {
-            const cat = d.category_group_code === 'PS3' ? '🧸' : '🏫';
-            return `<button type="button" class="school-pick" data-name="${escapeAttr(d.place_name)}"
-              style="display:block;width:100%;text-align:left;padding:10px 12px;border:none;background:#fff;cursor:pointer;border-bottom:1px solid #f0f0f0;font-family:inherit">
-              <div style="font-size:13px;font-weight:700;color:#4A4A4A">${cat} ${escapeAttr(d.place_name)}</div>
-              <div style="font-size:11px;color:#8B8B8B;margin-top:2px">${escapeAttr(d.address_name || d.road_address_name || '')}</div>
-            </button>`;
-          }).join('');
-          schoolList.style.display = 'block';
-          schoolList.querySelectorAll('.school-pick').forEach(btn => {
-            btn.addEventListener('click', () => {
-              schoolInput.value = btn.dataset.name;
-              closeList();
-            });
-          });
-        } catch (e) {
-          // 카카오 API 실패해도 자유 입력은 가능
-          console.warn('[school search]', e);
-        }
-      }
-    }
-
-    modal.querySelector('#profEditSave').addEventListener('click', () => {
-      const name     = modal.querySelector('#profEditName').value.trim()     || cur.name;
-      const grade    = modal.querySelector('#profEditGrade').value           || cur.grade;
-      const city     = modal.querySelector('#profEditCity').value            || '';
-      const district = modal.querySelector('#profEditDistrict').value        || '';
-      const school   = modal.querySelector('#profEditSchool').value.trim()   || '';
-      // 공개 범위는 이 모달이 아니라 settings.html 에서 변경 — localStorage 값 그대로 유지
-      const privacy  = cur.privacy;
-      const goal     = Math.max(1, parseInt(modal.querySelector('#profEditGoal').value, 10) || cur.goal);
-
-      // 표시용 region: "부산 · 부산진구" 또는 단일/legacy fallback
-      const SHORT = window.REGION_SHORT || {};
-      let region = '';
-      if (city && district) region = `${SHORT[city] || city} · ${district}`;
-      else if (city)        region = SHORT[city] || city;
-      else                  region = cur.region || '';
-
-      localStorage.setItem('profileName',     name);
-      localStorage.setItem('profileGrade',    grade);
-      localStorage.setItem('profileCity',     city);
-      localStorage.setItem('profileDistrict', district);
-      localStorage.setItem('profileSchool',   school);
-      localStorage.setItem('profilePrivacy',  privacy);
-      localStorage.setItem('profileRegion',   region); // 표시용 통일 문자열
-      localStorage.setItem('monthlyGoal',     String(goal));
-
-      document.getElementById('profileName').textContent   = name;
-      document.getElementById('profileGrade').textContent  = grade;
-      document.getElementById('profileRegion').textContent = region;
-      myStats.goalTarget = goal;
-      renderGoal();
-
-      close();
-      showToast('✅ 프로필이 저장됐어요');
-
-      // 로그인 상태면 Supabase에도 저장 (실패해도 localStorage는 이미 반영됨)
+    updateDistrict(); form.elements.city.addEventListener('change', updateDistrict);
+    modal.querySelector('#profileCancel').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const profile = {nickname:form.elements.nickname.value.trim() || '책읽는엄마',city:form.elements.city.value || null,district:form.elements.district.value || null,monthly_goal:Math.min(200,Math.max(1,Number(form.elements.goal.value) || 20))};
+      window.Sync.writeLocalProfile(profile); loadProfile(); myStats.goalTarget = profile.monthly_goal; renderGoal(); modal.remove();
+      showToast('이 기기에 프로필을 저장했어요');
       if (window.SB && window.SB.enabled) {
-        window.SB.upsertProfile({
-          nickname: name,
-          avatar: localStorage.getItem('profileAvatar') || '👩',
-          grade: grade,
-          region: region,
-          city: city || null,
-          district: district || null,
-          school: school || null,
-          privacy: privacy,
-          monthly_goal: goal
-        }).then(() => renderSchoolFriends()).catch(() => {});
+        const saved = await window.SB.upsertProfile(profile);
+        if (!saved) showToast('계정 동기화를 완료하지 못했어요. 다시 저장해 주세요.');
       }
+      renderPublicLibraries();
     });
   }
 
@@ -1256,8 +764,8 @@
   async function showShareCard() {
     const name   = localStorage.getItem('profileName')   || '책읽는엄마';
     const avatar = localStorage.getItem('profileAvatar') || '👩';
-    const grade  = localStorage.getItem('profileGrade')  || '';
-    const region = localStorage.getItem('profileRegion') || '';
+    const grade = '';
+    const region = [localStorage.getItem('profileCity'), localStorage.getItem('profileDistrict')].filter(Boolean).join(' ');
     const books  = Storage.getAllBooks();
 
     const W = 1080, H = 1350;

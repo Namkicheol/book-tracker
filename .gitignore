@@ -18,3 +18,8 @@ node_modules/
 /*.jpeg
 /*.webp
 .omc/
+
+# Local browser QA output; app artwork lives in img/.
+.playwright-cli/
+output/playwright/
+.vercel

@@ -1,0 +1,15 @@
+# Publish runtime assets only, not research, server source, or test fixtures.
+data/
+docs/
+tests/
+scripts/
+migrations/
+supabase/
+worker/
+output/
+.playwright-cli/
+.playwright-mcp/
+.claude/
+.omc/
+*.md
+*.sql

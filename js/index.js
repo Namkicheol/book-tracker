@@ -38,7 +38,7 @@
 
   // Load recommendation database (shared RecsCache memoizes — same data not fetched 3x in session)
   let recommendationData = null;
-  (window.RecsCache ? window.RecsCache.load() : fetch('data/book-recommendations.json').then(r => r.json()))
+  (window.RecsCache ? window.RecsCache.load() : Promise.resolve({ books: {}, sources: {} }))
     .then(data => {
       recommendationData = data;
       if (window.BookPreview) BookPreview.setRecData(data);
@@ -255,6 +255,7 @@
   let _currentVisibleBooks = []; // renderBooks가 만든 정렬·필터된 목록을 보존
 
   function renderBooks() {
+    if (window.ReadingGarden) ReadingGarden.render();
     const grid  = document.getElementById('booksGrid');
     const empty = document.getElementById('emptyState');
 

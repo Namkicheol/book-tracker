@@ -1,886 +1,404 @@
 /**
- * 추천 도서 브라우징 페이지 (학년별 섹션)
+ * Search current Aladin catalog results by reading age and interest.
  */
 
 (function () {
   'use strict';
 
-  let recommendationData = null;
-  let allBooks = [];
-  let textbookMode = false;
-  let originalMode = false;   // 영어 원서 탭
+  // Official catalog age/fiction categories; see source audit for verification.
+  const AGE_CATEGORIES = {'유아':13789, '초등 저학년':48825, '초등 중학년':48837, '초등 고학년':48846, '청소년':1137};
+  const CATALOG = window.CURATED_BOOKS || [];
+  const SHELF_PAGE_SIZE = 6;
+  const shelfCache = new Map();
+  let shelfLimit = SHELF_PAGE_SIZE;
+  let shelfRequest = 0;
+  let shelfQueue = Promise.resolve();
+  const SOURCE_LABELS = {moms:'맘스북스', library:'기관 추천', publisher:'출판사 소개', award:'수상작', social:'SNS 소개'};
+  const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 140%22%3E%3Crect fill=%22%23f8eff3%22 width=%22100%22 height=%22140%22/%3E%3Ctext x=%2250%22 y=%2278%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23a4779a%22%3E書%3C/text%3E%3C/svg%3E';
+
+  const COLLECTIONS = [
+    { title: '마음을 말해요', topic: '감정', question: '오늘 마음을 색으로 표현하면 무슨 색일까?', note: '기쁨, 속상함, 두려움을 이야기하는 독서 시간을 준비해 보세요.' },
+    { title: '친구와 함께 자라요', topic: '우정', question: '친구에게 오늘 해 주고 싶은 말은 무엇일까?', note: '친구 관계를 주제로 함께 읽고 대화할 책을 찾아요.' },
+    { title: '작은 자연 탐험가', topic: '자연', question: '산책길에서 궁금했던 것은 무엇일까?', note: '주변의 동식물을 관찰하며 읽을 책을 찾아요.' },
+    { title: '왜 그럴까? 과학 시간', topic: '과학', question: '오늘 발견한 왜 그럴까 질문은 무엇일까?', note: '아이의 질문에서 시작하는 과학 독서를 준비해 보세요.' },
+  ];
+  let selectedTopic = '그림책';
   let recView = localStorage.getItem('recView') || 'grid';
-  let kinderData = null;
-  let kinderOpen = false;     // 유치원 특선 토글 상태 (기본 닫힘)
-
-  const ALL_GRADE_IDS = ['유아', '초등 저학년', '초등 중학년', '초등 고학년', '청소년'];
-
-  // ── Load data ────────────────────────────────────────────────
+  let requestId = 0;
+  let searchBooks = [];
+  const selected = new Set();
+  let shelfBooks = [];
+  let searchState = 'idle';
 
   document.addEventListener('DOMContentLoaded', init);
 
   async function init() {
+    const data = window.RecsCache
+      ? await window.RecsCache.load()
+      : { meta: { sources: [] }, books: {}, awards: {} };
+    if (window.BookPreview) BookPreview.setRecData(data);
+
+    const collections = document.getElementById('recCollections');
+    collections.innerHTML = COLLECTIONS.map((item, index) => `<button type="button" class="rec-collection" data-collection="${index}" aria-pressed="false"><strong>${item.title}</strong><span>${item.note}</span></button>`).join('');
+    collections.addEventListener('click', event => {
+      const button = event.target.closest('[data-collection]');
+      if (!button) return;
+      const item = COLLECTIONS[Number(button.dataset.collection)];
+      selectedTopic = item.topic;
+      document.getElementById('recSearch').value = '';
+      document.querySelectorAll('[data-collection]').forEach(node => node.setAttribute('aria-pressed', String(node === button)));
+      updateTopics();
+      document.getElementById('recThemeQuestion').textContent = `함께 이야기해요 · ${item.question}`;
+      const topic = document.getElementById('recShelfTopic');
+      topic.value = [...topic.options].some(option => option.value === item.topic) ? item.topic : '';
+      refreshShelf();
+      runSearch();
+    });
+    document.getElementById('recAge').addEventListener('change', runSearch);
+    document.getElementById('recRetry').addEventListener('click', runSearch);
+    document.getElementById('recAddSelected').addEventListener('click', addSelected);
+    document.getElementById('recSelectAll').addEventListener('click', () => {
+      const eligible = searchBooks.filter(book => book.isbn && !inLibrary(book));
+      const allSelected = eligible.every(book => selected.has(book.isbn));
+      eligible.forEach(book => allSelected ? selected.delete(book.isbn) : selected.add(book.isbn));
+      renderBooks();
+    });
+    window.addEventListener('focus', renderBooks);
+    document.getElementById('bookPreviewModal')?.addEventListener('click', () => setTimeout(renderBooks, 0));
+    document.getElementById('recShelfRetry').addEventListener('click', loadStarterShelf);
+    initShelfFilters();
+    loadStarterShelf();
+    attachTopicListeners();
+    attachSearchListener();
+    attachViewToggle();
+    attachScrollTop();
+    await runSearch();
+  }
+
+  function attachTopicListeners() {
+    document.querySelectorAll('.rec-topic-chip[data-topic]').forEach(button => {
+      button.addEventListener('click', () => {
+        selectedTopic = button.dataset.topic || '';
+        updateTopics();
+        document.getElementById('recThemeQuestion').textContent = '';
+        document.querySelectorAll('[data-collection]').forEach(node => node.setAttribute('aria-pressed', 'false'));
+        runSearch();
+      });
+    });
+  }
+
+  function filteredShelf() {
+    const source = document.getElementById('recShelfSource').value;
+    const age = document.getElementById('recShelfAge').value;
+    const topic = document.getElementById('recShelfTopic').value;
+    return CATALOG.filter(entry => (!source || (entry.provenance || []).some(p => p.kind === source)) &&
+      (!age || (entry.ages || []).includes(age)) && (!topic || (entry.topics || []).includes(topic)));
+  }
+
+  function initShelfFilters() {
+    const options = (values, label) => `<option value="">${label}</option>` + values.map(value => `<option value="${escapeAttr(value)}">${escapeHtml(value)}</option>`).join('');
+    const kinds = Object.keys(SOURCE_LABELS).filter(kind => CATALOG.some(entry => (entry.provenance || []).some(p => p.kind === kind)));
+    document.getElementById('recShelfSource').innerHTML = '<option value="">모든 출처</option>' + kinds.map(kind => `<option value="${kind}">${SOURCE_LABELS[kind]}</option>`).join('');
+    document.getElementById('recShelfAge').innerHTML = options([...new Set(CATALOG.flatMap(entry => entry.ages || []))], '모든 연령');
+    document.getElementById('recShelfTopic').innerHTML = options([...new Set(CATALOG.flatMap(entry => entry.topics || []))], '모든 주제');
+    ['recShelfSource', 'recShelfAge', 'recShelfTopic'].forEach(id => document.getElementById(id).addEventListener('change', refreshShelf));
+    document.getElementById('recShelfMore').addEventListener('click', () => { shelfLimit += SHELF_PAGE_SIZE; return loadStarterShelf(); });
+  }
+
+  function refreshShelf() {
+    shelfLimit = SHELF_PAGE_SIZE;
+    return loadStarterShelf();
+  }
+
+  function loadStarterShelf() {
+    const current = ++shelfRequest;
+    const entries = filteredShelf();
+    const visible = entries.slice(0, shelfLimit);
+    const status = document.getElementById('recShelfStatus');
+    const retry = document.getElementById('recShelfRetry');
+    const more = document.getElementById('recShelfMore');
+    shelfBooks = [];
+    renderShelf();
+    if (entries.length) document.getElementById('recShelfGrid').innerHTML = '<p class="rec-empty">책을 불러오고 있어요.</p>';
+    status.textContent = entries.length ? '책을 불러오고 있어요.' : '조건에 맞는 책이 없어요.';
+    retry.hidden = true;
+    more.hidden = true;
+    // Serialize batches across filter changes; each batch has at most four requests.
+    shelfQueue = shelfQueue.then(async () => {
+      if (current !== shelfRequest) return;
+      let cursor = 0;
+      await Promise.all(Array.from({length: Math.min(4, visible.length)}, async () => {
+        while (cursor < visible.length && current === shelfRequest) {
+          const entry = visible[cursor++];
+          if (shelfCache.has(entry.isbn)) continue;
+          try {
+            if (!window.API || typeof API.aladinLookup !== 'function') continue;
+            const item = await API.aladinLookup(entry.isbn);
+            const book = item && normalizeItem(item);
+            const compact = value => value.normalize('NFC').replace(/\s/g, '');
+            if (book && book.isbn === entry.isbn && compact(book.title).includes(compact(entry.title)) && compact(book.author).includes(compact(entry.author))) {
+              shelfCache.set(entry.isbn, {...book, selection:entry});
+            }
+          } catch { /* Failed metadata remains retryable and is never cached. */ }
+        }
+      }));
+      if (current !== shelfRequest) return;
+      shelfBooks = visible.map(entry => shelfCache.get(entry.isbn)).filter(Boolean);
+      const filtered = entries.length !== CATALOG.length;
+      const missing = visible.length - shelfBooks.length;
+      status.textContent = entries.length ? `${filtered ? '조건에 맞는 ' : ''}${entries.length}권 중 ${shelfBooks.length}권을 보고 있어요.${missing ? ` ${missing}권은 정보를 불러오지 못했어요.` : ''}` : '조건에 맞는 책이 없어요.';
+      retry.hidden = shelfBooks.length === visible.length;
+      more.hidden = shelfLimit >= entries.length;
+      more.textContent = `다음 ${Math.min(SHELF_PAGE_SIZE, entries.length - shelfLimit)}권 더 보기`;
+      renderShelf();
+      attachCardListeners();
+    });
+    return shelfQueue;
+  }
+
+  function renderShelf() {
+    document.getElementById('recShelfGrid').innerHTML = shelfBooks.map(book => {
+      const entry = book.selection;
+      const sources = (entry.provenance || []).map(p => `<a href="${escapeAttr(p.source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(p.label)}${p.year && !p.label.includes(String(p.year)) ? ` · ${escapeHtml(String(p.year))}` : ''}${p.kind === 'social' ? ` · SNS 소개${p.checkedAt ? ` (확인 ${escapeHtml(p.checkedAt)})` : ''}` : ''} ↗</a>`).join('<br>');
+      const note = `<div class="rec-shelf-note"><p><strong>맘스북스 읽기 제안</strong> ${escapeHtml(entry.note)}</p><p><strong>함께 해요</strong> ${escapeHtml(entry.activity)}</p>${sources}<br><a href="${escapeAttr(entry.source)}" target="_blank" rel="noopener noreferrer">서지 확인 출처 ↗</a></div>`;
+      return renderCard(book, false).replace('</article>', `${note}</article>`);
+    }).join('') || (filteredShelf().length ? '<p class="rec-empty">책 정보를 불러오지 못했어요. 다시 불러오기를 눌러 주세요.</p>' : '<p class="rec-empty">다른 출처·연령·주제를 골라 보세요. 모든 조건을 보고 싶다면 각 항목을 ‘모든’으로 바꿔 주세요.</p>');
+  }
+
+  function updateTopics() {
+    document.querySelectorAll('.rec-topic-chip[data-topic]').forEach(chip => chip.setAttribute('aria-pressed', String(chip.dataset.topic === selectedTopic)));
+  }
+
+  function inLibrary(book) {
+    return window.Storage && Storage.getBookByIsbn(book.isbn);
+  }
+
+  function updateSelection() {
+    const count = selected.size;
+    const add = document.getElementById('recAddSelected');
+    add.textContent = count ? `선택한 ${count}권 읽을 책에 담기` : '책을 선택해 주세요';
+    add.disabled = !count;
+    document.getElementById('recSelectAll').disabled = !searchBooks.some(book => book.isbn && !inLibrary(book));
+  }
+
+  function addSelected() {
+    if (!window.Storage) return;
+    let count = 0;
     try {
-      // Shared RecsCache — same data not fetched 3x across pages
-      const [data, kinderRes] = await Promise.all([
-        window.RecsCache
-          ? window.RecsCache.load()
-          : fetch('data/book-recommendations.json').then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }),
-        fetch('data/kindergarten-curated.json').catch(() => null),
-      ]);
-
-      recommendationData = data;
-      if (window.BookPreview) BookPreview.setRecData(recommendationData);
-
-      // Convert books object to array
-      allBooks = Object.values(recommendationData.books || {});
-
-      if (allBooks.length === 0) {
-        throw new Error('No books in database');
-      }
-
-      if (kinderRes && kinderRes.ok) {
-        kinderData = await kinderRes.json();
-      }
-
-      console.log(`[recommendations] ${allBooks.length}권 로드 완료`);
-      attachModeTabListeners();
-      attachViewToggle();
-      attachScrollTop();
-      renderGradeSections();
-      attachSearchListener();
-      attachSourceViewListeners();
-
-      // book-preview의 추천 기관 배지 → sourceView 열기
-      window.openSourceView = openSourceView;
-
-      // ?source=...&grade=... 쿼리스트링으로 진입 시 자동으로 sourceView 열기
-      const params = new URLSearchParams(window.location.search);
-      const querySource = params.get('source');
-      const queryGrade = params.get('grade') || 'all';
-      if (querySource) {
-        setTimeout(() => openSourceView(querySource, queryGrade), 80);
-      }
-    } catch (err) {
-      console.error('[recommendations] 데이터 로드 실패:', err);
-      const content = document.getElementById('gradeContent');
-      content.innerHTML = `
-        <p style="text-align:center;padding:60px 16px;color:#999">
-          추천 도서 목록을 불러올 수 없습니다.<br>
-          <small style="color:#ccc;font-size:11px">${escapeHtml(err.message)}</small>
-        </p>
-      `;
-    }
-  }
-
-  // ── Mode Tabs ────────────────────────────────────────────────
-
-  function attachModeTabListeners() {
-    const btnAll  = document.getElementById('modeAll');
-    const btnOrig = document.getElementById('modeOriginal');
-    const btnTB   = document.getElementById('modeTextbook');
-    if (!btnAll || !btnTB) return;
-
-    function style(btn, active, color) {
-      if (!btn) return;
-      btn.style.color = active ? color : '#999';
-      btn.style.borderBottom = active ? '2px solid ' + color : 'none';
-      btn.style.marginBottom = active ? '-2px' : '';
-    }
-
-    function setMode(mode) { // 'all' | 'original' | 'textbook'
-      textbookMode = mode === 'textbook';
-      originalMode = mode === 'original';
-      style(btnAll,  mode === 'all',      '#FF6B6B');
-      style(btnOrig, mode === 'original', '#4A90E2');
-      style(btnTB,   mode === 'textbook', '#27ae60');
-
-      // 영어 원서는 목록형 고정 → 보기 토글 버튼 숨김
-      const viewToggleBtn = document.getElementById('recViewToggleBtn');
-      if (viewToggleBtn) viewToggleBtn.style.display = (mode === 'original') ? 'none' : '';
-
-      // 검색 상태 초기화 + gradeContent 강제 표시
-      const searchInput = document.getElementById('recSearch');
-      if (searchInput) searchInput.value = '';
-      const resultsEl = document.getElementById('searchResults');
-      if (resultsEl) resultsEl.hidden = true;
-      const gradeEl = document.getElementById('gradeContent');
-      if (gradeEl) gradeEl.style.display = 'block';
-
-      renderGradeSections();
-    }
-
-    btnAll.addEventListener('click', () => setMode('all'));
-    if (btnOrig) btnOrig.addEventListener('click', () => setMode('original'));
-    btnTB.addEventListener('click', () => setMode('textbook'));
-  }
-
-  // ── Grade Sections ───────────────────────────────────────────
-
-  // 각 학년별 상태 관리
-  const sectionState = {};
-
-  function renderGradeSections() {
-    if (originalMode) { renderOriginalSections(); return; }
-    if (textbookMode) { renderTextbookSections(); return; }
-
-    const content = document.getElementById('gradeContent');
-
-    // Prepend kindergarten curated section if data available
-    const kinderHtml = kinderData ? renderKindergartenSection() : '';
-
-    const grades = [
-      { id: '유아',        icon: '🐣', name: '유치원 (5~7세)'       },
-      { id: '초등 저학년', icon: '📗', name: '초등 저학년 (1-2학년)' },
-      { id: '초등 중학년', icon: '📘', name: '초등 중학년 (3-4학년)' },
-      { id: '초등 고학년', icon: '📕', name: '초등 고학년 (5-6학년)' },
-    ];
-
-    const INITIAL_SHOW = 8;
-
-    const sections = grades.map((grade, gradeIdx) => {
-      const allGradeBooks = allBooks.filter(b => b.targetAge === grade.id);
-      if (allGradeBooks.length === 0) return '';
-
-      // 초기 상태 설정
-      if (!sectionState[grade.id]) {
-        sectionState[grade.id] = {
-          sort: 'popularity', // popularity, recent, title
-          genre: 'all',
-          source: 'all',
-          current: INITIAL_SHOW,
-          open: false,
-        };
-      }
-
-      // 장르 목록 추출
-      const genres = ['all', ...new Set(allGradeBooks.map(b => b.genre).filter(Boolean))];
-
-      const genreChips = genres.map(g =>
-        `<button class="genre-chip ${sectionState[grade.id].genre === g ? 'active' : ''}" data-grade="${grade.id}" data-genre="${g}" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${sectionState[grade.id].genre === g ? '#FF6B6B' : '#fff'};color:${sectionState[grade.id].genre === g ? '#fff' : '#666'};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">${g === 'all' ? '전체' : g}</button>`
-      ).join('');
-
-      // 출처 칩 — 이 학년 책에 실제 등장한 소스만, meta.sources 정의 순서로
-      const sourcesPresent = new Set();
-      allGradeBooks.forEach(b => (b.lists || []).forEach(id => sourcesPresent.add(id)));
-      const availableSources = (recommendationData.meta.sources || []).filter(s => sourcesPresent.has(s.id));
-      const activeSource = sectionState[grade.id].source;
-      const sourceChips = availableSources.length === 0 ? '' : (() => {
-        const allChip =
-          `<button class="source-chip ${activeSource === 'all' ? 'active' : ''}" data-grade="${grade.id}" data-source="all" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${activeSource === 'all' ? '#444' : '#fff'};color:${activeSource === 'all' ? '#fff' : '#666'};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">전체</button>`;
-        const items = availableSources.map(s => {
-          const count = allGradeBooks.filter(b => (b.lists || []).includes(s.id)).length;
-          const isActive = activeSource === s.id;
-          const bg = isActive ? s.badge.color : '#fff';
-          const fg = isActive ? '#fff' : '#666';
-          return `<button class="source-chip ${isActive ? 'active' : ''}" data-grade="${grade.id}" data-source="${s.id}" style="padding:6px 12px;border:1px solid #ddd;border-radius:16px;background:${bg};color:${fg};font-size:12px;cursor:pointer;flex-shrink:0;white-space:nowrap">${escapeHtml(s.badge.text)} <span style="opacity:0.7;font-size:11px">${count}</span></button>`;
-        }).join('');
-        return allChip + items;
-      })();
-
-      return `
-        <details class="grade-section" data-grade-idx="${gradeIdx}" data-grade-id="${grade.id}" ${sectionState[grade.id].open ? 'open' : ''} style="margin-bottom:16px;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden">
-          <summary style="padding:16px;cursor:pointer;background:#f9f9f9;display:flex;justify-content:space-between;align-items:center;user-select:none">
-            <h2 class="grade-title" style="margin:0">${grade.icon} ${grade.name}</h2>
-            <span class="grade-count">${allGradeBooks.length}권</span>
-          </summary>
-          <div style="padding:16px">
-            <!-- 정렬 버튼 -->
-            <div style="margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap">
-              <button class="sort-btn ${sectionState[grade.id].sort === 'popularity' ? 'active' : ''}" data-grade="${grade.id}" data-sort="popularity" style="padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:${sectionState[grade.id].sort === 'popularity' ? '#4A90E2' : '#fff'};color:${sectionState[grade.id].sort === 'popularity' ? '#fff' : '#666'};font-size:13px;font-weight:${sectionState[grade.id].sort === 'popularity' ? '600' : '400'};cursor:pointer">📊 인기순</button>
-              <button class="sort-btn ${sectionState[grade.id].sort === 'recent' ? 'active' : ''}" data-grade="${grade.id}" data-sort="recent" style="padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:${sectionState[grade.id].sort === 'recent' ? '#4A90E2' : '#fff'};color:${sectionState[grade.id].sort === 'recent' ? '#fff' : '#666'};font-size:13px;font-weight:${sectionState[grade.id].sort === 'recent' ? '600' : '400'};cursor:pointer">🆕 최신순</button>
-              <button class="sort-btn ${sectionState[grade.id].sort === 'title' ? 'active' : ''}" data-grade="${grade.id}" data-sort="title" style="padding:8px 14px;border:1px solid #ddd;border-radius:6px;background:${sectionState[grade.id].sort === 'title' ? '#4A90E2' : '#fff'};color:${sectionState[grade.id].sort === 'title' ? '#fff' : '#666'};font-size:13px;font-weight:${sectionState[grade.id].sort === 'title' ? '600' : '400'};cursor:pointer">🔤 가나다순</button>
-            </div>
-
-            ${sourceChips ? `
-            <!-- 출처(추천 기관) 필터 -->
-            <div style="margin-bottom:8px">
-              <span style="font-size:11px;color:#999;letter-spacing:0.04em;display:block;margin-bottom:4px">출처</span>
-              <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
-                ${sourceChips}
-              </div>
-            </div>` : ''}
-
-            <!-- 장르 필터 -->
-            <div style="margin-bottom:16px">
-              <span style="font-size:11px;color:#999;letter-spacing:0.04em;display:block;margin-bottom:4px">장르</span>
-              <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none">
-                ${genreChips}
-              </div>
-            </div>
-
-            <!-- 책 그리드 -->
-            <div class="rec-browse-grid" data-grade="${grade.id}">
-              <!-- 동적으로 렌더링 -->
-            </div>
-
-            <!-- 더보기 버튼 -->
-            <div class="more-btn-container" data-grade="${grade.id}"></div>
-          </div>
-        </details>
-      `;
-    }).filter(Boolean).join('');
-
-    content.innerHTML = kinderHtml + sections;
-
-    // 각 섹션의 책 목록 렌더링
-    grades.forEach(grade => {
-      renderSectionBooks(grade.id, INITIAL_SHOW);
-    });
-
-    // Kindergarten section card listeners
-    if (kinderHtml) {
-      const kinderSection = content.querySelector('#kinderSection');
-      if (kinderSection) {
-        attachCardListeners();
-        backfillThumbnails(kinderSection);
-        kinderSection.addEventListener('toggle', () => {
-          kinderOpen = kinderSection.open;
-        });
-      }
-    }
-
-    // 이벤트 리스너 등록
-    attachSectionListeners();
-    applyRecView();
-  }
-
-  function renderSectionBooks(gradeId, showCount) {
-    const allGradeBooks = allBooks.filter(b => b.targetAge === gradeId);
-    const state = sectionState[gradeId];
-
-    // 출처 필터 + 장르 필터 (AND)
-    let filteredBooks = allGradeBooks;
-    if (state.source && state.source !== 'all') {
-      filteredBooks = filteredBooks.filter(b => (b.lists || []).includes(state.source));
-    }
-    if (state.genre && state.genre !== 'all') {
-      filteredBooks = filteredBooks.filter(b => b.genre === state.genre);
-    }
-
-    // 정렬 적용
-    if (state.sort === 'popularity') {
-      filteredBooks.sort((a, b) => (b.lists || []).length - (a.lists || []).length);
-    } else if (state.sort === 'recent') {
-      filteredBooks.sort((a, b) => (b.year || 0) - (a.year || 0));
-    } else if (state.sort === 'title') {
-      filteredBooks.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'ko'));
-    }
-
-    // 표시할 책 수 제한
-    const booksToShow = filteredBooks.slice(0, showCount);
-    const hasMore = filteredBooks.length > showCount;
-
-    // 그리드 렌더링
-    const grid = document.querySelector(`.rec-browse-grid[data-grade="${CSS.escape(gradeId)}"]`);
-    if (grid) {
-      grid.innerHTML = booksToShow.map(book => renderCard(book)).join('');
-      attachCardListeners();
-      backfillThumbnails(grid);
-    }
-
-    // 더보기 버튼 렌더링
-    const moreContainer = document.querySelector(`.more-btn-container[data-grade="${CSS.escape(gradeId)}"]`);
-    if (moreContainer) {
-      if (hasMore) {
-        moreContainer.innerHTML = `
-          <button class="btn-secondary" style="width:100%;margin-top:16px" data-load-more="${gradeId}" data-current="${showCount}">
-            더보기 (+${filteredBooks.length - showCount}권)
-          </button>
-        `;
-      } else {
-        moreContainer.innerHTML = '';
-      }
-    }
-
-    // 더보기 버튼 이벤트
-    const moreBtn = moreContainer?.querySelector('[data-load-more]');
-    if (moreBtn) {
-      moreBtn.addEventListener('click', () => {
-        const current = parseInt(moreBtn.dataset.current);
-        const LOAD_MORE = 12;
-        renderSectionBooks(gradeId, current + LOAD_MORE);
+      searchBooks.filter(book => selected.has(book.isbn)).forEach(book => {
+        if (inLibrary(book)) { selected.delete(book.isbn); return; }
+        Storage.saveBook({ ...book, status: 'want' });
+        selected.delete(book.isbn);
+        count++;
       });
+      document.getElementById('recActionStatus').textContent = `${count}권을 읽을 책에 담았어요.`;
+    } catch {
+      document.getElementById('recActionStatus').textContent = `${count}권 저장됨 · 저장 공간을 확인한 뒤 남은 책을 다시 담아 주세요.`;
     }
+    renderBooks();
   }
 
-  // ── 추천 기관 전용 페이지 (sourceView) ─────────────────────────
-
-  let sourceViewState = { active: false, sourceId: null, grade: 'all' };
-
-  function openSourceView(sourceId, initialGrade) {
-    if (!recommendationData) return;
-    const sourceObj = recommendationData.meta.sources.find(s => s.id === sourceId);
-    if (!sourceObj) return;
-
-    sourceViewState.active = true;
-    sourceViewState.sourceId = sourceId;
-    sourceViewState.grade = ALL_GRADE_IDS.includes(initialGrade) ? initialGrade : 'all';
-
-    toggleMainView(false);
-
-    const c = sourceObj.badge.color;
-    const header = document.getElementById('sourceViewHeader');
-    if (header) header.style.background = `linear-gradient(135deg, ${c} 0%, ${c}d0 100%)`;
-
-    document.getElementById('sourceViewBadge').textContent = sourceObj.badge.text;
-    document.getElementById('sourceViewTitle').textContent = sourceObj.fullName || sourceObj.name;
-    document.getElementById('sourceViewDesc').textContent = sourceObj.description || '';
-
-    const allFromSource = allBooks.filter(b => (b.lists || []).includes(sourceId));
-    document.getElementById('sourceViewCount').textContent = `총 ${allFromSource.length}권`;
-
-    const sv = document.getElementById('sourceView');
-    if (sv) sv.hidden = false;
-    renderSourceGradeTabs();
-    renderSourceGrid();
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }
-
-  function closeSourceView() {
-    sourceViewState.active = false;
-    const sv = document.getElementById('sourceView');
-    if (sv) sv.hidden = true;
-    toggleMainView(true);
-    // URL 파라미터 정리 — 뒤로 가서 다시 sourceView 안 열리게
-    if (window.location.search) {
-      history.replaceState(null, '', window.location.pathname);
-    }
-  }
-
-  function toggleMainView(show) {
-    const els = [
-      document.querySelector('.rec-search-bar'),
-      document.getElementById('modeTabs'),
-      document.getElementById('searchResults'),
-      document.getElementById('gradeContent'),
-    ];
-    els.forEach(el => { if (el) el.style.display = show ? '' : 'none'; });
-  }
-
-  function renderSourceGradeTabs() {
-    const wrap = document.getElementById('sourceGradeTabs');
-    if (!wrap || !sourceViewState.sourceId) return;
-    const sourceObj = recommendationData.meta.sources.find(s => s.id === sourceViewState.sourceId);
-    const c = sourceObj ? sourceObj.badge.color : '#FF6B6B';
-    const sourceBooks = allBooks.filter(b => (b.lists || []).includes(sourceViewState.sourceId));
-
-    const tabs = [
-      { id: 'all',          label: '전체',   icon: '📚' },
-      { id: '유아',         label: '유아',   icon: '🐣' },
-      { id: '초등 저학년', label: '저학년', icon: '📗' },
-      { id: '초등 중학년', label: '중학년', icon: '📘' },
-      { id: '초등 고학년', label: '고학년', icon: '📕' },
-      { id: '청소년',       label: '청소년', icon: '📖' },
-    ];
-
-    wrap.innerHTML = tabs.map(t => {
-      const count = t.id === 'all' ? sourceBooks.length : sourceBooks.filter(b => b.targetAge === t.id).length;
-      if (count === 0 && t.id !== 'all') return '';
-      const active = sourceViewState.grade === t.id;
-      return `<button class="source-grade-tab" data-grade="${escapeAttr(t.id)}" style="flex-shrink:0;padding:8px 14px;border:1.5px solid ${active ? c : '#e0e0e0'};border-radius:18px;background:${active ? c : '#fff'};color:${active ? '#fff' : '#666'};font-size:13px;font-weight:${active ? 700 : 500};cursor:pointer;white-space:nowrap">${t.icon} ${t.label} (${count})</button>`;
-    }).filter(Boolean).join('');
-
-    wrap.querySelectorAll('.source-grade-tab').forEach(btn => {
-      btn.addEventListener('click', () => {
-        sourceViewState.grade = btn.dataset.grade;
-        renderSourceGradeTabs();
-        renderSourceGrid();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      });
+  function attachSearchListener() {
+    document.getElementById('recDiscoveryForm')?.addEventListener('submit', event => {
+      event.preventDefault();
+      runSearch();
     });
   }
 
-  function renderSourceGrid() {
-    const grid = document.getElementById('sourceGrid');
-    if (!grid || !sourceViewState.sourceId) return;
-    let books = allBooks.filter(b => (b.lists || []).includes(sourceViewState.sourceId));
-    if (sourceViewState.grade !== 'all') {
-      books = books.filter(b => b.targetAge === sourceViewState.grade);
-    }
-    const gradeOrder = { '유아': 0, '초등 저학년': 1, '초등 중학년': 2, '초등 고학년': 3, '청소년': 4 };
-    books.sort((a, b) => {
-      const ga = gradeOrder[a.targetAge] ?? 9;
-      const gb = gradeOrder[b.targetAge] ?? 9;
-      if (ga !== gb) return ga - gb;
-      return (b.lists || []).length - (a.lists || []).length;
-    });
+  async function runSearch() {
+    const form = document.getElementById('recDiscoveryForm');
+    const results = document.getElementById('searchResults');
+    const meta = document.getElementById('searchMeta');
+    const grid = document.getElementById('searchGrid');
+    const button = document.getElementById('recSearchBtn');
+    const age = document.getElementById('recAge')?.value || '초등 저학년';
+    const extra = document.getElementById('recSearch')?.value.trim() || '';
+    const query = [selectedTopic, extra]
+      .filter(Boolean)
+      .join(' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+    const currentRequest = ++requestId;
+    searchState = 'loading';
+    selected.clear();
+    searchBooks = [];
+    updateSelection();
+    document.getElementById('recActionStatus').textContent = '';
+    document.getElementById('recRetry').hidden = true;
 
-    if (books.length === 0) {
-      grid.innerHTML = `<p style="text-align:center;padding:40px 16px;color:#999">이 학년에는 추천 도서가 없어요.</p>`;
-      return;
-    }
-    grid.innerHTML = books.map(b => renderCard(b)).join('');
-    attachCardListeners();
-    backfillThumbnails(grid);
-  }
-
-  function attachSourceViewListeners() {
-    document.getElementById('sourceBackBtn')?.addEventListener('click', closeSourceView);
-  }
-
-  // ── Kindergarten Curated Section ──────────────────────────────
-
-  function renderKindergartenSection() {
-    if (!kinderData || !kinderData.themes) return '';
-
-    const themes = kinderData.themes;
-    const booksMap = new Map(allBooks.map(b => [String(b.isbn), b]));
-
-    const themeHtml = themes.map(theme => {
-      const themeBooks = (theme.books || []).map(pick => {
-        const fromDB = booksMap.get(String(pick.isbn));
-        const book = fromDB
-          ? { ...fromDB, why: pick.why || fromDB.why }
-          : { isbn: pick.isbn, title: pick.title, author: pick.author, publisher: pick.publisher, why: pick.why, lists: [], targetAge: '유아', genre: '그림책' };
-        return book;
-      });
-
-      const cards = themeBooks.map(book => renderCard(book)).join('');
-
-      return `<div style="margin-bottom:16px">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;padding:0 16px">
-          <span style="font-size:18px">${theme.emoji}</span>
-          <span style="font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--text)">${escapeHtml(theme.name)}</span>
-          <span style="font-size:11px;color:var(--text-mute)">${escapeHtml(theme.description)}</span>
-        </div>
-        <div class="kinder-book-grid">${cards}</div>
-      </div>`;
-    }).join('');
-
-    return `<details id="kinderSection"${kinderOpen ? ' open' : ''} style="border-bottom:2px solid var(--border);margin-bottom:8px">
-      <summary class="kinder-summary">
-        <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-          <span style="font-size:20px">🌸</span>
-          <div>
-            <div style="font-family:var(--font-body);font-size:15px;font-weight:800;color:var(--text)">유치원 특선 <span style="font-size:11px;font-weight:400;color:var(--text-soft)">(5~7세)</span></div>
-            <div style="font-size:11px;color:var(--text-mute);margin-top:2px;font-style:italic">어린이도서연구회·학교도서관저널·행복한아침독서 추천 그림책</div>
-          </div>
-        </div>
-        <svg class="kinder-chevron" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </summary>
-      <div style="padding-bottom:20px">${themeHtml}</div>
-    </details>`;
-  }
-
-  // ── Textbook Mode: 1~6학년 개별 섹션 ────────────────────────
-
-  const tbState = {};  // { [grade]: { sort, current, open } }
-
-  function renderTextbookSections() {
-    const content = document.getElementById('gradeContent');
-    const tbGrades = [
-      { g: 1, icon: '📗', name: '1학년' },
-      { g: 2, icon: '📘', name: '2학년' },
-      { g: 3, icon: '📙', name: '3학년' },
-      { g: 4, icon: '📕', name: '4학년' },
-      { g: 5, icon: '📓', name: '5학년' },
-      { g: 6, icon: '📔', name: '6학년' },
-    ];
-    const INITIAL = 8;
-
-    const sections = tbGrades.map(({ g, icon, name }) => {
-      const books = allBooks.filter(b => b.textbookGrade === g);
-      if (!books.length) return '';
-      if (!tbState[g]) tbState[g] = { sort: 'title', current: INITIAL, open: false };
-
-      return `
-        <details class="grade-section tb-section" data-tb-grade="${g}" ${tbState[g].open ? 'open' : ''} style="margin-bottom:16px;border:1px solid #b8e0c8;border-radius:8px;overflow:hidden">
-          <summary style="padding:16px;cursor:pointer;background:#f0faf4;display:flex;justify-content:space-between;align-items:center;user-select:none">
-            <h2 class="grade-title" style="margin:0;color:#1a7a45">${icon} 초등 ${name}</h2>
-            <span class="grade-count" style="color:#27ae60">${books.length}권</span>
-          </summary>
-          <div style="padding:16px">
-            <div style="margin-bottom:12px;display:flex;gap:8px">
-              ${['title','popularity','recent'].map(s => {
-                const label = s === 'title' ? '🔤 가나다' : s === 'popularity' ? '📊 인기' : '🆕 최신';
-                const active = tbState[g].sort === s;
-                return `<button class="tb-sort-btn" data-tbg="${g}" data-sort="${s}" style="padding:7px 12px;border:1px solid ${active ? '#27ae60' : '#ddd'};border-radius:6px;background:${active ? '#27ae60' : '#fff'};color:${active ? '#fff' : '#666'};font-size:12px;cursor:pointer">${label}</button>`;
-              }).join('')}
-            </div>
-            <div class="tb-grid" data-tbg="${g}"></div>
-            <div class="tb-more" data-tbg="${g}"></div>
-          </div>
-        </details>
-      `;
-    }).filter(Boolean).join('');
-
-    content.innerHTML = sections;
-
-    tbGrades.forEach(({ g }) => renderTbBooks(g, INITIAL));
-    attachTbListeners();
-    applyRecView();
-  }
-
-  function renderTbBooks(g, showCount) {
-    const state = tbState[g];
-    let books = allBooks.filter(b => b.textbookGrade === g);
-
-    if (state.sort === 'popularity') books.sort((a, b) => (b.lists||[]).length - (a.lists||[]).length);
-    else if (state.sort === 'recent') books.sort((a, b) => (b.year||0) - (a.year||0));
-    else books.sort((a, b) => (a.title||'').localeCompare(b.title||'', 'ko'));
-
-    const shown = books.slice(0, showCount);
-    const hasMore = books.length > showCount;
-
-    const grid = document.querySelector(`.tb-grid[data-tbg="${g}"]`);
-    if (grid) {
-      grid.innerHTML = shown.map(b => renderCard(b, true)).join('');
-      attachCardListeners();
-      backfillThumbnails(grid);
-    }
-
-    const more = document.querySelector(`.tb-more[data-tbg="${g}"]`);
-    if (more) {
-      more.innerHTML = hasMore
-        ? `<button class="btn-secondary" style="width:100%;margin-top:16px" data-tb-more="${g}" data-current="${showCount}">더보기 (+${books.length - showCount}권)</button>`
-        : '';
-      more.querySelector('[data-tb-more]')?.addEventListener('click', e => {
-        const cur = parseInt(e.target.dataset.current);
-        renderTbBooks(g, cur + 12);
-      });
-    }
-  }
-
-  function attachTbListeners() {
-    document.querySelectorAll('details.tb-section').forEach(d => {
-      d.addEventListener('toggle', () => {
-        const g = parseInt(d.dataset.tbGrade);
-        if (tbState[g]) tbState[g].open = d.open;
-      });
-    });
-    document.querySelectorAll('.tb-sort-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        e.stopPropagation(); e.preventDefault();
-        const g = parseInt(btn.dataset.tbg);
-        tbState[g].sort = btn.dataset.sort;
-        tbState[g].open = true;
-        renderTextbookSections();
-      });
-    });
-  }
-
-  // ── 영어 원서 (AR 지수 밴드) ─────────────────────────────────
-  const AR_BANDS = [
-    { key: 'b01', label: 'AR 0~1 · 영어 첫걸음',  min: 0, max: 1,  icon: '🐣' },
-    { key: 'b12', label: 'AR 1~2 · 그림책 입문',  min: 1, max: 2,  icon: '🌱' },
-    { key: 'b23', label: 'AR 2~3 · 리더스',       min: 2, max: 3,  icon: '📗' },
-    { key: 'b34', label: 'AR 3~4 · 챕터북 입문',  min: 3, max: 4,  icon: '📘' },
-    { key: 'b4',  label: 'AR 4+ · 영어 동화',     min: 4, max: 99, icon: '📕' },
-  ];
-  const originalState = {};
-
-  function renderOriginalSections() {
-    const content = document.getElementById('gradeContent');
-    const enBooks = allBooks.filter(b => b.language === 'en');
-
-    if (!enBooks.length) {
-      content.innerHTML = `<p style="text-align:center;padding:60px 16px;color:#999">영어 원서 목록을 준비 중이에요.</p>`;
+    if (!meta || !grid) return;
+    if (!window.API || typeof API.aladinSearch !== 'function' || typeof API.normalizeAladin !== 'function') {
+      searchState = 'error';
+      meta.textContent = '도서 검색을 불러오지 못했어요.';
+      grid.innerHTML = '<p class="rec-empty">검색 기능을 사용할 수 없습니다. 잠시 후 다시 열어 주세요.</p>';
+      document.getElementById('recRetry').hidden = false;
       return;
     }
 
-    function inBand(b, band) {
-      return typeof b.ar === 'number' && b.ar >= band.min && b.ar < band.max;
+    if (form) form.setAttribute('aria-busy', 'true');
+    if (results) results.setAttribute('aria-busy', 'true');
+    if (button) button.disabled = true;
+    meta.textContent = `“${query}” 검색 중…`;
+    grid.innerHTML = '<p class="rec-empty">책을 찾아보고 있어요.</p>';
+
+    try {
+      const items = await API.aladinSearch({
+        query,
+        categoryId: AGE_CATEGORIES[age],
+        queryType: 'Keyword',
+        maxResults: 24,
+        sort: 'SalesPoint',
+      });
+      if (currentRequest !== requestId) return;
+
+      const seen = new Set();
+      searchBooks = (items || []).map(normalizeItem).filter(book => {
+        if (!book || !book.title || /세트|전집|패키지|\d+\s*권\s*묶음/.test(book.title)) return false;
+        const key = book.isbn || `${book.title}|${book.author}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      meta.textContent = `“${query}” · ${age} 분야 ${searchBooks.length}권 · 알라딘 OpenAPI`;
+      searchState = 'ready';
+      renderBooks();
+    } catch (error) {
+      if (currentRequest !== requestId) return;
+      console.warn('[recommendations] 도서 검색 실패:', error.message);
+      searchBooks = [];
+      searchState = 'error';
+      meta.textContent = '검색 결과를 불러오지 못했어요.';
+      document.getElementById('recRetry').hidden = false;
+      grid.innerHTML = '<p class="rec-empty">잠시 후 다시 시도하거나 다른 검색어를 입력해 주세요.</p>';
+    } finally {
+      if (currentRequest === requestId) {
+        if (form) form.setAttribute('aria-busy', 'false');
+        if (results) results.setAttribute('aria-busy', 'false');
+        if (button) button.disabled = false;
+      }
+    }
+  }
+
+  function normalizeItem(item) {
+    const normalized = API.normalizeAladin(item);
+    if (!normalized) return null;
+    const book = { ...normalized };
+    delete book._raw;
+    delete book.contents;
+    book.author = (book.authors || []).join(', ');
+    return book;
+  }
+
+  function renderBooks() {
+    const grid = document.getElementById('searchGrid');
+    if (!grid) return;
+    renderShelf();
+    if (searchState !== 'ready') { attachCardListeners(); return; }
+    searchBooks.forEach(book => { if (inLibrary(book)) selected.delete(book.isbn); });
+    updateSelection();
+    attachCardListeners();
+    if (searchBooks.length === 0) {
+      grid.innerHTML = '<p class="rec-empty">검색 결과가 없어요. 관심 주제나 검색어를 바꿔 다시 찾아보세요.</p>';
+      return;
     }
 
-    const sections = AR_BANDS.map(band => {
-      const books = enBooks.filter(b => inBand(b, band));
-      if (!books.length) return '';
-      if (!originalState[band.key]) originalState[band.key] = { open: true };
-      return `
-        <details class="grade-section og-section" data-og="${band.key}" ${originalState[band.key].open ? 'open' : ''} style="margin-bottom:16px;border:1px solid #cfe0f5;border-radius:8px;overflow:hidden">
-          <summary style="padding:16px;cursor:pointer;background:#f2f7fd;display:flex;justify-content:space-between;align-items:center;user-select:none">
-            <h2 class="grade-title" style="margin:0;color:#2c6cb0">${band.icon} ${band.label}</h2>
-            <span class="grade-count" style="color:#4A90E2">${books.length}권</span>
-          </summary>
-          <div style="padding:16px"><div class="og-grid" data-og="${band.key}"></div></div>
-        </details>`;
-    }).filter(Boolean).join('');
-
-    content.innerHTML = `
-      <p style="padding:14px 16px 4px;color:#888;font-size:12px;line-height:1.55">🌍 AR 지수로 분류한 영어 원서예요. 아이 수준에 맞는 단계부터 시작해 보세요.</p>
-      ${sections}`;
-
-    AR_BANDS.forEach(band => {
-      const grid = document.querySelector(`.og-grid[data-og="${band.key}"]`);
-      if (!grid) return;
-      const books = enBooks.filter(b => inBand(b, band)).sort((a, b) => a.ar - b.ar);
-      grid.innerHTML = books.map(b => renderCard(b)).join('');
-    });
+    grid.innerHTML = searchBooks.map(book => renderCard(book)).join('');
     attachCardListeners();
-    backfillThumbnails(content);
-    document.querySelectorAll('details.og-section').forEach(d => {
-      d.addEventListener('toggle', () => {
-        const k = d.dataset.og;
-        if (originalState[k]) originalState[k].open = d.open;
-      });
-    });
     applyRecView();
   }
 
-  function attachSectionListeners() {
-    // details 열림/닫힘 상태 보존
-    document.querySelectorAll('details.grade-section').forEach(d => {
-      d.addEventListener('toggle', () => {
-        const gradeId = d.dataset.gradeId;
-        if (gradeId && sectionState[gradeId]) {
-          sectionState[gradeId].open = d.open;
-        }
-      });
-    });
-
-    // 정렬 버튼
-    document.querySelectorAll('.sort-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        const gradeId = btn.dataset.grade;
-        const sortType = btn.dataset.sort;
-        sectionState[gradeId].sort = sortType;
-        sectionState[gradeId].current = 8;
-        sectionState[gradeId].open = true; // 정렬 변경 시 열림 유지
-        renderGradeSections();
-      });
-    });
-
-    // 장르 필터
-    document.querySelectorAll('.genre-chip').forEach(chip => {
-      chip.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        const gradeId = chip.dataset.grade;
-        const genre = chip.dataset.genre;
-        sectionState[gradeId].genre = genre;
-        sectionState[gradeId].current = 8;
-        sectionState[gradeId].open = true;
-        renderGradeSections();
-      });
-    });
-
-    // 출처 필터
-    document.querySelectorAll('.source-chip').forEach(chip => {
-      chip.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        const gradeId = chip.dataset.grade;
-        const source = chip.dataset.source;
-        sectionState[gradeId].source = source;
-        sectionState[gradeId].current = 8;
-        sectionState[gradeId].open = true;
-        renderGradeSections();
-      });
-    });
-  }
-
-  function attachCardListeners() {
-    document.querySelectorAll('.rec-browse-card').forEach(card => {
-      if (card.dataset.listenerAttached) return;
-      card.dataset.listenerAttached = 'true';
-
-      card.addEventListener('click', () => {
-        const bookData = JSON.parse(card.dataset.book);
-
-        // Build list from the same grid section for swipe navigation
-        const grid = card.closest('.rec-browse-grid, .tb-grid, .kinder-book-grid, #searchGrid');
-        if (grid && window.BookPreview && BookPreview.showList) {
-          const siblings = [...grid.querySelectorAll('.rec-browse-card')];
-          const books = siblings.map(c => {
-            try {
-              const b = JSON.parse(c.dataset.book);
-              return { ...b, authors: b.authors || (b.author ? [b.author] : []) };
-            } catch { return null; }
-          }).filter(Boolean);
-          const idx = books.findIndex(b => b.isbn === bookData.isbn);
-          BookPreview.showList(books, Math.max(0, idx), { mode: 'recommend' });
-        } else {
-          showBookPreview(bookData);
-        }
-      });
-    });
-  }
-
-  // 빈 표지 placeholder (한 군데서 재사용)
-  const PLACEHOLDER = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 140%22%3E%3Crect fill=%22%23e0e0e0%22 width=%22100%22 height=%22140%22/%3E%3Ctext x=%2250%22 y=%2270%22 text-anchor=%22middle%22 font-size=%2240%22 fill=%22%23999%22%3E書%3C/text%3E%3C/svg%3E';
-
-  // ISBN별 alanin lookup 결과 캐시 (thumbnail만)
-  const thumbCache = new Map();
-
-  function renderCard(book, showUnit = false) {
+  function renderCard(book, selectable = true) {
     const cover = book.thumbnail || PLACEHOLDER;
-    const needsLookup = !book.thumbnail && !!book.isbn;
-
-    const badges = (book.lists || []).map(listId => {
-      const source = recommendationData.meta.sources.find(s => s.id === listId);
-      if (!source) return '';
-      return `<span class="rec-browse-badge" style="background:${source.badge.color}">${escapeHtml(source.badge.text)}</span>`;
-    }).filter(Boolean).join('');
-
     const bookJson = escapeAttr(JSON.stringify(book));
-    const unitBadge = showUnit && book.textbookUnit
-      ? `<span style="display:inline-block;margin-top:3px;padding:2px 6px;border-radius:3px;background:#e8f5e9;color:#2e7d32;font-size:9px;font-weight:600">${escapeHtml(book.textbookUnit)}</span>`
-      : '';
-
     return `
-      <button type="button" class="rec-browse-card" data-book="${bookJson}"${needsLookup ? ` data-needs-thumb="${escapeAttr(book.isbn)}"` : ''}>
+      <article class="rec-browse-card">
+      <button type="button" class="rec-preview-button" data-book="${bookJson}">
         <img class="rec-browse-cover" src="${escapeAttr(cover)}" alt="" loading="lazy" onerror="this.src='${PLACEHOLDER}'">
         <div class="rec-browse-info">
           <h3 class="rec-browse-book-title">${escapeHtml(book.title)}</h3>
           <p class="rec-browse-author">${escapeHtml(book.author || '')}</p>
-          ${badges ? `<div class="rec-browse-badges">${badges}</div>` : ''}
-          ${unitBadge}
         </div>
       </button>
+      ${inLibrary(book) ? '<span class="rec-library-badge">✓ 내 서재에 있어요</span>' : book.isbn && selectable ? `<label class="rec-book-select"><input type="checkbox" data-select-isbn="${escapeAttr(book.isbn)}" ${selected.has(book.isbn) ? 'checked' : ''}><span>${escapeHtml(book.title)} 선택</span></label>` : '<span class="rec-library-badge">눌러서 상세 보기</span>'}
+      </article>
     `;
   }
 
-  /**
-   * 카드 렌더 후 thumbnail 없는 책들을 알라딘 lookup으로 채움.
-   * 동시 4개까지 병렬로 fetch — 합격자 노트 책은 알라딘에 cover가 있는데
-   * 우리 DB에 미수집된 경우가 다수.
-   */
-  async function backfillThumbnails(root = document) {
-    if (!window.API || typeof API.aladinLookup !== 'function') return;
-    const cards = [...root.querySelectorAll('[data-needs-thumb]')];
-    if (!cards.length) return;
-
-    const CONCURRENCY = 4;
-    let cursor = 0;
-
-    async function worker() {
-      while (cursor < cards.length) {
-        const card = cards[cursor++];
-        const isbn = card.dataset.needsThumb;
-        delete card.dataset.needsThumb;
-        if (!isbn) continue;
-
-        let cover = thumbCache.get(isbn);
-        if (cover === undefined) {
-          try {
-            const item = await API.aladinLookup(isbn);
-            cover = (item && item.cover) || null;
-          } catch {
-            cover = null;
-          }
-          thumbCache.set(isbn, cover);
-        }
-        if (cover) {
-          const img = card.querySelector('img.rec-browse-cover');
-          if (img && img.src.startsWith('data:')) img.src = cover;
-          // 미리보기 모달에서도 표지가 보이도록 dataset.book에 반영
-          try {
-            const bookData = JSON.parse(card.dataset.book);
-            bookData.thumbnail = cover;
-            card.dataset.book = JSON.stringify(bookData);
-          } catch {}
-        }
-      }
-    }
-
-    await Promise.all(Array(CONCURRENCY).fill(0).map(() => worker()));
-  }
-
-  // ── Search ───────────────────────────────────────────────────
-
-  function attachSearchListener() {
-    const input = document.getElementById('recSearch');
-    if (!input) return;
-    let timer = null;
-    input.addEventListener('input', () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => runSearch(input.value.trim()), 150);
+  function attachCardListeners() {
+    document.querySelectorAll('[data-select-isbn]').forEach(input => {
+      if (input.dataset.listenerAttached) return;
+      input.dataset.listenerAttached = 'true';
+      input.addEventListener('change', () => {
+        input.checked ? selected.add(input.dataset.selectIsbn) : selected.delete(input.dataset.selectIsbn);
+        updateSelection();
+      });
     });
-  }
-
-  function runSearch(query) {
-    const resultsEl = document.getElementById('searchResults');
-    const gradeEl = document.getElementById('gradeContent');
-    const grid = document.getElementById('searchGrid');
-    const meta = document.getElementById('searchMeta');
-    if (!resultsEl || !grid || !meta) return;
-
-    if (!query) {
-      resultsEl.hidden = true;
-      gradeEl.style.display = '';
-      return;
-    }
-
-    // 공백 무시 + 소문자 (한글은 영향 없음, 영어 입력 대응)
-    const norm = s => (s || '').toLowerCase().replace(/\s+/g, '');
-    const q = norm(query);
-    const matches = allBooks.filter(b => {
-      if (b.language === 'en') return false; // 원서는 전용 탭에서만
-      return norm(b.title).includes(q) || norm(b.author).includes(q);
-    }).slice(0, 60);
-
-    meta.textContent = `"${query}" 검색 결과 ${matches.length}권${matches.length === 60 ? ' (상위 60)' : ''}`;
-    grid.innerHTML = matches.map(b => renderCard(b)).join('') ||
-      `<p class="rec-empty">일치하는 책이 없어요.</p>`;
-    attachCardListeners();
-    backfillThumbnails(grid);
-
-    resultsEl.hidden = false;
-    gradeEl.style.display = 'none';
-  }
-
-  // ── Preview Modal (delegated to BookPreview module) ──────────
-
-  function showBookPreview(book) {
-    if (!window.BookPreview) {
-      console.error('[recommendations] BookPreview 모듈 미로드');
-      return;
-    }
-    // Recommendation entries store author as string; normalize to authors[]
-    const normalized = {
-      ...book,
-      authors: book.authors || (book.author ? [book.author] : []),
-    };
-    BookPreview.show(normalized, { mode: 'recommend' });
-  }
-
-  // ── View Toggle ─────────────────────────────────────────────
-
-  function applyRecView() {
-    document.querySelectorAll('.rec-browse-grid, .tb-grid, .kinder-book-grid').forEach(el => {
-      el.classList.toggle('list-view', recView === 'list');
+    document.querySelectorAll('.rec-preview-button').forEach(card => {
+      if (card.dataset.listenerAttached) return;
+      card.dataset.listenerAttached = 'true';
+      card.addEventListener('click', () => {
+        let book;
+        try { book = JSON.parse(card.dataset.book); } catch { return; }
+        if (window.BookPreview && typeof BookPreview.showList === 'function') {
+          const books = [...card.closest('.rec-browse-grid').querySelectorAll('.rec-preview-button')]
+            .map(item => {
+              try { return JSON.parse(item.dataset.book); } catch { return null; }
+            })
+            .filter(Boolean);
+          const index = books.findIndex(item => item.isbn === book.isbn);
+          BookPreview.showList(books, Math.max(index, 0), { mode: 'recommend' });
+          return;
+        }
+        if (window.BookPreview) BookPreview.show(book, { mode: 'recommend' });
+      });
     });
-    const btn = document.getElementById('recViewToggleBtn');
-    if (!btn) return;
-    btn.querySelector('.icon-list').style.display = recView === 'list' ? 'none' : '';
-    btn.querySelector('.icon-grid').style.display = recView === 'list' ? '' : 'none';
   }
 
   function attachViewToggle() {
-    const btn = document.getElementById('recViewToggleBtn');
-    if (!btn) return;
+    const button = document.getElementById('recViewToggleBtn');
+    if (!button) return;
     applyRecView();
-    btn.addEventListener('click', () => {
+    button.addEventListener('click', () => {
       recView = recView === 'grid' ? 'list' : 'grid';
       localStorage.setItem('recView', recView);
       applyRecView();
     });
   }
 
-  // ── Scroll to Top ────────────────────────────────────────────
-
-  function attachScrollTop() {
-    const btn = document.getElementById('scrollTopBtn');
-    if (!btn) return;
-    window.addEventListener('scroll', () => {
-      btn.classList.toggle('visible', window.scrollY > 300);
-    }, { passive: true });
-    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  function applyRecView() {
+    const grid = document.getElementById('searchGrid');
+    const button = document.getElementById('recViewToggleBtn');
+    if (grid) grid.classList.toggle('list-view', recView === 'list');
+    if (!button) return;
+    const listIcon = button.querySelector('.icon-list');
+    const gridIcon = button.querySelector('.icon-grid');
+    if (listIcon) listIcon.style.display = recView === 'list' ? 'none' : '';
+    if (gridIcon) gridIcon.style.display = recView === 'list' ? '' : 'none';
+    button.setAttribute('aria-label', recView === 'list' ? '그리드 보기로 전환' : '목록 보기로 전환');
   }
 
-  // ── Utilities ────────────────────────────────────────────────
+  function attachScrollTop() {
+    const button = document.getElementById('scrollTopBtn');
+    if (!button) return;
+    window.addEventListener('scroll', () => {
+      button.classList.toggle('visible', window.scrollY > 300);
+    }, { passive: true });
+    button.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
 
-  function escapeHtml(str) {
+  function escapeHtml(value) {
     const div = document.createElement('div');
-    div.textContent = str || '';
+    div.textContent = value || '';
     return div.innerHTML;
   }
 
-  function escapeAttr(str) {
-    return (str || '').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  function escapeAttr(value) {
+    return (value || '').replace(/[&"'<>]/g, char => ({
+      '&': '&amp;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '<': '&lt;',
+      '>': '&gt;',
+    })[char]);
   }
-
 })();

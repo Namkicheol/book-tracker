@@ -3,85 +3,118 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>추천 도서 | 書架</title>
+  <title>맘스북스 — 추천 도서</title>
   <link rel="stylesheet" href="css/style.css?v=20260531c">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#FF9E9E">
+  <meta name="theme-color" content="#ff8fa2">
   <link rel="apple-touch-icon" href="icons/icon-180.png">
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <script>if('serviceWorker' in navigator){addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})}</script>
   <style>
+    .rec-shelf-note {padding:0 10px 12px;font-size:12px;line-height:1.6;color:var(--text);}
+    .rec-shelf-filters {margin:12px 16px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+    .rec-shelf-filters label {min-width:0;font-size:12px;color:var(--text-mute);}
+    .rec-shelf-filters .rec-select {padding:10px 5px;font-size:12px;}
+    .rec-shelf-note p {margin:8px 0;}
+    .rec-shelf-note a {color:var(--cute-coral);}
+    .rec-collections { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin:16px; }
+    .rec-collection { padding:14px; border:1px solid var(--border); border-radius:14px; text-align:left; background:var(--bg-paper,#fffafb); color:var(--text); font:inherit; cursor:pointer; }
+    .rec-collection strong { display:block; font-size:14px; margin-bottom:6px; color:var(--cute-coral); }
+    .rec-collection span { display:block; font-size:12px; line-height:1.6; }
+    .rec-collection[aria-pressed="true"] { outline:2px solid var(--cute-pink); }
+    .rec-preview-button { display:flex; flex-direction:column; width:100%; padding:0; border:0; background:transparent; text-align:left; font:inherit; cursor:pointer; color:inherit; }
+    .rec-book-select,.rec-library-badge { display:flex; align-items:center; gap:6px; padding:10px; font-size:12px; min-height:44px; box-sizing:border-box; margin-top:auto; }
+    .rec-book-select span { overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .rec-book-select input { width:19px; height:19px; flex-shrink:0; accent-color:var(--cute-coral); }
+    .rec-library-badge { color:var(--text-mute); }
+    .rec-bulk { display:flex; gap:10px; margin:10px 16px; }
+    .rec-bulk button,#recRetry { min-height:44px; border:1px solid var(--border); border-radius:10px; padding:10px; background:var(--bg-paper,#fffafb); color:var(--text); font:inherit; cursor:pointer; }
+    .rec-bulk button:last-child { flex:1; }
+    .rec-bulk button:disabled { opacity:.55; cursor:default; }
+    .rec-preview-button:focus-visible,.rec-collection:focus-visible { outline:2px solid #b94465; outline-offset:-2px; }
+    #searchGrid.list-view .rec-preview-button { flex-direction:row; align-items:center; gap:12px; }
+    #searchGrid.list-view .rec-browse-card { flex-wrap:wrap; }
+    main,.rec-browse-header { max-width:var(--max-w); margin-left:auto; margin-right:auto; }
+    [data-theme="dark"] .rec-search-panel,[data-theme="dark"] .rec-browse-card,[data-theme="dark"] .rec-topic-chip { background:var(--bg-paper); color:var(--text); }
     .rec-browse-header {
-      padding: 20px 16px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
+      padding: 24px 18px;
+      background: linear-gradient(135deg, #FFF8F0 0%, #FFE8F0 100%);
+      color: var(--text-dark);
+      border-bottom: 1px solid var(--border);
     }
     .rec-browse-title {
       font-size: 24px;
       font-weight: 700;
-      margin: 0 0 8px 0;
+      margin: 0 0 6px;
       font-family: var(--font-han);
     }
     .rec-browse-subtitle {
-      font-size: 14px;
-      opacity: 0.9;
-      margin: 0;
-    }
-    .grade-section {
-      margin-bottom: 32px;
-      padding: 0 16px;
-    }
-    .grade-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 16px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid var(--border);
-    }
-    .grade-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--text-main);
-      margin: 0;
-      font-family: var(--font-han);
-    }
-    .grade-count {
       font-size: 13px;
-      color: var(--text-mute);
-      font-weight: 600;
+      opacity: 0.92;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .rec-search-panel {
+      margin: 16px;
+      padding: 18px;
+      background: var(--surface, #fffafb);
+      border: 1px solid var(--border, #f0dfe5);
+      border-radius: 16px;
+    }
+    .rec-field-label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--text-main, #463943);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .rec-select, .rec-search-input {
+      box-sizing: border-box;
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 13px;
+      border: 1px solid #ead5df;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text-main, #463943);
+      font: inherit;
+      font-size: 14px;
+    }
+    .rec-search-input:focus, .rec-select:focus {
+      outline: 2px solid #b94465;
+      outline-offset: 1px;
     }
     .rec-browse-grid {
-      padding: 16px;
+      padding: 8px 16px 28px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 16px;
+      gap: 14px;
     }
     .rec-browse-card {
       cursor: pointer;
-      border: none;
-      background: transparent;
+      border: 1px solid var(--border, #f0dfe5);
+      border-radius: 12px;
+      background: var(--surface, #fffafb);
       padding: 0;
       text-align: left;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
     }
     .rec-browse-cover {
       width: 100%;
       aspect-ratio: 3/4;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      background: linear-gradient(160deg, #f5f5f5, #e0e0e0);
+      object-fit: contain;
+      background: #f8eff3;
     }
     .rec-browse-info {
-      margin-top: 8px;
+      padding: 10px;
     }
     .rec-browse-book-title {
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-main);
-      margin: 0 0 4px 0;
+      color: var(--text-main, #463943);
+      margin: 0 0 5px;
       line-height: 1.3;
       display: -webkit-box;
       -webkit-line-clamp: 2;
@@ -90,131 +123,243 @@
     }
     .rec-browse-author {
       font-size: 11px;
-      color: var(--text-mute);
-      margin: 0 0 6px 0;
+      color: var(--text-mute, #756773);
+      margin: 0;
     }
-    .rec-browse-badges {
+    .rec-discovery-note {
+      margin: 10px 0 0;
+      color: var(--text-mute, #756773);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .rec-topic-list {
       display: flex;
       flex-wrap: wrap;
-      gap: 3px;
+      gap: 7px;
+      margin-top: 9px;
     }
-    .rec-browse-badge {
-      padding: 2px 6px;
-      border-radius: 2px;
-      font-size: 9px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
+    .rec-topic-chip {
+      min-height: 36px;
+      padding: 7px 12px;
+      border: 1px solid #ead5df;
+      border-radius: 20px;
+      background: #fff;
+      color: #55404e;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .rec-topic-chip[aria-pressed="true"] {
+      border-color: var(--cute-coral);
+      background: linear-gradient(135deg, var(--cute-coral), var(--cute-pink));
       color: #fff;
     }
-    .rec-empty {
-      padding: 60px 16px;
-      text-align: center;
-      color: var(--text-mute);
-    }
-    .rec-search-bar {
-      padding: 12px 16px 0;
-      position: sticky;
-      top: 0;
-      background: var(--bg, #fff);
-      z-index: 10;
-    }
-    .rec-search-input {
+    .rec-submit {
       width: 100%;
-      padding: 12px 14px 12px 40px;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 24px;
+      min-height: 46px;
+      margin-top: 15px;
+      border: 0;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--cute-coral), var(--cute-pink));
+      color: #fff;
+      font: inherit;
       font-size: 14px;
-      background: #fafafa url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23999' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") no-repeat 14px center;
-      transition: border-color 0.2s, background-color 0.2s;
-      box-sizing: border-box;
-    }
-    .rec-search-input:focus {
-      outline: none;
-      border-color: #FF9E9E;
-      background-color: #fff;
-    }
-    .rec-search-results {
-      padding: 0 16px;
-    }
-    .rec-search-meta {
-      padding: 12px 0;
-      font-size: 13px;
-      color: var(--text-mute, #888);
-    }
-    /* 유치원 특선 테마별 그리드 — 권수가 적어도 가운데 정렬 */
-    .kinder-book-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 160px));
-      gap: 12px;
-      padding: 0 16px 12px;
-      justify-content: center;
-    }
-    .kinder-book-grid.list-view {
-      grid-template-columns: 1fr !important;
-      justify-content: start;
-      gap: 6px;
-    }
-    /* 유치원 특선 접기/펼치기 */
-    .kinder-summary {
-      padding: 16px;
+      font-weight: 700;
       cursor: pointer;
-      list-style: none;
+    }
+    .rec-submit:disabled {
+      opacity: .65;
+      cursor: wait;
+    }
+    .rec-results-heading {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      user-select: none;
-      background: var(--bg, #fff);
+      gap: 10px;
+      padding: 6px 16px 0;
     }
-    .kinder-summary::-webkit-details-marker { display: none; }
-    .kinder-chevron { transition: transform 0.2s ease; flex-shrink: 0; color: var(--text-mute, #999); }
-    #kinderSection[open] .kinder-chevron { transform: rotate(180deg); }
+    .rec-results-heading h2 {
+      margin: 0;
+      color: var(--text-main, #463943);
+      font-size: 16px;
+    }
+    .rec-search-meta {
+      padding: 6px 16px 0;
+      color: var(--text-mute, #756773);
+      font-size: 12px;
+    }
+    .rec-empty {
+      grid-column: 1 / -1;
+      padding: 28px 12px;
+      text-align: center;
+      color: var(--text-mute, #756773);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    #recViewToggleBtn {
+      flex-shrink: 0;
+      padding: 7px;
+      border: 0;
+      background: transparent;
+      color: var(--text-mute, #756773);
+      cursor: pointer;
+    }
+    #searchGrid.list-view {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    #searchGrid.list-view .rec-browse-card {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+    }
+    #searchGrid.list-view .rec-browse-cover {
+      width: 64px;
+      flex: 0 0 64px;
+      aspect-ratio: 3/4;
+      border-radius: 6px;
+    }
+    #searchGrid.list-view .rec-browse-info { padding: 0; }
+    #searchGrid.list-view .rec-browse-card:hover {
+      border-color: #9b80c4;
+    }
+    .rec-browse-card:focus-visible, .rec-topic-chip:focus-visible, #recViewToggleBtn:focus-visible {
+      outline: 2px solid #7258a4;
+      outline-offset: 2px;
+    }
+    @media (max-width: 380px) {
+      .rec-browse-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+      .rec-search-panel { margin: 12px; padding: 14px; }
+    }
+    .catalog-panel {margin:16px;padding:16px;border:1px solid #ead5df;border-radius:18px;background:var(--bg-paper,#fff);}
+    .catalog-filters {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px;}
+    .catalog-filters label {min-width:0;font-size:12px;}
+    .catalog-filters .rec-select {padding:10px 5px;font-size:12px;}
+    .catalog-list {list-style:none;padding:0;margin:8px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px;}
+    .catalog-list li {min-width:0;}
+    .catalog-book {display:block;width:100%;height:100%;text-align:left;padding:10px;border:1px solid #ead5df;border-radius:12px;background:var(--bg-paper,#fff);color:var(--text);font:inherit;cursor:pointer;overflow-wrap:anywhere;}
+    .catalog-cover {width:100%;height:170px;object-fit:contain;display:block;margin:0 auto 10px;}
+    .catalog-cover-empty {background:#faedf1;display:grid;place-items:center;font-size:40px;}
+    .catalog-book strong,.catalog-book>span,.catalog-book small {display:block;}
+    .catalog-book strong {font-size:14px;line-height:1.5;}
+    .catalog-book>span,.catalog-book small {font-size:11px;color:var(--text-mute);margin-top:5px;}
+    .catalog-tabs {display:flex;gap:7px;flex-wrap:wrap;margin:12px 0;}
+    .catalog-tabs [aria-pressed="true"] {background:#f9dce7;border-color:#c76180;color:#794458;}
+    .catalog-english-filters {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px;}
+    .catalog-english-filters[hidden] {display:none;}
+    @media(min-width:650px) {.catalog-list {grid-template-columns:repeat(4,minmax(0,1fr));}}
+    .catalog-pages {display:flex;justify-content:space-between;gap:10px;}
+    .catalog-book:focus-visible {outline:2px solid var(--cute-coral);outline-offset:3px;}
   </style>
+  <link rel="stylesheet" href="css/app.css?v=20261020h">
 </head>
 <body>
   <header class="rec-browse-header">
-    <h1 class="rec-browse-title">📚 추천 도서</h1>
-    <p class="rec-browse-subtitle">전문가들이 추천하는 초등 필독서</p>
+    <h1 class="rec-browse-title">📚 관심사별 책 찾기</h1>
+    <p class="rec-browse-subtitle">우리 아이가 읽을 책을 찾고, 출처가 확인된 읽기 제안도 살펴보세요.</p>
   </header>
 
-  <div class="rec-search-bar">
-    <input type="search" id="recSearch" class="rec-search-input" placeholder="제목·저자 검색…" autocomplete="off">
-  </div>
+  <main>
+    <section class="catalog-panel" aria-labelledby="catalogTitle">
+      <h2 id="catalogTitle" style="font-size:18px;margin:0 0 8px">전체 책 둘러보기</h2>
 
-  <!-- 모드 탭 + 뷰 토글 -->
-  <div id="modeTabs" style="display:flex;gap:0;border-bottom:2px solid #e0e0e0;background:#fff;position:sticky;top:56px;z-index:9;align-items:center">
-    <button id="modeAll" class="mode-tab mode-tab-active" style="flex:1;padding:10px 0;font-size:13px;font-weight:600;border:none;background:transparent;color:#FF6B6B;border-bottom:2px solid #FF6B6B;margin-bottom:-2px;cursor:pointer">전체 추천</button>
-    <button id="modeOriginal" class="mode-tab" style="flex:1;padding:10px 0;font-size:13px;font-weight:600;border:none;background:transparent;color:#999;cursor:pointer">🌍 영어 원서</button>
-    <button id="modeTextbook" class="mode-tab" style="flex:1;padding:10px 0;font-size:13px;font-weight:600;border:none;background:transparent;color:#999;cursor:pointer">📖 교과서 학년별</button>
-    <button id="recViewToggleBtn" style="flex-shrink:0;padding:8px 12px;border:none;background:transparent;color:#999;cursor:pointer;display:flex;align-items:center" title="보기 전환">
-      <svg class="icon-list" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      <svg class="icon-grid" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-    </button>
-  </div>
-
-  <div id="searchResults" class="rec-search-results" hidden>
-    <p class="rec-search-meta" id="searchMeta"></p>
-    <div class="rec-browse-grid" id="searchGrid"></div>
-  </div>
-
-  <div id="gradeContent" style="padding-bottom:40px">
-    <!-- Dynamically populated with grade sections -->
-  </div>
-
-  <!-- 추천 기관 전용 페이지 (배지 클릭 시 표시) -->
-  <div id="sourceView" hidden style="padding-bottom:40px">
-    <div id="sourceViewHeader" style="padding:20px 16px 16px;color:#fff;position:relative">
-      <button id="sourceBackBtn" aria-label="뒤로" style="position:absolute;top:14px;left:12px;background:rgba(255,255,255,0.2);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)">←</button>
-      <div style="padding-left:44px">
-        <div id="sourceViewBadge" style="display:inline-block;padding:4px 10px;background:rgba(255,255,255,0.22);border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.06em;margin-bottom:6px"></div>
-        <h1 id="sourceViewTitle" style="font-family:var(--font-han);font-size:22px;font-weight:700;margin:0 0 4px 0"></h1>
-        <p id="sourceViewDesc" style="font-size:12px;opacity:0.92;margin:0;line-height:1.45"></p>
-        <div id="sourceViewCount" style="font-size:11px;opacity:0.85;margin-top:8px;font-weight:600"></div>
+      <div id="catalogTabs" class="catalog-tabs" role="group" aria-label="도서 구분">
+        <button type="button" class="rec-topic-chip" data-catalog-tab="all" aria-pressed="true">전체</button>
+        <button type="button" class="rec-topic-chip" data-catalog-tab="korean" aria-pressed="false">한국어</button>
+        <button type="button" class="rec-topic-chip" data-catalog-tab="english" aria-pressed="false">영어 원서</button>
+        <button type="button" class="rec-topic-chip" data-catalog-tab="textbook" aria-pressed="false">교과서</button>
       </div>
-    </div>
-    <div id="sourceGradeTabs" style="display:flex;gap:6px;padding:12px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;border-bottom:1px solid #f0f0f0;background:#fff;position:sticky;top:0;z-index:9"></div>
-    <div class="rec-browse-grid" id="sourceGrid" style="padding:16px"></div>
-  </div>
+      <form id="catalogForm">
+        <label class="rec-field-label" for="catalogQuery">제목·저자·출판사·ISBN 검색</label>
+        <input id="catalogQuery" class="rec-search-input" type="search" placeholder="찾고 싶은 책이나 저자" autocomplete="off">
+        <div class="catalog-filters">
+          <label>학년·연령 <select id="catalogAge" class="rec-select"></select></label>
+          <label>추천 목록 <select id="catalogSource" class="rec-select"></select></label>
+        </div>
+        <details class="catalog-more-filters" style="margin-top:10px;font-size:12px">
+          <summary>분야·출판사로 더 찾기</summary>
+          <div class="catalog-filters">
+            <label>분야 <select id="catalogGenre" class="rec-select"></select></label>
+            <label>출판사 <select id="catalogPublisher" class="rec-select"></select></label>
+          </div>
+        </details>
+        <div id="catalogEnglishFilters" class="catalog-english-filters" hidden>
+          <label>AR 지수<select id="catalogAr" class="rec-select"><option value="">모든 AR</option><option value="b01">AR 0~1</option><option value="b12">AR 1~2</option><option value="b23">AR 2~3</option><option value="b34">AR 3~4</option><option value="b4">AR 4 이상</option><option value="unknown">AR 미등록</option></select></label>
+          <label>영어 수상작<select id="catalogAward" class="rec-select"><option value="">모든 책</option><option value="newbery-award">뉴베리상</option><option value="caldecott-award">칼데콧상</option></select></label>
+        </div>
+        <button id="catalogReset" type="button" class="rec-topic-chip" style="margin-top:10px">전체 목록 보기</button>
+      </form>
+      <p id="catalogStatus" class="rec-search-meta" role="status"></p>
+      <p id="catalogActionStatus" class="rec-search-meta" role="status"></p>
+      <ul id="catalogList" class="catalog-list"></ul>
+<p class="rec-discovery-note">추천 목록과 AR는 기존 수집 자료의 분류예요. 현재 공식 선정·수준을 보증하지 않으며 미등록 책도 포함해요.</p>
+      <div class="catalog-pages" aria-label="전체 책 페이지">
+        <button id="catalogPrevious" type="button" class="rec-topic-chip">이전 24권</button>
+        <button id="catalogNext" type="button" class="rec-topic-chip">다음 24권</button>
+      </div>
+    </section>
+    <h2 style="font-size:17px;margin:20px 16px 8px">오늘은 어떤 이야기를 읽을까요?</h2>
+    <p class="rec-discovery-note" style="margin:0 16px">맘스북스가 구성한 독서 주제예요. 주제를 누르면 선택한 연령대로 책을 찾아요.</p>
+    <div id="recCollections" class="rec-collections" aria-label="독서 주제 모음"></div>
+    <p id="recThemeQuestion" class="rec-discovery-note" style="margin:0 16px" role="status"></p>
+    <section aria-labelledby="recShelfTitle">
+      <h2 id="recShelfTitle" style="font-size:17px;margin:24px 16px 8px">출처와 함께 고르는 책장</h2>
+      <p class="rec-discovery-note" style="margin:0 16px">맘스북스의 읽기 제안과 출처에서 확인한 소개·추천·수상 정보를 함께 살펴보세요. 연령과 주제는 맘스북스의 탐색 기준이며 아이의 관심과 읽기 수준에 맞춰 골라 주세요.</p>
+      <div class="rec-shelf-filters">
+        <label>출처 <select id="recShelfSource" class="rec-select"></select></label>
+        <label>연령 <select id="recShelfAge" class="rec-select"></select></label>
+        <label>주제 <select id="recShelfTopic" class="rec-select"></select></label>
+      </div>
+      <p id="recShelfStatus" class="rec-search-meta" role="status"></p>
+      <button type="button" id="recShelfRetry" class="rec-topic-chip" style="margin:0 16px" hidden>확인하지 못한 책 다시 불러오기</button>
+      <div id="recShelfGrid" class="rec-browse-grid"></div>
+      <button type="button" id="recShelfMore" class="rec-topic-chip" style="margin:12px 16px" hidden>책 더 보기</button>
+    </section>
+    <form id="recDiscoveryForm" class="rec-search-panel">
+      <label class="rec-field-label" for="recAge">찾아볼 분야</label>
+      <select id="recAge" class="rec-select">
+        <option value="유아">유아 (5~7세)</option>
+        <option value="초등 저학년" selected>초등 1~2학년 동화</option>
+        <option value="초등 중학년">초등 3~4학년 동화</option>
+        <option value="초등 고학년">초등 5~6학년 동화</option>
+        <option value="청소년">청소년</option>
+      </select>
+
+      <span class="rec-field-label" style="margin-top:16px">관심 주제</span>
+      <div id="recTopicList" class="rec-topic-list" aria-label="관심 주제">
+        <button type="button" class="rec-topic-chip" data-topic="그림책" aria-pressed="true">그림책</button>
+        <button type="button" class="rec-topic-chip" data-topic="동물" aria-pressed="false">동물</button>
+        <button type="button" class="rec-topic-chip" data-topic="과학" aria-pressed="false">과학</button>
+        <button type="button" class="rec-topic-chip" data-topic="자연" aria-pressed="false">자연</button>
+        <button type="button" class="rec-topic-chip" data-topic="모험" aria-pressed="false">모험</button>
+        <button type="button" class="rec-topic-chip" data-topic="우정" aria-pressed="false">우정</button>
+        <button type="button" class="rec-topic-chip" data-topic="감정" aria-pressed="false">감정</button>
+        <button type="button" class="rec-topic-chip" data-topic="예술" aria-pressed="false">예술</button>
+      </div>
+
+      <label class="rec-field-label" for="recSearch" style="margin-top:16px">검색어 추가</label>
+      <input type="search" id="recSearch" class="rec-search-input" placeholder="예: 공룡, 우주, 우리 몸" autocomplete="off">
+      <p class="rec-discovery-note">선택한 분야 안에서 주제로 검색해요. 초등은 학년별 동화 분야이며 세트·전집은 제외해요. 실제 연령 적합성은 책 상세 정보를 확인해 주세요. 특정 기관의 선정·추천을 뜻하지 않습니다.</p>
+      <button type="submit" id="recSearchBtn" class="rec-submit">책 찾아보기</button>
+    </form>
+
+    <section id="searchResults" aria-busy="false">
+      <div class="rec-results-heading">
+        <h2>찾아본 책</h2>
+        <button type="button" id="recViewToggleBtn" aria-label="목록 보기로 전환" title="보기 전환">
+          <svg class="icon-list" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          <svg class="icon-grid" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </button>
+      </div>
+      <p class="rec-search-meta" id="searchMeta" role="status">연령대와 관심 주제를 기준으로 책을 찾아요.</p>
+      <button type="button" id="recRetry" style="margin:10px 16px" hidden>다시 시도</button>
+      <div class="rec-bulk"><button type="button" id="recSelectAll">전체 선택 / 해제</button><button type="button" id="recAddSelected" disabled>책을 선택해 주세요</button></div>
+      <p id="recActionStatus" class="rec-search-meta" role="status"></p>
+      <div class="rec-browse-grid" id="searchGrid"></div>
+      <p class="rec-discovery-note" style="padding:0 16px 24px">책 정보와 표지는 <a href="https://www.aladin.co.kr/" target="_blank" rel="noopener noreferrer">알라딘 OpenAPI</a> 검색 결과를 사용합니다.</p>
+    </section>
+  </main>
 
   <!-- Scroll to top -->
   <button id="scrollTopBtn" class="scroll-top-btn" aria-label="맨 위로">
@@ -264,21 +409,25 @@
         <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
         <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
       </svg>
-      랭킹
+      이웃 서재
     </a>
   </nav>
 
   <script src="js/theme.js?v=20260508a"></script>
   <script src="js/config.js?v=20260504d"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=20260528a"></script>
-  <script src="js/auth-ui.js?v=20260530a"></script>
-  <script src="js/storage.js?v=20260527c"></script>
-  <script src="js/sync.js?v=20260528a"></script>
+  <script src="js/supabase.js?v=20261020h"></script>
+  <script src="js/regions.js?v=20261020a"></script>
+  <script src="js/auth-ui.js?v=20261021f"></script>
+  <script src="js/storage.js?v=20261020h"></script>
+  <script src="js/sync.js?v=20261020h"></script>
   <script src="js/api.js?v=20260504d"></script>
   <script src="js/library-api.js?v=20260512a"></script>
   <script src="js/book-preview.js?v=20260512a"></script>
-  <script src="js/recs-cache.js?v=20260527d"></script>
-  <script src="js/recommendations.js?v=20260531a"></script>
+  <script src="js/recs-cache.js?v=20261020h"></script>
+  <script src="js/book-catalog.js?v=20261021f"></script>
+  <script src="js/catalog-browser.js?v=20261021f"></script>
+  <script src="js/curated-books.js?v=20261021b"></script>
+  <script src="js/recommendations.js?v=20261021b"></script>
 </body>
 </html>
