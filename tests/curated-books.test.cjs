@@ -15,12 +15,20 @@ test('curated editions have unique valid ISBNs, original prompts and attributabl
   for(const field of ['title','author','note','activity']) assert.ok(book[field]?.trim(),book.isbn+' '+field);
   assert.equal(new URL(book.source).protocol,'https:');
   assert.ok(book.ages.length && book.topics.length);
-  assert.ok(book.provenance.length);
+  assert.ok(Array.isArray(book.provenance));
   for(const credit of book.provenance){
    assert.ok(['moms','publisher','library','award','social'].includes(credit.kind));
    assert.ok(credit.label); assert.equal(new URL(credit.source).protocol,'https:');
    if(credit.kind==='award') assert.ok(Number.isInteger(Number(credit.year)) && Number(credit.year)>1900);
    if(credit.kind==='social') assert.ok(credit.checkedAt && /instagram\.com|threads\.(net|com)/.test(new URL(credit.source).hostname));
   }
+ }
+});
+test('individual reading prompts retain 38 books without unlicensed institutional recommendation grouping',()=>{
+ assert.equal(books.length,38);
+ assert.equal(books.filter(b=>b.provenance.some(p=>p.kind==='moms')).length,4);
+ for(const book of books){
+  assert.ok(!book.provenance.some(p=>p.kind==='library'));
+  assert.ok(!/nlcy\.go\.kr/.test(book.source));
  }
 });

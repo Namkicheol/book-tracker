@@ -144,7 +144,7 @@
           <div>
             <div class="settings-row-label">내 서재를 누가 볼 수 있나요</div>
             <div class="settings-row-desc">
-              기본은 비공개입니다. 공개하면 서재의 책 제목·저자·표지·출판사·ISBN과 선택한 시·군·구가 보입니다. 한줄평·독서 날짜·폴더는 공개하지 않습니다. 다른 공개 서재는 내 공개 여부와 관계없이 볼 수 있어요.
+              첫 프로필 설정에서 공개 또는 비공개를 선택할 수 있어요. 공개하면 직접 정한 별명과 서재의 책 제목·저자·표지·출판사·ISBN과 선택한 시·군·구가 보입니다. 한줄평·독서 날짜·폴더는 공개하지 않습니다. 다른 공개 서재는 내 공개 여부와 관계없이 볼 수 있어요.
             </div>
           </div>
           <select id="privacySelect"
@@ -251,11 +251,11 @@
   <script src="js/theme.js?v=20260510a"></script>
   <script src="js/config.js?v=20260510a"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=20261020h"></script>
+  <script src="js/supabase.js?v=20261023a"></script>
   <script src="js/regions.js?v=20261020a"></script>
-  <script src="js/auth-ui.js?v=20261021i"></script>
+  <script src="js/auth-ui.js?v=20261023a"></script>
   <script src="js/storage.js?v=20261020h"></script>
-  <script src="js/sync.js?v=20261020h"></script>
+  <script src="js/sync.js?v=20261023a"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const toggle = document.getElementById('darkToggle');
@@ -288,27 +288,32 @@
           location.reload();
           return;
         }
+        const ownerId = window.Storage && window.Storage.getOwner ? window.Storage.getOwner() : null;
         const previous = localStorage.getItem('profileLibraryPublic') === 'true' ? 'public' : 'private';
         const v = privacySel.value;
         privacySel.disabled = true;
         try {
-          if (!window.SB || !window.SB.enabled || !await window.SB.getUser()) throw new Error('login');
-          const saved = await window.SB.upsertProfile({library_public: v === 'public'});
-          if (!saved) throw new Error('save');
+          if (!window.SB || !window.SB.enabled) throw new Error('login');
+          const user = await window.SB.getUser();
+          if (!user) throw new Error('login');
+          if (!ownerId || user.id !== ownerId) throw new Error('account');
+          const saved = await window.SB.upsertProfile({library_public: v === 'public'}, {expectedUserId: ownerId});
+          if (!saved || saved.id !== ownerId || saved.library_public !== (v === 'public') || !window.Storage.isOwnerCurrent() || window.Storage.getOwner() !== ownerId) throw new Error('save');
           window.Sync.writeLocalProfile(saved);
           privacyWarn.style.display = v === 'private' ? 'block' : 'none';
         } catch (e) {
           privacySel.value = previous;
-          alert(e.message === 'login' ? '서재 공개 설정은 로그인 후 선택할 수 있어요.' : '서버에 공개 설정을 저장하지 못했어요. 현재 공개 여부는 변경되지 않았습니다. 다시 시도해 주세요.');
+          alert(e.message === 'login' ? '서재 공개 설정은 로그인 후 선택할 수 있어요.' : '서버의 공개 설정을 확인하지 못했어요. 다시 열어 현재 공개 여부를 확인해 주세요.');
         } finally { privacySel.disabled = false; }
       });
       if (window.SB && window.SB.enabled) {
-        window.SB.getProfile().then(row => {
-          if (!row) return;
+        const loadingOwner = window.Storage && window.Storage.getOwner ? window.Storage.getOwner() : null;
+        window.SB.getProfile(loadingOwner).then(row => {
+          if (!row || row.id !== loadingOwner || !window.Storage.isOwnerCurrent() || window.Storage.getOwner() !== loadingOwner) return;
           window.Sync.writeLocalProfile(row);
           privacySel.value = row.library_public === true ? 'public' : 'private';
           privacyWarn.style.display = row.library_public === true ? 'none' : 'block';
-        });
+        }).catch(() => { privacyWarn.textContent = '서버에서 공개 설정을 불러오지 못했어요. 잠시 후 다시 열어 주세요.'; privacyWarn.style.display = 'block'; });
       }
 
       // ── 이 기기에서 데이터 삭제 ──────────────────────────────

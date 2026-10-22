@@ -68,3 +68,11 @@
 User requested deployment and testing after reviewing the preview. Vercel CLI published the verified runtime snapshot as production deployment `dpl_FMnf7eQzsQo6oR13udnvgievzg3D` (READY). Both `https://book-tracker-psi-one.vercel.app` and the existing `https://book-tracker-git-main-namkicheols-projects.vercel.app` resolve to this deployment. Forty-three public HTML/JS/CSS responses match local file bytes; raw data and internal docs return 404. Automated tests: 48 passed.
 
 GitHub CLI authentication is invalid. This production release is a direct CLI working-tree snapshot, not a pushed/merged Git release; its source cannot be described as main HEAD. `docs/production-release-20261021.json` records the deployment identity and runtime content hashes (excluding config). Commit/PR/main synchronization remains outstanding.
+
+### 2026-10-23 profile and catalog verification
+
+- Added 77 individually verified publisher books: Korean 43 (science 18, society 8, mathematics 7, history 5, art 5), English 34 (early readers 8, picture books 11, chapter nonfiction 15). Catalog total 5,702: Korean 4,609 and English 1,093. Six additional English candidates held because exact ISBN API lookup was unavailable; no inferred AR or age is published.
+- Excluded legacy third-party recommendation memberships; kept 78 verified award records and grade/language/AR/publisher navigation. Original research records remain outside public runtime.
+- First profile setup: editable city/district, required nickname, public choice preselected but saved explicitly, private option below. Existing private settings retained. Login outline uses the common muted icon color. Cross-account save races are guarded before writes.
+- Automated verification: 63 tests passed. Isolated 390px WebKit profile save verified using mocks, with no actual account writes. Aside verified catalog and English AR/award navigation. Database v2 public nickname RPC applied and tested with rolled-back fixtures.
+- Deployment status for this change is recorded after Git/production readback, not inferred from local checks.

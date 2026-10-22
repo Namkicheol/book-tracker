@@ -19,7 +19,7 @@
       $('catalog' + field).addEventListener('change', filter);
     });
     const sources=(window.BOOK_CATALOG.meta || {}).sources || [];
-    $('catalogSource').innerHTML='<option value="">모든 추천 목록</option>'+sources.map(source=>`<option value="${escape(source.id)}">${escape(source.name)}</option>`).join('');
+    $('catalogSource').innerHTML='<option value="">모든 수상 목록</option>'+sources.map(source=>`<option value="${escape(source.id)}">${escape(source.name)}</option>`).join('');
     ['catalogSource','catalogAr','catalogAward'].forEach(id=>$(id).addEventListener('change',filter));
     $('catalogTabs').addEventListener('click',event=>{
       const button=event.target.closest('[data-catalog-tab]');
@@ -65,13 +65,13 @@
     const bands={b01:[0,1],b12:[1,2],b23:[2,3],b34:[3,4],b4:[4,Infinity]};
     const english=book=>book.language==='en' || book.genre==='원서';
     matches = books.filter(book => {
-      const lists=book.lists || [];
+      const awards=book.awards || [];
       const level=book.ar;
       const known=typeof level==='number' && Number.isFinite(level);
-      return (tab==='all' || (tab==='korean' ? !english(book) : tab==='english' ? english(book) : lists.includes('textbook') || Boolean(book.textbookGrade))) &&
+      return (tab==='all' || (tab==='korean' ? !english(book) : tab==='english' ? english(book) : Boolean(book.textbookGrade))) &&
         (!query || compact([book.title,book.author,book.publisher,book.isbn].join(' ')).includes(query)) &&
         (!age || (age==='__unclassified' ? !book.age : book.age===age)) && (!genre || book.genre===genre) && (!publisher || book.publisher===publisher) &&
-        (!source || lists.includes(source)) && (!award || (Array.isArray(book.awards) ? book.awards.some(item=>item.id===award) : lists.includes(award))) &&
+        (!source || awards.some(item=>item.id===source)) && (!award || awards.some(item=>item.id===award)) &&
         (!ar || (ar==='unknown' ? !known : known && level>=bands[ar][0] && level<bands[ar][1]));
     });
     page = 1;

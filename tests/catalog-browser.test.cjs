@@ -5,7 +5,7 @@ const fs=require('node:fs');
 function setup(lookup=async isbn=>({isbn,title:`Book ${isbn}`}), normalize=x=>x) {
   const nodes=new Map();
   const node=id=>{if(!nodes.has(id))nodes.set(id,{value:'',textContent:'',innerHTML:'',handlers:{},addEventListener(k,fn){this.handlers[k]=fn;}});return nodes.get(id);};
-  const books=Array.from({length:55},(_,i)=>({isbn:String(i),title:`Book ${i}`,author:'Writer',publisher:i%2?'A':'B',age:i%3?'younger':'',genre:i%2?'fiction':'science',language:i%2?'en':'ko',lists:i%2?['newbery-award']:['textbook'],ar:i===1?0:i===3?1:i===5?2:null,thumbnail:'https://example.org/cover.jpg',awards:i===1?[{id:'newbery-award',year:2020,distinction:'Honor',source:'https://ala.org/'}]:[]}));
+  const books=Array.from({length:55},(_,i)=>({isbn:String(i),title:`Book ${i}`,author:'Writer',publisher:i%2?'A':'B',age:i%3?'younger':'',genre:i%2?'fiction':'science',language:i%2?'en':'ko',lists:i%2?['newbery-award']:['textbook'],ar:i===1?0:i===3?1:i===5?2:null,thumbnail:'https://example.org/cover.jpg',textbookGrade:i%2?null:'1',awards:i===1?[{id:'newbery-award',year:2020,distinction:'Honor',source:'https://ala.org/'}]:[]}));
   let init,calls=0;const previews=[];
   const window={BOOK_CATALOG:{books},API:{aladinLookup:isbn=>{calls++;return lookup(isbn);},normalizeAladin:normalize},BookPreview:{show:book=>previews.push(book)}};
   vm.runInNewContext(fs.readFileSync('js/catalog-browser.js','utf8'),{window,document:{querySelectorAll:()=>[],getElementById:node,addEventListener(k,fn){init=fn;}}});init();
@@ -29,9 +29,9 @@ test('English AR intervals include zero, have exact boundaries, and combine awar
  a.node('catalogAr').value='';a.node('catalogAward').value='caldecott-award';a.node('catalogAward').handlers.change();assert.match(a.node('catalogStatus').textContent,/조건に|조건에 맞는 책이 없어요/);
  assert.equal(a.calls(),0);
 });
-test('cover cards render lazy images and source/textbook filters use stored memberships',()=>{
+test('cover cards use verified award sources while textbook navigation uses grade metadata',()=>{
  const a=setup();assert.match(a.node('catalogList').innerHTML,/loading="lazy"/);
- a.node('catalogSource').value='textbook';a.node('catalogSource').handlers.change();assert.match(a.node('catalogStatus').textContent,/28권/);
+ a.node('catalogSource').value='newbery-award';a.node('catalogSource').handlers.change();assert.match(a.node('catalogStatus').textContent,/1권/);
  a.node('catalogTabs').handlers.click({target:{closest:()=>({dataset:{catalogTab:'textbook'}})}});assert.match(a.node('catalogStatus').textContent,/28권/);
 });
 

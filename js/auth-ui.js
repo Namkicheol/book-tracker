@@ -18,7 +18,7 @@
 (function () {
   'use strict';
 
-  var BENEFITS = ['☁️ 기기를 바꿔도 같은 서재', '📚 공개에 동의한 다른 부모들의 책 둘러보기', '🔒 내 서재는 기본 비공개'];
+  var BENEFITS = ['☁️ 기기를 바꿔도 같은 서재', '📚 공개에 동의한 다른 부모들의 책 둘러보기', '🌷 공개 범위는 직접 고를 수 있어요'];
 
   var AVATAR_EMOJIS = [
     '👩','🧑','👨','👧','👦','🧑‍🎓','👩‍🎓','👨‍🎓','🦊','🐰',
@@ -34,7 +34,7 @@
     var st = document.createElement('style');
     st.id = 'authUiButtonStyles';
     st.textContent = [
-      '#authBtnGlobal{box-sizing:border-box;width:44px;height:44px;min-width:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:6px;padding:0;border:0;border-radius:50%;background:transparent;color:#c9899d;box-shadow:none;font-size:22px;line-height:1;cursor:pointer;transition:color .15s ease,background-color .15s ease}',
+      '#authBtnGlobal{box-sizing:border-box;width:44px;height:44px;min-width:44px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-left:6px;padding:0;border:0;border-radius:50%;background:transparent;color:var(--text-mute,#B8B8B8);box-shadow:none;font-size:22px;line-height:1;cursor:pointer;transition:color .15s ease,background-color .15s ease}',
       '#authBtnGlobal:hover{background-color:rgba(185,68,101,.07)}',
       '#authBtnGlobal:focus-visible{outline:2px solid #c9899d;outline-offset:2px}',
       '#authBtnGlobal svg{display:block;width:24px;height:24px}',
@@ -135,7 +135,7 @@
         'z-index:990', 'box-sizing:border-box',
         'width:44px', 'height:44px', 'min-width:44px',
         'border:0', 'border-radius:50%', 'background:transparent',
-        'color:#c9899d', 'box-shadow:none', 'cursor:pointer',
+        'color:var(--text-mute,#B8B8B8)', 'box-shadow:none', 'cursor:pointer',
         'display:flex', 'align-items:center', 'justify-content:center',
         'font-size:22px', 'line-height:1', 'padding:0'
       ].join(';');
@@ -245,7 +245,11 @@
     });
   }
 
-  async function showProfileViewer() {
+  async function showProfileViewer(options) {
+    options = options || {};
+    var onboarding = options.onboarding === true;
+    var finishSetup;
+    var completion = options.waitForCompletion ? new Promise(function(resolve) { finishSetup = resolve; }) : undefined;
     if (!window.SB || !window.SB.enabled) return;
     if (document.getElementById('authProfileModal')) return;
     ensureAnim();
@@ -265,13 +269,18 @@
                             : '☁️ 계정 프로필 가져오기';
 
     var cur = {
-      name:   localStorage.getItem('profileName') || '책읽는엄마',
+      name:   onboarding ? '' : (localStorage.getItem('profileName') || '책읽는엄마'),
       city: localStorage.getItem('profileCity') || '',
       district: localStorage.getItem('profileDistrict') || '',
       goal:   parseInt(localStorage.getItem('monthlyGoal') || '20', 10) || 20,
-      avatar: localStorage.getItem('profileAvatar') || '👩'
+      avatar: localStorage.getItem('profileAvatar') || '👩',
+      libraryPublic: onboarding ? true : localStorage.getItem('profileLibraryPublic') === 'true'
     };
     var regions = window.REGIONS || {};
+    if (!Object.keys(regions).length) {
+      alert('지역 목록을 불러오지 못했어요. 페이지를 새로고침한 뒤 다시 시도해 주세요.');
+      return;
+    }
 
     var modal = document.createElement('div');
     modal.id = 'authProfileModal';
@@ -280,6 +289,7 @@
     modal.innerHTML = [
       '<div style="background:#fff;border-radius:20px;padding:22px;max-width:380px;width:100%;margin:auto;box-shadow:0 16px 48px rgba(0,0,0,0.2);animation:authPop .22s cubic-bezier(.2,.8,.2,1)">',
 
+      onboarding ? '<h2 style="font-size:20px;margin:0 0 14px">반가워요! 내 서재를 설정해 주세요</h2>' : '',
       // 헤더 — avatar + 이름 + provider badge
       '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">',
       '<div style="display:flex;align-items:center;gap:12px">',
@@ -312,6 +322,11 @@
       '<input id="apvGoal" type="number" min="1" max="200" value="' + cur.goal + '" style="padding:10px 12px;border:1.5px solid #eee;border-radius:10px;font-size:14px;background:#fff"></label>',
       '</div>',
 
+      '<fieldset style="margin:16px 0 0;padding:12px;border:1px solid #eedbe2;border-radius:12px"><legend>서재 공개 범위</legend>',
+      '<label style="display:block;padding:8px 0"><input id="apvPublic" type="radio" name="apvVisibility" value="public"' + (cur.libraryPublic ? ' checked' : '') + '> 공개 — 다른 부모와 책 목록 나누기</label>',
+      '<p style="font-size:12px;line-height:1.6;margin:0 0 8px;color:#756773">공개를 선택하고 저장하면 직접 정한 별명과 책 목록, 선택한 시·구가 로그인한 회원에게 공개돼요. 독서감상은 제외해요.</p>',
+      '<label style="display:block;padding:8px 0"><input id="apvPrivate" type="radio" name="apvVisibility" value="private"' + (!cur.libraryPublic ? ' checked' : '') + '> 비공개 — 나만 보는 서재</label></fieldset>',
+      '<p id="apvError" role="alert" style="font-size:12px;color:#b42318"></p>',
       // 3. 이모티콘 아바타 선택 — 하단
       '<details style="margin-top:16px;border:1.5px solid #eee;border-radius:12px;padding:12px">',
       '<summary style="cursor:pointer;font-size:13px;font-weight:700;color:#8B8B8B;list-style:none;display:flex;justify-content:space-between;align-items:center">',
@@ -371,7 +386,7 @@
       modal.querySelector('#apvDistrict').innerHTML = '<option value="">선택 안 함</option>' + (regions[modal.querySelector('#apvCity').value] || []).map(function(d) { return '<option' + (d === cur.district ? ' selected' : '') + '>' + htmlEscape(d) + '</option>'; }).join('');
     }
     updateDistrict(); modal.querySelector('#apvCity').addEventListener('change', updateDistrict);
-    setEditing(false); // 초기엔 보기 모드
+    setEditing(true); // 지역을 바로 선택할 수 있도록 편집 화면으로 연다.
 
     // 초기 avatar 렌더 (URL이면 img, emoji면 텍스트)
     setAvatarEl(modal.querySelector('#apvAvatarShow'), cur.avatar);
@@ -399,7 +414,10 @@
       grid.appendChild(b);
     });
 
-    function close() { modal.remove(); }
+    function close() {
+      modal.remove();
+      if (finishSetup) { finishSetup(saveBtn.dataset.saved === '1'); finishSetup = null; }
+    }
     modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
     modal.querySelector('#apvClose').addEventListener('click', close);
     modal.querySelector('#apvCancel').addEventListener('click', close);
@@ -439,17 +457,40 @@
         return;
       }
       // 편집 모드: '저장' 클릭 → 저장
-      var name   = modal.querySelector('#apvName').value.trim() || cur.name;
+      var name   = modal.querySelector('#apvName').value.trim();
       var city = modal.querySelector('#apvCity').value;
       var district = modal.querySelector('#apvDistrict').value;
       var goal   = Math.max(1, parseInt(modal.querySelector('#apvGoal').value, 10) || cur.goal);
       var avatar = cur.avatar;
 
-      localStorage.setItem('profileName',   name);
+      var libraryPublic = modal.querySelector('#apvPublic').checked;
+      var errorEl = modal.querySelector('#apvError');
+      errorEl.textContent = '';
+      if (!name) { errorEl.textContent = '실명 대신 사용할 별명을 입력해 주세요.'; return; }
+      if ((city && !Object.prototype.hasOwnProperty.call(regions, city)) || (district && (!city || !(regions[city] || []).includes(district)))) {
+        errorEl.textContent = '시·도와 시·군·구를 다시 선택해 주세요.'; return;
+      }
+      saveBtn.disabled = true;
+      saveBtn.textContent = '저장 중…';
+      try {
+        var active = await getCurrentUser();
+        if (!active || active.id !== user.id) throw new Error('account changed');
+        var saved = await window.SB.upsertProfile({nickname:name, public_nickname:name, avatar:avatar, city:city || null, district:district || null, monthly_goal:goal, library_public:libraryPublic}, {expectedUserId:user.id});
+        active = await getCurrentUser();
+        if (!active || active.id !== user.id || !saved || saved.nickname !== name || saved.public_nickname !== name || saved.library_public !== libraryPublic || (saved.city || '') !== city || (saved.district || '') !== district) throw new Error('profile not confirmed');
+      } catch (e) {
+        saveBtn.disabled = false;saveBtn.textContent = '다시 저장';
+        errorEl.textContent = '설정을 저장하지 못했어요. 공개 범위가 적용됐는지 확인하지 못했으니 다시 시도해 주세요.';
+        return;
+      }
+      localStorage.setItem('profileName', name);
       localStorage.setItem('profileCity', city);
       localStorage.setItem('profileDistrict', district);
-      localStorage.setItem('monthlyGoal',   String(goal));
+      localStorage.setItem('monthlyGoal', String(goal));
       localStorage.setItem('profileAvatar', avatar);
+      localStorage.setItem('profileLibraryPublic', String(libraryPublic));
+      localStorage.setItem('profilePrivacy', libraryPublic ? 'public' : 'private');
+      localStorage.removeItem('_profileSetupPending_' + user.id);
 
       // 즉시 피드백 — 버튼을 '✅ 저장됐어요'로 변신 후 0.8초 뒤 닫힘
       saveBtn.dataset.saved = '1';
@@ -471,12 +512,6 @@
       refresh(); // top-right 버튼 emoji 갱신
       setTimeout(close, 800);
 
-      // Supabase upsert (피드백/닫힘과 독립적으로 진행)
-      try {
-        await window.SB.upsertProfile({
-          nickname: name, avatar: avatar, city: city || null, district: district || null, monthly_goal: goal
-        });
-      } catch (e) { /* fail silently — localStorage는 이미 저장됨 */ }
     });
 
     modal.querySelector('#apvLogout').addEventListener('click', async function () {
@@ -484,6 +519,7 @@
       await window.SB.signOut();
       close();
     });
+    return completion;
   }
 
   // ── 첫 로그인 동기화 동의 + 재로그인 pull ──────────────────────
@@ -547,7 +583,14 @@
         window.location.reload();
         return;
       }
+      var profileBefore = await window.SB.getProfile(user.id);
+      var setupKey = '_profileSetupPending_' + user.id;
+      if (!profileBefore) localStorage.setItem(setupKey, '1');
       await window.Sync.syncProfileOnSignIn();
+      if (localStorage.getItem(setupKey) === '1') {
+        var setupComplete = await showProfileViewer({onboarding:true, waitForCompletion:true});
+        if (!setupComplete) return;
+      }
       var uploadedKey = '_syncUploaded_' + user.id;
       var pendingGuestImport = localStorage.getItem('_syncLegacyGuestPending_' + user.id) === '1';
       var guestBooks = window.Storage.getAllBooksRaw(null);
@@ -579,6 +622,16 @@
       if (booksOk === true && foldersOk === true) {
         localStorage.setItem(uploadedKey, '1');
         await window.Sync.flushOutbox();
+      }
+    } catch (e) {
+      if (!document.getElementById('authSetupRetry')) {
+        var retry = document.createElement('button');
+        retry.id = 'authSetupRetry';retry.type = 'button';
+        retry.textContent = '프로필을 불러오지 못했어요. 눌러서 다시 시도해 주세요.';
+        retry.setAttribute('role', 'alert');
+        retry.style.cssText = 'position:fixed;left:16px;right:16px;bottom:90px;z-index:10002;padding:14px;background:#fff1f5;color:#8a4058;border:1px solid #e6b5c7;border-radius:12px';
+        retry.addEventListener('click', function() { retry.remove(); handleSignIn(user); });
+        document.body.appendChild(retry);
       }
     } finally { activeSignInUser = null; }
   }

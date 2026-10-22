@@ -101,12 +101,14 @@
     });
   }
 
-  async function upsertProfile(profile) {
+  async function upsertProfile(profile, options) {
+    var expectedUserId = options && options.expectedUserId;
     if (!client) return null;
     var user = await getUser();
     if (!user) return null;
+    if (expectedUserId != null && user.id !== expectedUserId) return null;
     var row = { id: user.id, updated_at: new Date().toISOString() };
-    ['nickname', 'avatar', 'city', 'district', 'monthly_goal', 'library_public'].forEach(function (field) {
+    ['nickname', 'avatar', 'city', 'district', 'monthly_goal', 'library_public', 'public_nickname'].forEach(function (field) {
       if (Object.prototype.hasOwnProperty.call(profile, field)) row[field] = profile[field];
     });
     if (typeof row.library_public === 'boolean') row.privacy = row.library_public ? 'public' : 'private';
@@ -126,17 +128,17 @@
       if (!u) return null;
       id = u.id;
     }
-    var r = await client.from('users').select('id,nickname,avatar,city,district,monthly_goal,library_public').eq('id', id).maybeSingle();
+    var r = await client.from('users').select('id,nickname,avatar,city,district,monthly_goal,library_public,public_nickname').eq('id', id).maybeSingle();
     if (r.error) {
       console.warn('[supabase] getProfile error:', r.error);
-      return null;
+      throw r.error;
     }
     return r.data;
   }
 
   async function getPublicLibraries(city, district) {
     if (!client) return [];
-    var r = await client.rpc('list_public_libraries', {filter_city: city || null, filter_district: district || null});
+    var r = await client.rpc('list_public_libraries_v2', {filter_city: city || null, filter_district: district || null});
     if (r.error) throw r.error;
     return r.data || [];
   }
