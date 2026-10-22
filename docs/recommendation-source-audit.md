@@ -108,3 +108,11 @@ The user clarified that cover cards, grade/source filters, English AR bands, and
 The separate editorial shelf contains 38 entries after adding 12 Korean science, mathematics, history, society and art books. All 38 ISBN/title/writer combinations passed live app-API matching. The original 5,549-record input is preserved, with two non-book EANs excluded from browsing.
 
 Further individually sourced expansion: `data/catalog-supplemental.json` adds 36 Korean nonfiction and 30 English award titles after live API ISBN/cover checks. Browse total is 5,625 (Korean 4,566, English 1,059), with 78 verified English award mappings. New English AR values remain null. Exact source URLs and evidence notes are retained in the supplemental source file; copied publisher descriptions are not served. A regression check preserves English main titles before subtitle colons when opening live book details.
+
+## 2026-10-23 unlicensed list exclusion
+
+The user explicitly requested expansion through individual official book pages while excluding copyrighted recommendation compilations. The public catalog now excludes all 22 legacy list memberships and their source labels, while preserving the underlying bibliographic records. The source selector uses only individually checked Newbery/Caldecott award facts (78 books). Grade, language, publisher, AR and textbook-grade navigation remain. Old AR values remain legacy discovery metadata; new additions have no inferred AR.
+
+The separate 38-book reading shelf no longer groups ten books under the unlicensed institutional recommendation list. These books retain neutral individual bibliographic links and original reading prompts; they have not been relabelled as independent Momsbooks selections. Four existing Momsbooks selections remain four. Research notes are retained in `data/curated-evidence.json`, outside public runtime delivery, rather than exposing old list metadata in JavaScript.
+
+New Korean/English additions are documented in `data/publisher-additions.json` with individual publisher URLs, verification notes and dates. Titles and covers are reconciled with exact ISBN API responses; copied publisher descriptions, bulk recommendation selections and invented AR scores are excluded. This records the selection/data-handling decision, not a blanket legal clearance for all site assets or API usage.

@@ -306,6 +306,7 @@ test('a failed guest-import consent does not mark the account as uploaded', asyn
     SB: {
       enabled: true,
       getUser: async () => ({ id: 'account-a' }),
+      getProfile: async () => ({ id: 'account-a', nickname: '책별명', library_public: false }),
       getSession: async () => ({ user: { id: 'account-a' } }),
       onAuthChange: noop,
     },

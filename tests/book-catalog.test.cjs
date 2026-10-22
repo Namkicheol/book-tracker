@@ -40,3 +40,24 @@ test('existing editorial additions and all verified award mappings survive regen
   assert.ok(book.awards.some(a=>a.id===item.awardId&&a.year===item.year&&a.distinction===item.distinction&&a.source===item.source));
  }
 });
+test('public catalog preserves the existing books but excludes every legacy recommendation membership',()=>{
+ assert.ok(books.length>=5625);assert.equal(books.filter(b=>b.awards?.length).length,78);
+ assert.deepEqual(Array.from(ctx.window.BOOK_CATALOG.meta.sources,s=>s.id).sort(),['caldecott-award','newbery-award']);
+ for(const source of ctx.window.BOOK_CATALOG.meta.sources)assert.match(source.url,/^https:\/\/www\.ala\.org\//);
+ for(const book of books)assert.equal('lists' in book,false);
+});
+test('publisher additions preserve verified ISBNs and individual sources without invented AR or recommendation labels',()=>{
+ const additions=JSON.parse(fs.readFileSync('data/publisher-additions.json','utf8'));
+ assert.ok(additions.length>=40);
+ const ids=new Set();
+ for(const entry of additions){
+  assert.ok(!ids.has(entry.isbn));ids.add(entry.isbn);
+  assert.equal([...entry.isbn].reduce((sum,d,i)=>sum+Number(d)*(i%2?3:1),0)%10,0);
+  const book=books.find(b=>b.isbn===entry.isbn);assert.ok(book);
+  assert.equal(book.title,entry.title);assert.equal(book.language,entry.language);
+  assert.equal(book.ar,null);assert.equal('lists' in book,false);
+  assert.equal(new URL(entry.source).protocol,'https:');
+  assert.ok(entry.evidenceNotes);assert.equal(entry.checkedAt,'2026-10-23');
+  assert.match(book.thumbnail,/^https:\/\/image\.aladin\.co\.kr\//);
+ }
+});

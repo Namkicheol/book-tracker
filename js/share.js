@@ -233,7 +233,7 @@
         button.className = 'rank-item';
         button.style.cssText = 'width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer';
         // 서버에서 사용자 별명을 확인하기 전에는 계정 실명 대신 축약 ID만 표시.
-        button.innerHTML = `<span aria-hidden="true">📚</span><span class="rank-info"><span class="rank-name">서재 #${escapeHtml(shortId(library.owner_id))}</span><br><span class="rank-books">${Number(library.book_count) || 0}권 · ${escapeHtml([library.city, library.district].filter(Boolean).join(' ') || '지역 미선택')}</span></span><span>둘러보기 →</span>`;
+        button.innerHTML = `<span aria-hidden="true">📚</span><span class="rank-info"><span class="rank-name">${escapeHtml(library.nickname || '서재 #' + shortId(library.owner_id))}</span><br><span class="rank-books">${Number(library.book_count) || 0}권 · ${escapeHtml([library.city, library.district].filter(Boolean).join(' ') || '지역 미선택')}</span></span><span>둘러보기 →</span>`;
         button.addEventListener('click', () => showPublicLibrary(library));
         list.appendChild(button);
       });
@@ -248,7 +248,7 @@
   async function showPublicLibrary(library) {
     const modal = document.createElement('div');
     modal.className = 'friend-modal';
-    modal.innerHTML = `<div class="friend-modal-content"><div class="friend-modal-header"><h2>서재 #${escapeHtml(shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><p class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</p></div>`;
+    modal.innerHTML = `<div class="friend-modal-content"><div class="friend-modal-header"><h2>${escapeHtml(library.nickname || '서재 #' + shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><p class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</p></div>`;
     modal.querySelector('button').addEventListener('click', () => modal.remove());
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
     document.body.appendChild(modal);
@@ -734,6 +734,7 @@
 
   // ── 프로필 편집 모달 ──────────────────────────────────────────
   function showProfileEditor() {
+    const ownerId = window.Storage && window.Storage.getOwner ? window.Storage.getOwner() : null;
     const modal = document.createElement('div'); modal.className = 'friend-modal';
     const regions = window.REGIONS || {};
     const city = localStorage.getItem('profileCity') || '';
@@ -749,12 +750,23 @@
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      const profile = {nickname:form.elements.nickname.value.trim() || '책읽는엄마',city:form.elements.city.value || null,district:form.elements.district.value || null,monthly_goal:Math.min(200,Math.max(1,Number(form.elements.goal.value) || 20))};
-      window.Sync.writeLocalProfile(profile); loadProfile(); myStats.goalTarget = profile.monthly_goal; renderGoal(); modal.remove();
-      showToast('이 기기에 프로필을 저장했어요');
-      if (window.SB && window.SB.enabled) {
-        const saved = await window.SB.upsertProfile(profile);
-        if (!saved) showToast('계정 동기화를 완료하지 못했어요. 다시 저장해 주세요.');
+      const profile = {public_nickname:form.elements.nickname.value.trim() || '책읽는엄마',nickname:form.elements.nickname.value.trim() || '책읽는엄마',city:form.elements.city.value || null,district:form.elements.district.value || null,monthly_goal:Math.min(200,Math.max(1,Number(form.elements.goal.value) || 20))};
+      const saveButton = form.querySelector('button[type="submit"]');
+      saveButton.disabled = true;
+      try {
+        if (window.Storage && !window.Storage.isOwnerCurrent()) throw new Error('account');
+        if (ownerId) {
+          const user = await window.SB.getUser();
+          if (!user || user.id !== ownerId) throw new Error('account');
+          const saved = await window.SB.upsertProfile(profile, {expectedUserId:ownerId});
+          if (!saved || saved.id !== ownerId || !window.Storage.isOwnerCurrent() || window.Storage.getOwner() !== ownerId) throw new Error('save');
+        } else if (window.Storage && window.Storage.getOwner() !== null) throw new Error('account');
+        window.Sync.writeLocalProfile(profile); loadProfile(); myStats.goalTarget = profile.monthly_goal; renderGoal(); modal.remove();
+        showToast(ownerId ? '프로필을 저장했어요' : '이 기기에 프로필을 저장했어요');
+      } catch (_) {
+        showToast('프로필 저장을 확인하지 못했어요. 계정을 확인한 뒤 다시 저장해 주세요.');
+        saveButton.disabled = false;
+        return;
       }
       renderPublicLibraries();
     });

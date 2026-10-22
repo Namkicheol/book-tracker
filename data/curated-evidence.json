@@ -1,0 +1,207 @@
+[
+  {
+    "isbn": "9791160947502",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 재희(글·그림), 추천 월을 확인.",
+      "ISBN 9791160947502와 취학전아동 표시는 대전 한밭도서관 서지에서 확인: https://www.daejeon.go.kr/hanbatlibrary/searchDetail.do?ctrl=000004413490&lang=kor&loca=H0000001&marcType=m&siteCodeGubun=home&sysDiv=TOT"
+    ]
+  },
+  {
+    "isbn": "9791170820314",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 이혜인, 추천 월과 추천사서 김태연을 확인.",
+      "ISBN 9791170820314와 저자 표기는 서울시교육청 구로도서관 서지에서 확인: https://grlib.sen.go.kr/grlib/intro/search/index.do?editMode=normal&locExquery=111009&menu_idx=4&search_text=%EB%8B%AC%ED%8C%BD%EC%9D%B4%EB%8B%AC%EB%A6%AC%EA%B8%B0&search_type=titlecollquery"
+    ]
+  },
+  {
+    "isbn": "9788958079712",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 임수경 글·김혜원 그림, 추천 월을 확인.",
+      "ISBN 9788958079712와 저자 표기는 대전공공도서관 통합 서지에서 확인: https://www.u-library.kr/search/detail/CATCAZ000005210237?__verified_refresh=1"
+    ]
+  },
+  {
+    "isbn": "9791168341623",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 황지영 글·박소연 그림, 추천 월과 추천사서 손다운을 확인.",
+      "ISBN 9791168341623와 저자 표기는 파주시 광탄도서관 추천도서 서지에서 확인: https://lib.paju.go.kr/gtlib/recommendBookDetail.do?recommendBookIdx=23085&targetCd=CH"
+    ]
+  },
+  {
+    "isbn": "9788963195674",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 박슬기 글·해마 그림, 추천 월과 추천사서 이새롬을 확인.",
+      "ISBN 9788963195674와 저자 표기는 대전공공도서관 통합 서지에서 확인: https://www.u-library.kr/search/detail/CATCAZ000005207688?__verified_refresh=1"
+    ]
+  },
+  {
+    "isbn": "9791198527103",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 꼼은영, 추천 월과 추천사서 전지혜를 확인.",
+      "ISBN 9791198527103와 저자 표기는 홍산공공도서관 서지에서 확인: https://www.hongsanlib.or.kr/dls_lt/index.php?act=searchResultDetail&dbType=dan&jongKey=70612388&manageCode=MA&mod=wdDataSearch&offset=16"
+    ]
+  },
+  {
+    "isbn": "9791192148588",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 댄 야카리노 글·김경연 옮김, 추천 월과 추천사서 손다운을 확인.",
+      "ISBN 9791192148588와 저자 표기는 의정부시 도서관 서지에서 확인: https://www.uilib.go.kr/main/intro/search/detail.do?bookkey=29901475&booktype=MO&isbn=9791192148588&menu_idx=9&speciesKey=29901473"
+    ]
+  },
+  {
+    "isbn": "9791167552532",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 수산나 이세른 글·로시오 보니야 그림·김정하 옮김, 추천 월과 추천사서 김내현을 확인.",
+      "ISBN 9791167552532와 번역자 표기는 대전공공도서관 통합 서지에서 확인: https://www.u-library.kr/search/detail/CATTOT000005799691"
+    ]
+  },
+  {
+    "isbn": "9788901275406",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 임정순 글·김푸른 그림, 추천 월과 추천사서 채송아를 확인.",
+      "ISBN 9788901275406와 초등 3~6학년 도서 분야는 웅진주니어 공식 도서 페이지에서 확인: https://www.wjjunior.co.kr/shop/list/item/index.jsp?menuFlag=M08&no=7348&reqPageNo=1&scompetitionType=1"
+    ]
+  },
+  {
+    "isbn": "9791193086087",
+    "evidenceNotes": [
+      "추천 페이지에서 제목, 김지선 글·장경혜 그림, 추천 월과 추천사서 이새롬을 확인.",
+      "ISBN 9791193086087와 저자 표기는 대전공공도서관 통합 서지에서 확인: https://www.u-library.kr/search/detail/CATCAZ000005226257"
+    ]
+  },
+  {
+    "isbn": "9788949110172",
+    "evidenceNotes": "비룡소가 한국어판 제목·글/그림 저자·ISBN을 명시한다. 1963년 Caldecott Medal은 영어 원작 The Snowy Day의 그림 작가 Ezra Jack Keats에게 수여되었으며, 한국어판 수상이 아니다."
+  },
+  {
+    "isbn": "9788949110844",
+    "evidenceNotes": [
+      "비룡소의 한국어판 기록은 제목·글/그림 작가·ISBN 9788949110844를 명시한다. 2026-10-21 앱의 Kakao ISBN API 실조회에서 ISBN과 제목이 일치하고 authors가 ['데이비드 위즈너']로 반환되어 저자 검증을 통과했다. 1992년 Caldecott Medal은 영어 원작 Tuesday의 그림 작가 David Wiesner에게 수여된 상이며 한국어판 수상이 아니다."
+    ]
+  },
+  {
+    "isbn": "9788994041322",
+    "evidenceNotes": "대전 한밭도서관이 해당 한국어판 ISBN·글 작가·그림 작가를 기록한다. 2011년 Caldecott Medal은 영어 원작의 삽화가 Erin E. Stead에게 수여되었으며 한국어판 수상이 아니다."
+  },
+  {
+    "isbn": "9788952768810",
+    "evidenceNotes": "의정부정보도서관 목록에서 한국어판 제목·존 클라센·ISBN을 확인했다. 2013년 Caldecott Medal은 영어 원작 This Is Not My Hat의 글·그림 작가에게 수여된 상이다."
+  },
+  {
+    "isbn": "9788983090324",
+    "evidenceNotes": "통영시립도서관 목록은 한국어판 ISBN·크리스 라쉬카·2012 칼데콧 메달을 기록한다. ALA는 원작 A Ball for Daisy를 Chris Raschka가 쓰고 그린 수상작으로 기록하며, 수상은 한국어판에 주어진 것이 아니다."
+  },
+  {
+    "isbn": "9788901166421",
+    "evidenceNotes": "대전공공도서관 목록에 한국어판 제목·에런 베커·ISBN·2014 칼데콧 아너상이 명시되어 있다. 2014년 Caldecott Honor는 영어 원작 Journey의 글·그림 작가 Aaron Becker에게 선정되었으며, 한국어판 수상이 아니다."
+  },
+  {
+    "isbn": "9788949112657",
+    "evidenceNotes": "비룡소가 한국어판 ISBN을 명시하고, 맷 데 라 페냐 글·크리스티안 로빈슨 그림으로 표기한다. 2016년 Newbery Medal은 영어 원작 Last Stop on Market Street의 글 작가에게 수여되었고, 같은 해 Caldecott Honor도 영어 원작의 그림에 선정되었다."
+  },
+  {
+    "isbn": "9791156337935",
+    "evidenceNotes": "한국출판문화산업진흥원 출판유통통합전산망의 2026 특별판 기록에 한국어판 ISBN·저자·출판사·대상연령과 320쪽 분량이 있다. 초등 고학년은 장편 소설 형식을 고려한 독자 연령 제안이다. 2013년 Newbery Medal은 영어 원작 The One and Only Ivan의 작가 Katherine Applegate에게 수여되었고, 한국어판 수상이 아니다."
+  },
+  {
+    "isbn": "9788936446819",
+    "evidenceNotes": [
+      "양천구 개울건강도서관 서지 화면에서 제목, 저자, 출판사(창비), ISBN 9788936446819를 확인.",
+      "공개 게시물에서 @changbi.picturebook 계정이 『수박 수영장』과 안녕달 작가를 명시하고 작품의 10주년 회고를 소개함. 계정은 창비 그림책 소식을 전하는 출판사 계정이며, 게시물은 부모의 개인 추천으로 표시하지 않음."
+    ]
+  },
+  {
+    "isbn": "9788901299617",
+    "evidenceNotes": [
+      "웅진주니어 공식 도서 목록에서 제목, 강효선 글·그림, ISBN 9788901299617, 유아 4~7세 분류를 확인.",
+      "공개 게시물의 @woongjin_junior 캡션은 『빙고』와 등장인물 동이·진돌이를 명시하고 비 오는 날 빙고판으로 마음을 나누는 내용을 소개함. 공식 어린이책 출판사 계정."
+    ]
+  },
+  {
+    "isbn": "9788901300856",
+    "evidenceNotes": [
+      "웅진주니어 공식 도서 목록에서 제목, 윤지혜 글·그림, ISBN 9788901300856, 유아 4~7세 분류를 확인.",
+      "공개 게시물의 @woongjin_junior 캡션은 제목과 작가를 명시하고 음악으로 머리를 꾸며 주는 미용실 설정을 소개함. 공식 어린이책 출판사 계정."
+    ]
+  },
+  {
+    "isbn": "9788901300795",
+    "evidenceNotes": [
+      "웅진주니어 공식 도서 페이지에서 제목, 박정섭 글·그림, ISBN 9788901300795, 유아 4~7세 분류를 확인.",
+      "공개 게시물의 @woongjin_junior 캡션은 제목과 작가를 명시하고 독자가 여섯 명의 용의자 가운데 단서를 따라 범인을 찾는 구성을 소개함. 공식 어린이책 출판사 계정."
+    ]
+  },
+  {
+    "isbn": "9791169814249",
+    "evidenceNotes": [
+      "사계절 공식 서지에서 제목·저자·ISBN과 자연과학/갯벌 주제를 확인. 출판사는 어린이 눈높이에 맞춘 책이라고 소개하며 숫자 연령은 따로 제시하지 않아 초등 중·고학년으로 분류했습니다."
+    ]
+  },
+  {
+    "isbn": "9788958281795",
+    "evidenceNotes": [
+      "사계절 공식 서지에서 제목·지은이·ISBN·자연과학 지학 분류를 확인. 책 제목과 편집자 소개가 초등학생을 위한 입문서로 명시하며, 옮긴이는 장순근입니다.",
+      "동일 저자 François Michel의 한국어 표기가 출판사 프랑소와 미셸 / 도서 API 프랑스와 미셸로 달라, 화면 조회 일치를 위해 API 표기를 사용함."
+    ]
+  },
+  {
+    "isbn": "9791190896054",
+    "evidenceNotes": [
+      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 7세 이상을 확인했습니다. 출판사는 초등학교 수학 교과와 연결된 내용으로 소개합니다."
+    ]
+  },
+  {
+    "isbn": "9791190896511",
+    "evidenceNotes": [
+      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 8세 이상을 확인했습니다. 출판사는 초등 수학 교양 입문서로 분류합니다."
+    ]
+  },
+  {
+    "isbn": "9788949125039",
+    "evidenceNotes": [
+      "비룡소 공식 서지에서 제목·글쓴이·ISBN과 연령 9세 이상을 확인했습니다. ‘사회는 쉽다!’ 개정판 시리즈의 한국사 편입니다."
+    ]
+  },
+  {
+    "isbn": "9788958283768",
+    "evidenceNotes": [
+      "사계절 공식 서지에서 제목·김성환·ISBN과 역사 분류를 확인했습니다. 출판사는 초등 교과 핵심 키워드를 중학교 과정과 연결해 설명한다고 안내해 상급 초등 연령으로 분류했습니다."
+    ]
+  },
+  {
+    "isbn": "9791186872956",
+    "evidenceNotes": [
+      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 8세 이상을 확인했습니다. 출판사는 초등 사회 심화용 정치 입문서로 소개합니다."
+    ]
+  },
+  {
+    "isbn": "9788949125138",
+    "evidenceNotes": [
+      "비룡소 공식 서지에서 홍경의·ISBN과 연령 9세 이상을 확인했습니다. 출판사는 초등 사회 교과 개념과 사회 이슈를 다루는 책으로 소개합니다."
+    ]
+  },
+  {
+    "isbn": "9788949133492",
+    "evidenceNotes": [
+      "비룡소 공식 서지에서 글쓴이·ISBN과 연령 7세 이상을 확인했습니다. ‘어린이를 위한 아트 슈퍼스타’ 시리즈의 미술 인물 소개입니다."
+    ]
+  },
+  {
+    "isbn": "9788949133423",
+    "evidenceNotes": [
+      "비룡소 공식 서지에서 글쓴이·ISBN과 연령 7세 이상을 확인했습니다. ‘어린이를 위한 아트 슈퍼스타’ 시리즈의 미술 인물 소개입니다."
+    ]
+  },
+  {
+    "isbn": "9791169813600",
+    "evidenceNotes": [
+      "사계절 공식 서지에서 제목·주봄·ISBN과 사회과학/교육학 분류를 확인했습니다. 출판사는 10대 초반의 일상 고민을 다루는 책으로 소개합니다."
+    ]
+  },
+  {
+    "isbn": "9791160948936",
+    "evidenceNotes": [
+      "사계절 공식 서지에서 채현기·ISBN과 백과사전 분류를 확인했습니다. 출판사는 초등 저학년도 이해하기 쉬운 말로 과학기술·역사·예술·사회 등 125개 키워드를 다룬다고 설명합니다."
+    ]
+  }
+]

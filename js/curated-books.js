@@ -1,4 +1,4 @@
-/* Original selections and reading prompts. Source links verify bibliographic facts and attribution. */
+/* Original reading prompts and individual bibliographic sources; unlicensed recommendation-list memberships are excluded. */
 window.CURATED_BOOKS = [
   {
     "isbn": "9788949161341",
@@ -124,7 +124,7 @@ window.CURATED_BOOKS = [
     "isbn": "9791160947502",
     "title": "수영 이불",
     "author": "재희",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0801&schM=list&schOpt2=2024-06&schOpt3=search",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9791160947502",
     "note": "좋아하는 운동을 마음껏 즐기는 아이의 몸짓과 잠들기 전 상상을 함께 따라가는 그림책.",
     "activity": "내가 좋아하는 움직임 하나를 골라, 그 동작이 꿈속에서 어떻게 달라질지 한 장면으로 그려 보세요.",
     "ages": [
@@ -134,25 +134,13 @@ window.CURATED_BOOKS = [
       "감정",
       "모험"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 6월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0801&schM=list&schOpt2=2024-06&schOpt3=search",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 재희(글·그림), 추천 월을 확인.",
-      "ISBN 9791160947502와 취학전아동 표시는 대전 한밭도서관 서지에서 확인: https://www.daejeon.go.kr/hanbatlibrary/searchDetail.do?ctrl=000004413490&lang=kor&loca=H0000001&marcType=m&siteCodeGubun=home&sysDiv=TOT"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9791170820314",
     "title": "달팽이 달리기",
     "author": "이혜인",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0801&schM=list&schOpt2=2024-06&schOpt3=search",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9791170820314",
     "note": "달리기 시합에서 친구를 돕는 선택을 통해 승패와 배려의 의미를 생각해 보는 그림책.",
     "activity": "달리기 선수 네 명의 장점을 한 가지씩 정하고, 결승선에 도착하기까지 서로 도울 방법을 이야기해 보세요.",
     "ages": [
@@ -163,25 +151,13 @@ window.CURATED_BOOKS = [
       "우정",
       "자연"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 6월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0801&schM=list&schOpt2=2024-06&schOpt3=search",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 이혜인, 추천 월과 추천사서 김태연을 확인.",
-      "ISBN 9791170820314와 저자 표기는 서울시교육청 구로도서관 서지에서 확인: https://grlib.sen.go.kr/grlib/intro/search/index.do?editMode=normal&locExquery=111009&menu_idx=4&search_text=%EB%8B%AC%ED%8C%BD%EC%9D%B4%EB%8B%AC%EB%A6%AC%EA%B8%B0&search_type=titlecollquery"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9788958079712",
     "title": "무영이가 사라졌다",
     "author": "임수경",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0802&schM=list&schOpt2=2024-02&schOpt3=search",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9788958079712",
     "note": "조용한 친구의 결석을 계기로 반 아이들이 자신의 말과 행동을 돌아보는 학교 이야기.",
     "activity": "주인공 친구들이 건넨 사과 가운데 마음을 바꾼 말이 무엇인지 고르고, 내가 전하고 싶은 사과 한 문장을 써 보세요.",
     "ages": [
@@ -191,25 +167,13 @@ window.CURATED_BOOKS = [
       "우정",
       "감정"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 2월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0802&schM=list&schOpt2=2024-02&schOpt3=search",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 임수경 글·김혜원 그림, 추천 월을 확인.",
-      "ISBN 9788958079712와 저자 표기는 대전공공도서관 통합 서지에서 확인: https://www.u-library.kr/search/detail/CATCAZ000005210237?__verified_refresh=1"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9791168341623",
     "title": "시원하게 도와주는 북극곰 센터",
     "author": "황지영",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0802&schM=list&schOpt2=2024-08&schOpt3=search",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9791168341623",
     "note": "동물원에서 나온 북극곰이 사람들의 고민을 돕는 일을 시작하며 도움을 주고받는 마음을 보여 주는 동화.",
     "activity": "주인공이 받은 고민 편지 중 하나를 골라, 도움이 될 질문과 실천할 방법을 한 가지씩 적어 보세요.",
     "ages": [
@@ -220,25 +184,13 @@ window.CURATED_BOOKS = [
       "감정",
       "우정"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 8월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0802&schM=list&schOpt2=2024-08&schOpt3=search",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 황지영 글·박소연 그림, 추천 월과 추천사서 손다운을 확인.",
-      "ISBN 9791168341623와 저자 표기는 파주시 광탄도서관 추천도서 서지에서 확인: https://lib.paju.go.kr/gtlib/recommendBookDetail.do?recommendBookIdx=23085&targetCd=CH"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9788963195674",
     "title": "여름과 가을 사이",
     "author": "박슬기",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0803&schM=list&schOpt2=2024-08&schOpt3=search",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9788963195674",
     "note": "가까워지고 멀어지는 두 친구의 관계를 따라가며 각자 바라는 거리와 우정의 모양을 생각하게 하는 동화.",
     "activity": "친구와 편안하게 지내기 위해 필요한 약속을 하나씩 적고, 서로 다른 바람이 있을 때 나눌 말을 정해 보세요.",
     "ages": [
@@ -249,25 +201,13 @@ window.CURATED_BOOKS = [
       "우정",
       "감정"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 8월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0803&schM=list&schOpt2=2024-08&schOpt3=search",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 박슬기 글·해마 그림, 추천 월과 추천사서 이새롬을 확인.",
-      "ISBN 9788963195674와 저자 표기는 대전공공도서관 통합 서지에서 확인: https://www.u-library.kr/search/detail/CATCAZ000005207688?__verified_refresh=1"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9791198527103",
     "title": "작은 탐험",
     "author": "꼼은영",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&id=&page=1&schFld=0&schGroupCode=&schM=list&schOpt2=2024-12&schOpt3=search&viewCount=10",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9791198527103",
     "note": "아이들이 반려견과 섬을 살피며 바다와 숲의 풍경, 함께 움직이는 즐거움을 만나는 그림책.",
     "activity": "집이나 동네에서 새롭게 살펴보고 싶은 작은 장소를 정하고, 발견할 것 세 가지를 지도에 표시해 보세요.",
     "ages": [
@@ -279,25 +219,13 @@ window.CURATED_BOOKS = [
       "자연",
       "가족"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 12월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&id=&page=1&schFld=0&schGroupCode=&schM=list&schOpt2=2024-12&schOpt3=search&viewCount=10",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 꼼은영, 추천 월과 추천사서 전지혜를 확인.",
-      "ISBN 9791198527103와 저자 표기는 홍산공공도서관 서지에서 확인: https://www.hongsanlib.or.kr/dls_lt/index.php?act=searchResultDetail&dbType=dan&jongKey=70612388&manageCode=MA&mod=wdDataSearch&offset=16"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9791192148588",
     "title": "책이 사라진 세계에서",
     "author": "댄 야카리노",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0802&schM=list&schOpt2=2024-12&schOpt3=search",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9791192148588",
     "note": "책과 개성이 사라진 사회에서 주인공이 스스로 선택하고 읽는 경험을 찾아가는 모험 이야기.",
     "activity": "주인공이 처음 발견한 책의 역할을 떠올리고, 내가 고르고 싶은 책 한 권과 고른 이유를 나눠 보세요.",
     "ages": [
@@ -308,25 +236,13 @@ window.CURATED_BOOKS = [
       "모험",
       "다양성"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 12월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0802&schM=list&schOpt2=2024-12&schOpt3=search",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 댄 야카리노 글·김경연 옮김, 추천 월과 추천사서 손다운을 확인.",
-      "ISBN 9791192148588와 저자 표기는 의정부시 도서관 서지에서 확인: https://www.uilib.go.kr/main/intro/search/detail.do?bookkey=29901475&booktype=MO&isbn=9791192148588&menu_idx=9&speciesKey=29901473"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9791167552532",
     "title": "고래에게 잡아먹히면 어떡하지?",
     "author": "수산나 이세른",
-    "source": "https://nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0802&schM=list&schOpt2=2024-12&schOpt3=search",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9791167552532",
     "note": "걱정이 많은 아이와 엄마의 대화를 통해 불안을 상상과 호기심으로 바꾸는 그림책.",
     "activity": "아이의 걱정 하나를 골라, 엄마처럼 다정하고 재미있는 상상 답변을 함께 만들어 보세요.",
     "ages": [
@@ -338,25 +254,13 @@ window.CURATED_BOOKS = [
       "가족",
       "모험"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 12월",
-        "year": 2024,
-        "source": "https://nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0802&schM=list&schOpt2=2024-12&schOpt3=search",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 수산나 이세른 글·로시오 보니야 그림·김정하 옮김, 추천 월과 추천사서 김내현을 확인.",
-      "ISBN 9791167552532와 번역자 표기는 대전공공도서관 통합 서지에서 확인: https://www.u-library.kr/search/detail/CATTOT000005799691"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9788901275406",
     "title": "달빛초등학교 귀신부",
     "author": "임정순",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0803&schM=list&schOpt2=2024-12&schOpt3=search",
+    "source": "https://www.wjjunior.co.kr/shop/list/item/index.jsp?menuFlag=M08&no=7348&reqPageNo=1&scompetitionType=1",
     "note": "학교 귀신을 찾아 나선 아이들이 오해와 걱정을 마주하고, 각자의 문제를 스스로 풀어 가는 모험 동화.",
     "activity": "이야기 속 인물이 용기를 내어 전한 말을 찾아보고, 내가 어려운 대화를 시작할 때 쓸 첫 문장을 정해 보세요.",
     "ages": [
@@ -370,29 +274,18 @@ window.CURATED_BOOKS = [
     ],
     "provenance": [
       {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 12월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&schBcid=nlcy_normal08&schBdcode=_nlcy_normal0803&schM=list&schOpt2=2024-12&schOpt3=search",
-        "checkedAt": "2026-10-21"
-      },
-      {
         "kind": "publisher",
         "label": "웅진주니어 도서 소개",
         "source": "https://www.wjjunior.co.kr/shop/list/item/index.jsp?menuFlag=M08&no=7348&reqPageNo=1&scompetitionType=1",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 임정순 글·김푸른 그림, 추천 월과 추천사서 채송아를 확인.",
-      "ISBN 9788901275406와 초등 3~6학년 도서 분야는 웅진주니어 공식 도서 페이지에서 확인: https://www.wjjunior.co.kr/shop/list/item/index.jsp?menuFlag=M08&no=7348&reqPageNo=1&scompetitionType=1"
     ]
   },
   {
     "isbn": "9791193086087",
     "title": "꽃님이네 코딱지 밭",
     "author": "김지선",
-    "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&id=&page=1&schBdcode=_nlcy_normal0803&schFld=0&schGroupCode=&schM=list&schOpt2=2024-10&schOpt3=search&viewCount=10",
+    "source": "https://www.aladin.co.kr/shop/wproduct.aspx?ISBN=9791193086087",
     "note": "가족이 텃밭을 가꾸며 계절의 변화와 먹거리를 기르고 나누는 일을 함께 경험하는 어린이책.",
     "activity": "집에서 기를 수 있는 식물 하나를 고르고, 씨앗부터 수확까지 관찰할 달력을 만들어 보세요.",
     "ages": [
@@ -403,19 +296,7 @@ window.CURATED_BOOKS = [
       "과학",
       "가족"
     ],
-    "provenance": [
-      {
-        "kind": "library",
-        "label": "국립어린이청소년도서관 사서추천도서 · 2024년 10월",
-        "year": 2024,
-        "source": "https://www.nlcy.go.kr/NLCY/contents/C10600000000.do?ext2=1&id=&page=1&schBdcode=_nlcy_normal0803&schFld=0&schGroupCode=&schM=list&schOpt2=2024-10&schOpt3=search&viewCount=10",
-        "checkedAt": "2026-10-21"
-      }
-    ],
-    "evidenceNotes": [
-      "추천 페이지에서 제목, 김지선 글·장경혜 그림, 추천 월과 추천사서 이새롬을 확인.",
-      "ISBN 9791193086087와 저자 표기는 대전공공도서관 통합 서지에서 확인: https://www.u-library.kr/search/detail/CATCAZ000005226257"
-    ]
+    "provenance": []
   },
   {
     "isbn": "9788949110172",
@@ -445,8 +326,7 @@ window.CURATED_BOOKS = [
         "source": "https://bir.co.kr/book/11262/",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": "비룡소가 한국어판 제목·글/그림 저자·ISBN을 명시한다. 1963년 Caldecott Medal은 영어 원작 The Snowy Day의 그림 작가 Ezra Jack Keats에게 수여되었으며, 한국어판 수상이 아니다."
+    ]
   },
   {
     "isbn": "9788949110844",
@@ -471,9 +351,6 @@ window.CURATED_BOOKS = [
         "source": "https://www.ala.org/winner/tuesday",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "비룡소의 한국어판 기록은 제목·글/그림 작가·ISBN 9788949110844를 명시한다. 2026-10-21 앱의 Kakao ISBN API 실조회에서 ISBN과 제목이 일치하고 authors가 ['데이비드 위즈너']로 반환되어 저자 검증을 통과했다. 1992년 Caldecott Medal은 영어 원작 Tuesday의 그림 작가 David Wiesner에게 수여된 상이며 한국어판 수상이 아니다."
     ]
   },
   {
@@ -498,8 +375,7 @@ window.CURATED_BOOKS = [
         "source": "https://www.ala.org/winner/sick-day-amos-mcgee",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": "대전 한밭도서관이 해당 한국어판 ISBN·글 작가·그림 작가를 기록한다. 2011년 Caldecott Medal은 영어 원작의 삽화가 Erin E. Stead에게 수여되었으며 한국어판 수상이 아니다."
+    ]
   },
   {
     "isbn": "9788952768810",
@@ -524,8 +400,7 @@ window.CURATED_BOOKS = [
         "source": "https://www.ala.org/winner/not-my-hat",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": "의정부정보도서관 목록에서 한국어판 제목·존 클라센·ISBN을 확인했다. 2013년 Caldecott Medal은 영어 원작 This Is Not My Hat의 글·그림 작가에게 수여된 상이다."
+    ]
   },
   {
     "isbn": "9788983090324",
@@ -550,8 +425,7 @@ window.CURATED_BOOKS = [
         "source": "https://www.ala.org/winner/ball-daisya-ball-daisy",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": "통영시립도서관 목록은 한국어판 ISBN·크리스 라쉬카·2012 칼데콧 메달을 기록한다. ALA는 원작 A Ball for Daisy를 Chris Raschka가 쓰고 그린 수상작으로 기록하며, 수상은 한국어판에 주어진 것이 아니다."
+    ]
   },
   {
     "isbn": "9788901166421",
@@ -575,8 +449,7 @@ window.CURATED_BOOKS = [
         "source": "https://www.ala.org/winner/journey",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": "대전공공도서관 목록에 한국어판 제목·에런 베커·ISBN·2014 칼데콧 아너상이 명시되어 있다. 2014년 Caldecott Honor는 영어 원작 Journey의 글·그림 작가 Aaron Becker에게 선정되었으며, 한국어판 수상이 아니다."
+    ]
   },
   {
     "isbn": "9788949112657",
@@ -606,8 +479,7 @@ window.CURATED_BOOKS = [
         "source": "https://bir.co.kr/book/101205/",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": "비룡소가 한국어판 ISBN을 명시하고, 맷 데 라 페냐 글·크리스티안 로빈슨 그림으로 표기한다. 2016년 Newbery Medal은 영어 원작 Last Stop on Market Street의 글 작가에게 수여되었고, 같은 해 Caldecott Honor도 영어 원작의 그림에 선정되었다."
+    ]
   },
   {
     "isbn": "9791156337935",
@@ -632,8 +504,7 @@ window.CURATED_BOOKS = [
         "source": "https://www.ala.org/winner/one-and-only-ivan",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": "한국출판문화산업진흥원 출판유통통합전산망의 2026 특별판 기록에 한국어판 ISBN·저자·출판사·대상연령과 320쪽 분량이 있다. 초등 고학년은 장편 소설 형식을 고려한 독자 연령 제안이다. 2013년 Newbery Medal은 영어 원작 The One and Only Ivan의 작가 Katherine Applegate에게 수여되었고, 한국어판 수상이 아니다."
+    ]
   },
   {
     "isbn": "9788936446819",
@@ -657,10 +528,6 @@ window.CURATED_BOOKS = [
         "source": "https://www.instagram.com/p/DMg0wnRT3pP/",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "양천구 개울건강도서관 서지 화면에서 제목, 저자, 출판사(창비), ISBN 9788936446819를 확인.",
-      "공개 게시물에서 @changbi.picturebook 계정이 『수박 수영장』과 안녕달 작가를 명시하고 작품의 10주년 회고를 소개함. 계정은 창비 그림책 소식을 전하는 출판사 계정이며, 게시물은 부모의 개인 추천으로 표시하지 않음."
     ]
   },
   {
@@ -685,10 +552,6 @@ window.CURATED_BOOKS = [
         "source": "https://www.instagram.com/p/DWVEyTWE4Wn",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "웅진주니어 공식 도서 목록에서 제목, 강효선 글·그림, ISBN 9788901299617, 유아 4~7세 분류를 확인.",
-      "공개 게시물의 @woongjin_junior 캡션은 『빙고』와 등장인물 동이·진돌이를 명시하고 비 오는 날 빙고판으로 마음을 나누는 내용을 소개함. 공식 어린이책 출판사 계정."
     ]
   },
   {
@@ -712,10 +575,6 @@ window.CURATED_BOOKS = [
         "source": "https://www.instagram.com/woongjin_junior/p/Ded_cgjGkLs/",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "웅진주니어 공식 도서 목록에서 제목, 윤지혜 글·그림, ISBN 9788901300856, 유아 4~7세 분류를 확인.",
-      "공개 게시물의 @woongjin_junior 캡션은 제목과 작가를 명시하고 음악으로 머리를 꾸며 주는 미용실 설정을 소개함. 공식 어린이책 출판사 계정."
     ]
   },
   {
@@ -740,10 +599,6 @@ window.CURATED_BOOKS = [
         "source": "https://www.instagram.com/woongjin_junior/p/DebDifzGihX/",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "웅진주니어 공식 도서 페이지에서 제목, 박정섭 글·그림, ISBN 9788901300795, 유아 4~7세 분류를 확인.",
-      "공개 게시물의 @woongjin_junior 캡션은 제목과 작가를 명시하고 독자가 여섯 명의 용의자 가운데 단서를 따라 범인을 찾는 구성을 소개함. 공식 어린이책 출판사 계정."
     ]
   },
   {
@@ -769,9 +624,6 @@ window.CURATED_BOOKS = [
         "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B2964&type=publishing",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "사계절 공식 서지에서 제목·저자·ISBN과 자연과학/갯벌 주제를 확인. 출판사는 어린이 눈높이에 맞춘 책이라고 소개하며 숫자 연령은 따로 제시하지 않아 초등 중·고학년으로 분류했습니다."
     ],
     "publisher": "사계절",
     "thumbnail": "https://image.aladin.co.kr/product/38716/7/cover200/k512136636_1.jpg"
@@ -800,10 +652,6 @@ window.CURATED_BOOKS = [
         "checkedAt": "2026-10-21"
       }
     ],
-    "evidenceNotes": [
-      "사계절 공식 서지에서 제목·지은이·ISBN·자연과학 지학 분류를 확인. 책 제목과 편집자 소개가 초등학생을 위한 입문서로 명시하며, 옮긴이는 장순근입니다.",
-      "동일 저자 François Michel의 한국어 표기가 출판사 프랑소와 미셸 / 도서 API 프랑스와 미셸로 달라, 화면 조회 일치를 위해 API 표기를 사용함."
-    ],
     "publisher": "사계절",
     "thumbnail": "https://image.aladin.co.kr/product/68/25/cover200/8958281790_2.jpg"
   },
@@ -829,9 +677,6 @@ window.CURATED_BOOKS = [
         "source": "https://bir.co.kr/book/129487/",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 7세 이상을 확인했습니다. 출판사는 초등학교 수학 교과와 연결된 내용으로 소개합니다."
     ],
     "publisher": "어스본코리아",
     "thumbnail": "https://image.aladin.co.kr/product/27839/43/cover200/k752734787_1.jpg"
@@ -860,9 +705,6 @@ window.CURATED_BOOKS = [
         "checkedAt": "2026-10-21"
       }
     ],
-    "evidenceNotes": [
-      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 8세 이상을 확인했습니다. 출판사는 초등 수학 교양 입문서로 분류합니다."
-    ],
     "publisher": "어스본코리아",
     "thumbnail": "https://image.aladin.co.kr/product/30875/45/cover200/k292831187_2.jpg"
   },
@@ -889,9 +731,6 @@ window.CURATED_BOOKS = [
         "checkedAt": "2026-10-21"
       }
     ],
-    "evidenceNotes": [
-      "비룡소 공식 서지에서 제목·글쓴이·ISBN과 연령 9세 이상을 확인했습니다. ‘사회는 쉽다!’ 개정판 시리즈의 한국사 편입니다."
-    ],
     "publisher": "비룡소",
     "thumbnail": "https://image.aladin.co.kr/product/29756/79/cover200/894912503x_1.jpg"
   },
@@ -917,9 +756,6 @@ window.CURATED_BOOKS = [
         "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B1185&type=publishing",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "사계절 공식 서지에서 제목·김성환·ISBN과 역사 분류를 확인했습니다. 출판사는 초등 교과 핵심 키워드를 중학교 과정과 연결해 설명한다고 안내해 상급 초등 연령으로 분류했습니다."
     ],
     "publisher": "사계절",
     "thumbnail": "https://image.aladin.co.kr/product/4277/11/cover200/8958283769_1.jpg"
@@ -948,9 +784,6 @@ window.CURATED_BOOKS = [
         "checkedAt": "2026-10-21"
       }
     ],
-    "evidenceNotes": [
-      "비룡소/어스본 코리아 공식 서지에서 저자·ISBN과 연령 8세 이상을 확인했습니다. 출판사는 초등 사회 심화용 정치 입문서로 소개합니다."
-    ],
     "publisher": "어스본코리아",
     "thumbnail": "https://image.aladin.co.kr/product/13649/52/cover200/k082532217_2.jpg"
   },
@@ -977,9 +810,6 @@ window.CURATED_BOOKS = [
         "source": "https://bir.co.kr/book/138071/",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "비룡소 공식 서지에서 홍경의·ISBN과 연령 9세 이상을 확인했습니다. 출판사는 초등 사회 교과 개념과 사회 이슈를 다루는 책으로 소개합니다."
     ],
     "publisher": "비룡소",
     "thumbnail": "https://image.aladin.co.kr/product/30745/60/cover200/8949125137_1.jpg"
@@ -1008,9 +838,6 @@ window.CURATED_BOOKS = [
         "checkedAt": "2026-10-21"
       }
     ],
-    "evidenceNotes": [
-      "비룡소 공식 서지에서 글쓴이·ISBN과 연령 7세 이상을 확인했습니다. ‘어린이를 위한 아트 슈퍼스타’ 시리즈의 미술 인물 소개입니다."
-    ],
     "publisher": "비룡소",
     "thumbnail": "https://image.aladin.co.kr/product/31216/62/cover200/8949133490_1.jpg"
   },
@@ -1037,9 +864,6 @@ window.CURATED_BOOKS = [
         "source": "https://bir.co.kr/book/135376/",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "비룡소 공식 서지에서 글쓴이·ISBN과 연령 7세 이상을 확인했습니다. ‘어린이를 위한 아트 슈퍼스타’ 시리즈의 미술 인물 소개입니다."
     ],
     "publisher": "비룡소",
     "thumbnail": "https://image.aladin.co.kr/product/30067/19/cover200/8949133423_1.jpg"
@@ -1069,9 +893,6 @@ window.CURATED_BOOKS = [
         "checkedAt": "2026-10-21"
       }
     ],
-    "evidenceNotes": [
-      "사계절 공식 서지에서 제목·주봄·ISBN과 사회과학/교육학 분류를 확인했습니다. 출판사는 10대 초반의 일상 고민을 다루는 책으로 소개합니다."
-    ],
     "publisher": "사계절",
     "thumbnail": "https://image.aladin.co.kr/product/36144/97/cover200/k052038676_1.jpg"
   },
@@ -1099,9 +920,6 @@ window.CURATED_BOOKS = [
         "source": "https://www.sakyejul.net/bbs/m/publishing_data_view.php?ep=ep993587793575e55ff04653&gp=all&item=B2428&type=publishing",
         "checkedAt": "2026-10-21"
       }
-    ],
-    "evidenceNotes": [
-      "사계절 공식 서지에서 채현기·ISBN과 백과사전 분류를 확인했습니다. 출판사는 초등 저학년도 이해하기 쉬운 말로 과학기술·역사·예술·사회 등 125개 키워드를 다룬다고 설명합니다."
     ],
     "publisher": "사계절",
     "thumbnail": "https://image.aladin.co.kr/product/29716/46/cover200/k482838990_1.jpg"

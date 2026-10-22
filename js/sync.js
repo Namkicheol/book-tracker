@@ -111,11 +111,11 @@
     if (!user) return null;
     var ownerId = user.id == null ? activeUserId : user.id;
     if (user.id != null && activateOwner(user.id)) return null;
-    var existing = await window.SB.getProfile();
+    var existing = await window.SB.getProfile(ownerId);
     if (!isCurrentUser(ownerId)) return null;
     if (existing) { writeLocalProfile(existing); return existing; }
     // OAuth account names may be real names; never copy them into a public nickname.
-    var saved = await window.SB.upsertProfile(readLocalProfile());
+    var saved = await window.SB.upsertProfile(readLocalProfile(), {expectedUserId:ownerId});
     if (!isCurrentUser(ownerId)) return null;
     if (saved) writeLocalProfile(saved);
     return saved || null;

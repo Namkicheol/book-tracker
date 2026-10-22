@@ -18,6 +18,10 @@ if supplement_file.exists():
    for award in b.get('awards',[]):
     if award not in existing.setdefault('awards',[]):existing['awards'].append(award)
    if not existing.get('thumbnail'):existing['thumbnail']=b.get('thumbnail','')
+publisher_file=ROOT/'data/publisher-additions.json'
+if publisher_file.exists():
+ for b in json.loads(publisher_file.read_text()):
+  data['books'].setdefault(b['isbn'],b)
 books=[]
 for isbn,b in data['books'].items():
  if not re.fullmatch(r'97[89]\d{10}',isbn):continue
@@ -30,7 +34,7 @@ for isbn,b in data['books'].items():
  # This legacy batch assigned adult/teen novels to elementary fiction wholesale.
  if 'one-book' in b.get('lists',[]) or title=='천 개의 파랑':
   age='';genre='문학'
- books.append(dict(isbn=isbn,title=title,author=b.get('author',''),publisher=b.get('publisher',''),age=age,genre=genre,language=b.get('language','ko'),thumbnail=b.get('thumbnail',''),ar=b.get('ar'),lists=b.get('lists',[]),textbookGrade=b.get('textbookGrade')))
+ books.append(dict(isbn=isbn,title=title,author=b.get('author',''),publisher=b.get('publisher',''),age=age,genre=genre,language=b.get('language','ko'),thumbnail=b.get('thumbnail',''),ar=b.get('ar'),textbookGrade=b.get('textbookGrade')))
  if b.get('awards'):
   books[-1]['awards']=[{k:a[k] for k in ['id','year','distinction','source']} for a in b['awards']]
 award_file=ROOT/'data/english-award-mapping.json'
@@ -41,12 +45,13 @@ if award_file.exists():
   if book:
    evidence={'id':award['awardId'],'year':award['year'],'distinction':award['distinction'],'source':award['source']}
    if evidence not in book.setdefault('awards',[]):book['awards'].append(evidence)
-   if award['awardId'] not in book['lists']:book['lists'].append(award['awardId'])
  for book in books:
   if book['isbn']=='9780062691194':book['title']='New Kid'
   if book['isbn']=='9780374390402':book['author']='George Selden'
-sources=[{k:s.get(k,'') for k in ['id','name','url']} for s in data['meta']['sources']]
-sources.append({'id':'wendybook','name':'웬디북 원서 목록','url':'https://www.wendybook.com/'})
+sources=[]
+for award_id,name in [('newbery-award','뉴베리상 공식 수상 목록'),('caldecott-award','칼데콧상 공식 수상 목록')]:
+ evidence=next((a for b in books for a in b.get('awards',[]) if a['id']==award_id),None)
+ if evidence:sources.append({'id':award_id,'name':name,'url':evidence['source']})
 result={'meta':{'originalCount':original_count,'addedCount':len(data['books'])-original_count,'excludedCount':len(data['books'])-len(books),'sources':sources},'books':books}
-(ROOT/'js/book-catalog.js').write_text('/* Discovery metadata and legacy filter labels; copied review blurbs are excluded. */\nwindow.BOOK_CATALOG = '+json.dumps(result,ensure_ascii=False,separators=(',',':'))+';\n')
+(ROOT/'js/book-catalog.js').write_text('/* Bibliographic browsing and individually verified award facts; third-party recommendation lists and blurbs are excluded. */\nwindow.BOOK_CATALOG = '+json.dumps(result,ensure_ascii=False,separators=(',',':'))+';\n')
 print('Browse books:',len(books))

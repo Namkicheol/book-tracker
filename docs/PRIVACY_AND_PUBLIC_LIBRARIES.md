@@ -61,3 +61,11 @@ Aside 기존 localhost 탭에서 함께 보는 서재 화면과 프로필 편집
 초기 google=false 조회 이후 설정이 완료됐다. 상위 작업에서 Google Web OAuth 클라이언트 생성, Supabase provider 활성화, 정확한 callback과 로컬/production redirect allow list 등록, 테스트 계정 등록 및 실제 로컬 로그인 왕복을 확인했다. 독립 Auth settings 조회는 google=true/kakao=true이고 서버 집계에서 Google 계정·identity 각 1개를 확인했다. OAuth는 Testing 상태이며 일반 사용자용 공개 전환은 하지 않았다.
 
 서버 readback에서 새 Google Auth 계정에 서비스 프로필이 아직 없는 점을 발견했다. 공통 AuthUI에 프로필 동기화를 추가해 SIGNED_IN/INITIAL_SESSION 및 DOM 로드 전 완료된 세션 복원도 처리하도록 수정했다. share 페이지 방문에 의존하지 않는다. 테스트를 추가해 4개 통과했다. 최신 로컬 앱을 새로고침한 뒤 독립 SQL 집계로 Google 서비스 프로필 1개, 공개 설정 0개를 확인했다. 자격 증명과 개인 이메일·실명은 문서에 기록하지 않는다.
+
+## 2026-10-23 첫 프로필 설정 및 별명 공개
+
+첫 로그인에는 별명·선택형 시/구·공개 범위를 바로 편집한다. 공개 라디오가 먼저 선택되지만 저장 전 서버 기본값은 비공개이며, 기존 비공개 선택은 보존한다. 저장 응답을 확인한 후에만 성공을 표시한다. 거주지 선택 입력의 비활성화를 제거했다.
+
+`20261022231758_profile_setup_public_nickname.sql`을 운영 DB에 적용했다. 공개 별명은 사용자가 직접 저장한 `public_nickname`만 반환하며, 기존 OAuth 닉네임은 복사하지 않는다. v2 RPC는 로그인 회원에게 공개 동의된 서재만 반환한다. 롤백 트랜잭션의 공개/비공개 가상 프로필로 필터링과 별명 투영을 검증했고 실제 회원 데이터는 변경하지 않았다. anon 실행 불가, authenticated 실행 가능 확인.
+
+로컬 390px 화면에서 시/구 변경, 별명 입력, 비공개 전환 및 저장을 확인했다. Google OAuth의 일반 사용자 공개 전환 여부는 이 변경의 검증 범위가 아니다.
