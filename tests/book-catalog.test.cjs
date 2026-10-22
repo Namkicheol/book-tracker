@@ -57,7 +57,7 @@ test('publisher additions preserve verified ISBNs and individual sources without
   assert.equal(book.title,entry.title);assert.equal(book.language,entry.language);
   assert.equal(book.ar,null);assert.equal('lists' in book,false);
   assert.equal(new URL(entry.source).protocol,'https:');
-  assert.ok(entry.evidenceNotes);assert.equal(entry.checkedAt,'2026-10-23');
+  assert.ok(entry.evidenceNotes);assert.equal(entry.checkedAt,'2026-10-23');assert.ok(!book.thumbnail.includes('noimg'));
   assert.match(book.thumbnail,/^https:\/\/image\.aladin\.co\.kr\//);
  }
 });
