@@ -103,6 +103,15 @@
     document.getElementById('recShelfTopic').innerHTML = options([...new Set(CATALOG.flatMap(entry => entry.topics || []))], '모든 주제');
     ['recShelfSource', 'recShelfAge', 'recShelfTopic'].forEach(id => document.getElementById(id).addEventListener('change', refreshShelf));
     document.getElementById('recShelfMore').addEventListener('click', () => { shelfLimit += SHELF_PAGE_SIZE; return loadStarterShelf(); });
+    document.getElementById('recShelfGrid').addEventListener('click', event => {
+      if (!event.target.closest('[data-moms-shelf]')) return;
+      event.preventDefault();
+      document.getElementById('recShelfSource').value = 'moms';
+      document.getElementById('recShelfAge').value = '';
+      document.getElementById('recShelfTopic').value = '';
+      document.getElementById('recShelfTitle').scrollIntoView?.({block:'start'});
+      return refreshShelf();
+    });
   }
 
   function refreshShelf() {
@@ -159,7 +168,7 @@
   function renderShelf() {
     document.getElementById('recShelfGrid').innerHTML = shelfBooks.map(book => {
       const entry = book.selection;
-      const sources = (entry.provenance || []).map(p => `<a href="${escapeAttr(p.source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(p.label)}${p.year && !p.label.includes(String(p.year)) ? ` · ${escapeHtml(String(p.year))}` : ''}${p.kind === 'social' ? ` · SNS 소개${p.checkedAt ? ` (확인 ${escapeHtml(p.checkedAt)})` : ''}` : ''} ↗</a>`).join('<br>');
+      const sources = (entry.provenance || []).map(p => p.kind === 'moms' ? '<a href="#recShelfTitle" data-moms-shelf>맘스북스 추천 모아보기 →</a>' : `<a href="${escapeAttr(p.source)}" target="_blank" rel="noopener noreferrer">${escapeHtml(p.label)}${p.year && !p.label.includes(String(p.year)) ? ` · ${escapeHtml(String(p.year))}` : ''}${p.kind === 'social' ? ` · SNS 소개${p.checkedAt ? ` (확인 ${escapeHtml(p.checkedAt)})` : ''}` : ''} ↗</a>`).join('<br>');
       const note = `<div class="rec-shelf-note"><p><strong>맘스북스 읽기 제안</strong> ${escapeHtml(entry.note)}</p><p><strong>함께 해요</strong> ${escapeHtml(entry.activity)}</p>${sources}<br><a href="${escapeAttr(entry.source)}" target="_blank" rel="noopener noreferrer">서지 확인 출처 ↗</a></div>`;
       return renderCard(book, false).replace('</article>', `${note}</article>`);
     }).join('') || (filteredShelf().length ? '<p class="rec-empty">책 정보를 불러오지 못했어요. 다시 불러오기를 눌러 주세요.</p>' : '<p class="rec-empty">다른 출처·연령·주제를 골라 보세요. 모든 조건을 보고 싶다면 각 항목을 ‘모든’으로 바꿔 주세요.</p>');

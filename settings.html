@@ -144,16 +144,16 @@
           <div>
             <div class="settings-row-label">내 서재를 누가 볼 수 있나요</div>
             <div class="settings-row-desc">
-              첫 프로필 설정에서 공개 또는 비공개를 선택할 수 있어요. 공개하면 직접 정한 별명과 서재의 책 제목·저자·표지·출판사·ISBN과 선택한 시·군·구가 보입니다. 한줄평·독서 날짜·폴더는 공개하지 않습니다. 다른 공개 서재는 내 공개 여부와 관계없이 볼 수 있어요.
+              첫 프로필 설정에서 공개 또는 비공개를 선택할 수 있어요. 공개하면 직접 정한 별명과 서재의 책 제목·저자·표지·출판사·ISBN과 선택한 시·군·구가 보입니다. 한줄평·독서 날짜·폴더는 공개하지 않습니다. 내 서재를 공개한 회원만 다른 회원의 공개 서재를 볼 수 있어요.
             </div>
           </div>
           <select id="privacySelect"
             style="padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;background:var(--bg-paper);color:var(--text);width:100%">
-            <option value="public">전체 공개 — 책 목록 공유에 동의</option>
+            <option value="public">공개 — 다른 회원의 서재도 볼 수 있어요</option>
             <option value="private">🔒 비공개 — 나만 보기</option>
           </select>
           <div id="privacyWarning" style="display:none;background:#FFF8F0;border:1.5px dashed #FFB8C6;border-radius:10px;padding:10px;font-size:12px;color:#FF7B7B;line-height:1.55">
-            내 서재는 나만 볼 수 있어요. 다른 부모들이 공개한 서재는 계속 둘러볼 수 있습니다.
+            내 서재는 나만 볼 수 있어요. 비공개 상태에서는 다른 회원의 공개 서재도 볼 수 없습니다.
           </div>
         </div>
       </div>
@@ -253,7 +253,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js?v=20261023a"></script>
   <script src="js/regions.js?v=20261020a"></script>
-  <script src="js/auth-ui.js?v=20261023a"></script>
+  <script src="js/auth-ui.js?v=20261023b"></script>
   <script src="js/storage.js?v=20261020h"></script>
   <script src="js/sync.js?v=20261023a"></script>
   <script>
@@ -300,6 +300,7 @@
           const saved = await window.SB.upsertProfile({library_public: v === 'public'}, {expectedUserId: ownerId});
           if (!saved || saved.id !== ownerId || saved.library_public !== (v === 'public') || !window.Storage.isOwnerCurrent() || window.Storage.getOwner() !== ownerId) throw new Error('save');
           window.Sync.writeLocalProfile(saved);
+          window.dispatchEvent(new Event('profile-visibility-change'));
           privacyWarn.style.display = v === 'private' ? 'block' : 'none';
         } catch (e) {
           privacySel.value = previous;

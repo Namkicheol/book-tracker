@@ -387,7 +387,7 @@
     const ratingInfo = (item.subInfo && item.subInfo.ratingInfo) || {};
     const reviewList = (item.subInfo && item.subInfo.reviewList) || [];
 
-    const description = (item.description || b.contents || b.description || '').trim();
+    const description = descriptionText(item.description || b.contents || b.description || '');
     const fallbackScore = Number(item.customerReviewRank || ((b._raw || {}).customerReviewRank) || 0);
     const ratingScore = Number(ratingInfo.ratingScore || fallbackScore);
     const ratingCount = Number(ratingInfo.ratingCount || (b._raw || {}).reviewCount || 0);
@@ -846,6 +846,20 @@
     el.classList.add('show');
     clearTimeout(toast._t);
     toast._t = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  // Parse into an inert document; only escaped plain text is ever rendered.
+  function descriptionText(value) {
+    let text = String(value || '').replace(/<%[\s\S]*?%>/g, '');
+    for (let pass = 0; pass < 2; pass++) {
+      const source = text.replace(/<br\s*\/?\s*>/gi, '\n').replace(/<\/(?:p|div|li|h[1-6])\s*>/gi, '\n');
+      const parsed = new DOMParser().parseFromString(source, 'text/html');
+      parsed.querySelectorAll('script,style,iframe,object,embed,template').forEach(node => node.remove());
+      const next = (parsed.body.textContent || '').replace(/<%[\s\S]*?%>/g, '');
+      if (next === text) break;
+      text = next;
+    }
+    return text.replace(/\u00a0/g, ' ').replace(/[ \t]+/g, ' ').replace(/ *\n */g, '\n').trim();
   }
 
   function escapeHtml(s) {

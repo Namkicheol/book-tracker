@@ -69,3 +69,7 @@ Aside 기존 localhost 탭에서 함께 보는 서재 화면과 프로필 편집
 `20261022231758_profile_setup_public_nickname.sql`을 운영 DB에 적용했다. 공개 별명은 사용자가 직접 저장한 `public_nickname`만 반환하며, 기존 OAuth 닉네임은 복사하지 않는다. v2 RPC는 로그인 회원에게 공개 동의된 서재만 반환한다. 롤백 트랜잭션의 공개/비공개 가상 프로필로 필터링과 별명 투영을 검증했고 실제 회원 데이터는 변경하지 않았다. anon 실행 불가, authenticated 실행 가능 확인.
 
 로컬 390px 화면에서 시/구 변경, 별명 입력, 비공개 전환 및 저장을 확인했다. Google OAuth의 일반 사용자 공개 전환 여부는 이 변경의 검증 범위가 아니다.
+
+## 2026-10-23 reciprocal access policy
+
+User changed access policy: only members whose own library is public may browse other public libraries. All three private SQL functions (legacy list, v2 list, individual books) now check the current viewer profile on every call. Existing member preferences are unchanged. UI explains the benefit and private restriction before saving; private viewers receive a settings link. Rolled-back authenticated fixtures passed private denial, public access, withdrawal denial and private-owner exclusion. Existing anon denial remains.
