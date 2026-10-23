@@ -85,3 +85,14 @@ test('profile owner guard still allows an explicitly scoped edit for the matchin
  const result=await context.window.SB.upsertProfile({nickname:'reader',library_public:false},{expectedUserId:'account-a'});
  assert.equal(result.id,'account-a');assert.equal(result.library_public,false);
 });
+
+test('community feed forwards region filters and surfaces server failures instead of empty shelves',async()=>{
+ let received,fail=false;
+ const rows=[{owner_id:'reader',nickname:'alias',book_count:4,books:[{isbn:'123',title:'Book'}]}];
+ const client={auth:{},rpc:async(name,args)=>{received={name,args};return fail?{error:new Error('offline')}:{data:rows};}};
+ const context={window:{supabase:{createClient:()=>client}},SUPABASE_URL:'https://example.test',SUPABASE_ANON_KEY:'test',console,setTimeout};
+ vm.runInNewContext(source('supabase.js'),context);
+ assert.equal(await context.window.SB.getPublicLibraryFeed('Seoul','Mapo'),rows);
+ assert.equal(received.name,'list_public_library_feed');assert.equal(received.args.filter_city,'Seoul');assert.equal(received.args.filter_district,'Mapo');
+ fail=true;await assert.rejects(context.window.SB.getPublicLibraryFeed(),/offline/);
+});

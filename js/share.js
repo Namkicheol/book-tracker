@@ -48,7 +48,7 @@
           id: 'streak_broken',
           icon: '💔',
           text: '연속 독서 기록이 끊겼어요. 오늘 한 권 읽어볼까요?',
-          time: '1시간 전',
+          time: '내 독서 기록',
           unread: true,
           timestamp: now - 3600000,
         });
@@ -62,7 +62,7 @@
         id: 'goal_near',
         icon: '🎯',
         text: `목표까지 ${myStats.goalTarget - myStats.monthBooks}권 남았어요! 거의 다 왔어요!`,
-        time: '5시간 전',
+        time: '내 독서 기록',
         unread: false,
         timestamp: now - 5 * 3600000,
       });
@@ -71,21 +71,11 @@
         id: 'goal_done',
         icon: '🎉',
         text: '이번 달 목표를 달성했어요! 축하합니다!',
-        time: '12시간 전',
+        time: '내 독서 기록',
         unread: true,
         timestamp: now - 12 * 3600000,
       });
     }
-
-    // 4. 랭킹 변동 (더미)
-    notifications.push({
-      id: 'rank_change',
-      icon: '📈',
-      text: '우리 학교 랭킹이 3위로 올라갔어요!',
-      time: '어제',
-      unread: false,
-      timestamp: now - 24 * 3600000,
-    });
 
     // 5. 뱃지 획득
     const newBadges = BADGES.filter(b => b.condition(myStats)).slice(0, 1);
@@ -93,8 +83,8 @@
       notifications.push({
         id: 'badge_new',
         icon: newBadges[0].emoji,
-        text: `새 뱃지 획득! "${newBadges[0].name}"`,
-        time: '2일 전',
+        text: `달성한 뱃지: "${newBadges[0].name}"`,
+        time: '내 독서 기록',
         unread: false,
         timestamp: now - 2 * 24 * 3600000,
       });
@@ -183,6 +173,8 @@
   document.addEventListener('DOMContentLoaded', init);
 
   function init() {
+    document.getElementById('feedSearch')?.addEventListener('input',()=>{feedLimit=6;renderFeedCards();});
+    document.getElementById('feedMore')?.addEventListener('click',()=>{feedLimit+=6;renderFeedCards();});
     loadProfile();
     calculateMyStats();
     generateNotifications();
@@ -201,8 +193,10 @@
   }
 
   let publicLibraryRequest = 0;
+  let publicFeed = [];
+  let feedLimit = 6;
   function clearPublicLibraryViews() {
-    document.querySelectorAll('.public-library-modal').forEach(modal => modal.remove());
+    document.querySelectorAll('.public-library-modal').forEach(modal => modal._close ? modal._close() : modal.remove());
   }
   async function publicViewer() {
     const user = await window.SB.getUser();
@@ -213,6 +207,8 @@
     return user;
   }
   function showPrivateLibraryNotice(list) {
+    publicFeed = [];
+    const more = document.getElementById('feedMore'); if (more) more.hidden = true;
     clearPublicLibraryViews();
     list.textContent = '내 서재를 공개한 회원만 다른 회원의 공개 서재를 볼 수 있어요. 비공개 상태에서는 볼 수 없습니다.';
     const settings = document.createElement('a');settings.href='settings.html';settings.textContent='서재 공개 설정하기';list.appendChild(settings);
@@ -228,6 +224,9 @@
     const list = document.getElementById('rankList');
     if (!list) return;
     const request = ++publicLibraryRequest;
+    publicFeed = [];feedLimit = 6;
+    const more = document.getElementById('feedMore');if(more)more.hidden=true;
+    const status = document.getElementById('feedStatus');if(status)status.textContent='';
     clearPublicLibraryViews();
     list.textContent = '공개 서재를 불러오는 중이에요…';
     if (!window.SB || !window.SB.enabled) {
@@ -248,27 +247,15 @@
         list.textContent = '동네 서재를 보려면 프로필에서 시·도를 선택해 주세요. 지역 입력은 선택이에요.';
         return;
       }
-      const libraries = await window.SB.getPublicLibraries(city || null,
+      const libraries = await window.SB.getPublicLibraryFeed(city || null,
         currentTab === 'region' ? localStorage.getItem('profileDistrict') || null : null);
       if (request !== publicLibraryRequest) return;
       const stillPublic = await publicViewer();
       if (request !== publicLibraryRequest) return;
       if (!stillPublic || stillPublic.id !== viewer.id) { showPrivateLibraryNotice(list); return; }
-      list.innerHTML = '';
-      if (!libraries.length) {
-        list.textContent = '아직 공개한 서재가 없어요. 설정에서 내 서재 공개 여부를 직접 선택할 수 있어요.';
-        return;
-      }
-      libraries.forEach(library => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'rank-item';
-        button.style.cssText = 'width:100%;text-align:left;color:inherit;font:inherit;cursor:pointer';
-        // 서버에서 사용자 별명을 확인하기 전에는 계정 실명 대신 축약 ID만 표시.
-        button.innerHTML = `<span aria-hidden="true">📚</span><span class="rank-info"><span class="rank-name">${escapeHtml(library.nickname || '서재 #' + shortId(library.owner_id))}</span><br><span class="rank-books">${Number(library.book_count) || 0}권 · ${escapeHtml([library.city, library.district].filter(Boolean).join(' ') || '지역 미선택')}</span></span><span>둘러보기 →</span>`;
-        button.addEventListener('click', () => showPublicLibrary(library));
-        list.appendChild(button);
-      });
+      publicFeed = libraries.filter(library => library.owner_id !== viewer.id);
+      feedLimit = 6;
+      renderFeedCards();
     } catch (e) {
       if (request !== publicLibraryRequest) return;
       clearPublicLibraryViews();
@@ -279,34 +266,65 @@
     }
   }
 
+  function feedMatches() {
+    const query = (document.getElementById('feedSearch')?.value || '').trim().toLocaleLowerCase();
+    return publicFeed.filter(library => !query || (library.nickname || '서재 #' + shortId(library.owner_id)).toLocaleLowerCase().includes(query));
+  }
+  function coverMarkup(book) {
+    const src = /^https?:\/\//.test(book.thumbnail || '') && !/noimg|no_image/i.test(book.thumbnail) ? book.thumbnail.replace(/^http:/,'https:') : '';
+    return src ? `<img src="${escapeAttr(src)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'feed-cover-empty',textContent:'📖'}))">` : '<span class="feed-cover-empty" aria-hidden="true">📖</span>';
+  }
+  async function openFeedBook(book) {
+    try {
+      if (!await publicViewer()) { renderPublicLibraries(); return; }
+      window.BookPreview?.show(book, {mode:'recommend'});
+    } catch (_) { showToast('공개 설정을 확인하지 못했어요. 다시 시도해 주세요.'); }
+  }
+  function renderFeedCards() {
+    const list = document.getElementById('rankList');
+    if (!list) return;
+    const matches = feedMatches();
+    list.innerHTML = '';
+    if (!matches.length) list.textContent = publicFeed.length ? '다른 이웃 별명으로 찾아보세요.' : '아직 이곳에 공개한 서재가 없어요. 첫 책장을 기다리고 있어요.';
+    matches.slice(0,feedLimit).forEach(library => {
+      const card = document.createElement('article');card.className = 'neighbor-card';
+      const name = library.nickname || '서재 #' + shortId(library.owner_id);
+      const books = (library.books || []).slice(0,3);
+      card.innerHTML = `<header class="neighbor-top"><span class="neighbor-avatar" aria-hidden="true">📚</span><div><h3>${escapeHtml(name)}</h3><p>${escapeHtml([library.city,library.district].filter(Boolean).join(' ') || '지역 미선택')} · 서재 ${Number(library.book_count) || 0}권</p></div></header><div class="neighbor-covers">${books.map((book,index)=>`<button type="button" data-feed-book="${index}" aria-label="${escapeAttr(book.title || '책')} 자세히 보기">${coverMarkup(book)}<span>${escapeHtml(book.title || '')}</span></button>`).join('') || '<p class="neighbor-empty">새 책이 꽂히길 기다리는 책장이에요.</p>'}</div><button type="button" class="neighbor-open">${escapeHtml(name)}님의 서재 보기 <span aria-hidden="true">→</span></button>`;
+      card.querySelectorAll('[data-feed-book]').forEach(button => button.addEventListener('click',()=>openFeedBook(books[Number(button.dataset.feedBook)])));
+      card.querySelector('.neighbor-open').addEventListener('click',()=>showPublicLibrary(library));
+      list.appendChild(card);
+    });
+    const more=document.getElementById('feedMore');if(more)more.hidden=matches.length<=feedLimit;
+    const status=document.getElementById('feedStatus');if(status)status.textContent=matches.length ? `${matches.length}개의 이웃 서재` : '';
+  }
+
   async function showPublicLibrary(library) {
     const modal = document.createElement('div');
     modal.className = 'friend-modal public-library-modal';
-    modal.innerHTML = `<div class="friend-modal-content"><div class="friend-modal-header"><h2>${escapeHtml(library.nickname || '서재 #' + shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><p class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</p></div>`;
-    modal.querySelector('button').addEventListener('click', () => modal.remove());
-    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    modal.innerHTML = `<div class="friend-modal-content" role="dialog" aria-modal="true" aria-labelledby="neighborLibraryTitle"><div class="friend-modal-header"><h2 id="neighborLibraryTitle">${escapeHtml(library.nickname || '서재 #' + shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><div class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</div></div>`;
+    const returnFocus = document.activeElement;
+    const close = () => { modal.remove(); document.removeEventListener('keydown', keydown); returnFocus?.focus(); };
+    modal._close = close;
+    const keydown = event => { if(document.body.classList.contains('preview-open'))return; if(event.key==='Escape'){event.preventDefault();close();} if(event.key==='Tab'){const buttons=[...modal.querySelectorAll('button')];if(event.shiftKey && document.activeElement===buttons[0]){event.preventDefault();buttons.at(-1)?.focus();}else if(!event.shiftKey && document.activeElement===buttons.at(-1)){event.preventDefault();buttons[0]?.focus();}} };
+    document.addEventListener('keydown',keydown);
+    modal.querySelector('button').addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
     document.body.appendChild(modal);
+    modal.querySelector('button').focus();
     const content = modal.querySelector('.public-library-books');
     try {
       const viewer = await publicViewer();
-      if (!viewer) { modal.remove(); renderPublicLibraries(); return; }
+      if (!viewer) { close(); renderPublicLibraries(); return; }
       const books = await window.SB.getPublicLibraryBooks(library.owner_id);
       const stillPublic = await publicViewer();
-      if (!stillPublic || stillPublic.id !== viewer.id || !modal.isConnected) { modal.remove(); renderPublicLibraries(); return; }
+      if (!stillPublic || stillPublic.id !== viewer.id || !modal.isConnected) { close(); renderPublicLibraries(); return; }
       content.textContent = '';
       if (!books.length) content.textContent = '아직 공유한 책이 없거나 비공개로 전환된 서재예요.';
       books.forEach(book => {
-        const row = document.createElement('div');
-        row.style.cssText = 'padding:12px 0;border-bottom:1px solid var(--border)';
-        const title = document.createElement('strong'); title.textContent = book.title;
-        const author = document.createElement('p'); author.textContent = (book.authors || []).join(', ');
-        const add = document.createElement('button'); add.type = 'button'; add.textContent = '내 서재에 담기';
-        add.addEventListener('click', () => {
-          if ((book.isbn && Storage.getBookByIsbn(book.isbn)) || (!book.isbn && Storage.getAllBooks().some(b => b.title === book.title && JSON.stringify(b.authors) === JSON.stringify(book.authors)))) { showToast('이미 내 서재에 있는 책이에요'); return; }
-          Storage.saveBook({isbn:book.isbn || '',title:book.title,authors:book.authors || [],publisher:book.publisher || '',thumbnail:book.thumbnail || '',status:'want',readDate:''});
-          add.disabled = true; add.textContent = '담았어요'; showToast('내 서재에 담았어요');
-        });
-        row.append(title, author, add); content.appendChild(row);
+        const row = document.createElement('button');row.type='button';row.className='neighbor-book-row';
+        row.innerHTML=`${coverMarkup(book)}<span><strong>${escapeHtml(book.title || '')}</strong><small>${escapeHtml((book.authors || []).join(', '))}</small></span><span aria-hidden="true">›</span>`;
+        row.addEventListener('click',()=>openFeedBook(book));content.appendChild(row);
       });
     } catch (e) { content.textContent = '서재를 불러오지 못했어요. 닫은 뒤 다시 시도해 주세요.'; }
   }
