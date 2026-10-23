@@ -18,7 +18,7 @@
 (function () {
   'use strict';
 
-  var BENEFITS = ['☁️ 기기를 바꿔도 같은 서재', '📚 공개에 동의한 다른 부모들의 책 둘러보기', '🌷 공개 범위는 직접 고를 수 있어요'];
+  var BENEFITS = ['☁️ 기기를 바꿔도 같은 서재', '📚 내 서재를 공개하고 다른 회원의 서재 둘러보기', '🌷 공개 범위는 직접 고를 수 있어요'];
 
   var AVATAR_EMOJIS = [
     '👩','🧑','👨','👧','👦','🧑‍🎓','👩‍🎓','👨‍🎓','🦊','🐰',
@@ -323,8 +323,8 @@
       '</div>',
 
       '<fieldset style="margin:16px 0 0;padding:12px;border:1px solid #eedbe2;border-radius:12px"><legend>서재 공개 범위</legend>',
-      '<label style="display:block;padding:8px 0"><input id="apvPublic" type="radio" name="apvVisibility" value="public"' + (cur.libraryPublic ? ' checked' : '') + '> 공개 — 다른 부모와 책 목록 나누기</label>',
-      '<p style="font-size:12px;line-height:1.6;margin:0 0 8px;color:#756773">공개를 선택하고 저장하면 직접 정한 별명과 책 목록, 선택한 시·구가 로그인한 회원에게 공개돼요. 독서감상은 제외해요.</p>',
+      '<label style="display:block;padding:8px 0"><input id="apvPublic" type="radio" name="apvVisibility" value="public"' + (cur.libraryPublic ? ' checked' : '') + '> 공개 — 다른 회원의 서재도 볼 수 있어요</label>',
+      '<p style="font-size:12px;line-height:1.6;margin:0 0 8px;color:#756773">공개를 선택하고 저장하면 직접 정한 별명과 책 목록, 선택한 시·구가 서재를 공개한 회원에게 보여요. 독서감상은 제외해요. 내 서재를 공개한 회원만 다른 회원의 공개 서재를 볼 수 있으며 비공개 시에는 볼 수 없어요.</p>',
       '<label style="display:block;padding:8px 0"><input id="apvPrivate" type="radio" name="apvVisibility" value="private"' + (!cur.libraryPublic ? ' checked' : '') + '> 비공개 — 나만 보는 서재</label></fieldset>',
       '<p id="apvError" role="alert" style="font-size:12px;color:#b42318"></p>',
       // 3. 이모티콘 아바타 선택 — 하단
@@ -491,6 +491,7 @@
       localStorage.setItem('profileLibraryPublic', String(libraryPublic));
       localStorage.setItem('profilePrivacy', libraryPublic ? 'public' : 'private');
       localStorage.removeItem('_profileSetupPending_' + user.id);
+      if (window.dispatchEvent) window.dispatchEvent(new Event('profile-visibility-change'));
 
       // 즉시 피드백 — 버튼을 '✅ 저장됐어요'로 변신 후 0.8초 뒤 닫힘
       saveBtn.dataset.saved = '1';

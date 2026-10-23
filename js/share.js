@@ -200,10 +200,35 @@
     return String(uuid).replace(/-/g, '').slice(0, 6).toUpperCase();
   }
 
+  let publicLibraryRequest = 0;
+  function clearPublicLibraryViews() {
+    document.querySelectorAll('.public-library-modal').forEach(modal => modal.remove());
+  }
+  async function publicViewer() {
+    const user = await window.SB.getUser();
+    if (!user) return null;
+    const profile = await window.SB.getProfile(user.id);
+    const current = await window.SB.getUser();
+    if (!current || current.id !== user.id || !profile || profile.id !== user.id || profile.library_public !== true) return null;
+    return user;
+  }
+  function showPrivateLibraryNotice(list) {
+    clearPublicLibraryViews();
+    list.textContent = '내 서재를 공개한 회원만 다른 회원의 공개 서재를 볼 수 있어요. 비공개 상태에서는 볼 수 없습니다.';
+    const settings = document.createElement('a');settings.href='settings.html';settings.textContent='서재 공개 설정하기';list.appendChild(settings);
+  }
+  if (window.addEventListener) {
+    window.addEventListener('focus', renderPublicLibraries);
+    window.addEventListener('profile-visibility-change', renderPublicLibraries);
+    window.addEventListener('storage', event => { if (!event.key || /profileLibraryPublic|profilePrivacy/.test(event.key)) renderPublicLibraries(); });
+  }
+
   // 공개에 동의한 서재만 서버의 제한된 조회 함수로 읽는다.
   async function renderPublicLibraries() {
     const list = document.getElementById('rankList');
     if (!list) return;
+    const request = ++publicLibraryRequest;
+    clearPublicLibraryViews();
     list.textContent = '공개 서재를 불러오는 중이에요…';
     if (!window.SB || !window.SB.enabled) {
       list.textContent = '공개 서재 연결을 준비 중이에요. 내 독서 기록은 이 기기에 안전하게 남아 있어요.';
@@ -211,10 +236,13 @@
     }
     try {
       if (!await window.SB.getUser()) {
-        list.textContent = '로그인하면 공개에 동의한 다른 부모들의 서재를 둘러볼 수 있어요.';
+        list.textContent = '로그인 후 내 서재를 공개하면 다른 회원의 공개 서재도 볼 수 있어요.';
         const login = document.createElement('button'); login.type = 'button'; login.textContent = '로그인';
         login.addEventListener('click', showLoginPicker); list.appendChild(login); return;
       }
+      const viewer = await publicViewer();
+      if (request !== publicLibraryRequest) return;
+      if (!viewer) { showPrivateLibraryNotice(list); return; }
       const city = currentTab === 'region' ? localStorage.getItem('profileCity') : '';
       if (currentTab === 'region' && !city) {
         list.textContent = '동네 서재를 보려면 프로필에서 시·도를 선택해 주세요. 지역 입력은 선택이에요.';
@@ -222,6 +250,10 @@
       }
       const libraries = await window.SB.getPublicLibraries(city || null,
         currentTab === 'region' ? localStorage.getItem('profileDistrict') || null : null);
+      if (request !== publicLibraryRequest) return;
+      const stillPublic = await publicViewer();
+      if (request !== publicLibraryRequest) return;
+      if (!stillPublic || stillPublic.id !== viewer.id) { showPrivateLibraryNotice(list); return; }
       list.innerHTML = '';
       if (!libraries.length) {
         list.textContent = '아직 공개한 서재가 없어요. 설정에서 내 서재 공개 여부를 직접 선택할 수 있어요.';
@@ -238,6 +270,8 @@
         list.appendChild(button);
       });
     } catch (e) {
+      if (request !== publicLibraryRequest) return;
+      clearPublicLibraryViews();
       list.textContent = '공개 서재를 연결하지 못했어요. 잠시 후 다시 시도해 주세요.';
       const retry = document.createElement('button');
       retry.type = 'button'; retry.textContent = '다시 시도';
@@ -247,14 +281,18 @@
 
   async function showPublicLibrary(library) {
     const modal = document.createElement('div');
-    modal.className = 'friend-modal';
+    modal.className = 'friend-modal public-library-modal';
     modal.innerHTML = `<div class="friend-modal-content"><div class="friend-modal-header"><h2>${escapeHtml(library.nickname || '서재 #' + shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><p class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</p></div>`;
     modal.querySelector('button').addEventListener('click', () => modal.remove());
     modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
     document.body.appendChild(modal);
     const content = modal.querySelector('.public-library-books');
     try {
+      const viewer = await publicViewer();
+      if (!viewer) { modal.remove(); renderPublicLibraries(); return; }
       const books = await window.SB.getPublicLibraryBooks(library.owner_id);
+      const stillPublic = await publicViewer();
+      if (!stillPublic || stillPublic.id !== viewer.id || !modal.isConnected) { modal.remove(); renderPublicLibraries(); return; }
       content.textContent = '';
       if (!books.length) content.textContent = '아직 공유한 책이 없거나 비공개로 전환된 서재예요.';
       books.forEach(book => {

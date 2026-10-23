@@ -160,3 +160,16 @@ test('curated filter races cannot render stale books and never exceed four activ
   assert.match(app.node('recShelfStatus').textContent,/조건에 맞는 7권/);
   assert.doesNotMatch(app.node('recShelfGrid').innerHTML,/Book 0</);
 });
+
+test('Momsbooks recommendation opens the local Momsbooks shelf instead of a publisher site', async()=>{
+ const catalog=[{isbn:'1',title:'First',author:'Writer',ages:['유아'],topics:['우정'],provenance:[{kind:'moms',label:'맘스북스 추천',source:'https://publisher.example/book'}],source:'https://publisher.example/book',note:'note',activity:'activity'}];
+ const app=setup(async()=>[],async()=>({isbn:'1',title:'First',authors:['Writer']}),catalog);
+ await app.init();
+ assert.match(app.node('recShelfGrid').innerHTML,/href="#recShelfTitle" data-moms-shelf/);
+ app.node('recShelfAge').value='청소년';app.node('recShelfTopic').value='과학';
+ let prevented=false;
+ await app.node('recShelfGrid').handlers.click({target:{closest:()=>({})},preventDefault(){prevented=true;}});
+ assert.ok(prevented);assert.equal(app.node('recShelfSource').value,'moms');
+ assert.equal(app.node('recShelfAge').value,'');assert.equal(app.node('recShelfTopic').value,'');
+ assert.match(app.node('recShelfStatus').textContent,/1권/);
+});
