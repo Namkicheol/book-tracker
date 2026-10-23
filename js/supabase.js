@@ -136,6 +136,13 @@
     return r.data;
   }
 
+  async function getPublicLibraryFeed(city, district) {
+    if (!client) return [];
+    var r = await client.rpc('list_public_library_feed', {filter_city: city || null, filter_district: district || null});
+    if (r.error) throw r.error;
+    return r.data || [];
+  }
+
   async function getPublicLibraries(city, district) {
     if (!client) return [];
     var r = await client.rpc('list_public_libraries_v2', {filter_city: city || null, filter_district: district || null});
@@ -161,6 +168,7 @@
     upsertProfile: upsertProfile,
     getProfile: getProfile,
     getPublicLibraries: getPublicLibraries,
+    getPublicLibraryFeed: getPublicLibraryFeed,
     getPublicLibraryBooks: getPublicLibraryBooks
   };
 })();

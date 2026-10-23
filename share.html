@@ -878,6 +878,23 @@
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(255, 158, 158, 0.5);
     }
+
+    .chapter {padding:12px 24px 16px;min-height:0;}
+    .chapter-title {font-size:32px;margin:4px 0 0;}
+    .chapter-no {font-size:10px;}
+    .profile-card {padding:16px;margin-bottom:20px;}
+    .profile-top {margin-bottom:0;gap:10px;}
+    .profile-avatar {width:44px;height:44px;font-size:26px;flex-shrink:0;}
+    .profile-info {min-width:0;}.profile-name {flex-wrap:wrap;font-size:16px;}
+    .my-reading-details summary {cursor:pointer;font-size:12px;color:var(--text-gray);margin-top:14px;}
+    .neighbors-intro h2 {font-size:20px;margin:8px 0;}.neighbors-intro p,.feed-status {font-size:12px;color:var(--text-gray);line-height:1.6;}
+    .feed-search-label {display:block;font-size:12px;margin:14px 0 6px;}.feed-search {box-sizing:border-box;width:100%;padding:12px 14px;background:var(--bg-paper,#fff);border:1px solid #ead5df;border-radius:14px;font:inherit;color:var(--text-dark);}
+    .neighbor-feed {display:grid;gap:18px;}.neighbor-card {min-width:0;background:var(--bg-paper,#fff);border:1px solid #eedce3;border-radius:20px;padding:16px;box-shadow:0 6px 20px #b9768b0b;}
+    .neighbor-top {display:flex;gap:10px;align-items:center;}.neighbor-top>div {min-width:0;}.neighbor-avatar {width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:#fae8ee;font-size:23px;flex-shrink:0;}.neighbor-top h3 {font-size:15px;margin:0;overflow-wrap:anywhere;}.neighbor-top p {font-size:11px;color:var(--text-gray);margin:4px 0 0;}
+    .neighbor-covers {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 12px;}.neighbor-covers button {min-width:0;padding:0;border:0;background:transparent;color:var(--text-dark);font:inherit;text-align:left;cursor:pointer;}.neighbor-covers img,.feed-cover-empty {width:100%;height:132px;object-fit:contain;display:block;border-radius:4px;}.feed-cover-empty {display:grid;place-items:center;background:#fff1f5;font-size:30px;}.neighbor-covers button>span:last-child {display:block;font-size:11px;line-height:1.5;margin-top:6px;overflow-wrap:anywhere;}.neighbor-open,.feed-more {width:100%;border:1px solid #ebc6d2;border-radius:12px;padding:11px;background:#fff4f7;color:#99556b;font:inherit;font-size:12px;cursor:pointer;}.feed-more {margin-top:16px;}.neighbor-empty {grid-column:1/-1;font-size:12px;color:var(--text-gray);padding:20px 0;text-align:center;}
+    #bookPreviewModal {z-index:10003;}
+    .neighbor-book-row {display:flex;align-items:center;gap:12px;width:100%;padding:12px 0;border:0;border-bottom:1px solid #eedce3;background:transparent;text-align:left;font:inherit;color:inherit;cursor:pointer;}.neighbor-book-row img,.neighbor-book-row>.feed-cover-empty {width:52px;height:72px;object-fit:contain;flex-shrink:0;}.neighbor-book-row>span:nth-child(2) {flex:1;min-width:0;overflow-wrap:anywhere;}.neighbor-book-row strong {font-size:14px;}.neighbor-book-row small {display:block;font-size:11px;color:var(--text-gray);margin-top:5px;}
+    .neighbor-card button:focus-visible,.feed-more:focus-visible,.feed-search:focus-visible {outline:2px solid #c76180;outline-offset:3px;}
   </style>
   <link rel="stylesheet" href="css/app.css?v=20261020h">
 </head>
@@ -895,7 +912,7 @@
   <section class="chapter">
     <div class="chapter-glyph">書</div>
     <span class="chapter-no">Community · 書</span>
-    <h1 class="chapter-title">함께 보는 <em>서재</em></h1>
+    <h1 class="chapter-title">이웃 <em>서재</em></h1>
   </section>
 
   <main class="content">
@@ -925,6 +942,7 @@
         </button>
       </div>
 
+      <details class="my-reading-details"><summary>내 독서 목표와 배지 보기</summary>
       <div class="stats-grid">
         <div class="stat-box">
           <div class="stat-label">이번 주</div>
@@ -971,12 +989,17 @@
         </div>
         <div class="badges-grid" id="badgesGrid"></div>
       </div>
+      </details>
     </div>
 
-    <section aria-label="공개 서재 안내"><h2>다른 부모들의 서재</h2><p>공개에 동의한 서재의 책만 볼 수 있어요. 내 서재 공개는 설정에서 선택해 주세요.</p></section>
-    <div class="rank-tabs"><button class="rank-tab active" data-tab="all">모든 공개 서재</button><button class="rank-tab" data-tab="region">우리 동네</button></div>
+    <section aria-labelledby="neighborsTitle" class="neighbors-intro"><h2 id="neighborsTitle">오늘은 어떤 책이 꽂혔을까요?</h2><p>이웃의 책장에서 우리 집 다음 책을 발견해 보세요.</p></section>
+    <div class="rank-tabs"><button class="rank-tab active" data-tab="all">전체 서재</button><button class="rank-tab" data-tab="region">우리 동네</button></div>
+    <label class="feed-search-label" for="feedSearch">이웃 서재 찾기</label>
+    <input id="feedSearch" class="feed-search" type="search" placeholder="이웃 별명으로 찾아요" autocomplete="off">
+    <p id="feedStatus" class="feed-status" role="status"></p>
     <!-- 공개 서재 목록 -->
-    <div class="rank-list" id="rankList"></div>
+    <div class="rank-list neighbor-feed" id="rankList" aria-live="polite"></div>
+    <button type="button" id="feedMore" class="feed-more" hidden>이웃 서재 더 보기</button>
 
   </main>
 
@@ -1018,16 +1041,25 @@
     </a>
   </nav>
 
+  <div id="bookPreviewModal" class="book-preview-modal" hidden>
+    <div class="book-preview-backdrop" data-close-preview></div>
+    <div class="book-preview-card" role="dialog" aria-modal="true">
+      <button type="button" class="book-preview-close" data-close-preview aria-label="닫기">×</button>
+      <div class="book-preview-body" id="previewBody"></div>
+    </div>
+  </div>
   <div class="toast" id="toast"></div>
 
   <script src="js/theme.js?v=20260510a"></script>
   <script src="js/config.js?v=20260510a"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabase.js?v=20261023a"></script>
+  <script src="js/supabase.js?v=20261024a"></script>
   <script src="js/auth-ui.js?v=20261023b"></script>
   <script src="js/storage.js?v=20261020h"></script>
   <script src="js/sync.js?v=20261023a"></script>
   <script src="js/regions.js?v=20261020a"></script>
-  <script src="js/share.js?v=20261023b"></script>
+  <script src="js/api.js?v=20260504d"></script>
+  <script src="js/book-preview.js?v=20261024a"></script>
+  <script src="js/share.js?v=20261024a"></script>
 </body>
 </html>

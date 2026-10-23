@@ -73,3 +73,7 @@ Aside 기존 localhost 탭에서 함께 보는 서재 화면과 프로필 편집
 ## 2026-10-23 reciprocal access policy
 
 User changed access policy: only members whose own library is public may browse other public libraries. All three private SQL functions (legacy list, v2 list, individual books) now check the current viewer profile on every call. Existing member preferences are unchanged. UI explains the benefit and private restriction before saving; private viewers receive a settings link. Rolled-back authenticated fixtures passed private denial, public access, withdrawal denial and private-owner exclusion. Existing anon denial remains.
+
+## 2026-10-24 community shelf preview
+
+The new feed RPC returns the existing public nickname, city/district and total book count with up to three bibliographic cover previews. It reuses list_libraries_v2 for the current viewer/owner visibility checks and does not expose reviews, reading dates, child information or OAuth names. Authenticated rolled-back fixtures verified public/private access, withdrawal, region filters, count accuracy, the three-book limit and field minimization. Anonymous execute is denied. No member preferences were changed.
