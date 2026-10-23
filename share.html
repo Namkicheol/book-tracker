@@ -892,6 +892,8 @@
     .neighbor-feed {display:grid;gap:18px;}.neighbor-card {min-width:0;background:var(--bg-paper,#fff);border:1px solid #eedce3;border-radius:20px;padding:16px;box-shadow:0 6px 20px #b9768b0b;}
     .neighbor-top {display:flex;gap:10px;align-items:center;}.neighbor-top>div {min-width:0;}.neighbor-avatar {width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:#fae8ee;font-size:23px;flex-shrink:0;}.neighbor-top h3 {font-size:15px;margin:0;overflow-wrap:anywhere;}.neighbor-top p {font-size:11px;color:var(--text-gray);margin:4px 0 0;}
     .neighbor-covers {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 12px;}.neighbor-covers button {min-width:0;padding:0;border:0;background:transparent;color:var(--text-dark);font:inherit;text-align:left;cursor:pointer;}.neighbor-covers img,.feed-cover-empty {width:100%;height:132px;object-fit:contain;display:block;border-radius:4px;}.feed-cover-empty {display:grid;place-items:center;background:#fff1f5;font-size:30px;}.neighbor-covers button>span:last-child {display:block;font-size:11px;line-height:1.5;margin-top:6px;overflow-wrap:anywhere;}.neighbor-open,.feed-more {width:100%;border:1px solid #ebc6d2;border-radius:12px;padding:11px;background:#fff4f7;color:#99556b;font:inherit;font-size:12px;cursor:pointer;}.feed-more {margin-top:16px;}.neighbor-empty {grid-column:1/-1;font-size:12px;color:var(--text-gray);padding:20px 0;text-align:center;}
+    .example-label {display:block;font-size:10px;font-weight:700;color:#a77186;letter-spacing:.04em;margin-bottom:4px;}
+    .example-shelves {margin-top:26px;}
     #bookPreviewModal {z-index:10003;}
     .neighbor-book-row {display:flex;align-items:center;gap:12px;width:100%;padding:12px 0;border:0;border-bottom:1px solid #eedce3;background:transparent;text-align:left;font:inherit;color:inherit;cursor:pointer;}.neighbor-book-row img,.neighbor-book-row>.feed-cover-empty {width:52px;height:72px;object-fit:contain;flex-shrink:0;}.neighbor-book-row>span:nth-child(2) {flex:1;min-width:0;overflow-wrap:anywhere;}.neighbor-book-row strong {font-size:14px;}.neighbor-book-row small {display:block;font-size:11px;color:var(--text-gray);margin-top:5px;}
     .neighbor-card button:focus-visible,.feed-more:focus-visible,.feed-search:focus-visible {outline:2px solid #c76180;outline-offset:3px;}
@@ -1000,6 +1002,11 @@
     <!-- 공개 서재 목록 -->
     <div class="rank-list neighbor-feed" id="rankList" aria-live="polite"></div>
     <button type="button" id="feedMore" class="feed-more" hidden>이웃 서재 더 보기</button>
+    <section class="example-shelves" aria-labelledby="exampleShelvesTitle">
+      <h2 id="exampleShelvesTitle" style="font-size:18px">먼저 둘러볼 책장</h2>
+      <p class="feed-status">로그인 없이도 책을 살펴보고 내 기기에 담을 수 있어요.</p>
+      <div id="exampleLibraries" class="neighbor-feed"></div>
+    </section>
 
   </main>
 
@@ -1060,6 +1067,6 @@
   <script src="js/regions.js?v=20261020a"></script>
   <script src="js/api.js?v=20260504d"></script>
   <script src="js/book-preview.js?v=20261024a"></script>
-  <script src="js/share.js?v=20261024a"></script>
+  <script src="js/share.js?v=20261024b"></script>
 </body>
 </html>

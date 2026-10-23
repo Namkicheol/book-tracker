@@ -175,6 +175,7 @@
   function init() {
     document.getElementById('feedSearch')?.addEventListener('input',()=>{feedLimit=6;renderFeedCards();});
     document.getElementById('feedMore')?.addEventListener('click',()=>{feedLimit+=6;renderFeedCards();});
+    renderExampleLibraries();
     loadProfile();
     calculateMyStats();
     generateNotifications();
@@ -193,6 +194,7 @@
   }
 
   let publicLibraryRequest = 0;
+  const EXAMPLE_LIBRARIES = [{"nickname":"잠자리 그림책장","books":[{"isbn":"9788949161341","title":"만복이네 떡집","authors":["김리리 (지은이), 이승현 (그림)"],"publisher":"비룡소","thumbnail":"https://image.aladin.co.kr/product/716/52/cover200/8949161346_2.jpg"},{"isbn":"9788986621136","title":"강아지똥","authors":["권정생 (글), 정승각 (그림)"],"publisher":"길벗어린이","thumbnail":"https://image.aladin.co.kr/product/0/48/cover200/8986621134_1.jpg"},{"isbn":"9788936446819","title":"수박 수영장","authors":["안녕달"],"publisher":"창비","thumbnail":"https://image.aladin.co.kr/product/6365/38/cover200/8936446819_1.jpg"}]},{"nickname":"호기심 많은 책장","books":[{"isbn":"9791160947502","title":"수영 이불","authors":["재희 (지은이)"],"publisher":"사계절","thumbnail":"https://image.aladin.co.kr/product/27663/83/cover200/k212733232_1.jpg"},{"isbn":"9791170820314","title":"달팽이 달리기","authors":["이혜인 (지은이)"],"publisher":"킨더랜드","thumbnail":"https://image.aladin.co.kr/product/32753/25/cover200/k552936080_1.jpg"},{"isbn":"9788949182216","title":"발명가 매티","authors":["에밀리 아놀드 맥컬리 (지은이), 김고연주 (옮긴이)"],"publisher":"비룡소","thumbnail":"https://image.aladin.co.kr/product/88/45/cover200/8949182211_2.jpg"}]},{"nickname":"영어책 읽는 집","books":[{"isbn":"9780241003008","title":"The Very Hungry Caterpillar","authors":["에릭 칼"],"publisher":"Hamish Hamilton","thumbnail":"https://image.aladin.co.kr/product/28/65/cover200/0241003008_1.jpg"},{"isbn":"9780064410939","title":"Charlotte's Web","authors":["엘윈 브룩스 화이트"],"publisher":"Harper Collins","thumbnail":"https://image.aladin.co.kr/product/57/64/cover200/0064410935_2.jpg"},{"isbn":"9780064430173","title":"Goodnight Moon","authors":["마거릿 와이즈 브라운"],"publisher":"HarperTrophy","thumbnail":"https://image.aladin.co.kr/product/90/35/cover200/0064430170ff_1.jpg"}]}];
   let publicFeed = [];
   let feedLimit = 6;
   function clearPublicLibraryViews() {
@@ -274,12 +276,24 @@
     const src = /^https?:\/\//.test(book.thumbnail || '') && !/noimg|no_image/i.test(book.thumbnail) ? book.thumbnail.replace(/^http:/,'https:') : '';
     return src ? `<img src="${escapeAttr(src)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'feed-cover-empty',textContent:'📖'}))">` : '<span class="feed-cover-empty" aria-hidden="true">📖</span>';
   }
-  async function openFeedBook(book) {
+  async function openFeedBook(book, example = false) {
     try {
-      if (!await publicViewer()) { renderPublicLibraries(); return; }
+      if (!example && !await publicViewer()) { renderPublicLibraries(); return; }
       window.BookPreview?.show(book, {mode:'recommend'});
     } catch (_) { showToast('공개 설정을 확인하지 못했어요. 다시 시도해 주세요.'); }
   }
+  function renderExampleLibraries() {
+    const list = document.getElementById('exampleLibraries');if(!list)return;
+    list.innerHTML='';
+    EXAMPLE_LIBRARIES.forEach(library=>{
+      const card=document.createElement('article');card.className='neighbor-card';
+      card.innerHTML=`<header class="neighbor-top"><span class="neighbor-avatar" aria-hidden="true">📖</span><div><h3>${escapeHtml(library.nickname)}</h3><p>함께 펼쳐볼 책 3권</p></div></header><div class="neighbor-covers">${library.books.map((book,index)=>`<button type="button" data-example-book="${index}" aria-label="${escapeAttr(book.title)} 자세히 보기">${coverMarkup(book)}<span>${escapeHtml(book.title)}</span></button>`).join('')}</div><button type="button" class="neighbor-open">책장 전체 보기 →</button>`;
+      card.querySelectorAll('[data-example-book]').forEach(button=>button.addEventListener('click',()=>openFeedBook(library.books[Number(button.dataset.exampleBook)],true)));
+      card.querySelector('.neighbor-open').addEventListener('click',()=>showPublicLibrary(library,true));
+      list.appendChild(card);
+    });
+  }
+
   function renderFeedCards() {
     const list = document.getElementById('rankList');
     if (!list) return;
@@ -299,9 +313,9 @@
     const status=document.getElementById('feedStatus');if(status)status.textContent=matches.length ? `${matches.length}개의 이웃 서재` : '';
   }
 
-  async function showPublicLibrary(library) {
+  async function showPublicLibrary(library, example = false) {
     const modal = document.createElement('div');
-    modal.className = 'friend-modal public-library-modal';
+    modal.className = example ? 'friend-modal example-library-modal' : 'friend-modal public-library-modal';
     modal.innerHTML = `<div class="friend-modal-content" role="dialog" aria-modal="true" aria-labelledby="neighborLibraryTitle"><div class="friend-modal-header"><h2 id="neighborLibraryTitle">${escapeHtml(library.nickname || '서재 #' + shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><div class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</div></div>`;
     const returnFocus = document.activeElement;
     const close = () => { modal.remove(); document.removeEventListener('keydown', keydown); returnFocus?.focus(); };
@@ -314,17 +328,17 @@
     modal.querySelector('button').focus();
     const content = modal.querySelector('.public-library-books');
     try {
-      const viewer = await publicViewer();
-      if (!viewer) { close(); renderPublicLibraries(); return; }
-      const books = await window.SB.getPublicLibraryBooks(library.owner_id);
-      const stillPublic = await publicViewer();
-      if (!stillPublic || stillPublic.id !== viewer.id || !modal.isConnected) { close(); renderPublicLibraries(); return; }
+      const viewer = example ? null : await publicViewer();
+      if (!example && !viewer) { close(); renderPublicLibraries(); return; }
+      const books = example ? library.books : await window.SB.getPublicLibraryBooks(library.owner_id);
+      const stillPublic = example ? null : await publicViewer();
+      if ((!example && (!stillPublic || stillPublic.id !== viewer.id)) || !modal.isConnected) { close(); renderPublicLibraries(); return; }
       content.textContent = '';
       if (!books.length) content.textContent = '아직 공유한 책이 없거나 비공개로 전환된 서재예요.';
       books.forEach(book => {
         const row = document.createElement('button');row.type='button';row.className='neighbor-book-row';
         row.innerHTML=`${coverMarkup(book)}<span><strong>${escapeHtml(book.title || '')}</strong><small>${escapeHtml((book.authors || []).join(', '))}</small></span><span aria-hidden="true">›</span>`;
-        row.addEventListener('click',()=>openFeedBook(book));content.appendChild(row);
+        row.addEventListener('click',()=>openFeedBook(book,example));content.appendChild(row);
       });
     } catch (e) { content.textContent = '서재를 불러오지 못했어요. 닫은 뒤 다시 시도해 주세요.'; }
   }
