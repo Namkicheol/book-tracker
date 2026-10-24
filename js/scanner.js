@@ -71,6 +71,12 @@
   }
 
   function initModeTabs() {
+    document.querySelectorAll('[data-scan-alternative]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setMode(btn.dataset.scanAlternative);
+        document.getElementById(btn.dataset.scanAlternative === 'title' ? 'titleInput' : 'isbnInput')?.focus();
+      });
+    });
     document.querySelectorAll('#modeTabs [data-mode]').forEach(btn => {
       btn.addEventListener('click', () => setMode(btn.dataset.mode, { autoStart: true }));
     });
@@ -121,13 +127,14 @@
           qrbox: (width, height) => {
             const region = {
               width: Math.floor(width * 0.9),
-              height: Math.floor(Math.min(height * 0.7, width * 0.5)),
+              height: Math.floor(Math.min(height * 0.7, width * 0.5, document.getElementById('reader').parentElement.clientHeight * 0.8)),
             };
             // The visible guide must match the pixels passed to the decoder.
             Object.assign(document.getElementById('scanOverlay').style, {
               inset: 'auto',
-              left: `${(width - region.width) / 2}px`,
-              top: `${(height - region.height) / 2}px`,
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)',
               width: `${region.width}px`,
               height: `${region.height}px`,
             });

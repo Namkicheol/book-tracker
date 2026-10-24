@@ -7,7 +7,7 @@ function scannerHarness({ lookup = async () => null, start = async () => {}, pho
   const elements = new Map();
   const element = id => {
     if (!elements.has(id)) elements.set(id, {
-      disabled: false, textContent: '', dataset: {}, style: {},
+      disabled: false, textContent: '', dataset: {}, style: {}, parentElement: { clientHeight: 180 },
       classList: { add() {}, remove() {} },
     });
     return elements.get(id);
@@ -64,8 +64,10 @@ test('unrelated codes and read errors keep camera running without catalog reques
   assert.equal(scanner.element('startBtn').dataset.state, 'running');
   const region = scanner.calls.scanConfig.qrbox(240, 180);
   assert.ok(region.width < 240 && region.height < 180);
-  assert.equal(scanner.element('scanOverlay').style.left, `${(240 - region.width) / 2}px`);
-  assert.equal(scanner.element('scanOverlay').style.top, `${(180 - region.height) / 2}px`);
+  assert.equal(scanner.element('scanOverlay').style.left, '50%');
+  assert.equal(scanner.element('scanOverlay').style.top, '50%');
+  assert.equal(scanner.element('scanOverlay').style.transform, 'translate(-50%, -50%)');
+  assert.ok(scanner.calls.scanConfig.qrbox(350, 620).height <= 180 * 0.8);
   assert.deepEqual(Array.from(scanner.calls.config.formatsToSupport), [9]);
 });
 
