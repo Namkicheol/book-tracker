@@ -40,10 +40,12 @@
     </div>
     <div class="hdr-actions">
       <button class="hdr-action" id="selectBtn">선택</button>
-      <button class="hdr-action" id="sortBtn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
-        정렬
-      </button>
+      <select class="hdr-action" id="sortSelect" aria-label="서재 정렬" style="max-width:100px;min-width:0;font-family:inherit;cursor:pointer;padding-left:6px;padding-right:6px">
+        <option value="title">이름순</option>
+        <option value="rating">추천순 (내 별점)</option>
+        <option value="newest" selected>최신순</option>
+        <option value="oldest">오래된순</option>
+      </select>
       <button class="hdr-action" id="viewToggleBtn" aria-label="보기 전환">
         <svg class="icon-list" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
         <svg class="icon-grid" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="display:none"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -222,6 +224,6 @@
   <script src="js/recs-cache.js?v=20261020h"></script>
   <link rel="stylesheet" href="css/garden.css?v=20261020h">
   <script src="js/garden.js?v=20261021j"></script>
-  <script src="js/index.js?v=20261020h"></script>
+  <script src="js/index.js?v=20261024a"></script>
 </body>
 </html>

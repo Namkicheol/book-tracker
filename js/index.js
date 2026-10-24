@@ -1,14 +1,14 @@
 /**
  * 書架 — Library page (index.html)
  *
- * Renders the book gallery + folder filter chips + sort cycle.
+ * Renders the book gallery + folder filter chips + sort selection.
  */
 
 (function () {
   'use strict';
 
   let currentFolderId = '';        // '' === 전체
-  let currentSort     = 'newest';  // newest | oldest | rating | title
+  let currentSort     = localStorage.getItem('librarySort') || 'newest';  // newest | oldest | rating | title
   let currentStatus   = 'all';     // all | want | reading | read
   let currentView     = localStorage.getItem('libraryView') || 'grid'; // grid | list
 
@@ -30,11 +30,13 @@
   const selectedIds = new Set();
 
   const SORT_LABELS = {
-    newest: '최근 읽은 순',
-    oldest: '오래된 순',
-    rating: '별점 높은 순',
-    title:  '제목 순',
+    newest: '최신순',
+    oldest: '오래된순',
+    rating: '추천순 (내 별점 높은 순)',
+    title:  '이름순',
   };
+
+  if (!Object.hasOwn(SORT_LABELS, currentSort)) currentSort = 'newest';
 
   // Load recommendation database (shared RecsCache memoizes — same data not fetched 3x in session)
   let recommendationData = null;
@@ -53,17 +55,17 @@
     switch (mode) {
       case 'oldest':
         return arr.sort((a, b) =>
-          (a.readDate || a.createdAt || '').localeCompare(b.readDate || b.createdAt || ''));
+          (a.createdAt || '').localeCompare(b.createdAt || ''));
       case 'rating':
         return arr.sort((a, b) =>
           (b.rating || 0) - (a.rating || 0) ||
-          (b.readDate || b.createdAt || '').localeCompare(a.readDate || a.createdAt || ''));
+          (b.createdAt || '').localeCompare(a.createdAt || ''));
       case 'title':
         return arr.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'ko'));
       case 'newest':
       default:
         return arr.sort((a, b) =>
-          (b.readDate || b.createdAt || '').localeCompare(a.readDate || a.createdAt || ''));
+          (b.createdAt || '').localeCompare(a.createdAt || ''));
     }
   }
 
@@ -695,10 +697,11 @@
 
   // ── Sort ─────────────────────────────────────────────────────
 
-  function cycleSort() {
-    const modes = Object.keys(SORT_LABELS);
-    const i = modes.indexOf(currentSort);
-    currentSort = modes[(i + 1) % modes.length];
+  function selectSort(event) {
+    const mode = event.target.value;
+    if (!Object.hasOwn(SORT_LABELS, mode)) return;
+    currentSort = mode;
+    localStorage.setItem('librarySort', mode);
     showToast(`정렬: ${SORT_LABELS[currentSort]}`);
     renderBooks();
   }
@@ -785,8 +788,11 @@
     renderStatusTabs();
     renderFolders();
     renderBooks();
-    const sortBtn = document.getElementById('sortBtn');
-    if (sortBtn) sortBtn.addEventListener('click', cycleSort);
+    const sortSelect = document.getElementById('sortSelect');
+    if (sortSelect) {
+      sortSelect.value = currentSort;
+      sortSelect.addEventListener('change', selectSort);
+    }
     const selectBtnEl = document.getElementById('selectBtn');
     if (selectBtnEl) selectBtnEl.addEventListener('click', () => {
       if (selectMode) exitSelectMode();
