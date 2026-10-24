@@ -13,15 +13,14 @@
   <style>
     .scanner-wrap {
       width: 100%;
-      aspect-ratio: 4/3;
+      height: clamp(160px, 48vw, 220px);
       border-radius: 1px;
       overflow: hidden;
       box-shadow: 4px 6px 0 var(--shadow), 0 0 0 1px var(--border) inset;
       background: var(--ink);
     }
-    #reader { width: 100%; }
+    #reader { width: 100%; position: absolute !important; top: 50%; transform: translateY(-50%); }
     #reader video, #reader img { width: 100% !important; height: auto !important; display: block; }
-    .scanner-wrap:has(#reader video) { aspect-ratio: auto; }
     .scan-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
     .scan-line {
       position: absolute; left: 12%; right: 12%; top: 12%;
@@ -126,6 +125,7 @@
 
     <!-- ── Barcode mode ─────────────────────────── -->
     <div id="modeBarcode" class="mode-pane hidden">
+      <p style="font-size:14px;line-height:1.7;margin:0 0 12px;color:var(--text-dark)"><strong>도서관 바코드가 아니에요.</strong><br>책 뒤표지의 <strong>978·979로 시작하는 ISBN 바코드</strong>를 비춰 주세요.</p>
       <div class="scanner-wrap" style="position:relative">
         <div id="reader"></div>
         <div class="scan-overlay" id="scanOverlay" style="display:none">
@@ -147,6 +147,8 @@
       </p>
       <label class="btn btn-ghost btn-full mt-md" for="barcodePhoto">사진으로 바코드 인식</label>
       <input type="file" id="barcodePhoto" accept="image/*" capture="environment" hidden>
+      <p style="font-size:13px;line-height:1.7;margin:16px 0 8px">시리즈·세트 도서가 검색되지 않으면 제목 검색이나 ISBN 직접 입력을 이용해 주세요.</p>
+      <div style="display:flex;gap:8px"><button type="button" class="btn btn-ghost" data-scan-alternative="title" style="flex:1">제목 검색</button><button type="button" class="btn btn-ghost" data-scan-alternative="isbn" style="flex:1">ISBN 직접 입력</button></div>
     </div>
 
     <!-- ── ISBN mode ────────────────────────────── -->
@@ -277,6 +279,6 @@
   <script src="js/api.js?v=20260504e"></script>
   <script src="js/library-api.js?v=20260512a"></script>
   <script src="js/book-preview.js?v=20261023a"></script>
-  <script src="js/scanner.js?v=20261024b"></script>
+  <script src="js/scanner.js?v=20261024c"></script>
 </body>
 </html>
