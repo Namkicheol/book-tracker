@@ -22,6 +22,16 @@ publisher_file=ROOT/'data/publisher-additions.json'
 if publisher_file.exists():
  for b in json.loads(publisher_file.read_text()):
   data['books'].setdefault(b['isbn'],b)
+discovery_file=ROOT/'data/english-discovery-evidence.json'
+discovery=json.loads(discovery_file.read_text()) if discovery_file.exists() else []
+for entry in discovery:
+ if entry.get('bibliographic'):
+  data['books'].setdefault(entry['isbn'],dict(entry['bibliographic'],isbn=entry['isbn'],language='en'))
+award_expansion_file=ROOT/'data/english-award-expansion.json'
+award_expansion=json.loads(award_expansion_file.read_text()) if award_expansion_file.exists() else []
+for entry in award_expansion:
+ if entry.get('bibliographic'):
+  data['books'].setdefault(entry['isbn'],dict(entry['bibliographic'],isbn=entry['isbn'],language='en'))
 books=[]
 for isbn,b in data['books'].items():
  if not re.fullmatch(r'97[89]\d{10}',isbn):continue
@@ -48,10 +58,36 @@ if award_file.exists():
  for book in books:
   if book['isbn']=='9780062691194':book['title']='New Kid'
   if book['isbn']=='9780374390402':book['author']='George Selden'
+by_isbn={b['isbn']:b for b in books}
+for entry in award_expansion:
+ book=by_isbn.get(entry['isbn'])
+ if not book:
+  raise ValueError('Award ISBN missing from catalog: '+entry['isbn'])
+ award={'id':entry['awardId'],'year':entry['year'],'distinction':entry['distinction'],'source':entry['source']}
+ if award not in book.setdefault('awards',[]):book['awards'].append(award)
+for book in books:
+ book['arStatus']='legacy' if isinstance(book.get('ar'),(int,float)) else 'unknown'
+for entry in discovery:
+ book=by_isbn.get(entry['isbn'])
+ if not book:
+  raise ValueError('Discovery ISBN missing from catalog: '+entry['isbn'])
+ if book['language']!='en':
+  raise ValueError('Discovery entry must be English: '+entry['isbn'])
+ for field in ['stage','series','topics']:
+  if field in entry:book[field]=entry[field]
+ book['discoverySource']=entry['source']
+ book['discoveryCheckedAt']=entry['checkedAt']
+ if entry.get('ar'):
+  book['ar']=entry['ar']['value']
+  book['arStatus']='verified'
+  book['arEvidence']={k:v for k,v in entry['ar'].items() if k!='value'}
 sources=[]
 for award_id,name in [('newbery-award','뉴베리상 공식 수상 목록'),('caldecott-award','칼데콧상 공식 수상 목록')]:
  evidence=next((a for b in books for a in b.get('awards',[]) if a['id']==award_id),None)
  if evidence:sources.append({'id':award_id,'name':name,'url':evidence['source']})
+for entry in award_expansion:
+ if not any(s['id']==entry['awardId'] for s in sources):
+  sources.append({'id':entry['awardId'],'name':entry['awardName'],'url':entry['source']})
 result={'meta':{'originalCount':original_count,'addedCount':len(data['books'])-original_count,'excludedCount':len(data['books'])-len(books),'sources':sources},'books':books}
 (ROOT/'js/book-catalog.js').write_text('/* Bibliographic browsing and individually verified award facts; third-party recommendation lists and blurbs are excluded. */\nwindow.BOOK_CATALOG = '+json.dumps(result,ensure_ascii=False,separators=(',',':'))+';\n')
 print('Browse books:',len(books))

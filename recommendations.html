@@ -243,11 +243,16 @@
     .catalog-cover {width:100%;height:170px;object-fit:contain;display:block;margin:0 auto 10px;}
     .catalog-cover-empty {background:#faedf1;display:grid;place-items:center;font-size:40px;}
     .catalog-book strong,.catalog-book>span,.catalog-book small {display:block;}
+    .catalog-evidence {display:flex;flex-wrap:wrap;gap:5px 10px;padding:7px 2px;}
+    .catalog-evidence a {font-size:10px;line-height:1.5;color:var(--cute-coral,#b45b7c);overflow-wrap:anywhere;}
+    .catalog-list li:has(.catalog-evidence) .catalog-book {height:auto;}
     .catalog-book strong {font-size:14px;line-height:1.5;}
     .catalog-book>span,.catalog-book small {font-size:11px;color:var(--text-mute);margin-top:5px;}
     .catalog-tabs {display:flex;gap:7px;flex-wrap:wrap;margin:12px 0;}
     .catalog-tabs [aria-pressed="true"] {background:#f9dce7;border-color:#c76180;color:#794458;}
     .catalog-english-filters {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px;}
+    .catalog-english-filters label {min-width:0;font-size:12px;}
+    .catalog-english-filters .rec-select {font-size:12px;padding:10px 5px;}
     .catalog-english-filters[hidden] {display:none;}
     @media(min-width:650px) {.catalog-list {grid-template-columns:repeat(4,minmax(0,1fr));}}
     .catalog-pages {display:flex;justify-content:space-between;gap:10px;}
@@ -262,6 +267,11 @@
   </header>
 
   <main>
+    <nav id="catalogQuickLinks" aria-label="책 목록 바로가기" style="display:flex;gap:6px;margin:12px 16px;flex-wrap:wrap">
+      <button type="button" class="rec-topic-chip" data-catalog-quick="korean">한국어 책</button>
+      <button type="button" class="rec-topic-chip" data-catalog-quick="english">영어 원서</button>
+      <button type="button" class="rec-topic-chip" data-catalog-quick="awards">영어 수상작</button>
+    </nav>
     <h2 style="font-size:17px;margin:20px 16px 8px">오늘은 어떤 이야기를 읽을까요?</h2>
     <p class="rec-discovery-note" style="margin:0 16px">맘스북스가 구성한 독서 주제예요. 주제를 누르면 선택한 연령대로 책을 찾아요.</p>
     <div id="recCollections" class="rec-collections" aria-label="독서 주제 모음"></div>
@@ -280,7 +290,7 @@
       <button type="button" id="recShelfMore" class="rec-topic-chip" style="margin:12px 16px" hidden>책 더 보기</button>
     </section>
     <section class="catalog-panel" aria-labelledby="catalogTitle">
-      <h2 id="catalogTitle" style="font-size:18px;margin:0 0 8px">전체 책 둘러보기</h2>
+      <h2 id="catalogTitle" tabindex="-1" style="font-size:18px;margin:0 0 8px">전체 책 둘러보기</h2>
 
       <div id="catalogTabs" class="catalog-tabs" role="group" aria-label="도서 구분">
         <button type="button" class="rec-topic-chip" data-catalog-tab="all" aria-pressed="true">전체</button>
@@ -292,8 +302,8 @@
         <label class="rec-field-label" for="catalogQuery">제목·저자·출판사·ISBN 검색</label>
         <input id="catalogQuery" class="rec-search-input" type="search" placeholder="찾고 싶은 책이나 저자" autocomplete="off">
         <div class="catalog-filters">
-          <label>학년·연령 <select id="catalogAge" class="rec-select"></select></label>
-          <label>공식 수상 목록 <select id="catalogSource" class="rec-select"></select></label>
+          <label id="catalogAgeField">학년·연령 <select id="catalogAge" class="rec-select"></select></label>
+          <label id="catalogSourceField">공식 수상 목록 <select id="catalogSource" class="rec-select"></select></label>
         </div>
         <details class="catalog-more-filters" style="margin-top:10px;font-size:12px">
           <summary>분야·출판사로 더 찾기</summary>
@@ -302,9 +312,24 @@
             <label>출판사 <select id="catalogPublisher" class="rec-select"></select></label>
           </div>
         </details>
-        <div id="catalogEnglishFilters" class="catalog-english-filters" hidden>
-          <label>AR 지수<select id="catalogAr" class="rec-select"><option value="">모든 AR</option><option value="b01">AR 0~1</option><option value="b12">AR 1~2</option><option value="b23">AR 2~3</option><option value="b34">AR 3~4</option><option value="b4">AR 4 이상</option><option value="unknown">AR 미등록</option></select></label>
-          <label>영어 수상작<select id="catalogAward" class="rec-select"><option value="">모든 책</option><option value="newbery-award">뉴베리상</option><option value="caldecott-award">칼데콧상</option></select></label>
+        <div id="catalogEnglishFilters" hidden>
+          <div id="catalogEnglishExplore" class="catalog-tabs" role="group" aria-label="영어책 탐색">
+            <button type="button" class="rec-topic-chip" data-english-field="catalogStage">입문 단계</button><button type="button" class="rec-topic-chip" data-english-field="catalogAr">AR</button><button type="button" class="rec-topic-chip" data-english-field="catalogSeries">시리즈</button><button type="button" class="rec-topic-chip" data-english-field="catalogAward">수상작</button><button type="button" class="rec-topic-chip" data-english-field="catalogTopic">관심사</button>
+          </div>
+          <div class="catalog-english-filters">
+            <label>읽기 단계<select id="catalogStage" class="rec-select"></select></label>
+            <label>관심사<select id="catalogTopic" class="rec-select"></select></label>
+          </div>
+          <details id="catalogEnglishAdvanced" style="margin-top:10px;font-size:12px"><summary>AR·시리즈·수상작으로 더 찾기</summary>
+          <div class="catalog-english-filters">
+            <label>확인된 AR<select id="catalogAr" class="rec-select"><option value="">모든 책</option><option value="b01">AR 0~1</option><option value="b12">AR 1~2</option><option value="b23">AR 2~3</option><option value="b34">AR 3~4</option><option value="b4">AR 4 이상</option><option value="unknown">확인된 AR 미등록</option></select></label>
+            <label>시리즈<select id="catalogSeries" class="rec-select"></select></label>
+            <label>시리즈 순서<select id="catalogSeriesStep" class="rec-select"><option value="">모든 순서</option><option value="first">첫 권</option><option value="next">다음 권들</option></select></label>
+            <label>수상작<select id="catalogAward" class="rec-select"><option value="">모든 수상작</option></select></label>
+            <label>수상 구분<select id="catalogDistinction" class="rec-select"><option value="">수상 · Honor 모두</option><option value="Medal">수상작 (Medal · Winner)</option><option value="Honor">Honor 선정작</option></select></label>
+          </div>
+          </details>
+          <p class="rec-discovery-note">읽기 단계와 관심사는 맘스북스의 탐색 기준이에요. 출처가 확인된 AR만 표시해요. 미등록은 AR 0을 뜻하지 않아요. 시리즈를 고르면 첫 권부터 차례로 보여요.</p>
         </div>
         <button id="catalogReset" type="button" class="rec-topic-chip" style="margin-top:10px">전체 목록 보기</button>
       </form>
@@ -426,8 +451,8 @@
   <script src="js/library-api.js?v=20260512a"></script>
   <script src="js/book-preview.js?v=20261023a"></script>
   <script src="js/recs-cache.js?v=20261020h"></script>
-  <script src="js/book-catalog.js?v=20261023b"></script>
-  <script src="js/catalog-browser.js?v=20261023a"></script>
+  <script src="js/book-catalog.js?v=20261024a"></script>
+  <script src="js/catalog-browser.js?v=20261024a"></script>
   <script src="js/curated-books.js?v=20261023a"></script>
   <script src="js/recommendations.js?v=20261023a"></script>
 </body>

@@ -24,7 +24,7 @@ test('supplemental verified ISBNs retain covers, null AR and official award prov
  assert.equal(supplement.filter(b=>b.language==='ko').length,36);
  for(const entry of supplement){
   const book=books.find(b=>b.isbn===entry.isbn);assert.ok(book);
-  assert.equal(book.title,entry.title);assert.equal(book.ar,null);
+  assert.equal(book.title,entry.title);if(book.arStatus!=='verified')assert.equal(book.ar,null);
   assert.match(book.thumbnail,/^https:\/\/image\.aladin\.co\.kr\//);
   if(entry.language==='en'){
    assert.equal(book.language,'en');assert.equal(book.age,'');
@@ -41,8 +41,8 @@ test('existing editorial additions and all verified award mappings survive regen
  }
 });
 test('public catalog preserves the existing books but excludes every legacy recommendation membership',()=>{
- assert.ok(books.length>=5625);assert.equal(books.filter(b=>b.awards?.length).length,78);
- assert.deepEqual(Array.from(ctx.window.BOOK_CATALOG.meta.sources,s=>s.id).sort(),['caldecott-award','newbery-award']);
+ assert.ok(books.length>=5625);assert.ok(books.filter(b=>b.awards?.length).length>=78);
+ for(const id of ['caldecott-award','newbery-award'])assert.ok(ctx.window.BOOK_CATALOG.meta.sources.some(s=>s.id===id));
  for(const source of ctx.window.BOOK_CATALOG.meta.sources)assert.match(source.url,/^https:\/\/www\.ala\.org\//);
  for(const book of books)assert.equal('lists' in book,false);
 });
@@ -55,7 +55,7 @@ test('publisher additions preserve verified ISBNs and individual sources without
   assert.equal([...entry.isbn].reduce((sum,d,i)=>sum+Number(d)*(i%2?3:1),0)%10,0);
   const book=books.find(b=>b.isbn===entry.isbn);assert.ok(book);
   assert.equal(book.title,entry.title);assert.equal(book.language,entry.language);
-  assert.equal(book.ar,null);assert.equal('lists' in book,false);
+  if(book.arStatus!=='verified')assert.equal(book.ar,null);assert.equal('lists' in book,false);
   assert.equal(new URL(entry.source).protocol,'https:');
   assert.ok(entry.evidenceNotes);assert.equal(entry.checkedAt,'2026-10-23');assert.ok(!book.thumbnail.includes('noimg'));
   assert.match(book.thumbnail,/^https:\/\/image\.aladin\.co\.kr\//);

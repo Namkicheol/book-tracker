@@ -1,0 +1,1471 @@
+[
+  {
+    "isbn": "9780062221278",
+    "stage": "reader",
+    "series": {
+      "id": "amelia-bedelia-ican-read",
+      "name": "Amelia Bedelia I Can Read"
+    },
+    "topics": [
+      "friendship",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://www.icanread.com/books/9780062221278/amelia-bedelia-tries-her-luck/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Amelia Bedelia Tries Her Luck",
+      "author": "Herman Parish (지은이), Lynne Avril (그림)",
+      "publisher": "HarperCollins",
+      "thumbnail": "https://image.aladin.co.kr/product/2381/4/cover200/0062221272_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780063276505",
+    "stage": "reader",
+    "series": {
+      "id": "my-community-ican-read",
+      "name": "My Community I Can Read"
+    },
+    "topics": [
+      "humor"
+    ],
+    "source": "https://www.icanread.com/books/9780063276505/i-want-to-be-an-artist/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "I Want to Be an Artist: A My Community I Can Read",
+      "author": "Laura Driscoll (지은이), Echeverri, Catalina (그림)",
+      "publisher": "HarperCollins",
+      "thumbnail": "https://image.aladin.co.kr/product/33618/5/cover200/006327650x_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780063496507",
+    "stage": "reader",
+    "series": {
+      "id": "dc-ican-read",
+      "name": "DC I Can Read"
+    },
+    "topics": [
+      "adventure",
+      "humor"
+    ],
+    "source": "https://www.icanread.com/books/9780063496507/dc-i-am-a-super-hero/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "DC: I Am a Super Hero",
+      "author": "Warner Brothers (지은이)",
+      "publisher": "HarperCollins",
+      "thumbnail": "https://image.aladin.co.kr/product/37980/10/cover200/006349650x_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780062432377",
+    "stage": "reader",
+    "series": {
+      "id": "ranger-rick-ican-read",
+      "name": "Ranger Rick I Can Read"
+    },
+    "topics": [
+      "animals",
+      "science"
+    ],
+    "source": "https://www.icanread.com/books/9780062432377/ranger-rick-i-wish-i-was-a-kangaroo/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Ranger Rick: I Wish I Was a Kangaroo",
+      "author": "BOV  JENNIFER (지은이)",
+      "publisher": "HarperCollins",
+      "thumbnail": "https://image.aladin.co.kr/product/26318/87/cover200/0062432370_1.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781481461870",
+    "stage": "reader",
+    "series": {
+      "id": "my-first-ready-to-read",
+      "name": "My First Ready-to-Read"
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.simonandschuster.com/books/My-First-Gymnastics-Class/Alyssa-Satin-Capucilli/My-First/9781481461870",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "My First Gymnastics Class: Ready-To-Read Pre-Level 1",
+      "author": "알리사 사틴 카푸칠리 (지은이), Laura Hanifin (사진)",
+      "publisher": "Simon & Schuster",
+      "thumbnail": "https://image.aladin.co.kr/product/6846/37/cover200/1481461877_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780593128091",
+    "stage": "reader",
+    "series": {
+      "id": "big-shark-little-shark",
+      "name": "Big Shark, Little Shark"
+    },
+    "topics": [
+      "animals",
+      "friendship",
+      "humor"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/622618/big-shark-little-shark-baby-shark-by-anna-membrino-illustrated-by-tim-budgen/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Big Shark, Little Shark, Baby Shark",
+      "author": "Anna Membrino (지은이), Tim Budgen (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/21355/70/cover200/0593128095_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781452145426",
+    "stage": "picture",
+    "topics": [
+      "animals",
+      "science",
+      "adventure"
+    ],
+    "source": "https://www.chroniclebooks.com/products/over-and-under-the-pond",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Over and Under the Pond",
+      "author": "케이트 메스너 (지은이), 크리스토퍼 실라스 닐 (그림)",
+      "publisher": "Chronicle Books",
+      "thumbnail": "https://image.aladin.co.kr/product/8596/58/cover200/1452145423_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781452182704",
+    "stage": "picture",
+    "topics": [
+      "science"
+    ],
+    "source": "https://www.chroniclebooks.com/products/have-you-ever-seen-a-flower",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Have You Ever Seen a Flower?",
+      "author": "Shawn Harris (그림)",
+      "publisher": "Chronicle Books",
+      "thumbnail": "https://image.aladin.co.kr/product/25543/44/cover200/1452182701_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781452170336",
+    "stage": "picture",
+    "topics": [
+      "dinosaurs",
+      "friendship",
+      "humor"
+    ],
+    "source": "https://www.chroniclebooks.com/products/tiny-t-rex-and-the-impossible-hug",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Tiny T. Rex and the Impossible Hug",
+      "author": "Jonathan Stutzman (지은이), Jay Fleck (그림)",
+      "publisher": "Chronicle Books",
+      "thumbnail": "https://image.aladin.co.kr/product/15573/11/cover200/1452170339_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781452150130",
+    "stage": "picture",
+    "topics": [
+      "animals",
+      "science"
+    ],
+    "source": "https://www.chroniclebooks.com/products/they-all-saw-a-cat",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "They All Saw a Cat",
+      "author": "브렌던 웬젤 (그림)",
+      "publisher": "Chronicle Books",
+      "thumbnail": "https://image.aladin.co.kr/product/7561/62/cover200/1452150133_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780763678388",
+    "stage": "picture",
+    "topics": [
+      "adventure",
+      "friendship"
+    ],
+    "source": "https://www.candlewick.com/9780763678388/jabari-jumps/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Jabari Jumps",
+      "author": "Gaia Cornwall (지은이)",
+      "publisher": "Candlewick Press",
+      "thumbnail": "https://image.aladin.co.kr/product/9006/46/cover200/0763678384_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781536207163",
+    "stage": "picture",
+    "topics": [
+      "adventure",
+      "friendship"
+    ],
+    "source": "https://www.candlewick.com/9781536207163/jabari-tries/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Jabari Tries",
+      "author": "Gaia Cornwall (지은이)",
+      "publisher": "Candlewick Press",
+      "thumbnail": "https://image.aladin.co.kr/product/23139/28/cover200/1536207160_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780763690458",
+    "stage": "picture",
+    "topics": [
+      "friendship",
+      "adventure"
+    ],
+    "source": "https://www.candlewick.com/9780763690458/julian-is-a-mermaid/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Julian Is a Mermaid",
+      "author": "제시카 러브 (지은이)",
+      "publisher": "Candlewick Press",
+      "thumbnail": "https://image.aladin.co.kr/product/11718/74/cover200/0763690457_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780763662295",
+    "stage": "picture",
+    "topics": [
+      "adventure",
+      "humor"
+    ],
+    "source": "https://www.candlewick.com/9780763662295/sam-and-dave-dig-a-hole/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Sam & Dave Dig a Hole",
+      "author": "맥 바넷 (지은이), 존 클라센 (그림)",
+      "publisher": "Candlewick Press",
+      "thumbnail": "https://image.aladin.co.kr/product/3625/94/cover200/076366229d_1.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781419746550",
+    "stage": "picture",
+    "topics": [
+      "friendship",
+      "humor"
+    ],
+    "source": "https://www.abramsbooks.com/product/our-little-kitchen_9781419746550/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Our Little Kitchen: A Picture Book",
+      "author": "Jillian Tamaki (지은이)",
+      "publisher": "ABRAMS",
+      "thumbnail": "https://image.aladin.co.kr/product/24142/35/cover200/1419746553_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781419742064",
+    "stage": "picture",
+    "topics": [
+      "animals",
+      "friendship"
+    ],
+    "source": "https://www.abramsbooks.com/product/this-way-charlie_9781419742064/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "This Way, Charlie: A Picture Book",
+      "author": "Caron Levis (지은이), Charles Santoso (그림)",
+      "publisher": "ABRAMS",
+      "thumbnail": "https://image.aladin.co.kr/product/20306/76/cover200/141974206x_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781419731686",
+    "stage": "picture",
+    "topics": [
+      "friendship",
+      "humor"
+    ],
+    "source": "https://www.abramsbooks.com/product/neighbors_9781419731686/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "The Neighbors",
+      "author": "에이나트 차르파티 (지은이), 아넷 아펠 (옮긴이)",
+      "publisher": "ABRAMS",
+      "thumbnail": "https://image.aladin.co.kr/product/13519/56/cover200/1419731688_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780448431451",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/287309/who-was-thomas-jefferson-by-dennis-brindell-fradin-illustrated-by-john-obrien/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Thomas Jefferson?",
+      "author": "데니스 브린델 그래딘, Dennis B. Fradin (지은이), 존 오브라이언 (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/99/51/cover200/0448431459_1.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780448461465",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "humor"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/311414/who-was-roald-dahl-by-true-kelley-illustrated-by-stephen-marchesi/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Roald Dahl?",
+      "author": "True Kelley (지은이), Stephen Marchesi (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/1574/65/cover200/0448461463_1.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780448462899",
+    "stage": "chapter",
+    "series": {
+      "id": "what-was",
+      "name": "What Was?"
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/312178/what-was-the-gold-rush-by-joan-holub-illustrated-by-tim-tomkinson/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "What Was the Gold Rush?",
+      "author": "조앤 호럽 (지은이), Tim Tomkinson (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/1817/45/cover200/0448462893_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780448445403",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/300470/who-was-marco-polo-by-joan-holub-illustrated-by-john-obrien/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Marco Polo?",
+      "author": "조앤 호럽 (지은이), 존 오브라이언 (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/137/22/cover200/0448445409_1.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780448479316",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "adventure",
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/314494/who-was-ernest-shackleton-by-james-buckley-jr-illustrated-by-max-hergenrother/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Ernest Shackleton?",
+      "author": "Max Hergenrother, Jim Buckley (지은이)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/2870/31/cover200/0448479311_1.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780593387412",
+    "stage": "chapter",
+    "series": {
+      "id": "who-hq-now",
+      "name": "Who HQ Now"
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/692502/who-is-tom-brady-by-james-buckley-jr-illustrated-by-gregory-copeland/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Is Tom Brady?",
+      "author": "James Buckley, Who Hq (지은이), Gregory Copeland (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/27551/68/cover200/0593387414_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780399543890",
+    "stage": "chapter",
+    "series": {
+      "id": "what-was",
+      "name": "What Was?"
+    },
+    "topics": [
+      "animals",
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/538670/what-was-the-ice-age-by-nico-medina-illustrated-by-david-groff/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "What Was the Ice Age?",
+      "author": "Nicolas David Medina (지은이), David Groff (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/10117/13/cover200/0399543899_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780593752166",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/741835/who-was-katherine-johnson-by-shelia-p-moses-illustrated-by-dede-putra/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Katherine Johnson?",
+      "author": "Shelia P. Moses, Who Hq (지은이), Dede Putra (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/35644/66/cover200/0593752163_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780593750292",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/735299/who-was-cleopatra-by-kathryn-waterfield/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Cleopatra?",
+      "author": "Kathryn Waterfield, Who Hq (지은이), 마누엘 구티에레즈 (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/36026/14/cover200/0593750292_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780593754252",
+    "stage": "chapter",
+    "series": {
+      "id": "what-was",
+      "name": "What Was?"
+    },
+    "topics": [
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/746818/what-was-the-industrial-revolution-by-jim-gigliotti-illustrated-by-david-malan/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "What Was the Industrial Revolution?",
+      "author": "Who Hq, Jim E. Gigliotti (지은이)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/36030/28/cover200/0593754255_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9798217050963",
+    "stage": "chapter",
+    "topics": [
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/783083/what-is-ai-by-wes-locher-illustrated-by-dede-putra/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "What Is AI?",
+      "author": "Wes Locher, Who Hq (지은이), Dede Putra (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/37050/6/cover200/f722030231_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780448461922",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "animals",
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/311575/who-was-jane-goodall-by-roberta-edwards-illustrated-by-john-obrien/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Jane Goodall?",
+      "author": "Roberta Edwards, Stephen Marchesi, Harrison, Nan (지은이)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/1574/65/cover200/0448461927_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780448484235",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/316992/who-was-alexander-the-great-by-robin-waterfield-and-kathryn-waterfield-illustrated-by-andrew-thomson/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Alexander the Great?",
+      "author": "Robin H. Waterfield, Kathryn Waterfield (지은이), Andrew Thomson (그림)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/6730/58/cover200/0448484234_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780448431048",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/287280/who-was-wolfgang-amadeus-mozart-by-yona-zeldis-mcdonough-illustrated-by-carrie-robbins/9780448431048",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Wolfgang Amadeus Mozart?",
+      "author": "Yona Zeldis McDonough (지은이)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/68/12/cover200/0448431041_1.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781524788735",
+    "stage": "chapter",
+    "series": {
+      "id": "who-was",
+      "name": "Who Was?"
+    },
+    "topics": [
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/574480/who-was-confucius-by-michael-burgan-illustrated-by-robert-squier/",
+    "checkedAt": "2026-10-23",
+    "bibliographic": {
+      "title": "Who Was Confucius?",
+      "author": "Michael Burgan, Who Hq (지은이)",
+      "publisher": "Penguin Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/23456/95/cover200/1524788732_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474970105",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Fat cat on a mat (Paperback)",
+      "author": "러셀 푼터 (지은이)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/19583/41/cover200/1474970109_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474970112",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Shark in the Park (Paperback, New ed)",
+      "author": "레슬리 심스 (지은이), 스테판 카트라이트 (그림)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/20710/81/cover200/1474970117_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474970150",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Fox on a Box (Paperback)",
+      "author": "러셀 푼터 (지은이)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/23534/10/cover200/147497015x_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474970129",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Ted in a Red Bed (Paperback)",
+      "author": "러셀 푼터 (지은이)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/23533/60/cover200/1474970125_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474970099",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Big Pig on a Dig (Paperback)",
+      "author": "러셀 푼터 (지은이), 스테판 카트라이트 (그림)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/25412/16/cover200/1474970095_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474970181",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Goose on the Loose (Paperback)",
+      "author": "러셀 푼터 (지은이), 스테판 카트라이트 (그림)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/21858/9/cover200/1474970184_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474970143",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Mouse Moves House (Paperback)",
+      "author": "러셀 푼터 (지은이), 스테판 카트라이트 (그림)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/21858/9/cover200/1474970141_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781409577904",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Llamas in Pyjamas (Paperback)",
+      "author": "러셀 푼터 (지은이)",
+      "publisher": "Usborne Publishing",
+      "thumbnail": "https://image.aladin.co.kr/product/4425/37/cover200/1409577902_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781409580409",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Raccoon on the Moon (Paperback)",
+      "author": "러셀 푼터 (지은이)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/5348/1/cover200/1409580407_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781409557449",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Underpants for Ants (Paperback)",
+      "author": "러셀 푼터 (지은이)",
+      "publisher": "Usborne Publishing",
+      "thumbnail": "https://image.aladin.co.kr/product/2470/60/cover200/1409557448_1.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474922111",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "animals",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Ape's Great Escape (Paperback)",
+      "author": "러셀 푼터 (지은이), David Semple (그림)",
+      "publisher": "Usborne",
+      "thumbnail": "https://image.aladin.co.kr/product/11718/90/cover200/1474922112_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9781474959506",
+    "stage": "phonics",
+    "series": {
+      "id": "usborne-phonics-readers",
+      "name": "Usborne Phonics Readers"
+    },
+    "topics": [
+      "adventure",
+      "humor"
+    ],
+    "source": "https://usborne.com/media/usborne_pdfs/book-bands/Phonics_Readers_bookbands_Oct2021.pdf",
+    "checkedAt": "2026-10-24",
+    "bibliographic": {
+      "title": "Unicorns in Uniforms (Paperback)",
+      "author": "러셀 푼터 (지은이), David Semple (그림)",
+      "publisher": "Usborne Publishing Ltd",
+      "thumbnail": "https://image.aladin.co.kr/product/17105/71/cover200/1474959504_2.jpg",
+      "language": "en"
+    }
+  },
+  {
+    "isbn": "9780679824114",
+    "stage": "chapter",
+    "series": {
+      "id": "magic-tree-house",
+      "name": "Magic Tree House",
+      "order": 1
+    },
+    "topics": [
+      "dinosaurs",
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/125113/dinosaurs-before-dark-by-mary-pope-osborne-illustrated-by-sal-murdocca/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 2.6,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=6311",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780679824121",
+    "stage": "chapter",
+    "series": {
+      "id": "magic-tree-house",
+      "name": "Magic Tree House",
+      "order": 2
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/125127/the-knight-at-dawn-by-mary-pope-osborne-illustrated-by-sal-murdocca/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 2.9,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=6327",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780679824244",
+    "stage": "chapter",
+    "series": {
+      "id": "magic-tree-house",
+      "name": "Magic Tree House",
+      "order": 3
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/125139/mummies-in-the-morning-by-mary-pope-osborne-ilustrated-by-sal-murdocca/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 2.7,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=10644",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780679824251",
+    "stage": "chapter",
+    "series": {
+      "id": "magic-tree-house",
+      "name": "Magic Tree House",
+      "order": 4
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/125147/pirates-past-noon-by-mary-pope-osborne-illustrated-by-sal-murdocca/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 2.8,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=9291",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780679863717",
+    "stage": "chapter",
+    "series": {
+      "id": "magic-tree-house",
+      "name": "Magic Tree House",
+      "order": 5
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/125148/night-of-the-ninjas-by-mary-pope-osborne-illustrated-by-sal-murdocca/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 2.7,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=10680",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780679863724",
+    "stage": "chapter",
+    "series": {
+      "id": "magic-tree-house",
+      "name": "Magic Tree House",
+      "order": 6
+    },
+    "topics": [
+      "animals",
+      "adventure",
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/125149/afternoon-on-the-amazon-by-mary-pope-osborne-illustrated-by-sal-murdocca/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 2.6,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=14651",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780679890515",
+    "stage": "chapter",
+    "series": {
+      "id": "magic-tree-house",
+      "name": "Magic Tree House",
+      "order": 14
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/125107/day-of-the-dragon-king-by-mary-pope-osborne-illustrated-by-sal-murdocca/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 3.3,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=20015",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780679890638",
+    "stage": "chapter",
+    "series": {
+      "id": "magic-tree-house",
+      "name": "Magic Tree House",
+      "order": 17
+    },
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/125110/tonight-on-the-titanic-by-mary-pope-osborne-illustrated-by-sal-murdocca/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 3.1,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=31065",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780142400104",
+    "stage": "chapter",
+    "series": {
+      "id": "cam-jansen",
+      "name": "Cam Jansen",
+      "order": 1
+    },
+    "topics": [
+      "adventure",
+      "humor"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/292899/cam-jansen-the-mystery-of-the-stolen-diamonds-1-by-david-a-adler-illustrated-by-susanna-natti/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 3.2,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=308",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780142400111",
+    "stage": "chapter",
+    "series": {
+      "id": "cam-jansen",
+      "name": "Cam Jansen",
+      "order": 2
+    },
+    "topics": [
+      "adventure",
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/292907/cam-jansen-the-mystery-of-the-ufo-2-by-david-a-adler-illustrated-by-susanna-natti/",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780142400128",
+    "stage": "chapter",
+    "series": {
+      "id": "cam-jansen",
+      "name": "Cam Jansen",
+      "order": 3
+    },
+    "topics": [
+      "dinosaurs",
+      "adventure",
+      "science"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/292908/cam-jansen-the-mystery-of-the-dinosaur-bones-3-by-david-a-adler-illustrated-by-susanna-natti/",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780142400135",
+    "stage": "chapter",
+    "series": {
+      "id": "cam-jansen",
+      "name": "Cam Jansen",
+      "order": 4
+    },
+    "topics": [
+      "animals",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/292910/cam-jansen-the-mystery-of-the-television-dog-4-by-david-a-adler-illustrated-by-susanna-natti/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 3.4,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?q=18708&l=EN&slid=788787093",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780064442435",
+    "stage": "reader",
+    "topics": [
+      "animals",
+      "friendship"
+    ],
+    "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=43663",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 0.8,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=43663",
+      "checkedAt": "2026-10-24"
+    },
+    "series": {
+      "id": "biscuit",
+      "name": "Biscuit"
+    }
+  },
+  {
+    "isbn": "9780064442121",
+    "stage": "reader",
+    "series": {
+      "id": "biscuit",
+      "name": "Biscuit"
+    },
+    "topics": [
+      "animals",
+      "friendship"
+    ],
+    "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=31587",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 1.4,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=31587",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780064440202",
+    "stage": "reader",
+    "topics": [
+      "animals",
+      "friendship",
+      "humor"
+    ],
+    "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=6116",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 2.9,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=6116",
+      "checkedAt": "2026-10-24"
+    },
+    "series": {
+      "id": "frog-and-toad",
+      "name": "Frog and Toad"
+    }
+  },
+  {
+    "isbn": "9780064431781",
+    "stage": "picture",
+    "topics": [
+      "adventure",
+      "animals"
+    ],
+    "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=5499",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 3.4,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=5499",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780142410349",
+    "stage": "novel",
+    "topics": [
+      "animals",
+      "adventure",
+      "humor"
+    ],
+    "source": "https://www.arbookfind.com/bookdetail.aspx?q=5011&l=EN&slid=788786892",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 4.1,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?q=5011&l=EN&slid=788786892",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780064410939",
+    "stage": "novel",
+    "topics": [
+      "animals",
+      "friendship"
+    ],
+    "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=19",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 4.4,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=19",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780142410318",
+    "stage": "novel",
+    "topics": [
+      "adventure",
+      "humor"
+    ],
+    "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=20",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 4.8,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=20",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780063277915",
+    "stage": "reader",
+    "topics": [
+      "animals",
+      "humor"
+    ],
+    "source": "https://www.ala.org/news/2024/01/corey-r-tabor-wins-2024-geisel-award-fox-has-problem",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9781797213897",
+    "stage": "reader",
+    "topics": [
+      "friendship"
+    ],
+    "source": "https://www.ala.org/winner/henry-always",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9781665920018",
+    "stage": "reader",
+    "topics": [
+      "animals",
+      "friendship",
+      "humor",
+      "science"
+    ],
+    "source": "https://www.ala.org/news/2024/01/corey-r-tabor-wins-2024-geisel-award-fox-has-problem",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780062977076",
+    "stage": "reader",
+    "topics": [
+      "animals",
+      "adventure",
+      "friendship"
+    ],
+    "source": "https://www.ala.org/winner/fox-night",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780593643846",
+    "stage": "chapter",
+    "topics": [
+      "adventure",
+      "humor"
+    ],
+    "source": "https://www.ala.org/news/2011/11/nicholas-day-brett-helquist-win-2024-sibert-medal",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9781338305906",
+    "stage": "picture",
+    "topics": [],
+    "source": "https://www.ala.org/news/2011/11/nicholas-day-brett-helquist-win-2024-sibert-medal",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9781250810366",
+    "stage": "picture",
+    "topics": [
+      "animals",
+      "science"
+    ],
+    "source": "https://www.ala.org/news/2011/11/nicholas-day-brett-helquist-win-2024-sibert-medal",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780358458074",
+    "stage": "picture",
+    "topics": [
+      "animals",
+      "science"
+    ],
+    "source": "https://www.ala.org/news/2011/11/nicholas-day-brett-helquist-win-2024-sibert-medal",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780062888846",
+    "stage": "novel",
+    "topics": [],
+    "source": "https://www.ala.org/news/2011/11/ibi-zoboi-dare-coulter-win-2024-coretta-scott-king-book-awards",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780316056618",
+    "stage": "novel",
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.ala.org/winner/freewater-0",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9781541581203",
+    "stage": "picture",
+    "topics": [],
+    "source": "https://www.ala.org/winner/unspeakable-tulsa-race-massacre",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780399545436",
+    "stage": "novel",
+    "topics": [
+      "friendship"
+    ],
+    "source": "https://www.ala.org/rt/sites/ala.org.rt/files/content/cskbookawards/docs/CSK%202021%20Discussion%20Guide%20%28002%29.pdf",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9781525304149",
+    "stage": "picture",
+    "topics": [
+      "adventure"
+    ],
+    "source": "https://www.ala.org/winner/my-city-speaks",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780823445592",
+    "stage": "picture",
+    "topics": [],
+    "source": "https://www.ala.org/winner/i-talk-river",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780593374252",
+    "stage": "novel",
+    "topics": [],
+    "source": "https://www.ala.org/winner/kind-spark",
+    "checkedAt": "2026-10-24"
+  },
+  {
+    "isbn": "9780064436168",
+    "stage": "reader",
+    "series": {
+      "id": "biscuit",
+      "name": "Biscuit"
+    },
+    "topics": [
+      "animals"
+    ],
+    "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=61032",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 0.9,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=61032",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780060094614",
+    "stage": "reader",
+    "series": {
+      "id": "biscuit",
+      "name": "Biscuit"
+    },
+    "topics": [
+      "animals"
+    ],
+    "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=84976",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 0.9,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=84976",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780064443159",
+    "stage": "reader",
+    "series": {
+      "id": "biscuit",
+      "name": "Biscuit"
+    },
+    "topics": [
+      "animals"
+    ],
+    "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=45490",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 0.9,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=45490",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9781423113478",
+    "stage": "reader",
+    "series": {
+      "id": "elephant-and-piggie",
+      "name": "Elephant & Piggie"
+    },
+    "topics": [
+      "animals",
+      "friendship",
+      "humor"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/728672/are-you-ready-to-play-outside-an-elephant-and-piggie-book-by-mo-willems/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 0.6,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=154562",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9781423114109",
+    "stage": "reader",
+    "series": {
+      "id": "elephant-and-piggie",
+      "name": "Elephant & Piggie"
+    },
+    "topics": [
+      "animals",
+      "friendship",
+      "humor"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/728704/elephants-cannot-dance-an-elephant-and-piggie-book-by-mo-willems/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 0.9,
+      "source": "https://www.arbookfind.com/bookdetailprint.aspx?l=EN&q=154563",
+      "checkedAt": "2026-10-24"
+    }
+  },
+  {
+    "isbn": "9780394800165",
+    "stage": "reader",
+    "series": {
+      "id": "beginner-books",
+      "name": "Beginner Books"
+    },
+    "topics": [
+      "humor"
+    ],
+    "source": "https://www.penguinrandomhouse.com/books/43017/green-eggs-and-ham-by-dr-seuss/9780394800165/",
+    "checkedAt": "2026-10-24",
+    "ar": {
+      "value": 1.5,
+      "source": "https://www.arbookfind.com/bookdetail.aspx?client=WKAR&l=EN&q=9021",
+      "checkedAt": "2026-10-24"
+    },
+    "bibliographic": {
+      "title": "Green Eggs and Ham (Hardcover)",
+      "author": "Dr. Seuss (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/104/0/cover200/039480016f_1.jpg",
+      "language": "en"
+    }
+  }
+]
