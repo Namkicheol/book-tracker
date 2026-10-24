@@ -287,7 +287,7 @@
     modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:flex-start;justify-content:center;z-index:10000;padding:20px;overflow-y:auto;animation:authFadeIn .18s ease';
 
     modal.innerHTML = [
-      '<div style="background:#fff;border-radius:20px;padding:22px;max-width:380px;width:100%;margin:auto;box-shadow:0 16px 48px rgba(0,0,0,0.2);animation:authPop .22s cubic-bezier(.2,.8,.2,1)">',
+      '<div style="background:#fff;border-radius:20px;padding:22px;max-width:380px;width:100%;min-width:0;box-sizing:border-box;margin:auto;box-shadow:0 16px 48px rgba(0,0,0,0.2);animation:authPop .22s cubic-bezier(.2,.8,.2,1)">',
 
       onboarding ? '<h2 style="font-size:20px;margin:0 0 14px">반가워요! 내 서재를 설정해 주세요</h2>' : '',
       // 헤더 — avatar + 이름 + provider badge
@@ -333,7 +333,7 @@
       '<span>아바타 이모티콘으로 변경</span>',
       '<span id="apvAvatarPreview" style="font-size:22px;width:28px;height:28px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center"></span>',
       '</summary>',
-      '<div id="apvAvatarGrid" style="display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:12px"></div>',
+      '<div id="apvAvatarGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:6px;margin-top:12px;min-width:0"></div>',
       '</details>',
 
       // 4. 액션 버튼들 — 저장/취소 50/50
@@ -399,7 +399,7 @@
       b.type = 'button';
       b.textContent = emo;
       var isActive = emo === cur.avatar;
-      b.style.cssText = 'padding:8px;border:1.5px solid ' + (isActive ? '#FF9E9E' : 'transparent') + ';border-radius:10px;font-size:22px;cursor:pointer;background:' + (isActive ? '#FFE0EC' : '#fff');
+      b.style.cssText = 'min-width:0;min-height:44px;padding:6px 0;border:1.5px solid ' + (isActive ? '#FF9E9E' : 'transparent') + ';border-radius:10px;font-size:22px;cursor:pointer;background:' + (isActive ? '#FFE0EC' : '#fff');
       b.addEventListener('click', function () {
         cur.avatar = emo;
         grid.querySelectorAll('button').forEach(function (x) {
