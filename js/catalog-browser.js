@@ -3,6 +3,9 @@
   'use strict';
   const books = (window.BOOK_CATALOG || {}).books || [];
   const PAGE_SIZE = 24;
+  const ENGLISH_FIELDS = ['catalogStage','catalogSeries','catalogSeriesStep','catalogTopic','catalogDistinction'];
+  const STAGES = {picture:'그림책 함께 읽기',phonics:'파닉스 첫걸음',reader:'리더스',chapter:'챕터북',novel:'소설'};
+  const TOPICS = {animals:'동물',friendship:'우정',adventure:'모험',humor:'유머',dinosaurs:'공룡',science:'과학'};
   let page = 1;
   let tab = 'all';
   let matches = books;
@@ -19,26 +22,56 @@
       $('catalog' + field).addEventListener('change', filter);
     });
     const sources=(window.BOOK_CATALOG.meta || {}).sources || [];
-    $('catalogSource').innerHTML='<option value="">모든 수상 목록</option>'+sources.map(source=>`<option value="${escape(source.id)}">${escape(source.name)}</option>`).join('');
+    const awardOptions=sources.map(source=>`<option value="${escape(source.id)}">${escape(source.name)}</option>`).join('');
+    $('catalogSource').innerHTML='<option value="">모든 수상 목록</option>'+awardOptions;
+    $('catalogAward').innerHTML='<option value="">모든 수상작</option>'+awardOptions;
+    const englishBooks=books.filter(book=>book.language==='en' || book.genre==='원서');
+    const series=[...new Map(englishBooks.filter(book=>book.series?.id && typeof book.series.name==='string' && book.series.name.trim()).map(book=>[book.series.id,book.series])).values()].sort((a,b)=>a.name.localeCompare(b.name));
+    $('catalogStage').innerHTML='<option value="">모든 단계</option>'+Object.entries(STAGES).map(([id,name])=>`<option value="${id}">${name} (${englishBooks.filter(book=>book.stage===id).length})</option>`).join('')+`<option value="unknown">단계 미분류 (${englishBooks.filter(book=>!book.stage).length})</option>`;
+    $('catalogTopic').innerHTML='<option value="">모든 관심사</option>'+Object.entries(TOPICS).map(([id,name])=>`<option value="${id}">${name}</option>`).join('');
+    $('catalogSeries').innerHTML='<option value="">모든 시리즈</option>'+series.map(item=>`<option value="${escape(item.id)}">${escape(item.name)}</option>`).join('');
+    ENGLISH_FIELDS.forEach(id=>$(id).addEventListener('change',filter));
+    $('catalogEnglishExplore').addEventListener('click',event=>{const button=event.target.closest('[data-english-field]');if(!button)return;const field=button.dataset.englishField;if(!['catalogStage','catalogTopic'].includes(field))$('catalogEnglishAdvanced').open=true;$(field)?.focus?.();$(field)?.scrollIntoView?.({block:'nearest',behavior:'smooth'});});
     ['catalogSource','catalogAr','catalogAward'].forEach(id=>$(id).addEventListener('change',filter));
+    function selectTab(value) {
+      tab=value;
+      ['catalogQuery','catalogAge','catalogGenre','catalogPublisher','catalogSource','catalogAr','catalogAward',...ENGLISH_FIELDS].forEach(id=>{$(id).value='';});
+      document.querySelectorAll('[data-catalog-tab]').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.catalogTab===tab)));
+      $('catalogEnglishFilters').hidden=tab!=='english';
+      $('catalogSourceField').hidden=tab==='english';
+      $('catalogAgeField').hidden=tab==='english';
+      $('catalogEnglishAdvanced').open=false;
+      filter();
+    }
     $('catalogTabs').addEventListener('click',event=>{
       const button=event.target.closest('[data-catalog-tab]');
+      if(button)selectTab(button.dataset.catalogTab);
+    });
+    $('catalogQuickLinks')?.addEventListener('click',event=>{
+      const button=event.target.closest('[data-catalog-quick]');
       if(!button)return;
-      tab=button.dataset.catalogTab;
-      ['catalogQuery','catalogAge','catalogGenre','catalogPublisher','catalogSource','catalogAr','catalogAward'].forEach(id=>{$(id).value='';});
-      document.querySelectorAll('[data-catalog-tab]').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));
-      $('catalogEnglishFilters').hidden=tab!=='english';
-      filter();
+      selectTab(button.dataset.catalogQuick==='korean'?'korean':'english');
+      if(button.dataset.catalogQuick==='awards'){
+        $('catalogEnglishAdvanced').open=true;
+        $('catalogAward').focus?.();
+        $('catalogAward').scrollIntoView?.({block:'center',behavior:'smooth'});
+      }else{
+        $('catalogTitle').focus?.();
+        $('catalogTitle').scrollIntoView?.({block:'start',behavior:'smooth'});
+      }
     });
     $('catalogQuery').addEventListener('input', filter);
     $('catalogForm').addEventListener('submit', event => { event.preventDefault(); filter(); });
     $('catalogPrevious').addEventListener('click', () => { if (page > 1) changePage(-1); });
     $('catalogNext').addEventListener('click', () => { if (page * PAGE_SIZE < matches.length) changePage(1); });
     $('catalogReset').addEventListener('click', () => {
-      tab='all';
-      $('catalogEnglishFilters').hidden=true;
-      document.querySelectorAll('[data-catalog-tab]').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.catalogTab==='all')));
-      ['catalogQuery','catalogAge','catalogGenre','catalogPublisher','catalogSource','catalogAr','catalogAward'].forEach(id => { $(id).value = ''; });
+      if(tab!=='english')tab='all';
+      $('catalogEnglishFilters').hidden=tab!=='english';
+      $('catalogSourceField').hidden=tab==='english';
+      $('catalogAgeField').hidden=tab==='english';
+      $('catalogEnglishAdvanced').open=false;
+      document.querySelectorAll('[data-catalog-tab]').forEach(item=>item.setAttribute('aria-pressed',String(item.dataset.catalogTab===tab)));
+      ['catalogQuery','catalogAge','catalogGenre','catalogPublisher','catalogSource','catalogAr','catalogAward',...ENGLISH_FIELDS].forEach(id => { $(id).value = ''; });
       filter();
     });
     $('catalogList').addEventListener('click', event => {
@@ -62,18 +95,24 @@
     const genre = $('catalogGenre').value;
     const publisher = $('catalogPublisher').value;
     const source=$('catalogSource').value, ar=$('catalogAr').value, award=$('catalogAward').value;
+    const stage=$('catalogStage').value,series=$('catalogSeries').value,seriesStep=$('catalogSeriesStep').value,topic=$('catalogTopic').value,distinction=$('catalogDistinction').value;
     const bands={b01:[0,1],b12:[1,2],b23:[2,3],b34:[3,4],b4:[4,Infinity]};
     const english=book=>book.language==='en' || book.genre==='원서';
     matches = books.filter(book => {
       const awards=book.awards || [];
       const level=book.ar;
-      const known=typeof level==='number' && Number.isFinite(level);
+      const known=book.arStatus==='verified' && typeof level==='number' && Number.isFinite(level);
       return (tab==='all' || (tab==='korean' ? !english(book) : tab==='english' ? english(book) : Boolean(book.textbookGrade))) &&
         (!query || compact([book.title,book.author,book.publisher,book.isbn].join(' ')).includes(query)) &&
         (!age || (age==='__unclassified' ? !book.age : book.age===age)) && (!genre || book.genre===genre) && (!publisher || book.publisher===publisher) &&
-        (!source || awards.some(item=>item.id===source)) && (!award || awards.some(item=>item.id===award)) &&
+        (!source || awards.some(item=>item.id===source)) && (!award && !distinction || awards.some(item=>(!award || item.id===award) && (!distinction || (distinction==='Medal' ? ['Medal','Winner'].includes(item.distinction) : item.distinction===distinction)))) &&
+        (!stage || (stage==='unknown' ? !book.stage : book.stage===stage)) && (!series || book.series?.id===series) &&
+        (!seriesStep || (seriesStep==='first' ? book.series?.order===1 : Number.isFinite(book.series?.order) && book.series.order>1)) &&
+        (!topic || (book.topics || []).includes(topic)) &&
         (!ar || (ar==='unknown' ? !known : known && level>=bands[ar][0] && level<bands[ar][1]));
     });
+    if(series)matches.sort((a,b)=>(a.series?.order ?? Infinity)-(b.series?.order ?? Infinity) || a.title.localeCompare(b.title));
+    else if(tab==='english')matches.sort((a,b)=>Number(Boolean(b.discoverySource))-Number(Boolean(a.discoverySource)));
     page = 1;
     openRequest++;
     $('catalogActionStatus').textContent = '';
@@ -86,9 +125,11 @@
     $('catalogStatus').textContent = matches.length ? `${matches.length.toLocaleString('ko-KR')}권 · ${page} / ${Math.ceil(matches.length / PAGE_SIZE)}페이지` : '조건에 맞는 책이 없어요. 검색어나 분류를 바꿔 보세요.';
     $('catalogList').innerHTML = visible.map(book => {
       const cover=/^https:\/\//.test(book.thumbnail || '') ? `<img class="catalog-cover" src="${escape(book.thumbnail)}" alt="" loading="lazy" onerror="this.hidden=true">` : '<span class="catalog-cover catalog-cover-empty" aria-hidden="true">📖</span>';
-      const awards=(book.awards || []).map(item=>`${item.id==='newbery-award'?'뉴베리':item.id==='caldecott-award'?'칼데콧':item.id} ${item.year || ''} ${item.distinction || ''}`).join(' · ');
-      const ar=typeof book.ar==='number' && Number.isFinite(book.ar) ? ` · AR ${escape(String(book.ar))}` : '';
-      return `<li><button type="button" class="catalog-book" data-catalog-isbn="${escape(book.isbn)}">${cover}<strong>${escape(book.title)}</strong><span>${escape(book.author)}</span><small>${escape(book.publisher)}</small><small>${escape(book.age || (book.genre==='원서' ? '영어 원서' : '연령 미분류'))}${ar}</small>${awards ? `<small>${escape(awards)}</small>` : ''}</button></li>`;
+      const awards=(book.awards || []).map(item=>{const source=(window.BOOK_CATALOG.meta?.sources || []).find(source=>source.id===item.id);const name=source?.name?.replace(/\s*공식 수상 목록$/,'') || ({'newbery-award':'뉴베리','caldecott-award':'칼데콧'}[item.id]) || '수상작';return `${name} ${item.year || ''} ${item.distinction || ''}`;}).join(' · ');
+      const arSource=book.arStatus==='verified' && /^https:\/\//.test(book.arEvidence?.source || '') ? `<a href="${escape(book.arEvidence.source)}" target="_blank" rel="noopener noreferrer">AR 확인 출처 ↗</a>` : '';
+      const discoverySource=/^https:\/\//.test(book.discoverySource || '') ? `<a href="${escape(book.discoverySource)}" target="_blank" rel="noopener noreferrer">책·시리즈 출처 ↗</a>` : '';
+      const ar=book.arStatus==='verified' && typeof book.ar==='number' && Number.isFinite(book.ar) ? ` · AR ${escape(String(book.ar))}` : '';
+      return `<li><button type="button" class="catalog-book" data-catalog-isbn="${escape(book.isbn)}">${cover}<strong>${escape(book.title)}</strong><span>${escape(book.author)}</span><small>${escape(book.publisher)}</small><small>${escape(book.age || (book.genre==='원서' ? '영어 원서' : '연령 미분류'))}${ar}</small>${book.series ? `<small>${escape(book.series.name)}${Number.isFinite(book.series.order) ? ` · ${book.series.order===1?'첫 권':`${book.series.order}권`}` : ''}</small>` : ''}${book.stage ? `<small>${escape(STAGES[book.stage] || '')}</small>` : ''}${awards ? `<small>${escape(awards)}</small>` : ''}</button>${arSource || discoverySource ? `<div class="catalog-evidence">${arSource}${discoverySource}</div>` : ''}</li>`;
     }).join('');
     $('catalogPrevious').disabled = page === 1;
     $('catalogNext').disabled = start + PAGE_SIZE >= matches.length;
@@ -104,8 +145,9 @@
       const book = raw && window.API.normalizeAladin(raw);
       if (current !== openRequest) return;
       // Aladin can append subtitles/edition notes; require the saved main title and exact ISBN.
-      const title = compact(entry.title.split(/\s[-–—:]\s/)[0]);
-      if (!book || book.isbn !== isbn || !compact(raw.title || book.title).includes(title)) {
+      const mainTitle = value => String(value || '').replace(/^.*?#\s*0*\d+\s*:\s*/, '').split(/\s[-–—:]\s/)[0].normalize('NFC').toLocaleLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+      const title = mainTitle(entry.title);
+      if (!book || book.isbn !== isbn || !title || !mainTitle(raw.title || book.title).includes(title)) {
         $('catalogActionStatus').textContent = '등록된 책과 도서 정보가 일치하지 않아요. 다른 책을 골라 주세요.';
         return;
       }

@@ -339,18 +339,36 @@
         if (sec) sec.style.display = '';
         const delBtn = document.getElementById('deleteAccountBtn');
         if (!delBtn) return;
+        const ownsAccount = () => window.Storage && window.Storage.isOwnerCurrent() && window.Storage.getOwner() === user.id;
         delBtn.addEventListener('click', async function () {
+          if (delBtn.disabled) return;
+          if (!ownsAccount()) { alert('로그인 계정이 바뀌었어요. 설정을 다시 열어 주세요.'); return; }
           const ok = confirm('정말 회원 탈퇴할까요?\n계정과 서버에 저장된 모든 데이터가 삭제되며 되돌릴 수 없어요.');
           if (!ok) return;
           delBtn.disabled = true;
           delBtn.textContent = '처리 중…';
           try {
-            const { error } = await window.SB.client.functions.invoke('delete-account');
+            const session = await window.SB.getSession();
+            const currentUser = await window.SB.getUser();
+            if (!ownsAccount() || !session || !session.access_token || session.user.id !== user.id || !currentUser || currentUser.id !== user.id) throw new Error('account');
+            // Bind this request to the confirmed account even if another tab changes sessions.
+            const { data, error } = await window.SB.client.functions.invoke('delete-account', {
+              headers: { Authorization: 'Bearer ' + session.access_token }
+            });
             if (error) throw error;
+            if (!data || data.ok !== true || data.deletedUserId !== user.id) throw new Error('response');
+            const remainingSession = await window.SB.getSession();
+            if (!ownsAccount() || (remainingSession && remainingSession.user.id !== user.id)) {
+              alert('탈퇴 요청한 계정이 삭제됐어요. 현재 로그인한 다른 계정은 그대로 유지됩니다.');
+              delBtn.textContent = '탈퇴 완료';
+              return;
+            }
             let localDataCleared = true;
             try {
               if (!window.Sync || !window.Sync.clearCurrentAccount(user.id)) throw new Error('local cleanup');
             } catch (e) { localDataCleared = false; }
+            // Complete the guest scope switch before SIGNED_OUT can reload this settings page.
+            try { if (window.Sync) window.Sync.setOwner(null); } catch (e) { localDataCleared = false; }
             try { await window.SB.signOut(); } catch (e) {}
             alert(localDataCleared
               ? '회원 탈퇴가 완료됐어요. 그동안 이용해 주셔서 감사합니다.'
