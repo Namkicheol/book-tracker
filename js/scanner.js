@@ -18,6 +18,13 @@
 
   let html5QrCode = null;
   let scannerRunning = false;
+  let scannerStarting = false;
+  let scannerStopping = null;
+  let cameraWanted = false;
+  let decodePending = false;
+  let photoPending = false;
+  let cameraSession = 0;
+  let searchGeneration = 0;
   let pickedBook = null;  // currently shown in resultCard
 
   const PANES = {
@@ -30,6 +37,7 @@
   // ── Mode tabs ────────────────────────────────────────────────
 
   function setMode(mode, opts = {}) {
+    searchGeneration++;
     const target = PANES[mode] || PANES.barcode;
 
     document.querySelectorAll('.mode-pane').forEach(el => {
@@ -47,7 +55,7 @@
     document.getElementById('titleResults')?.classList.add('hidden');
 
     // Stop camera if leaving barcode mode
-    if (target !== 'modeBarcode' && scannerRunning) stopBarcode();
+    if (target !== 'modeBarcode') stopBarcode();
 
     // Auto-start camera ONLY from user gesture (탭 클릭). 페이지 로드에서 자동 시작하면
     // iOS Safari·Chrome이 user gesture 컨텍스트 부재로 NotAllowedError 발생.
@@ -77,28 +85,69 @@
   let lastDecodedAt = 0;
 
   async function startBarcode() {
-    if (scannerRunning) return;
+    if (scannerRunning || scannerStarting || scannerStopping || photoPending) return;
     if (typeof Html5Qrcode === 'undefined') {
       showError('바코드 라이브러리를 불러올 수 없어요. 인터넷 연결 후 새로고침해 주세요.');
       return;
     }
 
+    cameraSession++;
+    searchGeneration++;
+    decodePending = false;
+    lastDecoded = null;
+    cameraWanted = true;
+    scannerStarting = true;
+    hideLoading();
+    hideError();
+    document.getElementById('barcodeStatus').textContent = '바코드에 맞추면 자동으로 인식해요. 흐리면 책과 거리를 조금 벌려 주세요.';
     const startBtn = document.getElementById('startBtn');
     startBtn.disabled = true;
     startBtn.textContent = '카메라 준비 중…';
 
     try {
-      html5QrCode = new Html5Qrcode('reader', /* verbose= */ false);
+      html5QrCode = new Html5Qrcode('reader', {
+        formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13],
+        verbose: false,
+      });
       await html5QrCode.start(
         { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 280, height: 140 }, aspectRatio: 4/3 },
+        {
+          fps: 10,
+          videoConstraints: {
+            facingMode: { ideal: 'environment' },
+            width: { ideal: 1920 },
+            height: { ideal: 1080 },
+          },
+          qrbox: (width, height) => {
+            const region = {
+              width: Math.floor(width * 0.9),
+              height: Math.floor(Math.min(height * 0.7, width * 0.5)),
+            };
+            // The visible guide must match the pixels passed to the decoder.
+            Object.assign(document.getElementById('scanOverlay').style, {
+              inset: 'auto',
+              left: `${(width - region.width) / 2}px`,
+              top: `${(height - region.height) / 2}px`,
+              width: `${region.width}px`,
+              height: `${region.height}px`,
+            });
+            return region;
+          },
+        },
         onDecodeSuccess,
         () => { /* per-frame mismatch errors are noisy; ignore */ }
       );
       scannerRunning = true;
+      // Autofocus is optional: unsupported constraints must never stop a working camera.
+      try {
+        const capabilities = html5QrCode.getRunningTrackCapabilities();
+        if (capabilities.focusMode?.includes('continuous')) {
+          await html5QrCode.applyVideoConstraints({ advanced: [{ focusMode: 'continuous' }] });
+        }
+      } catch (e) { /* Camera/browser does not expose focus control. */ }
       const overlay = document.getElementById('scanOverlay');
       if (overlay) overlay.style.display = 'block';
-      startBtn.textContent = '카메라 정지';
+      startBtn.textContent = '카메라 끄기';
       startBtn.disabled = false;
       startBtn.dataset.state = 'running';
     } catch (e) {
@@ -116,36 +165,67 @@
       startBtn.textContent = '카메라 시작';
       startBtn.disabled = false;
       startBtn.dataset.state = '';
+    } finally {
+      scannerStarting = false;
+      // A mode switch while permission/start was pending must still release the camera.
+      if (!cameraWanted && scannerRunning) await stopBarcode();
     }
   }
 
-  function onDecodeSuccess(decoded) {
-    const num = String(decoded || '').replace(/\D/g, '');
-    if (num.length !== 13 && num.length !== 10) return;
+  function isBookBarcode(value) {
+    // Books use EAN-13 with the 978/979 prefix; other product codes and
+    // checksum failures must not turn off the camera or trigger a lookup.
+    if (!/^97[89]\d{10}$/.test(value)) return false;
+    const sum = value.slice(0, 12).split('').reduce((total, digit, index) =>
+      total + Number(digit) * (index % 2 ? 3 : 1), 0);
+    return (10 - sum % 10) % 10 === Number(value[12]);
+  }
 
-    // Debounce — html5-qrcode can fire same code several times
+  async function onDecodeSuccess(decoded) {
+    if (!scannerRunning || !cameraWanted || decodePending || scannerStopping) return;
+    const num = String(decoded || '').trim();
+    if (!isBookBarcode(num)) return;
+
     const now = Date.now();
-    if (num === lastDecoded && (now - lastDecodedAt) < 1500) return;
+    if (num === lastDecoded && (now - lastDecodedAt) < 5000) return;
     lastDecoded = num;
     lastDecodedAt = now;
-
-    // Auto-stop and search
-    stopBarcode().then(() => searchByIsbn(num));
+    const session = cameraSession;
+    decodePending = session;
+    document.getElementById('barcodeStatus').textContent = `ISBN ${num} 인식 · 책 찾는 중…`;
+    try {
+      // Keep the camera alive if the catalog lookup fails or finds no book.
+      await searchByIsbn(num, { fromCamera: true, cameraSession: session });
+    } finally {
+      if (decodePending === session) decodePending = false;
+      if (cameraWanted && session === cameraSession) document.getElementById('barcodeStatus').textContent = '계속 스캔하고 있어요. 바코드 전체를 선명하게 맞춰 주세요.';
+    }
   }
 
   async function stopBarcode() {
-    if (!html5QrCode || !scannerRunning) return;
-    try {
-      await html5QrCode.stop();
-      await html5QrCode.clear();
-    } catch (e) {
-      console.warn('[scanner] stop error', e);
-    }
-    scannerRunning = false;
-    document.getElementById('scanOverlay').style.display = 'none';
-    const btn = document.getElementById('startBtn');
-    btn.textContent = '카메라 시작';
-    btn.dataset.state = '';
+    cameraSession++;
+    decodePending = false;
+    cameraWanted = false;
+    if (scannerStopping) return scannerStopping;
+    if (!html5QrCode || !scannerRunning || scannerStarting) return;
+    scannerStopping = (async () => {
+      const btn = document.getElementById('startBtn');
+      btn.disabled = true;
+      try {
+        await html5QrCode.stop();
+        html5QrCode.clear();
+      } catch (e) {
+        console.warn('[scanner] stop error', e);
+      } finally {
+        scannerRunning = false;
+        document.getElementById('scanOverlay').style.display = 'none';
+        btn.textContent = '카메라 시작';
+        btn.dataset.state = '';
+        btn.disabled = false;
+      }
+    })();
+    try { await scannerStopping; }
+    finally { scannerStopping = null; }
   }
 
   function toggleBarcode() {
@@ -153,9 +233,46 @@
     else startBarcode();
   }
 
+  async function scanBarcodePhoto(file) {
+    if (!file || scannerStarting || scannerStopping || decodePending || photoPending) return;
+    if (typeof Html5Qrcode === 'undefined') {
+      showError('바코드 라이브러리를 불러올 수 없어요. 인터넷 연결 후 새로고침해 주세요.');
+      return;
+    }
+    const request = ++searchGeneration;
+    photoPending = true;
+    await stopBarcode();
+    if (request !== searchGeneration) { photoPending = false; return; }
+    const startBtn = document.getElementById('startBtn');
+    startBtn.disabled = true;
+    showLoading();
+    hideError();
+    hideResult();
+    try {
+      html5QrCode = new Html5Qrcode('reader', {
+        formatsToSupport: [Html5QrcodeSupportedFormats.EAN_13],
+        verbose: false,
+      });
+      const decoded = String(await html5QrCode.scanFile(file, false)).trim();
+      if (request !== searchGeneration) return;
+      if (!isBookBarcode(decoded)) throw new Error('not-book-barcode');
+      await searchByIsbn(decoded);
+    } catch (e) {
+      if (request !== searchGeneration) return;
+      showError('사진에서 책 바코드를 찾지 못했어요. 바코드 전체가 선명하게 보이도록 다시 촬영하거나 ISBN을 입력해 주세요.');
+    } finally {
+      if (request === searchGeneration) hideLoading();
+      photoPending = false;
+      startBtn.disabled = false;
+    }
+  }
+
   // ── ISBN search ──────────────────────────────────────────────
 
-  async function searchByIsbn(isbnRaw) {
+  async function searchByIsbn(isbnRaw, opts = {}) {
+    const request = ++searchGeneration;
+    const isCurrent = () => request === searchGeneration && (!opts.fromCamera ||
+      (cameraWanted && opts.cameraSession === cameraSession));
     const isbn = String(isbnRaw || '').replace(/\D/g, '');
     if (isbn.length !== 10 && isbn.length !== 13) {
       showError('ISBN은 10자리 또는 13자리여야 합니다.');
@@ -169,20 +286,34 @@
       // Already in our library?
       const existing = Storage.getBookByIsbn(isbn);
       if (existing) {
+        if (opts.fromCamera) {
+          if (!isCurrent()) return;
+          await stopBarcode();
+        }
+        if (request !== searchGeneration) return;
         hideLoading();
         showToast('이미 기록된 책이에요. 상세로 이동합니다.');
-        setTimeout(() => location.href = `detail.html?id=${encodeURIComponent(existing.id)}`, 700);
+        setTimeout(() => {
+          if (request === searchGeneration) location.href = `detail.html?id=${encodeURIComponent(existing.id)}`;
+        }, 700);
         return;
       }
 
       const book = await API.searchByIsbn(isbn);
+      if (!isCurrent()) return;
       hideLoading();
       if (!book) {
         showError(`ISBN ${isbn}에 해당하는 책을 찾을 수 없어요.`);
         return;
       }
+      if (opts.fromCamera) {
+        if (!isCurrent()) return;
+        await stopBarcode();
+      }
+      if (request !== searchGeneration) return;
       showResult(book);
     } catch (e) {
+      if (!isCurrent()) return;
       hideLoading();
       console.error('[scanner] ISBN search error', e);
       showError(`검색 실패: ${e.message || e}`);
@@ -192,6 +323,7 @@
   // ── Title search (multi-result) ──────────────────────────────
 
   async function searchByTitle(query) {
+    const request = ++searchGeneration;
     const q = String(query || '').trim();
     if (!q) {
       showError('검색어를 입력하세요.');
@@ -207,6 +339,7 @@
         API.searchByTitle(q, { size: 50, page: 1 }),
         API.searchByTitle(q, { size: 50, page: 2 }),
       ]);
+      if (request !== searchGeneration) return;
       const seen = new Set();
       const list = [...p1, ...p2].filter(b => {
         const key = b.isbn || b.title;
@@ -217,6 +350,7 @@
       hideLoading();
       renderTitleResults(list, q);
     } catch (e) {
+      if (request !== searchGeneration) return;
       hideLoading();
       console.error('[scanner] title search error', e);
       showError(`검색 실패: ${e.message || e}`);
@@ -380,12 +514,19 @@
 
   // ── Boot ─────────────────────────────────────────────────────
 
+  window.addEventListener('pagehide', () => stopBarcode());
+
   document.addEventListener('DOMContentLoaded', () => {
     initModeTabs();
 
     // Barcode toggle
     const startBtn = document.getElementById('startBtn');
     if (startBtn) startBtn.addEventListener('click', toggleBarcode);
+    const photoInput = document.getElementById('barcodePhoto');
+    if (photoInput) photoInput.addEventListener('change', async () => {
+      await scanBarcodePhoto(photoInput.files?.[0]);
+      photoInput.value = '';
+    });
 
     // ISBN form
     const isbnInput = document.getElementById('isbnInput');

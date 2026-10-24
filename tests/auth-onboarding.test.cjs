@@ -27,12 +27,12 @@ test('a setup marker for another account cannot trigger setup for the current ex
 test('profile lookup errors offer an explicit retry without creating setup or public writes',async()=>{
  const a=setup({profile:new Error('offline')});await a.handle();assert.ok(a.elements.get('authSetupRetry'));assert.equal(a.elements.has('authProfileModal'),false);assert.equal(a.calls.length,0);assert.equal(a.values.has('_profileSetupPending_u'),false);
 });
-test('sync consent waits until setup is saved; cancelling keeps setup pending for next sign in',async()=>{
+test('account sync waits until setup is saved and never opens an import prompt',async()=>{
  const a=setup({profile:null});a.window.Storage.getAllBooks=()=>[{id:'book'}];
  let pending=a.handle();await new Promise(resolve=>setImmediate(resolve));
  assert.equal(a.elements.has('syncConsentModal'),false);
  a.elements.get('authProfileModal').querySelector('#apvCancel').listeners.click();await pending;
  assert.equal(a.values.get('_profileSetupPending_u'),'1');
  pending=a.handle();await new Promise(resolve=>setImmediate(resolve));const m=a.elements.get('authProfileModal');assert.ok(m);m.querySelector('#apvName').value='책토끼';await m.querySelector('#apvSave').listeners.click();m.querySelector('#apvClose').listeners.click();await pending;
- assert.equal(a.values.has('_profileSetupPending_u'),false);assert.ok(a.elements.get('syncConsentModal'));
+ assert.equal(a.values.has('_profileSetupPending_u'),false);assert.equal(a.elements.has('syncConsentModal'),false);assert.equal(a.values.get('_syncUploaded_u'),'1');
 });

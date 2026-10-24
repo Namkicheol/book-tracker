@@ -846,73 +846,74 @@
   async function showShareCard() {
     const name   = localStorage.getItem('profileName')   || '책읽는엄마';
     const avatar = localStorage.getItem('profileAvatar') || '👩';
-    const grade = '';
-    const region = [localStorage.getItem('profileCity'), localStorage.getItem('profileDistrict')].filter(Boolean).join(' ');
-    const books  = Storage.getAllBooks();
+    await document.fonts?.ready;
+    const [avatarImage, brandImage, paperImage] = await Promise.all([
+      /^(https?:|data:image\/)/i.test(avatar) ? _loadCardImage(avatar) : null,
+      _loadCardImage('img/3YzCR.png'),
+      _loadCardImage('img/cards/monthly-paper.png'),
+    ]);
 
     const W = 1080, H = 1350;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext('2d');
 
-    // 배경 그라디언트
-    const bg = ctx.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0,   '#FFF8F0');
-    bg.addColorStop(0.5, '#FFE8F0');
-    bg.addColorStop(1,   '#F8E8FF');
-    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-
-    // 장식 원
-    ctx.fillStyle = 'rgba(255, 184, 198, 0.18)';
-    ctx.beginPath(); ctx.arc(W - 80, 120, 140, 0, Math.PI*2); ctx.fill();
-    ctx.fillStyle = 'rgba(232, 197, 255, 0.15)';
-    ctx.beginPath(); ctx.arc(120, H - 180, 180, 0, Math.PI*2); ctx.fill();
-
-    // 헤더 — 맘스북스
-    ctx.fillStyle = '#FF9E9E';
-    ctx.font = '700 32px "Gowun Batang", serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('📚 맘스북스', W/2, 110);
-    ctx.fillStyle = 'rgba(139, 139, 139, 0.7)';
-    ctx.font = '500 20px sans-serif';
-    ctx.fillText('READING TRACKER FOR KIDS', W/2, 145);
-
-    // 아바타 원
-    ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(W/2, 250, 60, 0, Math.PI*2); ctx.fill();
-    ctx.font = '64px sans-serif';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(avatar, W/2, 252);
-    ctx.textBaseline = 'alphabetic';
-
-    // 닉네임
-    ctx.fillStyle = '#4A4A4A';
-    ctx.font = '700 44px sans-serif';
-    ctx.fillText(name, W/2, 360);
-
-    // 학년·지역
-    if (grade || region) {
-      ctx.fillStyle = '#8B8B8B';
-      ctx.font = '500 24px sans-serif';
-      ctx.fillText([grade, region].filter(Boolean).join(' · '), W/2, 400);
+    if (paperImage) {
+      ctx.drawImage(paperImage, 0, 0, W, H);
+    } else {
+      const bg = ctx.createLinearGradient(0, 0, 0, H);
+      bg.addColorStop(0, '#FFF8F0');
+      bg.addColorStop(0.5, '#FFE8F0');
+      bg.addColorStop(1, '#F8E8FF');
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
     }
+
+    ctx.textAlign = 'center';
+    if (brandImage) ctx.drawImage(brandImage, W/2 - 30, 94, 60, 60);
+    ctx.fillStyle = '#AD667B';
+    ctx.font = '700 30px "Gowun Batang", serif';
+    ctx.fillText('맘스북스', W/2, 194);
+
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(W/2, 286, 62, 0, Math.PI*2); ctx.fill();
+    if (avatarImage) {
+      ctx.save();
+      ctx.beginPath(); ctx.arc(W/2, 286, 56, 0, Math.PI*2); ctx.clip();
+      const side = Math.min(avatarImage.naturalWidth, avatarImage.naturalHeight);
+      ctx.drawImage(avatarImage, (avatarImage.naturalWidth-side)/2, (avatarImage.naturalHeight-side)/2, side, side, W/2-56, 230, 112, 112);
+      ctx.restore();
+    } else {
+      const emoji = /^(?:\p{Extended_Pictographic}|\p{Emoji_Presentation}|[\u200d\ufe0f\u20e3]|\p{Emoji_Modifier}){1,16}$/u.test(avatar) ? avatar : '📖';
+      ctx.fillStyle = '#57424B';
+      ctx.font = '58px sans-serif';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(emoji, W/2, 288);
+      ctx.textBaseline = 'alphabetic';
+    }
+    ctx.fillStyle = '#57424B';
+    ctx.font = '700 42px "Gowun Batang", serif';
+    ctx.fillText(name, W/2, 408, W - 220);
+    ctx.fillStyle = '#9D858D';
+    ctx.font = '500 23px sans-serif';
+    const today = new Date();
+    ctx.fillText(`${today.getFullYear()}년 ${today.getMonth()+1}월의 독서 기록`, W/2, 452);
 
     // 큰 숫자 — 이번 달
     ctx.fillStyle = '#8B8B8B';
     ctx.font = '700 22px sans-serif';
-    ctx.fillText('이번 달', W/2, 510);
+    ctx.fillText('이번 달, 함께 읽은 책', W/2, 525);
 
     // 그라디언트 큰 숫자
     const numGrad = ctx.createLinearGradient(0, 530, 0, 700);
-    numGrad.addColorStop(0, '#FF9E9E');
-    numGrad.addColorStop(1, '#E8C5FF');
+    numGrad.addColorStop(0, '#C8788E');
+    numGrad.addColorStop(1, '#AD83B1');
     ctx.fillStyle = numGrad;
     ctx.font = '800 200px "Gowun Batang", serif';
     ctx.fillText(String(myStats.monthBooks), W/2, 700);
 
-    ctx.fillStyle = '#FF9E9E';
+    ctx.fillStyle = '#C8788E';
     ctx.font = '700 36px sans-serif';
-    ctx.fillText('권 읽었어요', W/2, 760);
+    ctx.fillText(myStats.monthBooks ? '권을 함께 읽었어요' : '첫 책을 기다리고 있어요', W/2, 760);
 
     // 3-칸 통계 박스
     const boxY = 830, boxH = 140;
@@ -928,7 +929,7 @@
       _roundRect(ctx, x + 8, boxY, boxW - 16, boxH, 18);
       ctx.fill();
 
-      ctx.fillStyle = '#FF9E9E';
+      ctx.fillStyle = '#C8788E';
       ctx.font = '800 56px "Gowun Batang", serif';
       ctx.fillText(String(b.num), x + boxW/2, boxY + 70);
 
@@ -943,28 +944,28 @@
     const pct = Math.min(myStats.monthBooks / target, 1);
     ctx.fillStyle = '#4A4A4A';
     ctx.font = '600 28px sans-serif';
-    ctx.fillText(`🎯 목표 ${target}권 · ${Math.round(pct*100)}%`, W/2, goalY);
+    ctx.fillText(`이번 달 목표 ${target}권 · ${Math.round(pct*100)}%`, W/2, goalY);
     // 바 배경
     const barX = 140, barW = W - 280, barH = 24, barY = goalY + 30;
     ctx.fillStyle = 'rgba(0,0,0,0.06)';
     _roundRect(ctx, barX, barY, barW, barH, 12); ctx.fill();
     // 바 fill
     const barGrad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
-    barGrad.addColorStop(0, '#FF9E9E');
-    barGrad.addColorStop(1, '#E8C5FF');
+    barGrad.addColorStop(0, '#C8788E');
+    barGrad.addColorStop(1, '#AD83B1');
     ctx.fillStyle = barGrad;
-    _roundRect(ctx, barX, barY, Math.max(barH, barW * pct), barH, 12); ctx.fill();
+    if (pct > 0) { _roundRect(ctx, barX, barY, Math.max(barH, barW * pct), barH, 12); ctx.fill(); }
 
     // 뱃지
     const unlocked = BADGES.filter(b => b.condition(myStats));
     ctx.fillStyle = '#4A4A4A';
     ctx.font = '600 26px sans-serif';
-    ctx.fillText(`🏆 뱃지 ${unlocked.length}/${BADGES.length}`, W/2, 1140);
+    ctx.fillText(`함께 모은 배지 ${unlocked.length}개`, W/2, 1140);
 
     // 푸터
     ctx.fillStyle = 'rgba(139, 139, 139, 0.7)';
     ctx.font = '500 22px sans-serif';
-    ctx.fillText('우리 아이 독서 기록 · 맘스북스', W/2, H - 60);
+    ctx.fillText('아이와 함께한 독서 기록', W/2, H - 105);
 
     // 카드 미리보기 + 공유 모달
     canvas.toBlob(async (blob) => {
@@ -972,6 +973,22 @@
       const url = URL.createObjectURL(blob);
       _showShareCardModal(url, blob, name);
     }, 'image/png', 0.95);
+  }
+
+  function _loadCardImage(source) {
+    return new Promise(resolve => {
+      const image = new Image();
+      const finish = value => {
+        clearTimeout(timer);
+        image.onload = image.onerror = null;
+        resolve(value);
+      };
+      const timer = setTimeout(() => finish(null), 3500);
+      image.crossOrigin = 'anonymous';
+      image.onload = () => finish(image.naturalWidth && image.naturalHeight ? image : null);
+      image.onerror = () => finish(null);
+      image.src = source.replace(/^http:\/\//i, 'https://');
+    });
   }
 
   function _roundRect(ctx, x, y, w, h, r) {
@@ -989,27 +1006,43 @@
   }
 
   function _showShareCardModal(imgUrl, blob, name) {
+    const previousFocus = document.activeElement === document.body ? document.getElementById('shareCardBtn') : document.activeElement;
     const modal = document.createElement('div');
     modal.className = 'friend-modal';
     modal.innerHTML = `
-      <div class="friend-modal-content" style="max-width:380px;padding:20px">
+      <div class="friend-modal-content" role="dialog" aria-modal="true" aria-labelledby="shareCardTitle" style="max-width:380px;padding:20px;max-height:90dvh;overflow:auto">
         <div style="text-align:center;margin-bottom:14px">
-          <div style="font-size:14px;font-weight:700;color:var(--text-dark);margin-bottom:4px">📤 독서 기록 공유</div>
-          <div style="font-size:12px;color:var(--text-gray)">인스타·카톡으로 자랑하기</div>
+          <div id="shareCardTitle" style="font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:6px">독서 기록 나누기</div>
+          <div style="font-size:12px;color:var(--text-gray)">소중한 독서의 순간을 이미지로 간직해요</div>
         </div>
         <div style="background:#f5f5f5;border-radius:12px;overflow:hidden;margin-bottom:14px">
-          <img src="${imgUrl}" alt="공유 카드" style="width:100%;display:block">
+          <img src="${imgUrl}" alt="이번 달 독서 기록 카드" style="width:100%;display:block">
         </div>
         <div style="display:flex;gap:8px">
-          <button id="shareCardCancel" class="cheer-cancel" style="flex:1;margin:0">닫기</button>
-          <button id="shareCardDownload" class="encouragement-btn" style="flex:1;margin:0">📥 저장</button>
-          <button id="shareCardShare" class="encouragement-btn" style="flex:1;margin:0">📤 공유</button>
+          <button id="shareCardCancel" class="cheer-cancel" style="flex:1;margin:0;padding:14px 6px;font-size:13px;white-space:nowrap">닫기</button>
+          <button id="shareCardDownload" class="encouragement-btn" style="flex:1;margin:0;padding:14px 6px;font-size:13px;white-space:nowrap">저장하기</button>
+          <button id="shareCardShare" class="encouragement-btn" style="flex:1;margin:0;padding:14px 6px;font-size:13px;white-space:nowrap">공유하기</button>
         </div>
       </div>
     `;
     document.body.appendChild(modal);
 
-    const close = () => { URL.revokeObjectURL(imgUrl); modal.remove(); };
+    const close = () => {
+      document.removeEventListener('keydown', onKeydown);
+      URL.revokeObjectURL(imgUrl); modal.remove();
+      previousFocus?.focus();
+    };
+    const onKeydown = e => {
+      if (e.key === 'Escape') close();
+      if (e.key === 'Tab') {
+        const buttons = [...modal.querySelectorAll('button')];
+        const first = buttons[0], last = buttons[buttons.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown', onKeydown);
+    modal.querySelector('#shareCardCancel').focus();
     modal.addEventListener('click', e => { if (e.target === modal) close(); });
     modal.querySelector('#shareCardCancel').addEventListener('click', close);
 
