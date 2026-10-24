@@ -263,7 +263,7 @@ test('first upload keeps a newer cloud row and reports failed writes as incomple
   assert.ok(failed.failures > 0);
 });
 
-test('a failed guest-import consent does not mark the account as uploaded', async () => {
+test('sign-in ignores legacy guest-import flags and hydrates only the current account', async () => {
   const localStorage = localStore();
   localStorage.setItem('_syncLegacyGuestPending_account-a', '1');
   const elements = new Map();
@@ -329,17 +329,54 @@ test('a failed guest-import consent does not mark the account as uploaded', asyn
   onReady();
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(profileSyncs, 1);
-  const modal = elements.get('syncConsentModal');
-  assert.ok(modal);
-  const button = modal.querySelector('#syncConsentOk');
-  await button.click();
-  assert.equal(uploadCalls, 1);
-  assert.equal(uploadOptions.sourceOwnerId, null);
-  assert.equal(localStorage.getItem('_syncUploaded_account-a'), null);
+  assert.equal(elements.has('syncConsentModal'), false);
+  assert.equal(uploadCalls, 0);
+  assert.equal(uploadOptions, undefined);
+  assert.equal(localStorage.getItem('_syncUploaded_account-a'), '1');
   assert.equal(localStorage.getItem('_syncLegacyGuestPending_account-a'), '1');
-  assert.equal(button.disabled, false);
-  assert.equal(button.textContent, '다시 시도');
-  assert.match(modal.querySelector('#syncConsentError').textContent, /서재는 이 기기에 남아/);
+});
+
+test('legacy uploadAll refuses guest and other account sources without changing stored books', async () => {
+  const writes = [];
+  const localStorage = localStore({ 'bookTracker.books.v1': JSON.stringify([{ id: 'guest-book' }]) });
+  const app = syncRuntime({ user: { id: 'account-b' }, localStorage, upsert: async (table, rows) => { writes.push({ table, rows }); return { error: null }; } });
+  app.window.Sync.setOwner('account-a');
+  localStorage.setItem('bookTracker.books.v1', JSON.stringify([{ id: 'a-book' }]));
+  app.window.Sync.setOwner('account-b');
+  assert.equal((await app.window.Sync.uploadAll({ sourceOwnerId: null })).complete, false);
+  assert.equal((await app.window.Sync.uploadAll({ sourceOwnerId: 'account-a' })).complete, false);
+  assert.deepEqual(writes, []);
+  assert.equal(app.window.Storage.getAllBooksRaw(null)[0].id, 'guest-book');
+  assert.equal(app.window.Storage.getAllBooksRaw('account-a')[0].id, 'a-book');
+  assert.deepEqual(JSON.parse(JSON.stringify(app.window.Storage.getAllBooksRaw())), []);
+});
+
+test('failed legacy guest imports remain queued while normal current-account writes retry', async () => {
+  const writes = [];
+  const guestBook = { id: 'guest-book', title: 'Guest original' };
+  const guestFolder = { id: 'guest-folder', name: 'Guest folder' };
+  const ownBook = { id: 'own-book', title: 'Current account edit' };
+  const localStorage = localStore({
+    'bookTracker.books.v1': JSON.stringify([guestBook]),
+    'bookTracker.folders.v1': JSON.stringify([guestFolder]),
+  });
+  const a = syncRuntime({ user: { id: 'account-b' }, localStorage, upsert: async (table, row) => { writes.push({ table, row }); return { error: null }; } });
+  a.window.Sync.setOwner('account-b');
+  localStorage.setItem('bookTracker.books.v1', JSON.stringify([ownBook]));
+  localStorage.setItem('_syncUploaded_account-b', '1');
+  localStorage.setItem('_syncLegacyGuestPending_account-b', '1');
+  localStorage.setItem('sync.outbox.v1', JSON.stringify([
+    { type: 'book', data: guestBook, user_id: 'account-b' },
+    { type: 'folder', data: guestFolder, user_id: 'account-b' },
+    { type: 'book', data: ownBook, user_id: 'account-b' },
+  ]));
+  await a.window.Sync.flushOutbox();
+  assert.equal(writes.length, 1);
+  assert.equal(writes[0].row.id, 'own-book');
+  assert.deepEqual(JSON.parse(localStorage.getItem('sync.outbox.v1')).map(row => row.data.id), ['guest-book', 'guest-folder']);
+  assert.equal(a.window.Storage.getAllBooksRaw(null)[0].title, 'Guest original');
+  assert.equal(a.window.Storage.getAllFoldersRaw(null)[0].name, 'Guest folder');
+  assert.equal(a.window.Storage.getAllBooksRaw()[0].id, 'own-book');
 });
 
 test('account deletion cleanup clears only the active account and its outbox', () => {

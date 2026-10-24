@@ -7,7 +7,7 @@
  *   syncProfileOnSignIn()     프로필 1회 동기화 (첫 로그인)
  *   pushBook(book)            책 1권 Supabase upsert (실패 시 outbox 보관)
  *   pushFolder(folder)        폴더 1개 Supabase upsert
- *   uploadAll()               localStorage 전체 → Supabase (첫 로그인 동의 후)
+ *   uploadAll()               현재 계정 localStorage → 같은 계정 Supabase
  *   pullBooks()               Supabase → localStorage 병합 (LWW by updated_at)
  *   pullFolders()             Supabase → localStorage 병합
  *   flushOutbox()             오프라인 보관 항목 재시도
@@ -34,18 +34,9 @@
   function legacyImportKey(userId) { return '_syncLegacyGuestPending_' + userId; }
   function uploadedKey(userId) { return '_syncUploaded_' + userId; }
 
-  function noteLegacyGuestImport(userId) {
-    if (!userId || !window.Storage || typeof window.Storage.hasScope !== 'function') return;
-    if (window.Storage.hasScope(userId)) return;
-    var guestBooks = window.Storage.getAllBooksRaw(null);
-    var guestFolders = window.Storage.getAllFoldersRaw(null);
-    if (guestBooks.length || guestFolders.length) localStorage.setItem(legacyImportKey(userId), '1');
-  }
-
   function activateOwner(userId) {
     var next = userId == null ? null : String(userId);
     if (next === activeUserId && (!window.Storage || typeof window.Storage.getOwner !== 'function' || window.Storage.getOwner() === next)) return false;
-    noteLegacyGuestImport(next);
     if (window.Storage && typeof window.Storage.setOwner === 'function') window.Storage.setOwner(next);
     activeUserId = next;
     scopeGeneration++;
@@ -308,7 +299,7 @@
     }
   }
 
-  // ── 전체 업로드 (첫 로그인 동의 후) ─────────────────────────
+  // ── 현재 계정의 전체 업로드 (다른 계정·guest 이전 불가) ─────────────────────────
 
   async function uploadAll(options) {
     if (!window.SB || !window.SB.enabled) return { complete: false, books: 0, folders: 0 };
@@ -316,6 +307,7 @@
     if (!user || !isCurrentUser(user.id)) return { complete: false, books: 0, folders: 0 };
 
     var sourceOwnerId = options && Object.prototype.hasOwnProperty.call(options, 'sourceOwnerId') ? options.sourceOwnerId : undefined;
+    if (sourceOwnerId !== undefined && sourceOwnerId !== user.id) return { complete: false, books: 0, folders: 0 };
     var books = window.Storage ? window.Storage.getAllBooksRaw.apply(null, sourceOwnerId === undefined ? [] : [sourceOwnerId]) : [];
     var folders = window.Storage ? window.Storage.getAllFoldersRaw.apply(null, sourceOwnerId === undefined ? [] : [sourceOwnerId]) : [];
     var generation = scopeGeneration;
@@ -462,6 +454,15 @@
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
       if (item.user_id !== user.id || !isCurrentUser(user.id)) continue;
+      if (window.Storage && item.data) {
+        var readRows = item.type === 'book' ? window.Storage.getAllBooksRaw : window.Storage.getAllFoldersRaw;
+        var ownRows = readRows();
+        var guestRows = readRows(null);
+        // A failed old import may have queued a guest-only record under this user ID.
+        // Keep it untouched in the queue instead of resuming an account migration.
+        if (!ownRows.some(function(row) { return row.id === item.data.id; })
+          && guestRows.some(function(row) { return row.id === item.data.id; })) continue;
+      }
       if (item.type === 'book')   await pushBook(item.data);
       if (item.type === 'folder') await pushFolder(item.data);
     }

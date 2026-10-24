@@ -523,56 +523,12 @@
     return completion;
   }
 
-  // ── 첫 로그인 동기화 동의 + 재로그인 pull ──────────────────────
-
-  function showSyncConsentDialog(userId, bookCount, sourceOwnerId) {
-    if (document.getElementById('syncConsentModal')) return;
-    ensureAnim();
-    var modal = document.createElement('div');
-    modal.id = 'syncConsentModal';
-    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:10001;padding:20px;animation:authFadeIn .18s ease';
-    modal.innerHTML = [
-      '<div style="background:#fff;border-radius:20px;padding:24px;max-width:340px;width:100%;box-shadow:0 16px 48px rgba(0,0,0,0.2);animation:authPop .22s cubic-bezier(.2,.8,.2,1);text-align:center">',
-      '<div style="font-size:40px;margin-bottom:12px">☁️</div>',
-      '<div style="font-size:18px;font-weight:800;color:#4A4A4A;margin-bottom:8px">서재를 클라우드에 올릴까요?</div>',
-      '<div style="font-size:14px;color:#8B8B8B;line-height:1.6;margin-bottom:20px">',
-      '이 기기에 <strong>' + bookCount + '권</strong>이 있어요.<br>',
-      '클라우드에 올리면 다른 기기에서도<br>같은 서재를 쓸 수 있어요.',
-      '</div>',
-      '<p id="syncConsentError" role="alert" style="min-height:0;margin:0 0 12px;color:#b42318;font-size:12px;line-height:1.5"></p>',
-      '<div style="display:flex;gap:8px">',
-      '<button id="syncConsentLater" style="flex:1;padding:12px;border:1.5px solid #eee;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;color:#8B8B8B">나중에</button>',
-      '<button id="syncConsentOk" style="flex:2;padding:12px;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff">올리기</button>',
-      '</div>',
-      '</div>'
-    ].join('');
-    document.body.appendChild(modal);
-
-    modal.querySelector('#syncConsentLater').addEventListener('click', function () {
-      modal.remove();
-    });
-
-    modal.querySelector('#syncConsentOk').addEventListener('click', async function () {
-      var btn = modal.querySelector('#syncConsentOk');
-      btn.disabled = true;
-      btn.textContent = '올리는 중…';
-      try {
-        var upload = await window.Sync.uploadAll({ sourceOwnerId: sourceOwnerId });
-        if (!upload || upload.complete !== true) throw new Error('upload');
-        var booksOk = await window.Sync.pullBooks();
-        var foldersOk = await window.Sync.pullFolders();
-        if (booksOk !== true || foldersOk !== true) throw new Error('pull');
-        localStorage.setItem('_syncUploaded_' + userId, '1');
-        localStorage.removeItem('_syncLegacyGuestPending_' + userId);
-        await window.Sync.flushOutbox();
-        modal.remove();
-      } catch (e) {
-        btn.disabled = false;
-        btn.textContent = '다시 시도';
-        var error = modal.querySelector('#syncConsentError');
-        if (error) error.textContent = '일부 데이터를 확인하지 못했어요. 서재는 이 기기에 남아 있어요. 다시 시도해 주세요.';
-      }
-    });
+  // 로그인한 계정의 기록만 복원하고 같은 소유자의 전송 대기를 재시도한다.
+  async function isCurrentSignIn(userId) {
+    var current = await getCurrentUser();
+    return !!(current && current.id === userId)
+      && (!window.Storage.getOwner || window.Storage.getOwner() === userId)
+      && (!window.Storage.isOwnerCurrent || window.Storage.isOwnerCurrent());
   }
 
   var activeSignInUser = null;
@@ -580,6 +536,8 @@
     if (!window.Sync || !window.Storage || activeSignInUser === user.id) return;
     activeSignInUser = user.id;
     try {
+      var currentUser = await getCurrentUser();
+      if (!currentUser || currentUser.id !== user.id) return;
       if (typeof window.Sync.setOwner === 'function' && window.Sync.setOwner(user.id)) {
         window.location.reload();
         return;
@@ -592,43 +550,19 @@
         var setupComplete = await showProfileViewer({onboarding:true, waitForCompletion:true});
         if (!setupComplete) return;
       }
-      var uploadedKey = '_syncUploaded_' + user.id;
-      var pendingGuestImport = localStorage.getItem('_syncLegacyGuestPending_' + user.id) === '1';
-      var guestBooks = window.Storage.getAllBooksRaw(null);
-      var guestFolders = window.Storage.getAllFoldersRaw(null);
-      if (pendingGuestImport && (guestBooks.length || guestFolders.length)) {
-        showSyncConsentDialog(user.id, guestBooks.length, null);
-        await window.Sync.pullBooks();
-        await window.Sync.pullFolders();
-        return;
-      }
-      if (localStorage.getItem(uploadedKey)) {
-        // 이미 동기화 동의한 사용자 — 조용히 pull
-        try {
-          await window.Sync.pullBooks();
-          await window.Sync.pullFolders();
-          await window.Sync.flushOutbox();
-        } catch (e) { /* ignore */ }
-        return;
-      }
-      var books = window.Storage.getAllBooks();
-      var folders = window.Storage.getAllFolders();
-      if (books.length || folders.length) {
-        showSyncConsentDialog(user.id, books.length, user.id);
-        return;
-      }
-      // Empty account scope: pull first and set the flag only after both reads succeed.
+      if (!await isCurrentSignIn(user.id)) return;
       var booksOk = await window.Sync.pullBooks();
+      if (!await isCurrentSignIn(user.id)) return;
       var foldersOk = await window.Sync.pullFolders();
-      if (booksOk === true && foldersOk === true) {
-        localStorage.setItem(uploadedKey, '1');
-        await window.Sync.flushOutbox();
-      }
+      if (!await isCurrentSignIn(user.id)) return;
+      if (booksOk !== true || foldersOk !== true) throw new Error('sync');
+      localStorage.setItem('_syncUploaded_' + user.id, '1');
+      await window.Sync.flushOutbox();
     } catch (e) {
       if (!document.getElementById('authSetupRetry')) {
         var retry = document.createElement('button');
         retry.id = 'authSetupRetry';retry.type = 'button';
-        retry.textContent = '프로필을 불러오지 못했어요. 눌러서 다시 시도해 주세요.';
+        retry.textContent = '서재와 프로필 동기화를 마치지 못했어요. 눌러서 다시 시도해 주세요.';
         retry.setAttribute('role', 'alert');
         retry.style.cssText = 'position:fixed;left:16px;right:16px;bottom:90px;z-index:10002;padding:14px;background:#fff1f5;color:#8a4058;border:1px solid #e6b5c7;border-radius:12px';
         retry.addEventListener('click', function() { retry.remove(); handleSignIn(user); });
