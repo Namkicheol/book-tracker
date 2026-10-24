@@ -4,7 +4,7 @@
 //   - 정적 자산(css/js/png/svg): cache-first (?v= 캐시버스팅으로 안전)
 //   - HTML/네비게이션      : network-first (캐시버스터·콘텐츠 최신, 오프라인 폴백)
 //   - 교차출처(API·폰트·Supabase 등): 가로채지 않음(브라우저 기본)
-const CACHE = 'momsbooks-20261024g';
+const CACHE = 'momsbooks-20261024h';
 
 self.addEventListener('install', () => self.skipWaiting());
 
