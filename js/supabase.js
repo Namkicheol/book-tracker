@@ -48,8 +48,12 @@
   }
 
   function getRedirectTo() {
-    // OAuth 후 돌아올 URL — 현재 페이지 그대로 (해시는 supabase가 처리 후 정리)
-    return window.location.origin + window.location.pathname;
+    // A detail ID belongs to the pre-login library, which may be another account.
+    // Return to the signed-in library instead of a detail URL missing its ID.
+    var path = window.location.pathname;
+    if (path.endsWith('/detail.html')) path = path.slice(0, -'detail.html'.length) + 'index.html';
+    // Do not forward old OAuth codes, query values or token fragments.
+    return window.location.origin + path;
   }
 
   async function getUser() {
