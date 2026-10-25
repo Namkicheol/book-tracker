@@ -460,7 +460,7 @@
       var name   = modal.querySelector('#apvName').value.trim();
       var city = modal.querySelector('#apvCity').value;
       var district = modal.querySelector('#apvDistrict').value;
-      var goal   = Math.max(1, parseInt(modal.querySelector('#apvGoal').value, 10) || cur.goal);
+      var goal   = Math.min(200, Math.max(1, parseInt(modal.querySelector('#apvGoal').value, 10) || cur.goal));
       var avatar = cur.avatar;
 
       var libraryPublic = modal.querySelector('#apvPublic').checked;
@@ -490,6 +490,8 @@
       localStorage.setItem('profileAvatar', avatar);
       localStorage.setItem('profileLibraryPublic', String(libraryPublic));
       localStorage.setItem('profilePrivacy', libraryPublic ? 'public' : 'private');
+      var resumeSetup = localStorage.getItem('_profileSetupPending_' + user.id) === '1'
+        || !localStorage.getItem('_syncUploaded_' + user.id);
       localStorage.removeItem('_profileSetupPending_' + user.id);
       if (window.dispatchEvent) window.dispatchEvent(new Event('profile-visibility-change'));
 
@@ -512,13 +514,28 @@
 
       refresh(); // top-right 버튼 emoji 갱신
       setTimeout(close, 800);
+      // A cancelled onboarding dialog no longer has a waiting sign-in task.
+      if (resumeSetup && !finishSetup) await handleSignIn(user);
 
     });
 
     modal.querySelector('#apvLogout').addEventListener('click', async function () {
       if (!confirm('로그아웃 하시겠어요?')) return;
-      await window.SB.signOut();
-      close();
+      var logoutButton = modal.querySelector('#apvLogout');
+      var errorEl = modal.querySelector('#apvError');
+      logoutButton.disabled = true;
+      errorEl.textContent = '';
+      try {
+        var current = await getCurrentUser();
+        if (!current || current.id !== user.id) throw new Error('account changed');
+        var result = await window.SB.signOut();
+        if (result && result.error) throw result.error;
+        current = await getCurrentUser();
+        if (current && current.id === user.id) throw new Error('session remains');
+        close();
+      } catch (_) {
+        errorEl.textContent = '로그아웃을 완료하지 못했어요. 다시 시도해 주세요.';
+      } finally { logoutButton.disabled = false; }
     });
     return completion;
   }
@@ -529,6 +546,14 @@
     return !!(current && current.id === userId)
       && (!window.Storage.getOwner || window.Storage.getOwner() === userId)
       && (!window.Storage.isOwnerCurrent || window.Storage.isOwnerCurrent());
+  }
+
+  function hasCompletedProfile(profile) {
+    if (!profile) return false;
+    if (typeof profile.public_nickname === 'string' && profile.public_nickname.trim()) return true;
+    // Preserve established profiles from before explicit public nicknames existed.
+    var legacyName = typeof profile.nickname === 'string' ? profile.nickname.trim() : '';
+    return !!legacyName && legacyName !== '책읽는엄마';
   }
 
   var activeSignInUser = null;
@@ -544,7 +569,8 @@
       }
       var profileBefore = await window.SB.getProfile(user.id);
       var setupKey = '_profileSetupPending_' + user.id;
-      if (!profileBefore) localStorage.setItem(setupKey, '1');
+      if (!hasCompletedProfile(profileBefore)) localStorage.setItem(setupKey, '1');
+      else localStorage.removeItem(setupKey);
       await window.Sync.syncProfileOnSignIn();
       if (localStorage.getItem(setupKey) === '1') {
         var setupComplete = await showProfileViewer({onboarding:true, waitForCompletion:true});
@@ -568,7 +594,7 @@
         retry.addEventListener('click', function() { retry.remove(); handleSignIn(user); });
         document.body.appendChild(retry);
       }
-    } finally { activeSignInUser = null; }
+    } finally { if (activeSignInUser === user.id) activeSignInUser = null; }
   }
 
   document.addEventListener('DOMContentLoaded', function () {
