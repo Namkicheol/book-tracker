@@ -170,20 +170,28 @@
       catch (_) { reject(new Error('이미지 저장을 완료하지 못했어요.')); }
     });
   }
+  const preparedBlobs = new WeakMap();
+  async function prepareShareCanvas(canvas) {
+    const blob = await canvasBlob(canvas);
+    preparedBlobs.set(canvas, blob);
+    return canvas;
+  }
   async function downloadCanvas(canvas, filename) {
-    const blob = await canvasBlob(canvas); const url = URL.createObjectURL(blob);
+    const blob = preparedBlobs.get(canvas) || await canvasBlob(canvas); const url = URL.createObjectURL(blob);
     const link = document.createElement('a'); link.href=url; link.download=filename; document.body.appendChild(link);link.click();link.remove();
     setTimeout(() => URL.revokeObjectURL(url),1000);
   }
   async function shareToAll(canvas, filename, bookTitle) {
-    const file = new File([await canvasBlob(canvas)],filename,{type:'image/png'});
+    // Prepared previews reach navigator.share synchronously within the user's click.
+    const blob = preparedBlobs.get(canvas) || await canvasBlob(canvas);
+    const file = new File([blob],filename,{type:'image/png'});
     if (!navigator.share || !navigator.canShare?.({files:[file]})) return {success:false};
     try { await navigator.share({files:[file],title:bookTitle});return {success:true}; }
     catch (error) { if(error.name==='AbortError')return {success:false,cancelled:true};throw error; }
   }
   async function saveForApp(canvas, filename) {
     await downloadCanvas(canvas,filename);
-    return {success:true,message:'이미지를 저장했어요. 원하는 앱에서 공유해 주세요.'};
+    return {success:true,message:'이미지 저장을 시작했어요. 저장한 뒤 원하는 앱에서 공유해 주세요.'};
   }
-  Object.assign(window,{generateInstagramTemplate,downloadCanvas,shareToAll,shareToInstagram:saveForApp,shareToKakao:saveForApp,shareToFacebook:saveForApp,shareToTwitter:saveForApp,INSTAGRAM_TEMPLATES:TEMPLATES});
+  Object.assign(window,{generateInstagramTemplate,prepareShareCanvas,downloadCanvas,shareToAll,shareToInstagram:saveForApp,shareToKakao:saveForApp,shareToFacebook:saveForApp,shareToTwitter:saveForApp,INSTAGRAM_TEMPLATES:TEMPLATES});
 })();

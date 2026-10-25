@@ -38,10 +38,10 @@
     const id = params.get('id');
     isNew = params.get('new') === '1';
 
-    if (!id) return showFatal('책 ID가 URL에 없습니다');
+    if (!id) return showFatal('책을 찾을 수 없어요. 내 서재에서 다시 선택해 주세요.');
 
     book = Storage.getBook(id);
-    if (!book) return showFatal('책을 찾을 수 없습니다 (id 확인 필요)');
+    if (!book) return showFatal('현재 계정의 서재에 없는 책이에요. 내 서재에서 다시 선택해 주세요.');
 
     folders = Storage.getAllFolders();
 
@@ -530,6 +530,7 @@
       const review = document.getElementById('reviewInput').innerText;
       const rating = selectedRating || 0;
       const canvas = await generateInstagramTemplate(bookData, review, rating, 1);
+      await prepareShareCanvas(canvas);
       showInstagramModal(canvas, bookData, review, rating);
     } catch (error) { showToast(error.message || '독서 카드를 만들지 못했어요. 다시 시도해 주세요.'); }
     finally { button.disabled = false; }
@@ -571,6 +572,7 @@
         busy(true);
         try {
           const canvas = await generateInstagramTemplate(bookData, review, rating, Number(button.dataset.template));
+          await prepareShareCanvas(canvas);
           if (token !== request || modal.hidden) return;
           apply(canvas);
           buttons.forEach(b => b.setAttribute('aria-pressed', String(b === button)));

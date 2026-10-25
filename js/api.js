@@ -24,18 +24,22 @@
 
   async function kakaoFetch(params) {
     if (!window.KAKAO_API_KEY) {
-      console.warn('[API] KAKAO_API_KEY 미설정 — mock 응답 반환');
-      return { documents: mockDocuments(params.query), meta: { is_end: true, total_count: 1 } };
+      throw new Error('책 검색 연결을 불러오지 못했어요. 새로고침한 뒤 다시 시도해 주세요.');
     }
     const qs = new URLSearchParams(params);
-    const res = await fetch(`${KAKAO_BASE}?${qs}`, {
-      headers: { 'Authorization': `KakaoAK ${KAKAO_API_KEY}` },
-    });
-    if (!res.ok) {
-      const errText = await res.text();
-      throw new Error(`Kakao API ${res.status}: ${errText}`);
+    try {
+      const res = await fetch(`${KAKAO_BASE}?${qs}`, {
+        headers: { 'Authorization': `KakaoAK ${window.KAKAO_API_KEY}` },
+        signal: AbortSignal.timeout(10000),
+      });
+      if (!res.ok) throw new Error('책 검색 서비스에 연결하지 못했어요. 잠시 후 다시 시도해 주세요.');
+      return await res.json();
+    } catch (error) {
+      if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+        throw new Error('책 검색 시간이 초과됐어요. 연결을 확인하고 다시 시도해 주세요.');
+      }
+      throw error;
     }
-    return res.json();
   }
 
   // ── Normalization ────────────────────────────────────────────
@@ -437,25 +441,6 @@
       }
     }
     return [];
-  }
-
-  // ── Mocks (when KAKAO_API_KEY is empty) ──────────────────────
-
-  function mockDocuments(query) {
-    const q = (query || '').toString();
-    return [
-      {
-        isbn: '0000000000 9788900000000',
-        title: `[Mock] ${q} — 검색 결과`,
-        authors: ['목업 저자'],
-        publisher: '목업 출판사',
-        thumbnail: '',
-        contents: 'API 키가 비어있어 mock 데이터를 반환합니다. 초등 3-4학년 추천 도서.',
-        url: '',
-        datetime: new Date().toISOString(),
-        price: 0,
-      },
-    ];
   }
 
   // ── Public ───────────────────────────────────────────────────

@@ -1060,9 +1060,11 @@
     const shareButton = modal.querySelector('#shareCardShare');
     const status = modal.querySelector('#shareCardStatus');
     let applied = {...initial};
+    let rendering = false;
     const regenerate = async () => {
       const request = ++revision;
       const next = {...selected};
+      rendering = true;
       downloadButton.disabled = shareButton.disabled = true;
       status.textContent = '카드를 만들고 있어요…';
       let nextUrl;
@@ -1089,7 +1091,11 @@
           status.textContent = '카드를 만들지 못했어요. 다시 골라 주세요.';
         }
       } finally {
-        if (!closed && request === revision) downloadButton.disabled = shareButton.disabled = false;
+        if (!closed && request === revision) {
+          rendering = false;
+          downloadButton.disabled = false;
+          shareButton.disabled = sharing;
+        }
       }
     };
     modal.querySelectorAll('[data-card-layout],[data-card-theme]').forEach(button => button.addEventListener('click', () => {
@@ -1104,13 +1110,17 @@
       a.href = imgUrl;
       a.download = `momsbooks_${name}_${new Date().toISOString().slice(0,10)}.png`;
       document.body.appendChild(a); a.click(); a.remove();
-      showToast('📥 이미지가 저장됐어요');
+      showToast('이미지 저장을 시작했어요.');
     });
 
+    let sharing = false;
     modal.querySelector('#shareCardShare').addEventListener('click', async () => {
+      if (sharing) return;
+      sharing = true;
+      shareButton.disabled = true;
       try {
         const file = new File([blob], 'momsbooks_share.png', { type: 'image/png' });
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        if (navigator.share && navigator.canShare?.({ files: [file] })) {
           await navigator.share({
             files: [file],
             title: '맘스북스 독서 기록',
@@ -1121,7 +1131,10 @@
           showToast('이 기기는 공유 미지원 — 저장 후 직접 공유해주세요');
         }
       } catch (e) {
-        if (e.name !== 'AbortError') showToast('공유 실패: ' + e.message);
+        if (e.name !== 'AbortError') showToast('공유하지 못했어요. 이미지 저장을 이용해 주세요.');
+      } finally {
+        sharing = false;
+        if (!closed && !rendering) shareButton.disabled = false;
       }
     });
   }

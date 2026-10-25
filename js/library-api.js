@@ -29,6 +29,19 @@
     { sido: '39', name: '제주',   lat: [33.0, 33.6], lng: [126.1, 126.9] },
   ];
 
+  async function requestLibrary(url) {
+    try {
+      const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+      if (!response.ok) throw new Error('도서관 정보를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.');
+      return await response.json();
+    } catch (error) {
+      if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+        throw new Error('도서관 조회 시간이 초과됐어요. 연결을 확인하고 다시 시도해 주세요.');
+      }
+      throw error;
+    }
+  }
+
   const LibraryAPI = {
 
     getRegionOptions() {
@@ -47,10 +60,7 @@
       if (options.region) params.set('region', options.region);
       if (options.pageSize) params.set('pageSize', String(options.pageSize));
 
-      const res = await fetch(`${workerUrl}/library/search?${params}`);
-      if (!res.ok) throw new Error(`Library search failed: ${res.status}`);
-
-      const data = await res.json();
+      const data = await requestLibrary(`${workerUrl}/library/search?${params}`);
       const rawLibs = data.response?.libs;
       if (!rawLibs) return [];
       const arr = Array.isArray(rawLibs) ? rawLibs : [rawLibs];
@@ -68,10 +78,7 @@
         isbn: String(isbn).replace(/\D/g, ''),
         libCode,
       });
-      const res = await fetch(`${workerUrl}/library/available?${params}`);
-      if (!res.ok) throw new Error(`Availability check failed: ${res.status}`);
-
-      const data = await res.json();
+      const data = await requestLibrary(`${workerUrl}/library/available?${params}`);
       const result = data.response?.result || {};
       return {
         available: result.loanAvailable === 'Y',
