@@ -195,7 +195,7 @@
   }
 
   let publicLibraryRequest = 0;
-  const EXAMPLE_LIBRARIES = [{"nickname":"잠자리 그림책장","books":[{"isbn":"9788949161341","title":"만복이네 떡집","authors":["김리리 (지은이), 이승현 (그림)"],"publisher":"비룡소","thumbnail":"https://image.aladin.co.kr/product/716/52/cover200/8949161346_2.jpg"},{"isbn":"9788986621136","title":"강아지똥","authors":["권정생 (글), 정승각 (그림)"],"publisher":"길벗어린이","thumbnail":"https://image.aladin.co.kr/product/0/48/cover200/8986621134_1.jpg"},{"isbn":"9788936446819","title":"수박 수영장","authors":["안녕달"],"publisher":"창비","thumbnail":"https://image.aladin.co.kr/product/6365/38/cover200/8936446819_1.jpg"}]},{"nickname":"호기심 많은 책장","books":[{"isbn":"9791160947502","title":"수영 이불","authors":["재희 (지은이)"],"publisher":"사계절","thumbnail":"https://image.aladin.co.kr/product/27663/83/cover200/k212733232_1.jpg"},{"isbn":"9791170820314","title":"달팽이 달리기","authors":["이혜인 (지은이)"],"publisher":"킨더랜드","thumbnail":"https://image.aladin.co.kr/product/32753/25/cover200/k552936080_1.jpg"},{"isbn":"9788949182216","title":"발명가 매티","authors":["에밀리 아놀드 맥컬리 (지은이), 김고연주 (옮긴이)"],"publisher":"비룡소","thumbnail":"https://image.aladin.co.kr/product/88/45/cover200/8949182211_2.jpg"}]},{"nickname":"영어책 읽는 집","books":[{"isbn":"9780241003008","title":"The Very Hungry Caterpillar","authors":["에릭 칼"],"publisher":"Hamish Hamilton","thumbnail":"https://image.aladin.co.kr/product/28/65/cover200/0241003008_1.jpg"},{"isbn":"9780064410939","title":"Charlotte's Web","authors":["엘윈 브룩스 화이트"],"publisher":"Harper Collins","thumbnail":"https://image.aladin.co.kr/product/57/64/cover200/0064410935_2.jpg"},{"isbn":"9780064430173","title":"Goodnight Moon","authors":["마거릿 와이즈 브라운"],"publisher":"HarperTrophy","thumbnail":"https://image.aladin.co.kr/product/90/35/cover200/0064430170ff_1.jpg"}]}];
+  const EXAMPLE_LIBRARIES = window.COMMUNITY_SHELVES || [];
   let publicFeed = [];
   let feedLimit = 6;
   function clearPublicLibraryViews() {
@@ -288,7 +288,7 @@
     list.innerHTML='';
     EXAMPLE_LIBRARIES.forEach(library=>{
       const card=document.createElement('article');card.className='neighbor-card';
-      card.innerHTML=`<header class="neighbor-top"><span class="neighbor-avatar" aria-hidden="true">📖</span><div><h3>${escapeHtml(library.nickname)}</h3><p>함께 펼쳐볼 책 3권</p></div></header><div class="neighbor-covers">${library.books.map((book,index)=>`<button type="button" data-example-book="${index}" aria-label="${escapeAttr(book.title)} 자세히 보기">${coverMarkup(book)}<span>${escapeHtml(book.title)}</span></button>`).join('')}</div><button type="button" class="neighbor-open">책장 전체 보기 →</button>`;
+      card.innerHTML=`<header class="neighbor-top"><span class="neighbor-avatar" aria-hidden="true">📖</span><div><h3>${escapeHtml(library.title)}</h3><p>책 ${library.books.length}권</p></div></header><div class="neighbor-covers">${library.books.slice(0,3).map((book,index)=>`<button type="button" data-example-book="${index}" aria-label="${escapeAttr(book.title)} 자세히 보기">${coverMarkup(book)}<span>${escapeHtml(book.title)}</span></button>`).join('')}</div><button type="button" class="neighbor-open">책장 전체 보기 →</button>`;
       card.querySelectorAll('[data-example-book]').forEach(button=>button.addEventListener('click',()=>openFeedBook(library.books[Number(button.dataset.exampleBook)],true)));
       card.querySelector('.neighbor-open').addEventListener('click',()=>showPublicLibrary(library,true));
       list.appendChild(card);
@@ -317,7 +317,7 @@
   async function showPublicLibrary(library, example = false) {
     const modal = document.createElement('div');
     modal.className = example ? 'friend-modal example-library-modal' : 'friend-modal public-library-modal';
-    modal.innerHTML = `<div class="friend-modal-content" role="dialog" aria-modal="true" aria-labelledby="neighborLibraryTitle"><div class="friend-modal-header"><h2 id="neighborLibraryTitle">${escapeHtml(library.nickname || '서재 #' + shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><div class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</div></div>`;
+    modal.innerHTML = `<div class="friend-modal-content" role="dialog" aria-modal="true" aria-labelledby="neighborLibraryTitle"><div class="friend-modal-header"><h2 id="neighborLibraryTitle">${escapeHtml(library.title || library.nickname || '서재 #' + shortId(library.owner_id))}</h2><button type="button" aria-label="닫기">✕</button></div><div class="public-library-books" aria-live="polite">책을 불러오는 중이에요…</div></div>`;
     const returnFocus = document.activeElement;
     const close = () => { modal.remove(); document.removeEventListener('keydown', keydown); returnFocus?.focus(); };
     modal._close = close;
