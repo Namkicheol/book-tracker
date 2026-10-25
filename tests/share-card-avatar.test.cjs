@@ -3,8 +3,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const full = fs.readFileSync('js/share.js', 'utf8');
-const source = full.slice(full.indexOf('  async function showShareCard()'), full.indexOf('  function _showShareCardModal('));
-async function render(avatar, fail = false) {
+const source = full.slice(full.indexOf('  async function showShareCard('), full.indexOf('  function _showShareCardModal('));
+async function render(avatar, fail = false, theme = 'paper') {
   const texts = [], images = [], loaded = [];
   let result;
   const gradient = { addColorStop() {} };
@@ -18,7 +18,7 @@ async function render(avatar, fail = false) {
     URL: { createObjectURL: () => 'blob:card' }, _showShareCardModal(url, blob) { result = { url, blob }; }, showToast() {}
   };
   vm.runInNewContext(source + '\nthis.render = showShareCard;', env);
-  await env.render();
+  await env.render(theme);
   return { texts, images, loaded, result };
 }
 for (const avatar of ['https://example.org/profile.jpg', 'data:image/png;base64,profile-data']) {
@@ -48,4 +48,12 @@ test('generated paper artwork is drawn under the content and remains optional', 
   const fallback = await render('👩', true);
   assert.equal(fallback.images.length, 0);
   assert.equal(fallback.result.blob.type, 'image/png');
+});
+
+test('each selected artwork is drawn and branding appears at top and footer', async () => {
+  for (const [theme, asset] of [['paper', 'monthly-paper'], ['coffee', 'reading-coffee'], ['forest', 'reading-forest']]) {
+    const card = await render('👩', false, theme);
+    assert.equal(card.images[0], `img/cards/${asset}.png`);
+    assert.equal(card.texts.filter(text => text === '맘스북스').length, 2);
+  }
 });
