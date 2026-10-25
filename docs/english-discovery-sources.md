@@ -235,3 +235,8 @@ No general rights clearance is claimed for app API data or covers; consult the s
 ## 2026-10-25 verified early-reader expansion
 
 Added25 individually verified print ISBNs (24 readers,1 chapter-level Step5). Total109 discovery records. Dinosaur filters grew3→12 and science19→30; no AR scores were inferred. ExactISBN Aladin lookup matched every added edition. See [launch expansion source table](launch-catalog-expansion-2026-10-25.md). The earlier84-record tables remain a dated snapshot.
+
+
+## 2026-10-25 입문 영역 추가 검증
+
+기존 영어 22권(그림책 13·리더스 9)의 개별 판본을 확인해 단계 분류를 보강하고 파닉스 17권을 추가했다. [ISBN별 공식 출처와 검증 범위](english-entry-stage-expansion-2026-10-25.md). AR 및 수상 정보는 변경하지 않았다.
