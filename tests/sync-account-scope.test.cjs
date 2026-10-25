@@ -225,9 +225,10 @@ test('a late success cannot remove a newer failed edit from the outbox', async (
   const oldWrite = runtime.window.Sync.pushBook({ id: 'same', title: 'Old', updatedAt: '2026-10-20T00:00:00Z' });
   await new Promise(resolve => setImmediate(resolve));
   const newWrite = runtime.window.Sync.pushBook({ id: 'same', title: 'New', updatedAt: '2026-10-20T01:00:00Z' });
-  await newWrite;
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(writeCount, 1, "same-record saves must be serialized");
   resolveOldWrite({ error: null });
-  await oldWrite;
+  await Promise.all([oldWrite, newWrite]);
 
   const queue = JSON.parse(runtime.localStorage.getItem('sync.outbox.v1'));
   assert.equal(queue.length, 1);
@@ -401,4 +402,95 @@ test('account deletion cleanup clears only the active account and its outbox', (
   assert.equal(runtime.localStorage.getItem('_syncUploaded_account-b'), '1');
   runtime.window.Sync.setOwner(null);
   assert.deepEqual(JSON.parse(JSON.stringify(runtime.window.Storage.getAllBooksRaw())), []);
+});
+
+
+test('failed local persistence does not report success or upload an unsaved book', () => {
+  const localStorage = localStore();
+  let pushes = 0;
+  const Storage = loadStorage(localStorage, { Sync: { pushBook() { pushes++; }, pushFolder() { pushes++; } } });
+  const originalSet = localStorage.setItem;
+  localStorage.setItem = (key, value) => { if (key === 'bookTracker.books.v1' || key === 'bookTracker.folders.v1') throw Error('quota'); originalSet(key, value); };
+  assert.equal(Storage.saveBook({title:'Unsaved'}), null);
+  assert.equal(Storage.saveFolder({name:'Unsaved'}), false);
+  assert.equal(pushes, 0);
+  assert.equal(Storage.getAllBooks().length, 0);
+});
+
+test('rereads preserve original date, deduplicate days and retain one library book', () => {
+  const Storage = loadStorage(localStore());
+  const book = Storage.saveBook({title:'Read again', readDate:'2026-10-01'});
+  Storage.recordReread(book.id, '2026-10-25');
+  const twice = Storage.recordReread(book.id, '2026-10-25');
+  assert.deepEqual(Array.from(twice.readHistory), ['2026-10-01','2026-10-25']);
+  assert.equal(twice.readDate,'2026-10-25');
+  assert.equal(Storage.getAllBooks().length,1);
+  assert.equal(Storage.recordReread(book.id,'2026-02-30'),null);
+});
+
+test('pending save is durable before network completion and status reflects failure then retry', async () => {
+  let resolveWrite;
+  const runtime = syncRuntime({user:{id:'account-a'},upsert:()=>new Promise(resolve=>{resolveWrite=resolve;})});
+  runtime.window.Sync.setOwner('account-a');
+  runtime.localStorage.setItem('_syncUploaded_account-a','1');
+  const write=runtime.window.Sync.pushBook({id:'durable',title:'Book',readHistory:['2026-10-01']});
+  assert.equal(JSON.parse(runtime.localStorage.getItem('sync.outbox.v1'))[0].data.id,'durable');
+  assert.equal(runtime.window.Sync.getSaveStatus().state,'saving');
+  await new Promise(resolve=>setImmediate(resolve));
+  resolveWrite({error:{message:'offline'}});await write;
+  assert.equal(runtime.window.Sync.getSaveStatus().state,'pending');
+  runtime.client.from=()=>({upsert:async row=>{assert.deepEqual(Array.from(row.read_history),['2026-10-01']);return {error:null};}});
+  await runtime.window.Sync.flushOutbox();
+  assert.equal(runtime.window.Sync.getSaveStatus().state,'saved');
+});
+
+
+test('rapid local edits have increasing versions so the newest outbox edit is distinguishable', () => {
+  const Storage = loadStorage(localStore());
+  const first = Storage.saveBook({title:'First'});
+  const second = Storage.updateBook(first.id,{title:'Second'});
+  const third = Storage.updateBook(first.id,{title:'Third'});
+  assert.ok(first.updatedAt < second.updatedAt);
+  assert.ok(second.updatedAt < third.updatedAt);
+});
+
+
+test('queued stale flush snapshot cannot overwrite a newer local edit', async () => {
+  const writes=[];
+  const runtime=syncRuntime({user:{id:'account-a'},upsert:async (_table,row)=>{writes.push(row);return {error:null};}});
+  runtime.window.Sync.setOwner('account-a');runtime.localStorage.setItem('_syncUploaded_account-a','1');
+  runtime.localStorage.setItem('bookTracker.books.v1',JSON.stringify([{id:'same',title:'Newest',updatedAt:'2026-10-25T12:00:00Z'}]));
+  await runtime.window.Sync.pushBook({id:'same',title:'Stale',updatedAt:'2026-10-24T00:00:00Z'});
+  assert.equal(writes.length,0);
+  assert.equal(runtime.window.Sync.getSaveStatus().pending,0);
+});
+
+test('startup and ignored guest imports never falsely claim cloud saving or saved', () => {
+  const runtime=syncRuntime();runtime.window.Sync.setOwner('account-a');
+  assert.equal(runtime.window.Sync.getSaveStatus().state,'ready');
+  runtime.window.Sync.setOwner(null);
+  const guest=runtime.window.Storage.saveBook({title:'Guest'});
+  runtime.window.Sync.setOwner('account-a');
+  runtime.localStorage.setItem('sync.outbox.v1',JSON.stringify([{user_id:'account-a',type:'book',data:guest}]));
+  assert.equal(runtime.window.Sync.getSaveStatus().pending,0);
+  assert.equal(runtime.window.Sync.getSaveStatus().state,'ready');
+});
+
+test('failed durable queue write is visible and does not start untracked network request', async () => {
+  let writes=0;
+  const runtime=syncRuntime({user:{id:'account-a'},upsert:async()=>{writes++;return {error:null};}});
+  runtime.window.Sync.setOwner('account-a');runtime.localStorage.setItem('_syncUploaded_account-a','1');
+  const original=runtime.localStorage.setItem;
+  runtime.localStorage.setItem=(key,value)=>{if(key==='sync.outbox.v1')throw Error('quota');original(key,value);};
+  await runtime.window.Sync.pushBook({id:'unsent',title:'Book'});
+  assert.equal(writes,0);
+  assert.equal(runtime.window.Sync.getSaveStatus().state,'error');
+});
+
+test('planned readDate is not treated as an already completed reread', () => {
+  const Storage=loadStorage(localStore());
+  const book=Storage.saveBook({title:'Planned',status:'want',readDate:'2026-11-01'});
+  const saved=Storage.recordReread(book.id,'2026-10-25');
+  assert.deepEqual(Array.from(saved.readHistory),['2026-10-25']);
+  assert.equal(saved.readDate,'2026-10-25');
 });

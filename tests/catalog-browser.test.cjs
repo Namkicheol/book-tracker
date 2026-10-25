@@ -94,3 +94,32 @@ test('top shortcuts select the requested catalog and expand award controls only 
  quick('awards');assert.equal(a.node('catalogEnglishAdvanced').open,true);assert.match(a.node('catalogStatus').textContent,/27권/);
  quick('korean');assert.equal(a.node('catalogEnglishFilters').hidden,true);assert.match(a.node('catalogStatus').textContent,/28권/);
 });
+
+test('duplicate ISBNs count once while different editions remain distinct',()=>{
+ const a=setup(undefined,undefined,books=>{books.push({...books[2]});books.push({...books[2],isbn:'new-edition'});});
+ assert.match(a.node('catalogStatus').textContent,/56권/);
+ a.node('catalogQuery').value='Book 2';a.node('catalogQuery').handlers.input();
+ assert.equal((a.node('catalogList').innerHTML.match(/data-catalog-isbn="2"/g)||[]).length,1);
+ assert.match(a.node('catalogList').innerHTML,/data-catalog-isbn="new-edition"/);
+});
+test('missing and failed covers retain a same-size accessible placeholder',()=>{
+ const a=setup(undefined,undefined,books=>books[0].thumbnail='');
+ assert.match(a.node('catalogList').innerHTML,/role="img" aria-label="표지 준비 중">📖/);
+ const placeholder={style:{display:'none'}};
+ const image={tagName:'IMG',classList:{contains:c=>c==='catalog-cover'},style:{},nextElementSibling:placeholder};
+ a.node('catalogList').handlers.error({target:image});
+ assert.equal(image.style.display,'none');assert.equal(placeholder.style.display,'grid');
+});
+test('set label uses explicit title wording and does not label a numbered single volume as a set',()=>{
+ const a=setup(undefined,undefined,books=>{books[0].title='그림책 세트 - 전3권';books[1].title='Reading Friends Boxed Set';books[2].title='Magic Tree House #2: The Knight at Dawn';});
+ assert.equal((a.node('catalogList').innerHTML.match(/세트 도서 · 낱권은 제목으로 찾아보세요/g)||[]).length,2);
+});
+test('explicit adult recruitment exam books are hidden without removing children test or career stories',()=>{
+ const excluded=['독끝 NCS 통합 기본서','2026 해커스공무원 실전동형모의고사','취업 공기업기출 일반상식','국어 문제풀이 - 9급 공무원 시험 대비'];
+ const retained=['어린이를 위한 공무원 이야기','내일은 시험왕','초등 수학 기출 문제집','한국사능력검정시험 한 권 합격 - 공무원 취업에도 도움','일본 취업 이야기','Sunset Stories'];
+ const a=setup(undefined,undefined,books=>{books.splice(0,books.length,...[...excluded,...retained].map((title,i)=>({isbn:String(i),title})));});
+ assert.match(a.node('catalogStatus').textContent,/6권/);
+ excluded.forEach(title=>assert.ok(!a.node('catalogList').innerHTML.includes(title)));
+ retained.forEach(title=>assert.ok(a.node('catalogList').innerHTML.includes(title)));
+ assert.doesNotMatch(a.node('catalogList').innerHTML,/세트 도서/);
+});

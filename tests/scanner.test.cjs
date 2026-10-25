@@ -3,12 +3,12 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 
-function scannerHarness({ lookup = async () => null, start = async () => {}, photo = async () => '9780306406157' } = {}) {
+function scannerHarness({ lookup = async () => null, start = async () => {}, photo = async () => '9780306406157', existing = null } = {}) {
   const elements = new Map();
   const element = id => {
     if (!elements.has(id)) elements.set(id, {
       disabled: false, textContent: '', dataset: {}, style: {}, parentElement: { clientHeight: 180 },
-      classList: { add() {}, remove() {} },
+      classList: { add() {}, remove() {} }, scrollIntoView() {}, focus() {},
     });
     return elements.get(id);
   };
@@ -33,13 +33,13 @@ function scannerHarness({ lookup = async () => null, start = async () => {}, pho
     history: { replaceState() {} },
     Html5Qrcode: Camera, Html5QrcodeSupportedFormats: { EAN_13: 9 },
     API: { async searchByIsbn(value) { calls.lookup++; return lookup(value); } },
-    Storage: { getBookByIsbn() { return null; } },
-    BookPreview: { show() { calls.preview++; } },
+    Storage: { getBookByIsbn() { return existing; } },
+    BookPreview: { show(book, opts) { calls.preview++; calls.previewOptions = opts; } },
     console: { log() {}, warn() {}, error() {} }, setTimeout, clearTimeout,
   };
   const source = fs.readFileSync('js/scanner.js', 'utf8').replace(
     '  // ── Boot',
-    '  window.scannerTest = { startBarcode, stopBarcode, onDecodeSuccess, isBookBarcode, scanBarcodePhoto, searchByIsbn, setMode };\n  // ── Boot'
+    '  window.scannerTest = { startBarcode, stopBarcode, onDecodeSuccess, isBookBarcode, scanBarcodePhoto, searchByIsbn, setMode, scanNextBook };\n  // ── Boot'
   );
   vm.runInNewContext(source, context);
   return { ...context.window.scannerTest, calls, element };
@@ -176,4 +176,41 @@ test('new manual ISBN request cancels a pending photo result', async () => {
   await pending;
   assert.equal(scanner.calls.lookup, 1);
   assert.equal(scanner.calls.preview, 1);
+});
+
+
+test('duplicate ISBN offers existing record and next scan without a forced redirect', async () => {
+  const scanner = scannerHarness({ existing: { id: 'existing-book', title: '우리 책' } });
+  await scanner.startBarcode();
+  await scanner.onDecodeSuccess('9780306406157');
+  assert.equal(scanner.calls.lookup, 0);
+  assert.equal(scanner.calls.stop, 1);
+  assert.equal(scanner.element('scanSavedTitle').textContent, '이미 서재에 있는 책이에요');
+  assert.equal(scanner.element('scanSavedDetail').href, 'detail.html?id=existing-book');
+  scanner.scanNextBook();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(scanner.calls.start, 2);
+});
+
+test('saved preview returns to next scan actions and can restart recognition', async () => {
+  const scanner = scannerHarness({ lookup: async isbn => ({ isbn, title: '새 책' }) });
+  await scanner.startBarcode();
+  await scanner.onDecodeSuccess('9780306406157');
+  scanner.calls.previewOptions.onSaved({id:'saved-book',title:'새 책'});
+  assert.equal(scanner.element('scanSavedTitle').textContent, '서재에 담았어요');
+  assert.equal(scanner.element('scanSavedDetail').href, 'detail.html?id=saved-book');
+  scanner.scanNextBook();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(scanner.calls.start, 2);
+  await scanner.onDecodeSuccess('9780306406157');
+  assert.equal(scanner.calls.lookup, 2, 'next scan resets the duplicate decode cooldown');
+});
+
+test('a stale preview save callback cannot replace a later search screen', async () => {
+  const scanner = scannerHarness({ lookup: async isbn => ({ isbn, title: '새 책' }) });
+  await scanner.searchByIsbn('9780306406157');
+  const saved = scanner.calls.previewOptions.onSaved;
+  scanner.setMode('title');
+  saved({id:'old',title:'늦은 책'});
+  assert.equal(scanner.element('scanSavedTitle').textContent, '');
 });

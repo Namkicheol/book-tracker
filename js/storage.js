@@ -181,7 +181,11 @@
     return 'id_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 9);
   }
 
-  function nowIso() { return new Date().toISOString(); }
+  let lastWriteTime = 0;
+  function nowIso() {
+    lastWriteTime = Math.max(Date.now(), lastWriteTime + 1);
+    return new Date(lastWriteTime).toISOString();
+  }
 
   function readJSON(key, fallback) {
     if (!ownerIsCurrent()) return fallback;
@@ -200,8 +204,10 @@
     if (!ownerIsCurrent()) return false;
     try {
       localStorage.setItem(key, JSON.stringify(value));
+      if (window.Sync && window.Sync.notifyLocalSave) window.Sync.notifyLocalSave(false);
       return true;
     } catch (e) {
+      if (window.Sync && window.Sync.notifyLocalSave) window.Sync.notifyLocalSave(true);
       console.error('[Storage] write error for', key, e);
       return false;
     }
@@ -244,7 +250,7 @@
       if (idx === -1) {
         const fresh = normalizeBook({ ...book, createdAt: now, updatedAt: now });
         books.push(fresh);
-        writeJSON(KEYS.BOOKS, books);
+        if (!writeJSON(KEYS.BOOKS, books)) return null;
         if (window.Sync) window.Sync.pushBook(fresh);
         return fresh;
       }
@@ -256,7 +262,7 @@
         updatedAt: now,
       });
       books[idx] = updated;
-      writeJSON(KEYS.BOOKS, books);
+      if (!writeJSON(KEYS.BOOKS, books)) return null;
       if (window.Sync) window.Sync.pushBook(updated);
       return updated;
     }
@@ -268,7 +274,7 @@
       updatedAt: now,
     });
     books.push(fresh);
-    writeJSON(KEYS.BOOKS, books);
+    if (!writeJSON(KEYS.BOOKS, books)) return null;
     if (window.Sync) window.Sync.pushBook(fresh);
     return fresh;
   }
@@ -288,7 +294,7 @@
     if (idx === -1) return false;
     const now = nowIso();
     books[idx] = normalizeBook({ ...books[idx], deletedAt: now, updatedAt: now });
-    writeJSON(KEYS.BOOKS, books);
+    if (!writeJSON(KEYS.BOOKS, books)) return null;
     if (window.Sync) window.Sync.pushBook(books[idx]);
     return true;
   }
@@ -319,6 +325,18 @@
     });
   }
 
+  function validReadDate(value) {
+    return typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
+      && Number.isFinite(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
+  }
+
+  function recordReread(id, date) {
+    const book = getBook(id);
+    if (!book || !validReadDate(date)) return null;
+    const history = [...new Set([...(book.readHistory || []), !book.status ? book.readDate : null, date].filter(validReadDate))].sort();
+    return saveBook({ ...book, readHistory: history, readDate: history[history.length - 1], status: null });
+  }
+
   function normalizeBook(b) {
     return {
       id:        b.id,
@@ -333,6 +351,7 @@
       rating:    Math.max(0, Math.min(5, Number(b.rating) || 0)),
       review:    b.review || '',
       readDate:  b.readDate || '',
+      readHistory: Array.isArray(b.readHistory) ? [...new Set(b.readHistory.filter(validReadDate))].sort() : [],
       vocab:     Array.isArray(b.vocab) ? b.vocab : [],
       folders:   Array.isArray(b.folders) ? b.folders : [],
       ar:        b.ar != null ? Number(b.ar) : null,
@@ -373,7 +392,7 @@
       if (idx !== -1) {
         const updated = { ...folders[idx], ...folder, updatedAt: now };
         folders[idx] = updated;
-        writeJSON(KEYS.FOLDERS, folders);
+        if (!writeJSON(KEYS.FOLDERS, folders)) return null;
         if (window.Sync) window.Sync.pushFolder(updated);
         return updated;
       }
@@ -391,7 +410,7 @@
       deletedAt: null,
     };
     folders.push(fresh);
-    writeJSON(KEYS.FOLDERS, folders);
+    if (!writeJSON(KEYS.FOLDERS, folders)) return false;
     if (window.Sync) window.Sync.pushFolder(fresh);
     return fresh;
   }
@@ -413,11 +432,11 @@
       }
       return b;
     });
-    if (touched) writeJSON(KEYS.BOOKS, nextBooks);
+    if (touched && !writeJSON(KEYS.BOOKS, nextBooks)) return false;
 
     const deletedFolder = { ...folders[idx], deletedAt: now, updatedAt: now };
     folders[idx] = deletedFolder;
-    writeJSON(KEYS.FOLDERS, folders);
+    if (!writeJSON(KEYS.FOLDERS, folders)) return false;
     if (window.Sync) {
       window.Sync.pushFolder(deletedFolder);
       if (touched) nextBooks.forEach(function(b) { if (b.updatedAt === now) window.Sync.pushBook(b); });
@@ -532,8 +551,10 @@
         writeJSON(KEYS.BOOKS,   incomingBooks.map(normalizeBook));
         writeJSON(KEYS.FOLDERS, incomingFolders);
       }
+      if (window.Sync && window.Sync.notifyLocalSave) window.Sync.notifyLocalSave(false);
       return true;
     } catch (e) {
+      if (window.Sync && window.Sync.notifyLocalSave) window.Sync.notifyLocalSave(true);
       console.error('[Storage] importData failed', e);
       return false;
     }
@@ -618,6 +639,7 @@
     getBookByIsbn,
     saveBook,
     updateBook,
+    recordReread,
     deleteBook,
     purgeOldDeletedBooks,
     getBooksByFolder,

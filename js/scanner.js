@@ -7,8 +7,7 @@
  *   - title   : title/author search → multi-result list → pick one
  *
  * Common flow:
- *   detect/pick book → preview card → "이 책 기록하기" → detail.html?isbn=XXX&pending=1
- *   (the detail page handles the "new book" flow when isbn is in URL but no id)
+ *   detect/pick book → preview → save → next scan or open the saved record
  */
 
 (function () {
@@ -299,10 +298,7 @@
         }
         if (request !== searchGeneration) return;
         hideLoading();
-        showToast('이미 기록된 책이에요. 상세로 이동합니다.');
-        setTimeout(() => {
-          if (request === searchGeneration) location.href = `detail.html?id=${encodeURIComponent(existing.id)}`;
-        }, 700);
+        showSavedBook(existing, true);
         return;
       }
 
@@ -445,12 +441,17 @@
 
   // ── Result preview ───────────────────────────────────────────
   // 풍부한 미리보기는 BookPreview 모듈에 위임. 알라딘 평점·리뷰·추천 이유까지 보고
-  // "＋ 내 서재에 기록" 버튼 누르면 자동 저장 + detail.html?id=...&new=1 이동.
+  // 저장 후에는 다음 스캔과 상세 기록 중 사용자가 고른다.
 
   function showResult(book) {
+    const existing = Storage.getBookByIsbn(book.isbn);
+    if (existing) { showSavedBook(existing, true); return; }
     pickedBook = book;
     if (window.BookPreview) {
-      BookPreview.show(book, { mode: 'recommend' });
+      const request = searchGeneration;
+      BookPreview.show(book, { mode: 'recommend', onSaved(saved) {
+        if (request === searchGeneration) showSavedBook(saved);
+      } });
       return;
     }
     // Fallback (BookPreview 미로드 시 옛 in-page 카드)
@@ -471,7 +472,7 @@
     section.classList.remove('hidden');
   }
 
-  // BookPreview의 saveBtn이 직접 저장 + 이동을 처리하므로 recordPicked는 fallback 용도만 유지.
+  // BookPreview가 저장을 처리하므로 recordPicked는 fallback 용도만 유지.
   function recordPicked() {
     if (!pickedBook) return;
     const saved = Storage.saveBook({
@@ -484,7 +485,24 @@
       category: pickedBook.category || '',
       language: pickedBook.language || 'ko',
     });
-    location.href = `detail.html?id=${encodeURIComponent(saved.id)}&new=1`;
+    if (!saved) { showError('책을 저장하지 못했어요. 로그인 상태를 확인하고 다시 시도해 주세요.'); return; }
+    showSavedBook(saved);
+  }
+
+  function showSavedBook(book, existing = false) {
+    hideResult();
+    const section = document.getElementById('scanSavedSection');
+    document.getElementById('scanSavedTitle').textContent = existing ? '이미 서재에 있는 책이에요' : '서재에 담았어요';
+    document.getElementById('scanSavedBook').textContent = book.title || '제목 없는 책';
+    document.getElementById('scanSavedDetail').href = `detail.html?id=${encodeURIComponent(book.id)}`;
+    section.classList.remove('hidden');
+    section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.getElementById('scanNextBtn').focus({ preventScroll: true });
+  }
+
+  function scanNextBook() {
+    setMode('barcode', { autoStart: true });
+    document.getElementById('modeBarcode').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   function cancelPicked() {
@@ -501,7 +519,7 @@
     document.getElementById('errorSection').classList.remove('hidden');
   }
   function hideError()  { document.getElementById('errorSection').classList.add('hidden'); }
-  function hideResult() { document.getElementById('resultSection').classList.add('hidden'); pickedBook = null; }
+  function hideResult() { document.getElementById('resultSection').classList.add('hidden'); document.getElementById('scanSavedSection')?.classList.add('hidden'); pickedBook = null; }
 
   function showToast(msg) {
     const toast = document.getElementById('toast');
@@ -550,6 +568,8 @@
     if (titleInput) titleInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') { e.preventDefault(); searchByTitle(titleInput.value); }
     });
+
+    document.getElementById('scanNextBtn')?.addEventListener('click', scanNextBook);
 
     // Result card actions
     const recordBtn = document.getElementById('recordBtn');

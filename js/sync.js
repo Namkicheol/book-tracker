@@ -30,6 +30,49 @@
 
   var activeUserId = storedUserId();
   var scopeGeneration = 0;
+  var saveError = false;
+  var cloudSaved = false;
+  var pendingWrites = new Map();
+
+  function getSaveStatus() {
+    var count = outboxAll().filter(function(item) { return item.user_id === activeUserId && eligibleOutboxItem(item); }).length;
+    var saving = Array.from(pendingWrites.keys()).some(function(key) { return key.indexOf(activeUserId + ':') === 0; });
+    return { state: saveError ? 'error' : !activeUserId ? 'local' : saving ? 'saving' : count ? 'pending' : cloudSaved ? 'saved' : 'ready', pending: count };
+  }
+
+  function emitSaveStatus() {
+    if (typeof window.dispatchEvent === 'function' && typeof window.CustomEvent === 'function') {
+      window.dispatchEvent(new window.CustomEvent('sync-status', { detail: getSaveStatus() }));
+    }
+  }
+
+  function notifyLocalSave(failed) { saveError = failed; emitSaveStatus(); }
+
+  function queuePush(type, data, send) {
+    var owner = activeUserId, generation = scopeGeneration;
+    if (!owner || !window.SB || !window.SB.enabled || !isCurrentUser(owner)) { emitSaveStatus(); return Promise.resolve(); }
+    // Persist before awaiting the network: navigation must not lose pending saves.
+    if (!outboxAdd(type, data, owner)) { saveError = true; emitSaveStatus(); return Promise.resolve(); }
+    var key = owner + ':' + type + ':' + data.id;
+    var previous = pendingWrites.get(key) || Promise.resolve();
+    var task = previous.catch(function() {}).then(function() {
+      if (generation !== scopeGeneration || !isCurrentUser(owner)) return;
+      var readRows = window.Storage && (type === 'book' ? window.Storage.getAllBooksRaw : window.Storage.getAllFoldersRaw);
+      var latest = readRows && readRows().find(function(row) { return row.id === data.id; });
+      if (latest && compareRecordVersion(latest, data) === 1) { outboxRemove(type, data.id, owner, data); return; }
+      var newer = outboxAll().some(function(item) { return item.user_id === owner && item.type === type && item.data.id === data.id && compareRecordVersion(item.data, data) === 1; });
+      if (!newer && generation === scopeGeneration && isCurrentUser(owner)) return send(data);
+    }).finally(function() {
+      if (pendingWrites.get(key) === task) pendingWrites.delete(key);
+      emitSaveStatus();
+    });
+    pendingWrites.set(key, task);
+    emitSaveStatus();
+    return task;
+  }
+
+  function pushBook(book) { return queuePush('book', book, pushBookNow); }
+  function pushFolder(folder) { return queuePush('folder', folder, pushFolderNow); }
 
   function legacyImportKey(userId) { return '_syncLegacyGuestPending_' + userId; }
   function uploadedKey(userId) { return '_syncUploaded_' + userId; }
@@ -40,6 +83,9 @@
     if (window.Storage && typeof window.Storage.setOwner === 'function') window.Storage.setOwner(next);
     activeUserId = next;
     scopeGeneration++;
+    saveError = false;
+    cloudSaved = false;
+    emitSaveStatus();
     return true;
   }
 
@@ -129,6 +175,7 @@
       rating:     (book.rating != null && book.rating > 0) ? book.rating : null,
       review:     book.review     || null,
       read_date:  book.readDate   || null,
+      read_history: Array.isArray(book.readHistory) ? book.readHistory : [],
       vocab:      Array.isArray(book.vocab) ? book.vocab : [],
       folders:    Array.isArray(book.folders) ? book.folders : [],
       ar:         book.ar   != null ? book.ar   : null,
@@ -154,6 +201,7 @@
       rating:    row.rating     != null ? row.rating : 0,
       review:    row.review     || '',
       readDate:  row.read_date  || '',
+      readHistory: Array.isArray(row.read_history) ? row.read_history : [],
       vocab:     row.vocab      || [],
       folders:   row.folders    || [],
       ar:        row.ar         != null ? row.ar    : null,
@@ -205,19 +253,20 @@
 
   function outboxAdd(type, data, userId) {
     try {
-      var q = JSON.parse(localStorage.getItem(OUTBOX_KEY) || '[]');
+      var q = JSON.parse(localStorage.getItem(OUTBOX_KEY || 'sync.outbox.v1') || '[]');
       var matching = q.filter(function(e) { return e.type === type && e.data && e.data.id === data.id && e.user_id === userId; });
-      if (matching.some(function(e) { var order = compareRecordVersion(e.data, data); return order === 1 || order === null; })) return;
+      if (matching.some(function(e) { var order = compareRecordVersion(e.data, data); return order === 1 || order === null; })) return true;
       // 같은 계정의 같은 id만 교체한다. 소유자가 없는 과거 항목은 격리한다.
       var next = q.filter(function(e) { return !(e.type === type && e.data && e.data.id === data.id && e.user_id === userId); });
       next.push({ type: type, data: data, user_id: userId, ts: Date.now() });
       localStorage.setItem(OUTBOX_KEY, JSON.stringify(next));
-    } catch (e) { /* ignore */ }
+      return true;
+    } catch (e) { return false; }
   }
 
   function outboxRemove(type, id, userId, completedData) {
     try {
-      var q = JSON.parse(localStorage.getItem(OUTBOX_KEY) || '[]');
+      var q = JSON.parse(localStorage.getItem(OUTBOX_KEY || 'sync.outbox.v1') || '[]');
       var next = q.filter(function(e) {
         if (e.type !== type || !e.data || e.data.id !== id || e.user_id !== userId) return true;
         if (!completedData) return false;
@@ -229,7 +278,7 @@
   }
 
   function outboxAll() {
-    try { return JSON.parse(localStorage.getItem(OUTBOX_KEY) || '[]'); }
+    try { return JSON.parse(localStorage.getItem(OUTBOX_KEY || 'sync.outbox.v1') || '[]'); }
     catch (e) { return []; }
   }
 
@@ -247,7 +296,7 @@
 
   // ── 단건 push ────────────────────────────────────────────────
 
-  async function pushBook(book) {
+  async function pushBookNow(book) {
     var ownerId = activeUserId;
     var generation = scopeGeneration;
     if (!ownerId || !window.SB || !window.SB.enabled || !isCurrentUser(ownerId)) return;
@@ -270,10 +319,11 @@
       outboxAdd('book', book, ownerId);
     } else {
       outboxRemove('book', book.id, ownerId, book);
+      if (isCurrentUser(ownerId) && generation === scopeGeneration) cloudSaved = true;
     }
   }
 
-  async function pushFolder(folder) {
+  async function pushFolderNow(folder) {
     var ownerId = activeUserId;
     var generation = scopeGeneration;
     if (!ownerId || !window.SB || !window.SB.enabled || !isCurrentUser(ownerId)) return;
@@ -296,6 +346,7 @@
       outboxAdd('folder', folder, ownerId);
     } else {
       outboxRemove('folder', folder.id, ownerId, folder);
+      if (isCurrentUser(ownerId) && generation === scopeGeneration) cloudSaved = true;
     }
   }
 
@@ -442,6 +493,16 @@
 
   // ── Outbox 재시도 ─────────────────────────────────────────────
 
+  function eligibleOutboxItem(item) {
+    if (!item.data || !['book', 'folder'].includes(item.type)) return false;
+    if (!window.Storage) return true;
+    var readRows = item.type === 'book' ? window.Storage.getAllBooksRaw : window.Storage.getAllFoldersRaw;
+    var ownRows = readRows();
+    var guestRows = readRows(null);
+    return ownRows.some(function(row) { return row.id === item.data.id; })
+      || !guestRows.some(function(row) { return row.id === item.data.id; });
+  }
+
   async function flushOutbox() {
     if (!window.SB || !window.SB.enabled) return;
     var user;
@@ -454,15 +515,7 @@
     for (var i = 0; i < items.length; i++) {
       var item = items[i];
       if (item.user_id !== user.id || !isCurrentUser(user.id)) continue;
-      if (window.Storage && item.data) {
-        var readRows = item.type === 'book' ? window.Storage.getAllBooksRaw : window.Storage.getAllFoldersRaw;
-        var ownRows = readRows();
-        var guestRows = readRows(null);
-        // A failed old import may have queued a guest-only record under this user ID.
-        // Keep it untouched in the queue instead of resuming an account migration.
-        if (!ownRows.some(function(row) { return row.id === item.data.id; })
-          && guestRows.some(function(row) { return row.id === item.data.id; })) continue;
-      }
+      if (!eligibleOutboxItem(item)) continue;
       if (item.type === 'book')   await pushBook(item.data);
       if (item.type === 'folder') await pushFolder(item.data);
     }
@@ -474,6 +527,9 @@
   });
 
   window.Sync = {
+    getSaveStatus:        getSaveStatus,
+    getStatus:            getSaveStatus,
+    notifyLocalSave:      notifyLocalSave,
     syncProfileOnSignIn: syncProfileOnSignIn,
     setOwner:            activateOwner,
     getOwner:            function() { return activeUserId; },
