@@ -50,6 +50,7 @@
     renderRating();
     renderReview();
     renderDate();
+    renderReadHistory();
     renderFolderPicker();
     wireStatus();
     wireActions();
@@ -103,7 +104,10 @@
     document.querySelectorAll('.status-pick-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const newStatus = btn.dataset.status || null;
-        book = Storage.updateBook(book.id, { status: newStatus });
+        const saved = Storage.updateBook(book.id, { status: newStatus });
+        if (!saved) { showToast('저장하지 못했어요. 다시 시도해 주세요.'); return; }
+        book = saved;
+        renderReadHistory();
         renderStatus();
         const label = STATUS_LABELS[newStatus || ''];
         showToast(`✅ '${label}'으로 저장됐어요 — 따로 저장 안 눌러도 돼요`);
@@ -402,6 +406,24 @@
     input.value = book.readDate || new Date().toISOString().slice(0, 10);
   }
 
+  function renderReadHistory() {
+    const dates = [...new Set([...(book.readHistory || []), ...(!book.status && book.readDate ? [book.readDate] : [])])].sort();
+    document.getElementById('readHistorySummary').textContent = dates.length
+      ? `${dates.length}번 읽었어요 · ${dates.join(' · ')}` : '다 읽은 날을 남겨 보세요.';
+  }
+
+  function recordReread() {
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const saved = Storage.recordReread(book.id, today);
+    if (!saved) { showToast('저장하지 못했어요. 다시 시도해 주세요.'); return; }
+    book = saved;
+    renderDate();
+    renderReadHistory();
+    renderStatus();
+    showToast('오늘 읽은 기록을 남겼어요');
+  }
+
   // ── Folders ──────────────────────────────────────────────────
 
   function renderFolderPicker() {
@@ -420,7 +442,11 @@
         chip.classList.toggle('active');
         // 즉시 저장 — "저장" 버튼 안 눌러도 폴더 변경 반영
         const folders = getCurrentFolderSelections();
-        Storage.updateBook(book.id, { folders });
+        if (!Storage.updateBook(book.id, { folders })) {
+          chip.classList.toggle('active');
+          showToast('저장하지 못했어요. 다시 시도해 주세요.');
+          return;
+        }
         book.folders = folders;
         const folderName = (Storage.getFolder(chip.dataset.folder) || {}).name || '';
         const isOn = chip.classList.contains('active');
@@ -434,6 +460,7 @@
     const name = (prompt('새 폴더 이름') || '').trim();
     if (!name) return;
     const f = Storage.saveFolder({ name });
+    if (!f) { showToast('폴더를 저장하지 못했어요.'); return; }
     folders = Storage.getAllFolders();
     book.folders = [...(book.folders || []), f.id];
     renderFolderPicker();
@@ -452,6 +479,7 @@
 
     document.getElementById('recordForm').addEventListener('submit', save);
     deleteBtn.addEventListener('click', deleteCurrent);
+    document.getElementById('rereadBtn').addEventListener('click', recordReread);
 
     // Instagram 공유 버튼
     const instagramBtn = document.getElementById('instagramShareBtn');
@@ -468,12 +496,16 @@
     const editor = document.getElementById('reviewInput');
     const reviewHtml = editor.innerText.trim() ? sanitizeReviewHtml(editor.innerHTML) : '';
 
-    book = Storage.updateBook(book.id, {
+    const saved = Storage.updateBook(book.id, {
       rating: selectedRating,
       review: reviewHtml,
       readDate: document.getElementById('dateInput').value,
+      readHistory: (book.readHistory || []).map(date => date === book.readDate ? document.getElementById('dateInput').value : date),
       folders: getCurrentFolderSelections(),
     });
+    if (!saved) { showToast('저장하지 못했어요. 다시 시도해 주세요.'); return; }
+    book = saved;
+    renderReadHistory();
     isNew = false;  // After first save it's no longer "new"
     showToast('저장됨 — 계속 수정 가능');
 
@@ -485,7 +517,7 @@
 
   function deleteCurrent() {
     if (!confirm(`"${book.title}"을(를) 서재에서 삭제할까요?`)) return;
-    Storage.deleteBook(book.id);
+    if (!Storage.deleteBook(book.id)) { showToast('삭제하지 못했어요. 다시 시도해 주세요.'); return; }
     showToast('삭제됨');
     setTimeout(() => location.href = 'index.html', 600);
   }

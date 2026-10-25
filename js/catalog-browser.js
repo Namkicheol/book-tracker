@@ -1,7 +1,22 @@
 /* Local bibliographic browsing. Source compilations and unverified claims stay private. */
 (function () {
   'use strict';
-  const books = (window.BOOK_CATALOG || {}).books || [];
+  // Hide explicitly named adult recruitment-exam workbooks from children's browsing.
+  // Keep the underlying catalog intact; ordinary school tests and career stories stay visible.
+  function isAdultExamBook(title) {
+    const text = String(title || '');
+    const main = text.split(' - ')[0];
+    return (/\bNCS\b|공무원|취업/i.test(main) && /기출|모의고사|기본서|시험\s*대비|채용\s*시험|\d\s*급|수리능력|응용수리|문제집|인적성|PSAT/i.test(main)) ||
+      /공무원\s*(?:채용\s*)?시험\s*대비/.test(text);
+  }
+  const seenIsbns = new Set();
+  const books = ((window.BOOK_CATALOG || {}).books || []).filter(book => {
+    if (isAdultExamBook(book.title)) return false;
+    if (!book.isbn) return true;
+    if (seenIsbns.has(book.isbn)) return false;
+    seenIsbns.add(book.isbn);
+    return true;
+  });
   const PAGE_SIZE = 24;
   const ENGLISH_FIELDS = ['catalogStage','catalogSeries','catalogSeriesStep','catalogTopic','catalogDistinction'];
   const STAGES = {picture:'그림책 함께 읽기',phonics:'파닉스 첫걸음',reader:'리더스',chapter:'챕터북',novel:'소설'};
@@ -74,6 +89,12 @@
       ['catalogQuery','catalogAge','catalogGenre','catalogPublisher','catalogSource','catalogAr','catalogAward',...ENGLISH_FIELDS].forEach(id => { $(id).value = ''; });
       filter();
     });
+    $('catalogList').addEventListener('error', event => {
+      const image = event.target;
+      if (image.tagName !== 'IMG' || !image.classList.contains('catalog-cover')) return;
+      image.style.display = 'none';
+      image.nextElementSibling.style.display = 'grid';
+    }, true);
     $('catalogList').addEventListener('click', event => {
       const button = event.target.closest('[data-catalog-isbn]');
       if (button) openBook(button.dataset.catalogIsbn);
@@ -124,12 +145,14 @@
     const visible = matches.slice(start, start + PAGE_SIZE);
     $('catalogStatus').textContent = matches.length ? `${matches.length.toLocaleString('ko-KR')}권 · ${page} / ${Math.ceil(matches.length / PAGE_SIZE)}페이지` : '조건에 맞는 책이 없어요. 검색어나 분류를 바꿔 보세요.';
     $('catalogList').innerHTML = visible.map(book => {
-      const cover=/^https:\/\//.test(book.thumbnail || '') ? `<img class="catalog-cover" src="${escape(book.thumbnail)}" alt="" loading="lazy" onerror="this.hidden=true">` : '<span class="catalog-cover catalog-cover-empty" aria-hidden="true">📖</span>';
+      const hasCover = /^https:\/\//.test(book.thumbnail || '');
+      const cover = `${hasCover ? `<img class="catalog-cover" src="${escape(book.thumbnail)}" alt="" loading="lazy">` : ''}<span class="catalog-cover catalog-cover-empty" role="img" aria-label="표지 준비 중"${hasCover ? ' style="display:none"' : ''}>📖</span>`;
+      const setBook = /(?:세트|전집|전\s*\d+\s*권|\bbox(?:ed)?\s+set\b)/i.test(book.title || '');
       const awards=(book.awards || []).map(item=>{const source=(window.BOOK_CATALOG.meta?.sources || []).find(source=>source.id===item.id);const name=source?.name?.replace(/\s*공식 수상 목록$/,'') || ({'newbery-award':'뉴베리','caldecott-award':'칼데콧'}[item.id]) || '수상작';return `${name} ${item.year || ''} ${item.distinction || ''}`;}).join(' · ');
       const arSource=book.arStatus==='verified' && /^https:\/\//.test(book.arEvidence?.source || '') ? `<a href="${escape(book.arEvidence.source)}" target="_blank" rel="noopener noreferrer">AR 확인 출처 ↗</a>` : '';
       const discoverySource=/^https:\/\//.test(book.discoverySource || '') ? `<a href="${escape(book.discoverySource)}" target="_blank" rel="noopener noreferrer">책·시리즈 출처 ↗</a>` : '';
       const ar=book.arStatus==='verified' && typeof book.ar==='number' && Number.isFinite(book.ar) ? ` · AR ${escape(String(book.ar))}` : '';
-      return `<li><button type="button" class="catalog-book" data-catalog-isbn="${escape(book.isbn)}">${cover}<strong>${escape(book.title)}</strong><span>${escape(book.author)}</span><small>${escape(book.publisher)}</small><small>${escape(book.age || (book.genre==='원서' ? '영어 원서' : '연령 미분류'))}${ar}</small>${book.series ? `<small>${escape(book.series.name)}${Number.isFinite(book.series.order) ? ` · ${book.series.order===1?'첫 권':`${book.series.order}권`}` : ''}</small>` : ''}${book.stage ? `<small>${escape(STAGES[book.stage] || '')}</small>` : ''}${awards ? `<small>${escape(awards)}</small>` : ''}</button>${arSource || discoverySource ? `<div class="catalog-evidence">${arSource}${discoverySource}</div>` : ''}</li>`;
+      return `<li><button type="button" class="catalog-book" data-catalog-isbn="${escape(book.isbn)}">${cover}<strong>${escape(book.title)}</strong>${setBook ? '<small>세트 도서 · 낱권은 제목으로 찾아보세요</small>' : ''}<span>${escape(book.author)}</span><small>${escape(book.publisher)}</small><small>${escape(book.age || (book.genre==='원서' ? '영어 원서' : '연령 미분류'))}${ar}</small>${book.series ? `<small>${escape(book.series.name)}${Number.isFinite(book.series.order) ? ` · ${book.series.order===1?'첫 권':`${book.series.order}권`}` : ''}</small>` : ''}${book.stage ? `<small>${escape(STAGES[book.stage] || '')}</small>` : ''}${awards ? `<small>${escape(awards)}</small>` : ''}</button>${arSource || discoverySource ? `<div class="catalog-evidence">${arSource}${discoverySource}</div>` : ''}</li>`;
     }).join('');
     $('catalogPrevious').disabled = page === 1;
     $('catalogNext').disabled = start + PAGE_SIZE >= matches.length;

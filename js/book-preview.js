@@ -101,7 +101,7 @@
     if (gen !== _renderGen) return;
 
     bodyEl.innerHTML = renderContent(book, meta, detail, mode);
-    wireActions(book, modal, mode, detail);
+    wireActions(book, modal, mode, detail, opts);
   }
 
   // ── Navigation bar ───────────────────────────────────────────
@@ -592,7 +592,7 @@
     modal.querySelector('.preview-list-nav')?.remove();
   }
 
-  function wireActions(book, modal, mode, detail) {
+  function wireActions(book, modal, mode, detail, opts = {}) {
     // 추천 기관 배지 클릭 → 그 기관 전용 페이지 열기 (책의 학년이 기본 선택)
     modal.querySelectorAll('.rec-source-badge').forEach(btn => {
       btn.addEventListener('click', e => {
@@ -668,9 +668,14 @@
       // 별점·한줄평 이어 적도록 detail.html 로 이동.
       const stayHere = status === 'want' || status === 'reading';
       if (existing) {
-        if (status !== null) Storage.updateBook(existing.id, { status });
+        if (status !== null && !Storage.updateBook(existing.id, { status })) { toast('저장하지 못했어요. 다시 시도해 주세요.'); return; }
         const label = status === 'want' ? '✅ 읽을 책으로 저장' : status === 'reading' ? '📖 읽는 중으로 저장' : '이미 서재에 있어요';
         toast(label);
+        if (typeof opts.onSaved === 'function') {
+          closePreview(modal);
+          opts.onSaved(Storage.getBook(existing.id) || existing);
+          return;
+        }
         if (stayHere) {
           closePreview(modal);
           return;
@@ -690,9 +695,11 @@
         categoryId:   book.categoryId   || (window.API && API.extractCategoryId ? API.extractCategoryId(detail || {}) : undefined),
         categoryName: book.categoryName || (detail && detail.categoryName),
       });
+      if (!saved) { toast('책을 저장하지 못했어요. 다시 시도해 주세요.'); return; }
       const label = status === 'want' ? `✅ "${book.title}" 읽을 책으로 저장` : status === 'reading' ? `📖 "${book.title}" 읽는 중으로 저장` : `"${book.title}" 기록됨`;
       toast(label);
       closePreview(modal);
+      if (typeof opts.onSaved === 'function') { opts.onSaved(saved); return; }
       if (stayHere) return;
       setTimeout(() => location.href = `detail.html?id=${encodeURIComponent(saved.id)}&new=1`, 700);
     }

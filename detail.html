@@ -219,6 +219,11 @@
       <div class="form-group animate-in" style="animation-delay:180ms">
         <label class="form-label" for="dateInput">읽은 날짜</label>
         <input type="date" class="form-input" id="dateInput">
+        <div style="margin-top:14px;padding:14px;border:1px solid #f0d5df;border-radius:14px;background:#fff8fa">
+          <button type="button" class="btn btn-ghost" id="rereadBtn">오늘 다시 읽었어요</button>
+          <p id="readHistorySummary" style="font-size:13px;line-height:1.7;margin:10px 0 0;color:#876772" aria-live="polite"></p>
+          <small style="color:#876772">하루 한 번 기록돼요. 책 수는 늘어나지 않아요.</small>
+        </div>
       </div>
 
       <div class="form-group animate-in" style="animation-delay:210ms">
@@ -402,14 +407,15 @@
   <script src="js/supabase.js?v=20261024a"></script>
   <script src="js/regions.js?v=20261020a"></script>
   <script src="js/auth-ui.js?v=20261024b"></script>
-  <script src="js/storage.js?v=20261020h"></script>
-  <script src="js/sync.js?v=20261024a"></script>
+  <script src="js/storage.js?v=20261025a"></script>
+  <script src="js/sync.js?v=20261025a"></script>
+  <script src="js/save-status.js?v=20261025a"></script>
   <script src="js/api.js?v=20260504g"></script>
   <script src="js/library-api.js?v=20260512a"></script>
-  <script src="js/book-preview.js?v=20261023a"></script>
+  <script src="js/book-preview.js?v=20261025a"></script>
   <script src="js/garden.js?v=20261021j"></script>
   <script src="js/share-template-new.js?v=20261021h"></script>
   <script src="js/recs-cache.js?v=20261020h"></script>
-  <script src="js/detail.js?v=20261020h"></script>
+  <script src="js/detail.js?v=20261025a"></script>
 </body>
 </html>
