@@ -843,14 +843,16 @@
   }
 
   // ── 공유 카드 (Canvas 1080×1350) ──────────────────────────────
-  async function showShareCard() {
+  async function showShareCard(theme = 'paper', previewOnly = false) {
+    const themes = { paper: 'monthly-paper.png', coffee: 'reading-coffee.png', forest: 'reading-forest.png' };
+    const artwork = themes[theme] || themes.paper;
     const name   = localStorage.getItem('profileName')   || '책읽는엄마';
     const avatar = localStorage.getItem('profileAvatar') || '👩';
     await document.fonts?.ready;
     const [avatarImage, brandImage, paperImage] = await Promise.all([
       /^(https?:|data:image\/)/i.test(avatar) ? _loadCardImage(avatar) : null,
       _loadCardImage('img/3YzCR.png'),
-      _loadCardImage('img/cards/monthly-paper.png'),
+      _loadCardImage('img/cards/' + artwork),
     ]);
 
     const W = 1080, H = 1350;
@@ -869,9 +871,9 @@
     }
 
     ctx.textAlign = 'center';
-    if (brandImage) ctx.drawImage(brandImage, W/2 - 30, 94, 60, 60);
+    if (brandImage) ctx.drawImage(brandImage, W/2 - 48, 58, 96, 96);
     ctx.fillStyle = '#AD667B';
-    ctx.font = '700 30px "Gowun Batang", serif';
+    ctx.font = '700 44px "Gowun Batang", serif';
     ctx.fillText('맘스북스', W/2, 194);
 
     ctx.fillStyle = '#fff';
@@ -963,16 +965,23 @@
     ctx.fillText(`함께 모은 배지 ${unlocked.length}개`, W/2, 1140);
 
     // 푸터
-    ctx.fillStyle = 'rgba(139, 139, 139, 0.7)';
+    ctx.fillStyle = '#AD667B';
+    ctx.font = '700 38px "Gowun Batang", serif';
+    ctx.fillText('맘스북스', W/2, H - 98);
+    ctx.fillStyle = '#8B747C';
     ctx.font = '500 22px sans-serif';
-    ctx.fillText('아이와 함께한 독서 기록', W/2, H - 105);
+    ctx.fillText('아이와 함께한 독서 기록', W/2, H - 56);
 
     // 카드 미리보기 + 공유 모달
-    canvas.toBlob(async (blob) => {
-      if (!blob) { showToast('이미지 생성 실패'); return; }
-      const url = URL.createObjectURL(blob);
-      _showShareCardModal(url, blob, name);
-    }, 'image/png', 0.95);
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 0.95));
+    if (!blob) {
+      if (previewOnly) throw new Error('이미지를 만들지 못했어요');
+      showToast('이미지 생성 실패');
+      return;
+    }
+    if (previewOnly) return blob;
+    const url = URL.createObjectURL(blob);
+    _showShareCardModal(url, blob, name, nextTheme => showShareCard(nextTheme, true));
   }
 
   function _loadCardImage(source) {
@@ -1005,7 +1014,7 @@
     ctx.closePath();
   }
 
-  function _showShareCardModal(imgUrl, blob, name) {
+  function _showShareCardModal(imgUrl, blob, name, renderTheme) {
     const previousFocus = document.activeElement === document.body ? document.getElementById('shareCardBtn') : document.activeElement;
     const modal = document.createElement('div');
     modal.className = 'friend-modal';
@@ -1015,6 +1024,13 @@
           <div id="shareCardTitle" style="font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:6px">독서 기록 나누기</div>
           <div style="font-size:12px;color:var(--text-gray)">소중한 독서의 순간을 이미지로 간직해요</div>
         </div>
+        <label for="shareCardTheme" style="display:block;font-size:13px;margin-bottom:6px;color:var(--text-dark)">카드 분위기</label>
+        <select id="shareCardTheme" style="width:100%;padding:10px 12px;margin-bottom:12px;border:1px solid #F0D5DF;border-radius:12px;background:#FFF8FA;color:#704F5B;font:inherit">
+          <option value="paper">분홍빛 편지</option>
+          <option value="coffee">책과 커피</option>
+          <option value="forest">동물 친구들의 책숲</option>
+        </select>
+        <p id="shareCardStatus" role="status" style="font-size:12px;color:var(--text-gray);margin:0 0 8px"></p>
         <div style="background:#f5f5f5;border-radius:12px;overflow:hidden;margin-bottom:14px">
           <img src="${imgUrl}" alt="이번 달 독서 기록 카드" style="width:100%;display:block">
         </div>
@@ -1027,7 +1043,11 @@
     `;
     document.body.appendChild(modal);
 
+    let closed = false, revision = 0;
     const close = () => {
+      if (closed) return;
+      closed = true;
+      revision++;
       document.removeEventListener('keydown', onKeydown);
       URL.revokeObjectURL(imgUrl); modal.remove();
       previousFocus?.focus();
@@ -1035,7 +1055,7 @@
     const onKeydown = e => {
       if (e.key === 'Escape') close();
       if (e.key === 'Tab') {
-        const buttons = [...modal.querySelectorAll('button')];
+        const buttons = [...modal.querySelectorAll('select, button:not(:disabled)')];
         const first = buttons[0], last = buttons[buttons.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
@@ -1045,6 +1065,43 @@
     modal.querySelector('#shareCardCancel').focus();
     modal.addEventListener('click', e => { if (e.target === modal) close(); });
     modal.querySelector('#shareCardCancel').addEventListener('click', close);
+
+    const themeSelect = modal.querySelector('#shareCardTheme');
+    const downloadButton = modal.querySelector('#shareCardDownload');
+    const shareButton = modal.querySelector('#shareCardShare');
+    const status = modal.querySelector('#shareCardStatus');
+    let appliedTheme = 'paper';
+    themeSelect.addEventListener('change', async () => {
+      const request = ++revision;
+      const nextTheme = themeSelect.value;
+      downloadButton.disabled = shareButton.disabled = true;
+      status.textContent = '카드를 만들고 있어요…';
+      let nextUrl;
+      try {
+        const nextBlob = await renderTheme(nextTheme);
+        if (closed || request !== revision) return;
+        nextUrl = URL.createObjectURL(nextBlob);
+        const preview = new Image();
+        preview.src = nextUrl;
+        await preview.decode();
+        if (closed || request !== revision) { URL.revokeObjectURL(nextUrl); return; }
+        const oldUrl = imgUrl;
+        imgUrl = nextUrl;
+        blob = nextBlob;
+        modal.querySelector('img').src = imgUrl;
+        URL.revokeObjectURL(oldUrl);
+        appliedTheme = nextTheme;
+        status.textContent = '새 카드가 준비됐어요';
+      } catch (_) {
+        if (nextUrl) URL.revokeObjectURL(nextUrl);
+        if (!closed && request === revision) {
+          themeSelect.value = appliedTheme;
+          status.textContent = '카드를 만들지 못했어요. 다시 골라 주세요.';
+        }
+      } finally {
+        if (!closed && request === revision) downloadButton.disabled = shareButton.disabled = false;
+      }
+    });
 
     modal.querySelector('#shareCardDownload').addEventListener('click', () => {
       const a = document.createElement('a');
