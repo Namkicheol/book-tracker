@@ -358,5 +358,793 @@
     ],
     "publisher": "사계절",
     "thumbnail": "https://image.aladin.co.kr/product/29716/46/cover200/k482838990_1.jpg"
+  },
+  {
+    "isbn": "9791190896382",
+    "title": "어린이를 위한 마음 처방 : 감정 편",
+    "author": "펠리시티 브룩스 (지은이), 마르 페레로 (그림), 송지혜 (옮긴이)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/31040/73/cover200/k352831619_1.jpg",
+    "source": "https://bir.co.kr/book/138996/",
+    "note": "이름 붙이기 어려운 기분을 아이와 천천히 살펴보는 읽기예요.",
+    "activity": "오늘 마음과 닮은 색을 고르고, 그 색이 떠오른 순간을 말해 볼까요?",
+    "ages": [
+      "유아",
+      "초등 저학년"
+    ],
+    "topics": [
+      "감정",
+      "우정"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/138996/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/138996/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 5세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9791190896528",
+    "title": "논리력 쑥쑥! 영재 플랩북 : 감정이 궁금해!",
+    "author": "라라 브라이언 (지은이), 셸리 라슬로 (그림), 신인수 (옮긴이), 사샤 릴리 라이언스 (감수), 조디 스미스 (디자인)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/29712/87/cover200/k312838893_1.jpg",
+    "source": "https://bir.co.kr/book/134337/",
+    "note": "감정에 관한 질문을 열어 보며 마음과 몸의 반응을 연결해 보세요.",
+    "activity": "화가 나거나 신날 때 몸 어디에서 신호가 오는지 그려 볼까요?",
+    "ages": [
+      "유아",
+      "초등 저학년"
+    ],
+    "topics": [
+      "감정",
+      "과학"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/134337/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/134337/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 5세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949114101",
+    "title": "감정은 무얼 할까?",
+    "author": "티나 오지에비츠 (지은이), 알렉산드라 자욘츠 (그림), 이지원 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/27767/17/cover200/8949114100_1.jpg",
+    "source": "https://bir.co.kr/book/129418/",
+    "note": "감정이 등장인물이 된다면 어떤 모습일지 상상하는 그림책 읽기예요.",
+    "activity": "오늘의 기분을 작은 생물로 그린 뒤 이름과 집을 만들어 주세요.",
+    "ages": [
+      "유아",
+      "초등 저학년"
+    ],
+    "topics": [
+      "감정",
+      "상상"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/129418/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/129418/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 5세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949132587",
+    "title": "과학과 역사가 보이는 5,000가지 지식 3 - 내셔널 지오그래픽 키즈",
+    "author": "내셔널지오그래픽 키즈 (지은이), 서남희, 이한음 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/40491/93/cover200/8949132583_1.jpg",
+    "source": "https://bir.co.kr/book/151387/",
+    "note": "여러 분야의 짧은 지식 중 아이가 궁금해하는 항목부터 골라 읽어 보세요.",
+    "activity": "처음 알게 된 사실 하나를 고르고, 더 확인하고 싶은 질문을 붙여 볼까요?",
+    "ages": [
+      "초등 중학년",
+      "초등 고학년"
+    ],
+    "topics": [
+      "과학",
+      "자연",
+      "역사"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/151387/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/151387/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 7세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9791171200986",
+    "title": "어디어디 숨었니? : 바다 탐험대 잠수함",
+    "author": "라라 브라이언 (지은이), 니아 튜더 (그림)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/39715/80/cover200/k032130693_1.jpg",
+    "source": "https://bir.co.kr/book/150651/",
+    "note": "잠수함 안팎을 살피며 바닷속 탐험을 함께 상상하는 플랩북이에요.",
+    "activity": "작은 잠수함을 그려 보고 바다에서 찾아보고 싶은 것 세 가지를 실어 보세요.",
+    "ages": [
+      "유아"
+    ],
+    "topics": [
+      "과학",
+      "모험"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/150651/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/150651/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 3세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949132570",
+    "title": "과학과 역사가 보이는 5,000가지 지식 2 - 내셔널 지오그래픽 키즈",
+    "author": "내셔널지오그래픽 키즈 (지은이), 서남희, 이한음 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/37894/76/cover200/8949132575_1.jpg",
+    "source": "https://bir.co.kr/book/148004/",
+    "note": "과학과 사회를 오가며 관심 있는 주제를 짧게 나누어 읽기 좋아요.",
+    "activity": "서로 다른 쪽에서 찾은 사실 둘이 어떻게 연결되는지 이야기해 볼까요?",
+    "ages": [
+      "초등 중학년",
+      "초등 고학년"
+    ],
+    "topics": [
+      "과학",
+      "자연",
+      "역사"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/148004/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/148004/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 7세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9791171200382",
+    "title": "초등학생이 알아야 할 참 쉬운 생명 과학",
+    "author": "리지 코프 (지은이), 안톤 할만 (그림), 송지혜 (옮긴이), 사무엘 고렘 (디자인)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/37835/70/cover200/k862033696_2.jpg",
+    "source": "https://bir.co.kr/book/147848/",
+    "note": "세포와 유전, 생물의 분류로 관심을 넓혀 보는 생명 과학 읽기예요.",
+    "activity": "주변 생물 둘의 닮은 점과 다른 점을 관찰표로 만들어 보세요.",
+    "ages": [
+      "초등 중학년",
+      "초등 고학년"
+    ],
+    "topics": [
+      "과학",
+      "자연"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/147848/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/147848/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 8세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9791171200726",
+    "title": "어디어디 숨었니? : 즐거운 산타 마을",
+    "author": "안나 밀버른 (지은이), 엠마 앨런 (그림), 송지혜 (옮긴이)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/37696/63/cover200/k432033965_1.jpg",
+    "source": "https://bir.co.kr/book/147551/",
+    "note": "크리스마스를 준비하는 산타 마을을 구석구석 구경하는 읽기예요.",
+    "activity": "우리 집이 함께 준비하고 싶은 작은 축제를 그림으로 계획해 볼까요?",
+    "ages": [
+      "유아"
+    ],
+    "topics": [
+      "상상",
+      "가족"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/147551/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/147551/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 3세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9791192430591",
+    "title": "과학자는 무슨 일을 할까?",
+    "author": "툼 뭄브레이 (지은이), 잔 토그릴, 제럴딘 시 (그림), 신인수 (옮긴이), UK Space Agency (감수)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/36617/37/cover200/k122030963_1.jpg",
+    "source": "https://bir.co.kr/book/145868/",
+    "note": "과학자가 어떤 질문을 품고 어떤 도구를 쓰는지 알아보세요.",
+    "activity": "내가 조사하고 싶은 문제 하나와 필요한 도구를 골라 보세요.",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "과학",
+      "사회"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/145868/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/145868/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 8세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949132280",
+    "title": "기발하고 괴상하고 웃긴 과학 사전! : 상어",
+    "author": "내셔널지오그래픽 키즈 (지은이), 송지혜 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/36484/93/cover200/8949132281_1.jpg",
+    "source": "https://bir.co.kr/book/145760/",
+    "note": "상어를 무섭다는 한 가지 이미지 너머로 살펴보는 동물 지식 읽기예요.",
+    "activity": "마음에 드는 상어를 골라 특징 세 가지를 적은 관찰 카드를 만들어 볼까요?",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "과학",
+      "자연"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/145760/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/145760/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 7세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9791171200313",
+    "title": "AI 로봇부터 우주 도시까지 미래 과학",
+    "author": "톰 치즈라이트 (지은이), 제이슨 솔로 (그림), 송지혜 (옮긴이), 루시 웨인 (디자인)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/36034/89/cover200/k782037632_1.jpg",
+    "source": "https://bir.co.kr/book/145439/",
+    "note": "미래의 기술이 일상을 어떻게 바꿀지 아이의 질문을 모아 보세요.",
+    "activity": "편리해질 일 하나와 새로 걱정되는 일 하나를 나란히 적어 볼까요?",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "과학",
+      "상상"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/145439/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/145439/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 8세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949169309",
+    "title": "사이언스 리더스 LEVEL 3 기적의 과학자 아인슈타인",
+    "author": "리비 로메로 (지은이), 조은영 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/35852/40/cover200/8949169304_1.jpg",
+    "source": "https://bir.co.kr/book/145288/",
+    "note": "아인슈타인의 삶을 따라가며 과학자의 호기심을 생각하는 읽기예요.",
+    "activity": "평소 당연하게 넘긴 일 하나에 왜 그럴까라는 질문을 붙여 보세요.",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "과학",
+      "역사"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/145288/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/145288/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 7세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949118109",
+    "title": "친구들은 어떻게 잠들까?",
+    "author": "히도 반 헤네흐텐 (지은이), 김영진 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/38900/88/cover200/8949118106_2.jpg",
+    "source": "https://bir.co.kr/book/149014/",
+    "note": "동물 친구들의 잠자리를 구경하며 우리 집 잠들기 습관을 이야기해요.",
+    "activity": "잠들기 전에 하고 싶은 일을 그림 세 장으로 순서대로 놓아 볼까요?",
+    "ages": [
+      "유아"
+    ],
+    "topics": [
+      "가족",
+      "동물"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/149014/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/149014/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 1세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9791171200467",
+    "title": "친구야, 꼬옥 안아 줄게",
+    "author": "라라 브라이언 (지은이), 알리스 패터슨 (그림), 송지혜 (옮긴이)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/35987/9/cover200/k772037416_1.jpg",
+    "source": "https://bir.co.kr/book/145410/",
+    "note": "친구를 위로하고 반가움을 표현하는 방법을 함께 찾아보세요.",
+    "activity": "안아 주기 말고도 마음을 전할 수 있는 말과 행동을 하나씩 골라 보세요.",
+    "ages": [
+      "유아"
+    ],
+    "topics": [
+      "감정",
+      "우정"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/145410/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/145410/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 1세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949105673",
+    "title": "꼬마 악어는 친구들에게 무슨 말을 할까요?",
+    "author": "에바 몬타나리 (지은이), 노은정 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/34109/15/cover200/8949105675_1.jpg",
+    "source": "https://bir.co.kr/book/143853/",
+    "note": "공원에서 새 친구를 만나는 꼬마 악어와 함께 첫 인사를 연습해요.",
+    "activity": "처음 만난 친구에게 건넬 인사를 동물 인형으로 번갈아 해 볼까요?",
+    "ages": [
+      "유아"
+    ],
+    "topics": [
+      "우정",
+      "모험"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/143853/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/143853/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 3세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949166032",
+    "title": "쿠키와 브로콜리 2 - 멋진 친구 되는 법",
+    "author": "밥 맥마흔 (지은이), 노은정 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/33413/33/cover200/8949166038_1.jpg",
+    "source": "https://bir.co.kr/book/142901/",
+    "note": "멋진 친구가 된다는 것이 어떤 뜻인지 쿠키와 브로콜리와 생각해요.",
+    "activity": "친구가 자기 모습을 좋아하게 도와주는 말을 세 가지 찾아보세요.",
+    "ages": [
+      "유아",
+      "초등 저학년"
+    ],
+    "topics": [
+      "우정",
+      "감정"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/142901/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/142901/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 6세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9791190896399",
+    "title": "어린이를 위한 마음 처방 : 친구 편",
+    "author": "펠리시티 브룩스 (지은이), 마르 페레로 (그림), 송지혜 (옮긴이)",
+    "publisher": "어스본코리아",
+    "thumbnail": "https://image.aladin.co.kr/product/31081/27/cover200/k592831621_1.jpg",
+    "source": "https://bir.co.kr/book/139024/",
+    "note": "친구와 다투거나 마음이 다를 때 쓸 말을 함께 연습하는 읽기예요.",
+    "activity": "싫은 일을 거절하면서도 내 마음을 차분히 전하는 말을 바꾸어 말해 보세요.",
+    "ages": [
+      "유아",
+      "초등 저학년"
+    ],
+    "topics": [
+      "우정",
+      "감정"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/139024/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/139024/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 5세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949162249",
+    "title": "내 남자 친구야",
+    "author": "베아트리스 루에 (지은이), 로지 (그림), 최윤정 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/32539/7/cover200/8949162245_1.jpg",
+    "source": "https://bir.co.kr/book/135941/",
+    "note": "좋아하는 마음과 친구 사이의 일상을 이야기해 보는 짧은 동화예요.",
+    "activity": "좋아하는 사람에게 고맙다고 말하고 싶은 순간을 떠올려 보세요.",
+    "ages": [
+      "초등 저학년"
+    ],
+    "topics": [
+      "우정",
+      "감정"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/135941/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/135941/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 8세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949144016",
+    "title": "배드 가이즈 1 - ‘착한 친구들’의 탄생",
+    "author": "애런 블레이비 (지은이), 신수진 (옮긴이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/27453/55/cover200/8949144018_1.jpg",
+    "source": "https://bir.co.kr/book/128644/",
+    "note": "겉모습만 보고 정한 인상을 돌아보며 유쾌한 모험을 읽어 보세요.",
+    "activity": "등장인물이 행동으로 보여 준 모습과 첫인상을 비교해 볼까요?",
+    "ages": [
+      "초등 저학년",
+      "초등 중학년"
+    ],
+    "topics": [
+      "우정",
+      "모험"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/128644/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/128644/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 8세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949102559",
+    "title": "친구를 만지지 않아요 - 2021년 제27회 황금도깨비상 수상작",
+    "author": "육월식 (지은이)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/27272/45/cover200/8949102552_1.jpg",
+    "source": "https://bir.co.kr/book/128319/",
+    "note": "말없이 이어지는 그림을 보며 서로 마음을 전하는 방법을 찾아보세요.",
+    "activity": "그림 한 장을 고르고 인물의 마음을 말풍선으로 붙여 볼까요?",
+    "ages": [
+      "유아",
+      "초등 저학년"
+    ],
+    "topics": [
+      "우정",
+      "상상"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/128319/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/128319/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 4세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949131283",
+    "title": "나랑 친구 할래? - 사회성을 길러 주는 책",
+    "author": "크리스틴 애덤스 (지은이), R. W. 앨리 (그림), 노은정 (옮긴이), 이임숙 (감수)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/25973/68/cover200/8949131285_1.jpg",
+    "source": "https://bir.co.kr/book/124993/",
+    "note": "친구가 되는 일을 작은 말과 행동으로 나누어 생각하는 읽기예요.",
+    "activity": "혼자 있는 친구에게 먼저 건넬 말을 역할놀이로 연습해 보세요.",
+    "ages": [
+      "유아",
+      "초등 저학년"
+    ],
+    "topics": [
+      "우정",
+      "감정"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/124993/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/124993/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 4세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
+  },
+  {
+    "isbn": "9788949131252",
+    "title": "친구랑 다른 건 싫어 - 또래 집단 속에서 정체성 찾기",
+    "author": "짐 아우어 (지은이), R. W. 앨리 (그림), 노은정 (옮긴이), 이임숙 (감수)",
+    "publisher": "비룡소",
+    "thumbnail": "https://image.aladin.co.kr/product/25973/55/cover200/8949131250_1.jpg",
+    "source": "https://bir.co.kr/book/124982/",
+    "note": "친구와 달라도 괜찮은 내 선택을 이야기하는 읽기로 제안해요.",
+    "activity": "친구와 같은 점 하나, 다른 점 하나를 적고 둘 다 좋은 이유를 찾아보세요.",
+    "ages": [
+      "유아",
+      "초등 저학년"
+    ],
+    "topics": [
+      "우정",
+      "감정"
+    ],
+    "provenance": [
+      {
+        "kind": "moms",
+        "label": "맘스북스 읽기 제안",
+        "source": "https://bir.co.kr/book/124982/",
+        "checkedAt": "2026-10-25"
+      },
+      {
+        "kind": "publisher",
+        "label": "비룡소·어스본 도서 소개",
+        "source": "https://bir.co.kr/book/124982/",
+        "checkedAt": "2026-10-25"
+      }
+    ],
+    "evidenceNotes": [
+      "개별 출판사 페이지에서 제목·저자·ISBN·주제를 확인. 출판사 표시: 4세 이상. 연령 묶음과 읽기 질문은 맘스북스 편집 분류이며 출판사의 추천·선정이 아님.",
+      "알라딘 Worker ItemLookUp의 isbn13과 일치하는 판본의 서지·표지를 확인."
+    ]
   }
 ]

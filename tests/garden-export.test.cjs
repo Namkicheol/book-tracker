@@ -91,7 +91,7 @@ test('PNG retains complete long text when artwork fails and caps oversized canva
   assert.ok(canvas.height > 1350 && canvas.height <= 8000);
   assert.ok(app.drawn.join('').includes(review));
   assert.ok(app.drawn.includes('★★★★☆'));
-  assert.equal(Object.keys(app.INSTAGRAM_TEMPLATES).length, 8);
+  assert.equal(Object.keys(app.INSTAGRAM_TEMPLATES).length, 9);
   await assert.rejects(app.generateInstagramTemplate({ title:'책' }, '가'.repeat(20000),5,1), /PDF/);
 });
 
@@ -254,4 +254,16 @@ test('all eight themes keep a 300 character review complete on a 4:5 card', asyn
     const source=app.imageDraws[0][0].source;
     assert.match(source,[/letter-desk/,/coffee-desk/,/journal-garden/,/flower-desk/,/night-desk/,/picnic-desk/,/animal-friends/,/kids-notebook/][template-1]);
   }
+});
+
+
+test('scrapbook card preserves long title and note within its canvas', async () => {
+  const app = runtime();
+  const title = '함께 읽은 소중한 책'.repeat(20), review = '오늘의 생각'.repeat(220);
+  const canvas = await app.generateInstagramTemplate({title,author:'작가'},review,4,9);
+  assert.ok(app.drawn.join('').includes(title));
+  assert.ok(app.drawn.join('').includes(review));
+  assert.ok(canvas.height > 1350 && canvas.height <= 8000);
+  assert.ok(app.textPositions.every(item => item.y < canvas.height));
+  assert.ok(app.drawn.includes('맘스북스'));
 });

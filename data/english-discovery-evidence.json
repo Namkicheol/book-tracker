@@ -1467,5 +1467,605 @@
       "thumbnail": "https://image.aladin.co.kr/product/104/0/cover200/039480016f_1.jpg",
       "language": "en"
     }
+  },
+  {
+    "isbn": "9780307262004",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "humor"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780307262004",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Dancing Dinos (Paperback)",
+      "author": "Sally Lucas (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/87/cover200/0307262006_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780375832413",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "humor"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780375832413",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Dancing Dinos Go to School (Paperback)",
+      "author": "Sally Lucas, Margeaux Lucas (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/16/cover200/0375832416_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780375856402",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "humor"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780375856402",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Dancing Dinos at the Beach (Paperback) - Step into Reading : Step 1",
+      "author": "Sally Lucas (지은이), Margeaux Lucas (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/459/96/cover200/0375856404_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9781524718664",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "science"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9781524718664",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Tyrannosaurus Rex (Storybots) (Paperback)",
+      "author": "Jibjab Bros Studios (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/10161/96/cover200/1524718661_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780593304754",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "science"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780593304754",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Velociraptors (Storybots) (Paperback)",
+      "author": "Scott Emmons (지은이), Nikolas Ilic (그림)",
+      "publisher": "Random House Books for Young Readers",
+      "thumbnail": "https://image.aladin.co.kr/product/24526/66/cover200/0593304756_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780679812074",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-2",
+      "name": "Step into Reading · Step 2"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "science"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780679812074",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Dinosaur Babies (Paperback)",
+      "author": "Lucille Recht Penner (지은이), 피터 배러트 (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/14/cover200/0679812075_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780385379236",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "science"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780385379236",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Dinosaur Days (Paperback, Revised)",
+      "author": "Joyce Milton (지은이), Franco Tempesta (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/3281/64/cover200/0385379234_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780375824500",
+    "stage": "chapter",
+    "series": {
+      "id": "step-into-reading-5",
+      "name": "Step into Reading · Step 5"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "science"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780375824500",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Dinosaur Hunters (Paperback)",
+      "author": "케이트 맥뮐란 (지은이), John R. Jones (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/15/cover200/0375824502_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780553523164",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "science"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780553523164",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Space: Planets, Moons, Stars, and More! (Paperback)",
+      "author": "Joe Rhatigan (지은이), Thomas Girard (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/6621/66/cover200/0553523163_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780525578826",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "dinosaurs",
+      "animals",
+      "science"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780525578826",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Truth or Lie: Dinosaurs! (Paperback)",
+      "author": "에리카 S. 펄 (지은이), 마이클 슬랙 (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/17077/56/cover200/052557882x_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780394874715",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "science",
+      "animals"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780394874715",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Hungry, Hungry Sharks! (Paperback)",
+      "author": "조애너 콜, 퍼트리셔 윈 (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/16/cover200/0394874714_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780375869778",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "science"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780375869778",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "How to Help the Earth-By the Lorax (Dr. Seuss) (Paperback)",
+      "author": "Tish Rabe (지은이), Jan Gerardi, Christopher Moroney (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/1149/33/cover200/0375869778_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780679881261",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "animals",
+      "humor"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780679881261",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Big Egg (Paperback)",
+      "author": "몰리 칵스 (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/16/cover200/0679881263_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780679864417",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "animals",
+      "humor"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780679864417",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Cat Traps (Paperback)",
+      "author": "몰리 칵스 (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/16/cover200/0679864415_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780375843501",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "animals",
+      "adventure"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780375843501",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Dragon Egg (Paperback)",
+      "author": "Mallory Loehr (지은이), Hala Wittwer (그림)",
+      "publisher": "Random House",
+      "thumbnail": "https://image.aladin.co.kr/product/100/54/cover200/0375843507_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780375831652",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "friendship"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780375831652",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Hog and Dog (Paperback) - Step into Reading 1단계",
+      "author": "Diane Wright Landolf (지은이), Jennifer Beck Harris (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/147/62/cover200/0375831657_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780307261014",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "animals",
+      "humor"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780307261014",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Hot Dog (Paperback)",
+      "author": "몰리 칵스 (지은이)",
+      "publisher": "Golden books",
+      "thumbnail": "https://image.aladin.co.kr/product/20/70/cover200/0307261018_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780307261137",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [
+      "animals"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780307261137",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Bear Hugs (Paperback)",
+      "author": "알리사 사틴 카푸칠리 (지은이), Jim Ishi (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/87/cover200/0307261131_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780394898094",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "science",
+      "animals"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780394898094",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Whales, the Gentle Giants (Paperback)",
+      "author": "Joyce Milton, Alton Langford (지은이)",
+      "publisher": "아이피에스",
+      "thumbnail": "https://image.aladin.co.kr/product/21/47/cover200/0394898095_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780375812477",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780375812477",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Johnny Appleseed: My Story (Paperback)",
+      "author": "David Lee Harrison, 마이크 우누트카 (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/17/cover200/0375812474_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780394886688",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "friendship",
+      "animals",
+      "humor"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780394886688",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Norma Jean, Jumping Bean (Paperback)",
+      "author": "조애너 콜 (지은이), Lynn M. Munsinger (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/14/cover200/0394886682_2.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780394892795",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "friendship"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780394892795",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "The Missing Tooth (Paperback)",
+      "author": "조애너 콜, Marylin Hafner (지은이)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/16/cover200/039489279d_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780394896953",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "science",
+      "animals",
+      "adventure"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780394896953",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "The Bravest Dog Ever: The True Story of Balto (Paperback)",
+      "author": "내털리 스탠디포드 (지은이), Donald Cook (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/14/cover200/0394896955_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780394841755",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-3",
+      "name": "Step into Reading · Step 3"
+    },
+    "topics": [
+      "friendship",
+      "adventure"
+    ],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780394841755",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Molly the Brave and Me (Paperback)",
+      "author": "제인 오코너 (지은이), Sheila Hamanaka (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/95/14/cover200/0394841751_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
+  },
+  {
+    "isbn": "9780375869099",
+    "stage": "reader",
+    "series": {
+      "id": "step-into-reading-1",
+      "name": "Step into Reading · Step 1"
+    },
+    "topics": [],
+    "source": "https://penguinrandomhouseelementaryeducation.com/book/?isbn=9780375869099",
+    "checkedAt": "2026-10-25",
+    "bibliographic": {
+      "title": "Ballet Stars (Paperback)",
+      "author": "조앤 호럽 (지은이), Shelagh McNicholas (그림)",
+      "publisher": "Random House Childrens Books",
+      "thumbnail": "https://image.aladin.co.kr/product/1340/74/cover200/0375869093_1.jpg",
+      "language": "en"
+    },
+    "evidenceNotes": [
+      "Official individual ISBN page confirms print edition and Step into Reading level. Stage/topic labels are editorial navigation; no AR score or reading-order number is inferred."
+    ]
   }
 ]

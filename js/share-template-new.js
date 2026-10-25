@@ -11,7 +11,8 @@
     5: { name:'밤의 서재', background:'#e9dfd7', ink:'#65534e', paper:'#faf1e4', art:'img/cards/night-desk.png', footerInk:'#f5e7cf' },
     6: { name:'피크닉 독서', background:'#f1eee0', ink:'#68765b', paper:'#fffdf2', art:'img/cards/picnic-desk.png' },
     7: { name:'동물 친구', background:'#fdf0e4', ink:'#916746', paper:'#fffaf0', art:'img/cards/animal-friends.png', child:true },
-    8: { name:'낙서 공책', background:'#fcebef', ink:'#976477', paper:'#fffdf7', art:'img/cards/kids-notebook.png', child:true }
+    8: { name:'낙서 공책', background:'#fcebef', ink:'#976477', paper:'#fffdf7', art:'img/cards/kids-notebook.png', child:true },
+    9: { name:'오늘의 한 장', background:'#fae9ee', ink:'#985e73', paper:'#fffcf5', art:'img/cards/reading-scrapbook.png', scrapbook:true }
   };
   function loadImage(src) {
     if (!src) return Promise.resolve(null);
@@ -83,6 +84,29 @@
     else if (!sheet) {ctx.font=`22px ${FONT}`;ctx.fillText(garden.currentTree ? `지금 자라는 나무 · ${garden.currentCount}/20권` : '다음 씨앗을 기다리고 있어요.',120,y+155);}
     if (trees.length>6) {ctx.textAlign='right';ctx.font=`18px ${FONT}`;ctx.fillText('최근 나무 6그루',960,y+200);ctx.textAlign='left';}
   }
+  function drawScrapbook(book, review, rating, art, cover, style) {
+    const canvas=document.createElement('canvas');canvas.width=1080;
+    const ctx=canvas.getContext('2d');
+    ctx.font=`700 40px ${FONT}`;const titles=wrap(ctx,book.title || '제목 없음',760);
+    ctx.font=`36px ${HAND}`;const lines=wrap(ctx,review || '오늘 아이랑 함께 읽은 책. 오래 기억하고 싶은 한 장면.',720);
+    const noteY=700+titles.length*52;
+    canvas.height=Math.max(1350,noteY+lines.length*48+170);
+    if(canvas.height>8000)throw new Error('기록이 길어 이미지 한 장에 담기 어려워요.');
+    ctx.fillStyle=style.paper;ctx.fillRect(0,0,1080,canvas.height);
+    if(art)ctx.drawImage(art,0,0,1080,canvas.height);
+    ctx.textAlign='center';ctx.fillStyle=style.ink;ctx.font=`30px ${HAND}`;
+    ctx.fillText('오늘 아이랑 읽은 책',540,150);
+    drawCover(ctx,cover,book.title || '책',380,200,320,400,style);
+    ctx.textAlign='center';ctx.fillStyle=style.ink;ctx.font=`700 40px ${FONT}`;
+    titles.forEach((line,i)=>ctx.fillText(line,540,660+i*52));
+    ctx.textAlign='left';ctx.fillStyle='#614650';ctx.font=`36px ${HAND}`;
+    lines.forEach((line,i)=>ctx.fillText(line,180,noteY+i*48));
+    const score=Math.max(0,Math.min(5,Math.round(Number(rating)||0)));
+    if(score){ctx.textAlign='center';ctx.fillStyle=style.ink;ctx.font=`24px ${FONT}`;ctx.fillText('★'.repeat(score),540,canvas.height-155);}
+    rounded(ctx,300,canvas.height-90,480,68,16,'#fff8f0');
+    ctx.textAlign='left';ctx.save();ctx.translate(285,canvas.height-135);ctx.scale(.8,.8);wordmark(ctx,style.ink);ctx.restore();
+    return canvas;
+  }
   async function generateInstagramTemplate(book, review, rating, templateId = 1) {
     if (document.fonts?.load) await Promise.all([document.fonts.load(`44px ${HAND}`),document.fonts.load(`36px ${FONT}`)]);
     if (document.fonts?.ready) await document.fonts.ready;
@@ -92,6 +116,7 @@
       style.garden ? loadImage('img/garden/growth-sprites.png') : null,
       style.garden ? loadImage('img/garden/mature-trees.png') : null
     ]);
+    if(style.scrapbook)return drawScrapbook(book,review,rating,art,cover,style);
     const canvas=document.createElement('canvas');canvas.width=1080;
     const ctx=canvas.getContext('2d');
     const title=String(book.title || '제목 없음');
@@ -136,7 +161,7 @@
       const garden=window.ReadingGarden?.getGarden() || {count:0,matureTrees:[],currentTree:null,currentCount:0};
       drawGarden(ctx,sheet,matureSheet,garden,gardenY,style);
     }
-    ctx.save();ctx.translate(370,height-105);ctx.scale(.52,.52);wordmark(ctx,style.footerInk || style.ink);ctx.restore();
+    ctx.save();ctx.translate(285,height-130);ctx.scale(.8,.8);wordmark(ctx,style.footerInk || style.ink);ctx.restore();
     return canvas;
   }
   function canvasBlob(canvas) {

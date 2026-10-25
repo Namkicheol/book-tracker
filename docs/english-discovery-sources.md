@@ -230,3 +230,8 @@ Topics are shown only where a current interest filter fits. A blank topic cell i
 Reading stages and topic tags are navigation aids, not guaranteed reading suitability. There are no age classifications. Every verified ATOS score is backed by an official exact-edition Bookfinder page; all other scores are left outside this evidence set. The award overlay is additive and its award distinctions stay in the separate award data file.
 
 No general rights clearance is claimed for app API data or covers; consult the source audit for the existing API terms limitation.
+
+
+## 2026-10-25 verified early-reader expansion
+
+Added25 individually verified print ISBNs (24 readers,1 chapter-level Step5). Total109 discovery records. Dinosaur filters grew3→12 and science19→30; no AR scores were inferred. ExactISBN Aladin lookup matched every added edition. See [launch expansion source table](launch-catalog-expansion-2026-10-25.md). The earlier84-record tables remain a dated snapshot.
