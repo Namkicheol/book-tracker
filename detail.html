@@ -349,16 +349,17 @@
       <div class="book-preview-body" style="padding:var(--sp-lg)">
         <h3 id="instagramTitle" style="font-family:var(--font-body);font-size:20px;font-weight:700;margin:0 0 var(--sp-sm);color:var(--text)">독서 카드</h3>
 
-        <style>.reading-card-styles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 0}.reading-card-styles .template-btn{min-width:0;padding:10px 4px;font-size:12px;white-space:normal}.reading-card-styles .template-btn[aria-pressed="true"]{background:#c76180;color:#fff;border-color:#c76180}.reading-card-styles .template-btn:focus-visible{outline:3px solid #b5674f;outline-offset:3px}</style>
+        <style>.reading-card-styles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:18px 0}.reading-card-styles .template-btn img{display:block;width:100%;height:72px;object-fit:cover;border-radius:8px;margin-bottom:7px}.reading-card-styles .template-btn{min-width:0;padding:10px 4px;font-size:12px;white-space:normal}.reading-card-styles .template-btn[aria-pressed="true"]{background:#c76180;color:#fff;border-color:#c76180}.reading-card-styles .template-btn:focus-visible{outline:3px solid #b5674f;outline-offset:3px}</style>
         <div class="reading-card-styles" role="group" aria-label="독서 카드 스타일">
-          <button type="button" class="template-btn btn btn-secondary" data-template="1" aria-pressed="true">손편지</button>
-          <button type="button" class="template-btn btn btn-secondary" data-template="2" aria-pressed="false">커피 한 잔</button>
-          <button type="button" class="template-btn btn btn-secondary" data-template="3" aria-pressed="false">나의 책 정원</button>
-          <button type="button" class="template-btn btn btn-secondary" data-template="4" aria-pressed="false">꽃갈피</button>
-          <button type="button" class="template-btn btn btn-secondary" data-template="5" aria-pressed="false">밤의 서재</button>
-          <button type="button" class="template-btn btn btn-secondary" data-template="6" aria-pressed="false">피크닉 독서</button>
-          <button type="button" class="template-btn btn btn-secondary" data-template="7" aria-pressed="false">동물 친구</button>
-          <button type="button" class="template-btn btn btn-secondary" data-template="8" aria-pressed="false">낙서 공책</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="1" aria-pressed="true"><img src="img/cards/letter-desk.png" alt="" loading="lazy">손편지</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="2" aria-pressed="false"><img src="img/cards/coffee-desk.png" alt="" loading="lazy">커피 한 잔</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="3" aria-pressed="false"><img src="img/cards/../garden/journal-garden.png" alt="" loading="lazy">나의 책 정원</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="4" aria-pressed="false"><img src="img/cards/flower-desk.png" alt="" loading="lazy">꽃갈피</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="5" aria-pressed="false"><img src="img/cards/night-desk.png" alt="" loading="lazy">밤의 서재</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="6" aria-pressed="false"><img src="img/cards/picnic-desk.png" alt="" loading="lazy">피크닉 독서</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="7" aria-pressed="false"><img src="img/cards/animal-friends.png" alt="" loading="lazy">동물 친구</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="8" aria-pressed="false"><img src="img/cards/kids-notebook.png" alt="" loading="lazy">낙서 공책</button>
+          <button type="button" class="template-btn btn btn-secondary" data-template="9" aria-pressed="false"><img src="img/cards/reading-scrapbook.png" alt="" loading="lazy">오늘의 한 장</button>
         </div>
         <p style="font-size:12px;color:var(--text-soft)">내 감상을 한 장에 담아요. 긴 글은 이미지가 길어져요. 아주 긴 기록은 <a href="stats.html">전체 기록을 PDF로 저장</a>해 주세요.</p>
 
@@ -414,7 +415,7 @@
   <script src="js/library-api.js?v=20260512a"></script>
   <script src="js/book-preview.js?v=20261025a"></script>
   <script src="js/garden.js?v=20261021j"></script>
-  <script src="js/share-template-new.js?v=20261021h"></script>
+  <script src="js/share-template-new.js?v=20261025a"></script>
   <script src="js/recs-cache.js?v=20261020h"></script>
   <script src="js/detail.js?v=20261025a"></script>
 </body>

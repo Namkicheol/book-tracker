@@ -24,11 +24,27 @@ test('curated editions have unique valid ISBNs, original prompts and attributabl
   }
  }
 });
-test('individual reading prompts retain 38 books without unlicensed institutional recommendation grouping',()=>{
- assert.equal(books.length,38);
- assert.equal(books.filter(b=>b.provenance.some(p=>p.kind==='moms')).length,4);
+test('individual reading prompts retain 60 books without unlicensed institutional recommendation grouping',()=>{
+ assert.equal(books.length,60);
+ assert.equal(books.filter(b=>b.provenance.some(p=>p.kind==='moms')).length,26);
  for(const book of books){
   assert.ok(!book.provenance.some(p=>p.kind==='library'));
   assert.ok(!/nlcy\.go\.kr/.test(book.source));
+ }
+});
+
+test('launch additions keep exact edition metadata, independent prompts and dated publisher evidence',()=>{
+ const additions=JSON.parse(fs.readFileSync('data/editorial-additions.json','utf8')).filter(b=>b.provenance.some(p=>p.checkedAt==='2026-10-25'));
+ assert.equal(additions.length,22);
+ assert.equal(new Set(additions.map(b=>b.note)).size,22);
+ assert.equal(new Set(additions.map(b=>b.activity)).size,22);
+ for(const addition of additions){
+  const card=books.find(b=>b.isbn===addition.isbn);
+  assert.ok(card,addition.isbn);
+  for(const key of ['title','author','publisher','thumbnail','source','note','activity']) assert.equal(card[key],addition[key]);
+  assert.equal(new URL(card.source).hostname,'bir.co.kr');
+  assert.equal(new URL(card.thumbnail).hostname,'image.aladin.co.kr');
+  assert.ok(card.evidenceNotes.some(note=>note.includes('isbn13')));
+  assert.ok(card.provenance.some(p=>p.kind==='publisher' && p.checkedAt==='2026-10-25'));
  }
 });

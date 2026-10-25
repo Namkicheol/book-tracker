@@ -4,14 +4,22 @@
 //   - 정적 자산(css/js/png/svg): cache-first (?v= 캐시버스팅으로 안전)
 //   - HTML/네비게이션      : network-first (캐시버스터·콘텐츠 최신, 오프라인 폴백)
 //   - 교차출처(API·폰트·Supabase 등): 가로채지 않음(브라우저 기본)
-const CACHE = 'momsbooks-20261025b';
+const CACHE = 'momsbooks-20261025c';
+const OFFLINE_URL = '/offline.html';
 
-self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('install', (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    // Only the self-contained fallback is required; do not preload member data.
+    await cache.add(OFFLINE_URL);
+    await self.skipWaiting();
+  })());
+});
 
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)));
+    await Promise.all(keys.filter((k) => k.startsWith('momsbooks-') && k !== CACHE).map((k) => caches.delete(k)));
     await self.clients.claim();
   })());
 });
@@ -49,6 +57,10 @@ async function networkFirst(req) {
   } catch (e) {
     const cached = await caches.match(req);
     if (cached) return cached;
+    if (req.mode === 'navigate') {
+      const fallback = await caches.match(OFFLINE_URL);
+      if (fallback) return fallback;
+    }
     throw e;
   }
 }

@@ -149,6 +149,7 @@
   }
 
   function showEncouragementPopup(data) {
+    if (document.querySelector('.friend-modal')) return;
     const overlay = document.createElement('div');
     overlay.className = 'friend-modal';
     overlay.innerHTML = `
@@ -443,7 +444,7 @@
     const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
     const yearAgo = new Date(now.getFullYear(), 0, 1);
 
-    const dated = books.filter(b => b.readDate);
+    const dated = books.filter(b => !b.status && b.readDate && new Date(b.readDate) <= now);
     const thisWeek = dated.filter(b => new Date(b.readDate) >= weekAgo).length;
     const thisMonth = dated.filter(b => new Date(b.readDate) >= monthAgo).length;
     const thisYear = dated.filter(b => new Date(b.readDate) >= yearAgo).length;
@@ -481,7 +482,8 @@
   }
 
   function calculateStreak(books) {
-    const dated = books.filter(b => b.readDate);
+    const now = new Date();
+    const dated = books.filter(b => !b.status && b.readDate && new Date(b.readDate) <= now);
     if (dated.length === 0) return 0;
     const sorted = dated.map(b => new Date(b.readDate).setHours(0,0,0,0))
       .sort((a, b) => b - a);
@@ -512,7 +514,7 @@
       const weekEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - (i * 7));
       const hasBooks = books.some(b => {
         const d = new Date(b.readDate);
-        return d >= weekStart && d < weekEnd;
+        return !b.status && d >= weekStart && d < weekEnd && d <= now;
       });
       if (hasBooks) weeks++;
       else break;
@@ -843,145 +845,126 @@
   }
 
   // ── 공유 카드 (Canvas 1080×1350) ──────────────────────────────
-  async function showShareCard(theme = 'paper', previewOnly = false) {
-    const themes = { paper: 'monthly-paper.png', coffee: 'reading-coffee.png', forest: 'reading-forest.png' };
-    const artwork = themes[theme] || themes.paper;
-    const name   = localStorage.getItem('profileName')   || '책읽는엄마';
+  async function showShareCard(options = {}, previewOnly = false) {
+    if (typeof options === 'string') options = { theme: options, layout: 'monthly' };
+    const layout = ['profile', 'monthly', 'garden'].includes(options.layout) ? options.layout : 'profile';
+    const themes = { paper: 'monthly-paper.png', coffee: 'reading-coffee.png', forest: 'reading-forest.png', bookshelf: 'profile-bookshelf.png', garden: 'garden-postcard.png' };
+    const theme = Object.hasOwn(themes, options.theme) ? options.theme : layout === 'garden' ? 'garden' : layout === 'profile' ? 'bookshelf' : 'paper';
+    const name = localStorage.getItem('profileName') || '책읽는엄마';
     const avatar = localStorage.getItem('profileAvatar') || '👩';
+    const books = window.Storage ? Storage.getAllBooks() : [];
+    const completed = books.filter(book => !book.status);
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const month = today.slice(0,7);
+    const monthBooks = completed.filter(book => book.readDate && book.readDate.slice(0,7) === month && book.readDate <= today);
+    const featured = (layout === 'monthly' ? monthBooks : books).slice().sort((a,b) => String(b.readDate || b.createdAt || '').localeCompare(String(a.readDate || a.createdAt || ''))).slice(0,3);
+    const garden = window.ReadingGarden ? ReadingGarden.getGarden(books) : null;
     await document.fonts?.ready;
-    const [avatarImage, brandImage, paperImage] = await Promise.all([
+    const [avatarImage, brandImage, paperImage, growthImage, matureImage, ...covers] = await Promise.all([
       /^(https?:|data:image\/)/i.test(avatar) ? _loadCardImage(avatar) : null,
       _loadCardImage('img/3YzCR.png'),
-      _loadCardImage('img/cards/' + artwork),
+      _loadCardImage('img/cards/' + themes[theme]),
+      layout === 'garden' ? _loadCardImage('img/garden/growth-sprites.png') : null,
+      layout === 'garden' ? _loadCardImage('img/garden/mature-trees.png') : null,
+      ...featured.map(book => /^https?:\/\//i.test(book.thumbnail || '') ? _loadCardImage('https://book-tracker-aladin.obangti.workers.dev/image-proxy?url=' + encodeURIComponent(book.thumbnail.replace(/^http:/i,'https:'))) : null),
     ]);
-
     const W = 1080, H = 1350;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext('2d');
-
-    if (paperImage) {
-      ctx.drawImage(paperImage, 0, 0, W, H);
+    if (paperImage) ctx.drawImage(paperImage, 0, 0, W, H);
+    else { const bg = ctx.createLinearGradient(0,0,0,H); bg.addColorStop(0,'#FFF8F0'); bg.addColorStop(1,'#FBE8F1');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H); }
+    const text = (value,x,y,size=30,color='#705460',weight=500) => {
+      ctx.fillStyle=color;ctx.font=`${weight} ${size}px "Gowun Batang", serif`;ctx.fillText(String(value),x,y,880);
+    };
+    ctx.textAlign='center';
+    if (brandImage) ctx.drawImage(brandImage, W/2-43,44,86,86);
+    text('맘스북스',W/2,175,48,'#A85F78',700);
+    const drawAvatar = (y,r=56) => {
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(W/2,y,r+6,0,Math.PI*2);ctx.fill();
+      if (avatarImage) {
+        ctx.save();ctx.beginPath();ctx.arc(W/2,y,r,0,Math.PI*2);ctx.clip();
+        const side=Math.min(avatarImage.naturalWidth,avatarImage.naturalHeight);
+        ctx.drawImage(avatarImage,(avatarImage.naturalWidth-side)/2,(avatarImage.naturalHeight-side)/2,side,side,W/2-r,y-r,r*2,r*2);ctx.restore();
+      } else {
+        const emoji=/^(?:\p{Extended_Pictographic}|\p{Emoji_Presentation}|[\u200d\ufe0f\u20e3]|\p{Emoji_Modifier}){1,16}$/u.test(avatar) ? avatar : '📖';
+        ctx.textBaseline='middle';ctx.font=`${r}px sans-serif`;ctx.fillStyle='#705460';ctx.fillText(emoji,W/2,y);ctx.textBaseline='alphabetic';
+      }
+    };
+    const drawBooks = (y, compact = false) => {
+      if (!featured.length) return;
+      const width=compact?132:194,height=compact?176:264,gap=42,start=(W-featured.length*width-(featured.length-1)*gap)/2;
+      featured.forEach((book,i) => {
+        const x=start+i*(width+gap);
+        ctx.fillStyle='rgba(255,255,255,.86)';_roundRect(ctx,x-10,y-10,width+20,height+70,12);ctx.fill();
+        const cover=covers[i];
+        if (cover) {const ratio=Math.min(width/cover.naturalWidth,height/cover.naturalHeight);const cw=cover.naturalWidth*ratio,ch=cover.naturalHeight*ratio;ctx.drawImage(cover,x+(width-cw)/2,y+(height-ch)/2,cw,ch);}
+        else {ctx.fillStyle='#F5DDE6';ctx.fillRect(x,y,width,height);text('책',x+width/2,y+height/2,50,'#AD667B',700);}
+        ctx.font='600 22px "Gowun Batang", serif';ctx.fillStyle='#705460';
+        let title=String(book.title||'제목 없음');while(title.length>1&&ctx.measureText(title).width>width) title=title.slice(0,-1);
+        if(title!==book.title) title=title.slice(0,-1)+'…';ctx.fillText(title,x+width/2,y+height+36,width);
+      });
+    };
+    if (layout === 'profile') {
+      const compact = theme === 'bookshelf';
+      drawAvatar(compact?260:294,compact?48:64);
+      text(name,W/2,compact?355:416,44,'#5F4652',700);
+      text('우리 집 작은 책장',W/2,compact?407:480,28);
+      text(books.length ? `한 권씩 모인 ${books.length}권의 이야기` : '첫 이야기를 기다리는 책장',W/2,compact?467:568,compact?32:38,'#A85F78',700);
+      if (featured.length) {
+        drawBooks(compact?505:650,compact);
+        ctx.fillStyle='rgba(255,250,246,.92)';_roundRect(ctx,330,compact?735:1027,420,56,12);ctx.fill();
+        text(`함께 읽은 책 ${completed.length}권`,W/2,compact?772:1065,compact?25:28);
+      } else {
+        text('좋아하는 책을 만나고',W/2,compact?565:744,34);
+        text('우리만의 기록을 남겨요',W/2,compact?625:804,34);
+      }
+    } else if (layout === 'monthly') {
+      const compact = theme === 'bookshelf';
+      text(`${now.getFullYear()}년 ${now.getMonth()+1}월`,W/2,compact?266:300,30);
+      text('이번 달, 함께 읽은 책',W/2,compact?329:370,42,'#5F4652',700);
+      if (monthBooks.length) {
+        text(`${monthBooks.length}권`,W/2,compact?470:535,108,'#B8708B',700);
+        text(`${name}의 책갈피`,W/2,compact?520:594,26);
+        drawBooks(compact?555:660,compact);
+        ctx.fillStyle='rgba(255,250,246,.92)';_roundRect(ctx,290,compact?790:1022,500,56,12);ctx.fill();
+        text(monthBooks.length>3 ? '최근에 읽은 세 권을 담았어요' : '책을 덮어도 이야기는 남아요',W/2,compact?828:1060,27);
+      } else {
+        text('아직 빈 책갈피',W/2,560,54,'#B8708B',700);
+        text('이번 달 첫 책을 만나면',W/2,680,32);
+        text('여기에 이야기가 쌓여요',W/2,740,32);
+        text(name,W/2,965,30);
+      }
     } else {
-      const bg = ctx.createLinearGradient(0, 0, 0, H);
-      bg.addColorStop(0, '#FFF8F0');
-      bg.addColorStop(0.5, '#FFE8F0');
-      bg.addColorStop(1, '#F8E8FF');
-      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+      text(`${name}의`,W/2,290,30);
+      text('책으로 자라는 정원',W/2,362,48,'#5F4652',700);
+      if (garden) {
+        const trees=[...garden.matureTrees,...(garden.currentTree?[garden.currentTree]:[])];
+        const visible=trees.slice(-3),size=240,start=(W-visible.length*size)/2;
+        visible.forEach((tree,i) => {
+          const mature=tree.stage===5,image=mature?matureImage:growthImage;
+          if(!image)return;
+          const sw=image.naturalWidth/3,sh=mature?image.naturalHeight:image.naturalHeight/2;
+          const col=mature?['forest','flower','fruit'].indexOf(tree.seed):tree.stage%3,row=mature?0:Math.floor(tree.stage/3);
+          const trim=!mature&&tree.stage<3?.94:1;
+          ctx.drawImage(image,col*sw,row*sh,sw,sh*trim,start+i*size,490,size,size*trim);
+        });
+        if(!trees.length) {text('첫 씨앗을 기다려요',W/2,620,46,'#A85F78',700);text('서재에서 마음에 드는 씨앗을 골라 주세요',W/2,690,26);}
+        if(theme==='bookshelf'){ctx.fillStyle='rgba(255,250,246,.94)';_roundRect(ctx,270,766,540,246,20);ctx.fill();}
+        text(`함께 읽은 책 ${garden.count}권`,W/2,820,38,'#A85F78',700);
+        text(garden.matureTrees.length ? `다 자란 나무 ${garden.matureTrees.length}그루` : '한 권씩 읽으며 천천히 자라요',W/2,885,29);
+        if(garden.currentTree)text(`지금 자라는 나무 · ${garden.currentCount}/20권`,W/2,945,26);
+        if(trees.length>3)text('최근 나무 세 그루',W/2,1050,22);
+      } else text('서재에서 나의 정원을 만나 보세요',W/2,650,32);
     }
-
-    ctx.textAlign = 'center';
-    if (brandImage) ctx.drawImage(brandImage, W/2 - 48, 58, 96, 96);
-    ctx.fillStyle = '#AD667B';
-    ctx.font = '700 44px "Gowun Batang", serif';
-    ctx.fillText('맘스북스', W/2, 194);
-
-    ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(W/2, 286, 62, 0, Math.PI*2); ctx.fill();
-    if (avatarImage) {
-      ctx.save();
-      ctx.beginPath(); ctx.arc(W/2, 286, 56, 0, Math.PI*2); ctx.clip();
-      const side = Math.min(avatarImage.naturalWidth, avatarImage.naturalHeight);
-      ctx.drawImage(avatarImage, (avatarImage.naturalWidth-side)/2, (avatarImage.naturalHeight-side)/2, side, side, W/2-56, 230, 112, 112);
-      ctx.restore();
-    } else {
-      const emoji = /^(?:\p{Extended_Pictographic}|\p{Emoji_Presentation}|[\u200d\ufe0f\u20e3]|\p{Emoji_Modifier}){1,16}$/u.test(avatar) ? avatar : '📖';
-      ctx.fillStyle = '#57424B';
-      ctx.font = '58px sans-serif';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(emoji, W/2, 288);
-      ctx.textBaseline = 'alphabetic';
-    }
-    ctx.fillStyle = '#57424B';
-    ctx.font = '700 42px "Gowun Batang", serif';
-    ctx.fillText(name, W/2, 408, W - 220);
-    ctx.fillStyle = '#9D858D';
-    ctx.font = '500 23px sans-serif';
-    const today = new Date();
-    ctx.fillText(`${today.getFullYear()}년 ${today.getMonth()+1}월의 독서 기록`, W/2, 452);
-
-    // 큰 숫자 — 이번 달
-    ctx.fillStyle = '#8B8B8B';
-    ctx.font = '700 22px sans-serif';
-    ctx.fillText('이번 달, 함께 읽은 책', W/2, 525);
-
-    // 그라디언트 큰 숫자
-    const numGrad = ctx.createLinearGradient(0, 530, 0, 700);
-    numGrad.addColorStop(0, '#C8788E');
-    numGrad.addColorStop(1, '#AD83B1');
-    ctx.fillStyle = numGrad;
-    ctx.font = '800 200px "Gowun Batang", serif';
-    ctx.fillText(String(myStats.monthBooks), W/2, 700);
-
-    ctx.fillStyle = '#C8788E';
-    ctx.font = '700 36px sans-serif';
-    ctx.fillText(myStats.monthBooks ? '권을 함께 읽었어요' : '첫 책을 기다리고 있어요', W/2, 760);
-
-    // 3-칸 통계 박스
-    const boxY = 830, boxH = 140;
-    const boxes = [
-      { num: myStats.weekBooks,  label: '이번 주' },
-      { num: myStats.yearBooks,  label: '올해' },
-      { num: myStats.streak,     label: '연속 일' },
-    ];
-    const boxW = (W - 160) / 3;
-    boxes.forEach((b, i) => {
-      const x = 80 + i * boxW;
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-      _roundRect(ctx, x + 8, boxY, boxW - 16, boxH, 18);
-      ctx.fill();
-
-      ctx.fillStyle = '#C8788E';
-      ctx.font = '800 56px "Gowun Batang", serif';
-      ctx.fillText(String(b.num), x + boxW/2, boxY + 70);
-
-      ctx.fillStyle = '#8B8B8B';
-      ctx.font = '600 22px sans-serif';
-      ctx.fillText(b.label, x + boxW/2, boxY + 110);
-    });
-
-    // 목표 진행
-    const goalY = 1020;
-    const target = myStats.goalTarget || 20;
-    const pct = Math.min(myStats.monthBooks / target, 1);
-    ctx.fillStyle = '#4A4A4A';
-    ctx.font = '600 28px sans-serif';
-    ctx.fillText(`이번 달 목표 ${target}권 · ${Math.round(pct*100)}%`, W/2, goalY);
-    // 바 배경
-    const barX = 140, barW = W - 280, barH = 24, barY = goalY + 30;
-    ctx.fillStyle = 'rgba(0,0,0,0.06)';
-    _roundRect(ctx, barX, barY, barW, barH, 12); ctx.fill();
-    // 바 fill
-    const barGrad = ctx.createLinearGradient(barX, 0, barX + barW, 0);
-    barGrad.addColorStop(0, '#C8788E');
-    barGrad.addColorStop(1, '#AD83B1');
-    ctx.fillStyle = barGrad;
-    if (pct > 0) { _roundRect(ctx, barX, barY, Math.max(barH, barW * pct), barH, 12); ctx.fill(); }
-
-    // 뱃지
-    const unlocked = BADGES.filter(b => b.condition(myStats));
-    ctx.fillStyle = '#4A4A4A';
-    ctx.font = '600 26px sans-serif';
-    ctx.fillText(`함께 모은 배지 ${unlocked.length}개`, W/2, 1140);
-
-    // 푸터
-    ctx.fillStyle = '#AD667B';
-    ctx.font = '700 38px "Gowun Batang", serif';
-    ctx.fillText('맘스북스', W/2, H - 98);
-    ctx.fillStyle = '#8B747C';
-    ctx.font = '500 22px sans-serif';
-    ctx.fillText('아이와 함께한 독서 기록', W/2, H - 56);
-
-    // 카드 미리보기 + 공유 모달
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png', 0.95));
-    if (!blob) {
-      if (previewOnly) throw new Error('이미지를 만들지 못했어요');
-      showToast('이미지 생성 실패');
-      return;
-    }
-    if (previewOnly) return blob;
-    const url = URL.createObjectURL(blob);
-    _showShareCardModal(url, blob, name, nextTheme => showShareCard(nextTheme, true));
+    ctx.fillStyle='rgba(255,250,246,.9)';_roundRect(ctx,310,H-146,460,112,20);ctx.fill();
+    text('맘스북스',W/2,H-104,38,'#A85F78',700);
+    text('아이와 함께한 독서 기록',W/2,H-59,23);
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png',.95));
+    if(!blob){if(previewOnly)throw new Error('이미지를 만들지 못했어요');showToast('이미지 생성 실패');return;}
+    if(previewOnly)return blob;
+    _showShareCardModal(URL.createObjectURL(blob),blob,name,next=>showShareCard(next,true),{layout,theme});
   }
 
   function _loadCardImage(source) {
@@ -1014,7 +997,7 @@
     ctx.closePath();
   }
 
-  function _showShareCardModal(imgUrl, blob, name, renderTheme) {
+  function _showShareCardModal(imgUrl, blob, name, renderTheme, initial = {layout: 'profile', theme: 'bookshelf'}) {
     const previousFocus = document.activeElement === document.body ? document.getElementById('shareCardBtn') : document.activeElement;
     const modal = document.createElement('div');
     modal.className = 'friend-modal';
@@ -1024,15 +1007,19 @@
           <div id="shareCardTitle" style="font-size:16px;font-weight:700;color:var(--text-dark);margin-bottom:6px">독서 기록 나누기</div>
           <div style="font-size:12px;color:var(--text-gray)">소중한 독서의 순간을 이미지로 간직해요</div>
         </div>
-        <label for="shareCardTheme" style="display:block;font-size:13px;margin-bottom:6px;color:var(--text-dark)">카드 분위기</label>
-        <select id="shareCardTheme" style="width:100%;padding:10px 12px;margin-bottom:12px;border:1px solid #F0D5DF;border-radius:12px;background:#FFF8FA;color:#704F5B;font:inherit">
-          <option value="paper">분홍빛 편지</option>
-          <option value="coffee">책과 커피</option>
-          <option value="forest">동물 친구들의 책숲</option>
-        </select>
+        <div aria-label="카드 종류" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:14px">
+          <button type="button" data-card-layout="profile" class="share-card-choice">우리 집 책장</button>
+          <button type="button" data-card-layout="monthly" class="share-card-choice">이번 달 기록</button>
+          <button type="button" data-card-layout="garden" class="share-card-choice">독서 정원</button>
+        </div>
+        <p style="font-size:13px;margin:0 0 8px;color:var(--text-dark)">그림을 골라 보세요</p>
+        <div aria-label="카드 그림" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:14px">
+          ${[['bookshelf','profile-bookshelf','책장'],['paper','monthly-paper','편지'],['coffee','reading-coffee','커피'],['forest','reading-forest','동물'],['garden','garden-postcard','정원']].map(([id,file,label])=>`<button type="button" data-card-theme="${id}" class="share-card-choice" style="padding:3px;font-size:11px"><img src="img/cards/${file}.png" alt="" style="display:block;width:100%;height:54px;object-fit:cover;border-radius:7px;margin-bottom:4px">${label}</button>`).join('')}
+        </div>
+        <style>.share-card-choice{min-width:0;min-height:44px;border:1px solid #ecd1da;border-radius:10px;background:#fff8fa;color:#80596a;font:inherit;font-size:12px;padding:9px 3px;cursor:pointer}.share-card-choice[aria-pressed="true"]{background:#fbe0e9;border-color:#c57792;box-shadow:0 0 0 1px #c57792}.share-card-choice:focus-visible{outline:2px solid #a55f7a;outline-offset:2px}</style>
         <p id="shareCardStatus" role="status" style="font-size:12px;color:var(--text-gray);margin:0 0 8px"></p>
         <div style="background:#f5f5f5;border-radius:12px;overflow:hidden;margin-bottom:14px">
-          <img src="${imgUrl}" alt="이번 달 독서 기록 카드" style="width:100%;display:block">
+          <img id="shareCardPreview" src="${imgUrl}" alt="독서 기록 카드 미리보기" style="width:100%;display:block">
         </div>
         <div style="display:flex;gap:8px">
           <button id="shareCardCancel" class="cheer-cancel" style="flex:1;margin:0;padding:14px 6px;font-size:13px;white-space:nowrap">닫기</button>
@@ -1062,23 +1049,25 @@
       }
     };
     document.addEventListener('keydown', onKeydown);
-    modal.querySelector('#shareCardCancel').focus();
+    modal.querySelector('[data-card-layout]').focus();
     modal.addEventListener('click', e => { if (e.target === modal) close(); });
     modal.querySelector('#shareCardCancel').addEventListener('click', close);
 
-    const themeSelect = modal.querySelector('#shareCardTheme');
+    let selected = {...initial};
+    const updateChoices = () => modal.querySelectorAll('[data-card-layout],[data-card-theme]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.cardLayout ? button.dataset.cardLayout === selected.layout : button.dataset.cardTheme === selected.theme)));
+    updateChoices();
     const downloadButton = modal.querySelector('#shareCardDownload');
     const shareButton = modal.querySelector('#shareCardShare');
     const status = modal.querySelector('#shareCardStatus');
-    let appliedTheme = 'paper';
-    themeSelect.addEventListener('change', async () => {
+    let applied = {...initial};
+    const regenerate = async () => {
       const request = ++revision;
-      const nextTheme = themeSelect.value;
+      const next = {...selected};
       downloadButton.disabled = shareButton.disabled = true;
       status.textContent = '카드를 만들고 있어요…';
       let nextUrl;
       try {
-        const nextBlob = await renderTheme(nextTheme);
+        const nextBlob = await renderTheme(next);
         if (closed || request !== revision) return;
         nextUrl = URL.createObjectURL(nextBlob);
         const preview = new Image();
@@ -1088,20 +1077,27 @@
         const oldUrl = imgUrl;
         imgUrl = nextUrl;
         blob = nextBlob;
-        modal.querySelector('img').src = imgUrl;
+        modal.querySelector('#shareCardPreview').src = imgUrl;
         URL.revokeObjectURL(oldUrl);
-        appliedTheme = nextTheme;
+        applied = next;
         status.textContent = '새 카드가 준비됐어요';
       } catch (_) {
         if (nextUrl) URL.revokeObjectURL(nextUrl);
         if (!closed && request === revision) {
-          themeSelect.value = appliedTheme;
+          selected = {...applied};
+          updateChoices();
           status.textContent = '카드를 만들지 못했어요. 다시 골라 주세요.';
         }
       } finally {
         if (!closed && request === revision) downloadButton.disabled = shareButton.disabled = false;
       }
-    });
+    };
+    modal.querySelectorAll('[data-card-layout],[data-card-theme]').forEach(button => button.addEventListener('click', () => {
+      if(button.dataset.cardLayout) selected.layout = button.dataset.cardLayout;
+      else selected.theme = button.dataset.cardTheme;
+      updateChoices();
+      regenerate();
+    }));
 
     modal.querySelector('#shareCardDownload').addEventListener('click', () => {
       const a = document.createElement('a');
@@ -1118,7 +1114,7 @@
           await navigator.share({
             files: [file],
             title: '맘스북스 독서 기록',
-            text: `${name}의 독서 기록 — 이번 달 ${myStats.monthBooks}권`,
+            text: `${name}의 독서 기록 · 맘스북스`,
           });
           close();
         } else {
