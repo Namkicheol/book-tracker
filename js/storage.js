@@ -52,6 +52,7 @@
     'profileName', 'profileAvatar', 'profileCity', 'profileDistrict',
     'profileLibraryPublic', 'profilePrivacy', 'monthlyGoal',
     'bookTracker.garden.v1', 'bookTracker.garden.watered.v1', 'bookTracker.garden.trees.v1',
+    'bookTracker.garden.collection.v1',
   ];
   const ACTIVE_OWNER_KEY = SCOPE_PREFIX + 'active-owner';
 

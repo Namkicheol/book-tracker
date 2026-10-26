@@ -267,3 +267,15 @@ test('scrapbook card preserves long title and note within its canvas', async () 
   assert.ok(app.textPositions.every(item => item.y < canvas.height));
   assert.ok(app.drawn.includes('맘스북스'));
 });
+
+test('book garden card exports equipped art without clipping or requiring image loads', async () => {
+  const equipped=[{id:'clover',name:'네잎클로버',svg:'<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"></svg>'}];
+  for(const loaded of [true,false]) {
+    const app=runtime([],{},loaded);app.ReadingGarden.getCollection=()=>({equipped});
+    const canvas=await app.generateInstagramTemplate({title:'정원'},'함께 읽었어요',5,3);
+    assert.ok(app.drawn.includes('네잎클로버'));
+    assert.equal(canvas.height,1350);
+    assert.ok(app.textPositions.every(item=>item.y<canvas.height));
+    assert.equal(app.imageDraws.some(args=>args[0].source.startsWith('data:image/svg+xml')),loaded);
+  }
+});

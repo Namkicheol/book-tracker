@@ -860,6 +860,7 @@
     const monthBooks = completed.filter(book => book.readDate && book.readDate.slice(0,7) === month && book.readDate <= today);
     const featured = (layout === 'monthly' ? monthBooks : books).slice().sort((a,b) => String(b.readDate || b.createdAt || '').localeCompare(String(a.readDate || a.createdAt || ''))).slice(0,3);
     const garden = window.ReadingGarden ? ReadingGarden.getGarden(books) : null;
+    const decorations = layout === 'garden' ? window.ReadingGarden?.getCollection?.(books).equipped || [] : [];
     await document.fonts?.ready;
     const [avatarImage, brandImage, paperImage, growthImage, matureImage, ...covers] = await Promise.all([
       /^(https?:|data:image\/)/i.test(avatar) ? _loadCardImage(avatar) : null,
@@ -869,6 +870,7 @@
       layout === 'garden' ? _loadCardImage('img/garden/mature-trees.png') : null,
       ...featured.map(book => /^https?:\/\//i.test(book.thumbnail || '') ? _loadCardImage('https://book-tracker-aladin.obangti.workers.dev/image-proxy?url=' + encodeURIComponent(book.thumbnail.replace(/^http:/i,'https:'))) : null),
     ]);
+    const decorationImages=await Promise.all(decorations.map(item=>_loadCardImage('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(item.svg))));
     const W = 1080, H = 1350;
     const canvas = document.createElement('canvas');
     canvas.width = W; canvas.height = H;
@@ -955,7 +957,16 @@
         text(`함께 읽은 책 ${garden.count}권`,W/2,820,38,'#A85F78',700);
         text(garden.matureTrees.length ? `다 자란 나무 ${garden.matureTrees.length}그루` : '한 권씩 읽으며 천천히 자라요',W/2,885,29);
         if(garden.currentTree)text(`지금 자라는 나무 · ${garden.currentCount}/20권`,W/2,945,26);
-        if(trees.length>3)text('최근 나무 세 그루',W/2,1050,22);
+        if(trees.length>3)text('최근 나무 세 그루',W/2,1000,22);
+        if(decorations.length){
+          const width=decorations.length*160+48;
+          ctx.fillStyle='rgba(255,250,246,.94)';_roundRect(ctx,(W-width)/2,1012,width,138,16);ctx.fill();
+        }
+        decorations.forEach((item,i) => {
+          const x=W/2+(i-(decorations.length-1)/2)*160;
+          if(decorationImages[i])ctx.drawImage(decorationImages[i],x-36,1025,72,72);
+          text(item.name,x,1130,22);
+        });
       } else text('서재에서 나의 정원을 만나 보세요',W/2,650,32);
     }
     ctx.fillStyle='rgba(255,250,246,.9)';_roundRect(ctx,310,H-146,460,112,20);ctx.fill();

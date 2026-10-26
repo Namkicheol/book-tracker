@@ -61,11 +61,16 @@
       ctx.font=`22px ${FONT}`;ctx.fillText('BOOK JOURNAL',x+w/2,y+h-38);ctx.textAlign='left';
     }
   }
-  function drawGarden(ctx,sheet,matureSheet,garden,y,style) {
+  function drawGarden(ctx,sheet,matureSheet,garden,y,style,decorations,decorationImages) {
     rounded(ctx,92,y,896,220,20,style.background);
     ctx.fillStyle=style.ink;ctx.font=`700 26px ${FONT}`;ctx.fillText('책과 함께 자라는 내 정원',120,y+44);
     ctx.font=`22px ${FONT}`;
     ctx.fillText(`완독 ${garden.count}권 · 다 자란 나무 ${garden.matureTrees.length}그루`,120,y+82);
+    decorations.forEach((item,i) => {
+      const x=800+i*80;
+      if (decorationImages[i]) ctx.drawImage(decorationImages[i],x,y+8,60,60);
+      ctx.font=`16px ${FONT}`;ctx.fillText(item.name,x-8,y+86);
+    });
     const trees=[...garden.matureTrees,...(garden.currentTree ? [garden.currentTree] : [])];
     // Keep the snapshot readable even for a large library; total above remains exact.
     const visible=trees.slice(-6),size=110;
@@ -111,10 +116,13 @@
     if (document.fonts?.load) await Promise.all([document.fonts.load(`44px ${HAND}`),document.fonts.load(`36px ${FONT}`)]);
     if (document.fonts?.ready) await document.fonts.ready;
     const style=TEMPLATES[templateId] || TEMPLATES[1];
-    const [art,cover,sheet,matureSheet]=await Promise.all([
+    const garden=style.garden ? window.ReadingGarden?.getGarden() || {count:0,matureTrees:[],currentTree:null,currentCount:0} : null;
+    const decorations=style.garden ? window.ReadingGarden?.getCollection?.().equipped || [] : [];
+    const [art,cover,sheet,matureSheet,...decorationImages]=await Promise.all([
       loadImage(style.art),loadImage(book.cover),
       style.garden ? loadImage('img/garden/growth-sprites.png') : null,
-      style.garden ? loadImage('img/garden/mature-trees.png') : null
+      style.garden ? loadImage('img/garden/mature-trees.png') : null,
+      ...decorations.map(item=>loadImage('data:image/svg+xml;charset=utf-8,'+encodeURIComponent(item.svg)))
     ]);
     if(style.scrapbook)return drawScrapbook(book,review,rating,art,cover,style);
     const canvas=document.createElement('canvas');canvas.width=1080;
@@ -158,8 +166,7 @@
     ctx.fillStyle='#57444d';ctx.font=`44px ${HAND}`;
     reviews.forEach((line,i)=>ctx.fillText(line,180,reviewY+i*54));
     if (style.garden) {
-      const garden=window.ReadingGarden?.getGarden() || {count:0,matureTrees:[],currentTree:null,currentCount:0};
-      drawGarden(ctx,sheet,matureSheet,garden,gardenY,style);
+      drawGarden(ctx,sheet,matureSheet,garden,gardenY,style,decorations,decorationImages);
     }
     ctx.save();ctx.translate(285,height-130);ctx.scale(.8,.8);wordmark(ctx,style.footerInk || style.ink);ctx.restore();
     return canvas;
