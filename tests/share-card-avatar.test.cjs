@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const full = fs.readFileSync('js/share.js', 'utf8');
 const source = full.slice(full.indexOf('  async function showShareCard('), full.indexOf('  function _showShareCardModal('));
-async function render(avatar, fail = false, theme = 'paper', layout = 'profile', books = []) {
+async function render(avatar, fail = false, theme = 'paper', layout = 'profile', books = [], equipped = []) {
   const texts = [], images = [], loaded = [];
   let result;
   const gradient = { addColorStop() {} };
@@ -19,7 +19,7 @@ async function render(avatar, fail = false, theme = 'paper', layout = 'profile',
     URL: { createObjectURL: () => 'blob:card' }, _showShareCardModal(url, blob) { result = { url, blob }; }, showToast() {}
   };
   env.window.Storage = env.Storage = {getAllBooks:()=>books};
-  env.window.ReadingGarden = env.ReadingGarden = {getGarden:()=>({count:books.filter(book=>!book.status).length,matureTrees:[],currentTree:null})};
+  env.window.ReadingGarden = env.ReadingGarden = {getGarden:()=>({count:books.filter(book=>!book.status).length,matureTrees:[],currentTree:null}),getCollection:()=>({equipped})};
   vm.runInNewContext(source + '\nthis.render = showShareCard;', env);
   await env.render({theme,layout});
   return { texts, images, loaded, result };
@@ -80,4 +80,16 @@ test('empty monthly record avoids invented progress and zero-stat dashboard', as
   assert.ok(card.texts.includes('아직 빈 책갈피'));
   assert.ok(!card.texts.includes('0'));
   assert.ok(!card.texts.some(text=>String(text).includes('지역')));
+});
+
+test('garden cards include equipped decorations and preserve names when images fail', async () => {
+  const equipped = [{id:'clover',name:'네잎클로버',svg:'<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"></svg>'}];
+  const card=await render('👩',false,'garden','garden',[],equipped);
+  assert.ok(card.images.some(source=>source.startsWith('data:image/svg+xml')));
+  assert.ok(card.texts.includes('네잎클로버'));
+  const fallback=await render('👩',true,'garden','garden',[],equipped);
+  assert.ok(fallback.texts.includes('네잎클로버'));
+  assert.equal(fallback.result.blob.type,'image/png');
+  const profile=await render('👩',false,'paper','profile',[],equipped);
+  assert.ok(!profile.images.some(source=>source.startsWith('data:image/svg+xml')));
 });

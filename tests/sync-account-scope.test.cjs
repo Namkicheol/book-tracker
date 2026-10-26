@@ -48,6 +48,7 @@ test('active owner survives reload and account, guest, profile, and garden data 
     'bookTracker.garden.v1': 'flower',
     'bookTracker.garden.watered.v1': JSON.stringify(['isbn:guest']),
     'bookTracker.garden.trees.v1': JSON.stringify(['flower']),
+    'bookTracker.garden.collection.v1': JSON.stringify(['clover']),
   });
   let Storage = loadStorage(localStorage);
   assert.equal(Storage.getOwner(), null);
@@ -61,6 +62,7 @@ test('active owner survives reload and account, guest, profile, and garden data 
   localStorage.setItem('bookTracker.garden.v1', 'forest');
   localStorage.setItem('bookTracker.garden.watered.v1', JSON.stringify(['isbn:a']));
   localStorage.setItem('bookTracker.garden.trees.v1', JSON.stringify(['forest']));
+  localStorage.setItem('bookTracker.garden.collection.v1', JSON.stringify(['rabbit','bird']));
 
   // A fresh page load must recognize that the base keys still belong to A.
   Storage = loadStorage(localStorage);
@@ -71,9 +73,11 @@ test('active owner survives reload and account, guest, profile, and garden data 
   Storage.setOwner('account-b');
   assert.deepEqual(JSON.parse(JSON.stringify(Storage.getAllBooksRaw())), []);
   assert.equal(localStorage.getItem('profileName'), null);
+  assert.equal(localStorage.getItem('bookTracker.garden.collection.v1'),null);
   localStorage.setItem('bookTracker.books.v1', JSON.stringify([{ id: 'b-book', title: 'B book' }]));
   localStorage.setItem('profileName', 'B');
   localStorage.setItem('bookTracker.garden.v1', 'fruit');
+  localStorage.setItem('bookTracker.garden.collection.v1', JSON.stringify(['flowers']));
 
   Storage.setOwner('account-a');
   assert.equal(Storage.getAllBooksRaw()[0].id, 'a-book');
@@ -81,14 +85,17 @@ test('active owner survives reload and account, guest, profile, and garden data 
   assert.equal(localStorage.getItem('bookTracker.garden.v1'), 'forest');
   assert.deepEqual(JSON.parse(localStorage.getItem('bookTracker.garden.watered.v1')), ['isbn:a']);
   assert.deepEqual(JSON.parse(localStorage.getItem('bookTracker.garden.trees.v1')), ['forest']);
+  assert.deepEqual(JSON.parse(localStorage.getItem('bookTracker.garden.collection.v1')), ['rabbit','bird']);
 
   Storage.setOwner('account-b');
   assert.equal(Storage.getAllBooksRaw()[0].id, 'b-book');
   assert.equal(localStorage.getItem('profileName'), 'B');
+  assert.deepEqual(JSON.parse(localStorage.getItem('bookTracker.garden.collection.v1')), ['flowers']);
   Storage.setOwner(null);
   assert.equal(Storage.getAllBooksRaw()[0].id, 'legacy');
   assert.equal(localStorage.getItem('profileName'), 'Guest');
   assert.equal(localStorage.getItem('bookTracker.garden.v1'), 'flower');
+  assert.deepEqual(JSON.parse(localStorage.getItem('bookTracker.garden.collection.v1')), ['clover']);
 });
 
 test('pending pull from account A cannot write after switching the active scope to B', async () => {
