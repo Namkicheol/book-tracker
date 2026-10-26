@@ -587,6 +587,8 @@
       localStorage.setItem('_syncUploaded_' + user.id, '1');
       await window.Sync.flushOutbox();
     } catch (e) {
+      try { if (!await isCurrentSignIn(user.id)) return; }
+      catch (authError) { return; }
       if (!document.getElementById('authSetupRetry')) {
         var retry = document.createElement('button');
         retry.id = 'authSetupRetry';retry.type = 'button';
