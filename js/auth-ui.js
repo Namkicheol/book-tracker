@@ -568,10 +568,12 @@
         return;
       }
       var profileBefore = await window.SB.getProfile(user.id);
+      if (!await isCurrentSignIn(user.id)) return;
       var setupKey = '_profileSetupPending_' + user.id;
       if (!hasCompletedProfile(profileBefore)) localStorage.setItem(setupKey, '1');
       else localStorage.removeItem(setupKey);
       await window.Sync.syncProfileOnSignIn();
+      if (!await isCurrentSignIn(user.id)) return;
       if (localStorage.getItem(setupKey) === '1') {
         var setupComplete = await showProfileViewer({onboarding:true, waitForCompletion:true});
         if (!setupComplete) return;

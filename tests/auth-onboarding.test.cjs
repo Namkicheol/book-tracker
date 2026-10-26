@@ -68,3 +68,31 @@ test('stale profile logout cannot sign out a different account',async()=>{
 test('monthly goal is capped at the displayed maximum',async()=>{
  const a=setup(),m=await a.open();m.querySelector('#apvName').value='별명';m.querySelector('#apvGoal').value='999';await m.querySelector('#apvSave').listeners.click();assert.equal(a.calls[0].monthly_goal,200);
 });
+
+test('a profile lookup finishing after an account switch cannot open setup for the new account',async()=>{
+ let finishLookup;
+ const a=setup({profile:new Promise(resolve=>{finishLookup=resolve;})});
+ let profileSyncs=0;a.window.Sync.syncProfileOnSignIn=async()=>{profileSyncs++;};
+ const pending=a.handle();await new Promise(resolve=>setImmediate(resolve));
+ a.setUser({id:'other'});finishLookup(null);
+ await new Promise(resolve=>setImmediate(resolve));
+ const opened=a.elements.has('authProfileModal');
+ if(opened)a.elements.get('authProfileModal').querySelector('#apvCancel').listeners.click();
+ await pending;
+ assert.equal(opened,false);
+ assert.equal(profileSyncs,0);
+ assert.equal(a.values.has('_profileSetupPending_u'),false);
+});
+
+test('profile sync finishing after an account switch cannot open setup for the new account',async()=>{
+ const a=setup({profile:null});let finishSync;
+ a.window.Sync.syncProfileOnSignIn=()=>new Promise(resolve=>{finishSync=resolve;});
+ const pending=a.handle();await new Promise(resolve=>setImmediate(resolve));
+ a.setUser({id:'other'});finishSync();
+ await new Promise(resolve=>setImmediate(resolve));
+ const opened=a.elements.has('authProfileModal');
+ if(opened)a.elements.get('authProfileModal').querySelector('#apvCancel').listeners.click();
+ await pending;
+ assert.equal(opened,false);
+ assert.equal(a.values.has('_profileSetupPending_other'),false);
+});
