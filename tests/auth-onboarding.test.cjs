@@ -68,3 +68,64 @@ test('stale profile logout cannot sign out a different account',async()=>{
 test('monthly goal is capped at the displayed maximum',async()=>{
  const a=setup(),m=await a.open();m.querySelector('#apvName').value='별명';m.querySelector('#apvGoal').value='999';await m.querySelector('#apvSave').listeners.click();assert.equal(a.calls[0].monthly_goal,200);
 });
+
+test('a profile lookup finishing after an account switch cannot open setup for the new account',async()=>{
+ let finishLookup;
+ const a=setup({profile:new Promise(resolve=>{finishLookup=resolve;})});
+ let profileSyncs=0;a.window.Sync.syncProfileOnSignIn=async()=>{profileSyncs++;};
+ const pending=a.handle();await new Promise(resolve=>setImmediate(resolve));
+ a.setUser({id:'other'});finishLookup(null);
+ await new Promise(resolve=>setImmediate(resolve));
+ const opened=a.elements.has('authProfileModal');
+ if(opened)a.elements.get('authProfileModal').querySelector('#apvCancel').listeners.click();
+ await pending;
+ assert.equal(opened,false);
+ assert.equal(profileSyncs,0);
+ assert.equal(a.values.has('_profileSetupPending_u'),false);
+});
+
+test('profile sync finishing after an account switch cannot open setup for the new account',async()=>{
+ const a=setup({profile:null});let finishSync;
+ a.window.Sync.syncProfileOnSignIn=()=>new Promise(resolve=>{finishSync=resolve;});
+ const pending=a.handle();await new Promise(resolve=>setImmediate(resolve));
+ a.setUser({id:'other'});finishSync();
+ await new Promise(resolve=>setImmediate(resolve));
+ const opened=a.elements.has('authProfileModal');
+ if(opened)a.elements.get('authProfileModal').querySelector('#apvCancel').listeners.click();
+ await pending;
+ assert.equal(opened,false);
+ assert.equal(a.values.has('_profileSetupPending_other'),false);
+});
+
+for(const phase of ['lookup','sync']){
+ for(const change of ['logout','owner mismatch','stale tab']){
+  test(`${change} during profile ${phase} stops onboarding and library sync`,async()=>{
+   const a=setup({profile:null});let finish,pulls=0;
+   if(phase==='lookup')a.window.SB.getProfile=()=>new Promise(resolve=>{finish=resolve;});
+   else a.window.Sync.syncProfileOnSignIn=()=>new Promise(resolve=>{finish=resolve;});
+   a.window.Sync.pullBooks=async()=>{pulls++;return true;};
+   const pending=a.handle();await new Promise(resolve=>setImmediate(resolve));
+   if(change==='logout')a.setUser(null);
+   else if(change==='owner mismatch')a.window.Storage.getOwner=()=> 'other';
+   else a.window.Storage.isOwnerCurrent=()=>false;
+   finish(null);await pending;
+   assert.equal(a.elements.has('authProfileModal'),false);
+   assert.equal(a.elements.has('authSetupRetry'),false);
+   assert.equal(a.values.has('_syncUploaded_u'),false);
+   assert.equal(pulls,0);
+  });
+ }
+ test(`late rejected profile ${phase} cannot show a retry after another account signs in`,async()=>{
+  const a=setup({profile:{nickname:'완료된 별명'}});let rejectOld;
+  if(phase==='lookup')a.window.SB.getProfile=()=>new Promise((_resolve,reject)=>{rejectOld=reject;});
+  else a.window.Sync.syncProfileOnSignIn=()=>new Promise((_resolve,reject)=>{rejectOld=reject;});
+  const old=a.handle();await new Promise(resolve=>setImmediate(resolve));
+  a.setUser({id:'other'});
+  a.window.SB.getProfile=async()=>({nickname:'다른 별명'});
+  a.window.Sync.syncProfileOnSignIn=async()=>{};
+  await a.handle();
+  assert.equal(a.values.get('_syncUploaded_other'),'1');
+  rejectOld(new Error('late offline failure'));await old;
+  assert.equal(a.elements.has('authSetupRetry'),false);
+ });
+}
