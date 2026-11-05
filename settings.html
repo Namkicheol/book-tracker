@@ -310,12 +310,14 @@
 
       // ── 공개 범위 ──────────────────────────────────────────────
       const privacySel = document.getElementById('privacySelect');
+      let privacyEdited = false;
       const privacyWarn = document.getElementById('privacyWarning');
       const curPrivacy = localStorage.getItem('profileLibraryPublic') === 'true' ? 'public' : 'private';
       privacySel.value = curPrivacy;
       privacyWarn.style.display = curPrivacy === 'private' ? 'block' : 'none';
 
       privacySel.addEventListener('change', async function () {
+        privacyEdited = true;
         if (window.Storage && typeof window.Storage.isOwnerCurrent === 'function' && !window.Storage.isOwnerCurrent()) {
           location.reload();
           return;
@@ -342,11 +344,11 @@
       if (window.SB && window.SB.enabled) {
         const loadingOwner = window.Storage && window.Storage.getOwner ? window.Storage.getOwner() : null;
         window.SB.getProfile(loadingOwner).then(row => {
-          if (!row || row.id !== loadingOwner || !window.Storage.isOwnerCurrent() || window.Storage.getOwner() !== loadingOwner) return;
+          if (privacyEdited || !row || row.id !== loadingOwner || !window.Storage.isOwnerCurrent() || window.Storage.getOwner() !== loadingOwner) return;
           window.Sync.writeLocalProfile(row);
           privacySel.value = row.library_public === true ? 'public' : 'private';
           privacyWarn.style.display = row.library_public === true ? 'none' : 'block';
-        }).catch(() => { privacyWarn.textContent = '서버에서 공개 설정을 불러오지 못했어요. 잠시 후 다시 열어 주세요.'; privacyWarn.style.display = 'block'; });
+        }).catch(() => { if (privacyEdited || !window.Storage.isOwnerCurrent() || window.Storage.getOwner() !== loadingOwner) return; privacyWarn.textContent = '서버에서 공개 설정을 불러오지 못했어요. 잠시 후 다시 열어 주세요.'; privacyWarn.style.display = 'block'; });
       }
 
       // ── 이 기기에서 데이터 삭제 ──────────────────────────────

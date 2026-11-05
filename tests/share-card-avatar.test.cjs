@@ -4,16 +4,16 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const full = fs.readFileSync('js/share.js', 'utf8');
 const source = full.slice(full.indexOf('  async function showShareCard('), full.indexOf('  function _showShareCardModal('));
-async function render(avatar, fail = false, theme = 'paper', layout = 'profile', books = [], equipped = []) {
+async function render(avatar, fail = false, theme = 'paper', layout = 'profile', books = [], equipped = [], nickname = '책친구', missingContext = false) {
   const texts = [], images = [], loaded = [];
   let result;
   const gradient = { addColorStop() {} };
   const ctx = new Proxy({ measureText: value => ({width:String(value).length*12}), fillText(value) { texts.push(value); }, drawImage(image) { images.push(image.src); }, createLinearGradient() { return gradient; } }, { get: (target, key) => target[key] || (() => {}) });
-  const canvas = { getContext: () => ctx, toBlob(callback, type) { assert.equal(type, 'image/png'); callback({ type }); } };
+  const canvas = { getContext: () => missingContext ? null : ctx, toBlob(callback, type) { assert.equal(type, 'image/png'); callback({ type }); } };
   const env = {
     window: {},
     document: { fonts: { ready: Promise.resolve() }, createElement: () => canvas },
-    localStorage: { getItem: key => key === 'profileAvatar' ? avatar : '책친구' },
+    localStorage: { getItem: key => key === 'profileAvatar' ? avatar : nickname },
     Image: class { set src(value) { this._src = value; loaded.push({ value, cors: this.crossOrigin }); this.naturalWidth = 200; this.naturalHeight = 100; queueMicrotask(() => fail ? this.onerror() : this.onload()); } get src() { return this._src; } },
     setTimeout, clearTimeout, myStats: { monthBooks: 0, weekBooks: 0, yearBooks: 0, streak: 0 }, BADGES: [],
     URL: { createObjectURL: () => 'blob:card' }, _showShareCardModal(url, blob) { result = { url, blob }; }, showToast() {}
@@ -66,7 +66,7 @@ test('profile, monthly and garden exports contain distinct truthful content', as
   const today = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   const books = [{title:'읽은 책',readDate:today},{title:'읽을 책',readDate:today,status:'want'}];
   const profile = await render('👩',false,'paper','profile',books);
-  assert.ok(profile.texts.includes('한 권씩 모인 2권의 이야기'));
+  assert.ok(profile.texts.includes('서재에 담은 2권'));
   assert.ok(profile.texts.includes('함께 읽은 책 1권'));
   const monthly = await render('👩',false,'paper','monthly',books);
   assert.ok(monthly.texts.includes('1권'));
@@ -92,4 +92,53 @@ test('garden cards include equipped decorations and preserve names when images f
   assert.equal(fallback.result.blob.type,'image/png');
   const profile=await render('👩',false,'paper','profile',[],equipped);
   assert.ok(!profile.images.some(source=>source.startsWith('data:image/svg+xml')));
+});
+
+test('cover collage shows six most recent shelf books and keeps count separate from completions', async () => {
+  const books=Array.from({length:8},(_,i)=>({title:`책${i}`,createdAt:`2026-10-${String(i+1).padStart(2,'0')}`,status:i%2?'want':''}));
+  const card=await render('👩',true,'paper','collage',books);
+  assert.ok(card.texts.includes('나의 취향 책장'));
+  assert.ok(card.texts.includes('서재에 모인 8권 · 내 서재에서 고른 책'));
+  assert.equal(card.texts.filter(value=>/^책\d/.test(value)).length,6);
+  assert.ok(!card.texts.includes('책0'));
+  assert.ok(card.texts.includes('책7'));
+  assert.equal(card.result.blob.type,'image/png');
+});
+test('milestone counts only completed books and reports the next reachable milestone', async () => {
+  const books=Array.from({length:12},(_,i)=>({title:`책${i}`,status:i<10?'':'want'}));
+  const card=await render('👩',false,'paper','milestone',books);
+  assert.ok(card.texts.includes('10권'));
+  assert.ok(card.texts.includes('10권의 발자국을 남겼어요'));
+  assert.ok(card.texts.includes('다음 발자국 20권까지 10권'));
+});
+test('new layouts have honest empty states and never export child metadata', async () => {
+  const collage=await render('👩',true,'paper','collage');
+  assert.ok(collage.texts.includes('아직 비어 있는 책장'));
+  const milestone=await render('👩',true,'paper','milestone');
+  assert.ok(milestone.texts.includes('첫 완독의 순간을 기다려요'));
+  assert.ok(milestone.texts.includes('다음 발자국 1권까지 1권'));
+  assert.ok(![...collage.texts,...milestone.texts].some(value=>/지역|학년|생년월일/.test(value)));
+});
+
+// Canvas text should fit long user-entered nicknames rather than compressing the glyphs.
+test('long nicknames remain bounded in every profile card layout', async () => {
+  for(const layout of ['profile','monthly','garden','collage','milestone']) {
+    const card=await render('👩',false,'paper',layout,[],[],'책을사랑하는엄마'.repeat(40));
+    assert.ok(card.texts.every(value=>String(value).length<=74));
+    assert.equal(card.result.blob.type,'image/png');
+  }
+});
+
+test('unavailable canvas context rejects rendering before PNG export', async () => {
+  await assert.rejects(render('👩',false,'paper','profile',[],[],'책친구',true), /이미지를 만들지 못했어요/);
+});
+test('initial card failure shows retry feedback and unlocks the entry button', async () => {
+  const button={disabled:false},toasts=[];
+  const entry=full.slice(full.indexOf('  async function openShareCard('),full.indexOf('  async function showShareCard('));
+  const env={document:{getElementById:()=>button},showShareCard:()=>Promise.reject(new Error('canvas unavailable')),showToast:message=>toasts.push(message)};
+  vm.runInNewContext(entry+'\nthis.open = openShareCard;',env);
+  await env.open();
+  assert.equal(button.disabled,false);
+  assert.equal(toasts.length,1);
+  assert.match(toasts[0],/다시 눌러/);
 });
