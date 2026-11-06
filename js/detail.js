@@ -543,6 +543,7 @@
     const share = document.getElementById('shareAllBtn');
     let currentCanvas = initialCanvas;
     let request = 0;
+    let exporting = false;
     const returnFocus = document.getElementById('instagramShareBtn');
     const close = () => {
       ++request;
@@ -565,9 +566,11 @@
     apply(initialCanvas); busy(false); modal.hidden = false;
     modal.querySelector('button[data-close-instagram]')?.focus();
     const buttons = modal.querySelectorAll('.template-btn');
+    const exportBusy = value => { exporting = value; buttons.forEach(button => { button.disabled = value; }); busy(value); };
     buttons.forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.template === '1'));
       button.onclick = async () => {
+        if (exporting) return;
         const token = ++request;
         busy(true);
         try {
@@ -582,19 +585,21 @@
     });
     const filename = `독서기록_${String(bookData.title || '책').replace(/[^가-힣a-zA-Z0-9]/g, '_').slice(0,70)}.png`;
     download.onclick = async () => {
-      busy(true);
+      if (exporting) return;
+      exportBusy(true);
       try { await downloadCanvas(currentCanvas, filename); showToast('독서 카드 저장을 시작했어요.'); }
       catch (_) { showToast('저장하지 못했어요. 다시 시도해 주세요.'); }
-      finally { busy(false); }
+      finally { exportBusy(false); }
     };
     share.onclick = async () => {
-      busy(true);
+      if (exporting) return;
+      exportBusy(true);
       try {
         const result = await window.shareToAll(currentCanvas, filename, bookData.title);
         if (!result.success && !result.cancelled) { await downloadCanvas(currentCanvas, filename); showToast('이미지를 저장한 뒤 원하는 앱에서 공유해 주세요.'); }
         if (result.success) close();
       } catch (_) { showToast('공유하지 못했어요. 이미지 저장을 이용해 주세요.'); }
-      finally { busy(false); }
+      finally { exportBusy(false); }
     };
     modal.querySelectorAll('[data-close-instagram]').forEach(button => button.onclick = close);
   }

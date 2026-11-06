@@ -55,15 +55,23 @@
     .profile-avatar {
       width: 72px;
       height: 72px;
+      min-width: 44px;
+      min-height: 44px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--cute-pink), var(--cute-coral));
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 36px;
+      color: inherit;
+      padding: 0;
       box-shadow: 0 4px 16px rgba(255, 158, 158, 0.4);
       border: 4px solid #FFF;
+      cursor: pointer;
     }
+    .profile-avatar:focus-visible,
+    #profileName:focus-visible,
+    #shareCardBtn:focus-visible { outline: 2px solid #a85070; outline-offset: 3px; }
     .profile-info {
       flex: 1;
     }
@@ -73,6 +81,25 @@
       font-weight: 700;
       margin-bottom: 6px;
       color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    #profileName {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+      text-decoration: underline dotted rgba(255, 184, 198, 0.8);
+      text-underline-offset: 3px;
+      padding: 4px 0;
+      min-height: 44px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      cursor: pointer;
     }
     .profile-meta {
       font-size: 14px;
@@ -886,6 +913,10 @@
     .profile-top {margin-bottom:0;gap:10px;}
     .profile-avatar {width:44px;height:44px;font-size:26px;flex-shrink:0;}
     .profile-info {min-width:0;}.profile-name {flex-wrap:wrap;font-size:16px;}
+    @media (max-width:430px) {
+      .profile-top {flex-wrap:wrap;}
+      #shareCardBtn {box-sizing:border-box;width:100%;flex:1 0 100%;justify-content:center;}
+    }
     .my-reading-details summary {cursor:pointer;font-size:12px;color:var(--text-gray);margin-top:14px;}
     .neighbors-intro h2 {font-size:20px;margin:8px 0;}.neighbors-intro p,.feed-status {font-size:12px;color:var(--text-gray);line-height:1.6;}
     .feed-search-label {display:block;font-size:12px;margin:14px 0 6px;}.feed-search {box-sizing:border-box;width:100%;padding:12px 14px;background:var(--bg-paper,#fff);border:1px solid #ead5df;border-radius:14px;font:inherit;color:var(--text-dark);}
@@ -922,10 +953,10 @@
     <!-- 내 프로필 -->
     <div class="profile-card animate-in">
       <div class="profile-top">
-        <div class="profile-avatar" id="profileAvatar">👩</div>
+        <button class="profile-avatar" id="profileAvatar" type="button" aria-label="프로필 아바타 바꾸기" title="프로필 아바타 바꾸기">👩</button>
         <div class="profile-info">
           <div class="profile-name">
-            <span id="profileName">책읽는엄마</span>
+            <button id="profileName" type="button" aria-label="프로필 닉네임 편집" title="프로필 닉네임 편집">책읽는엄마</button>
             <span class="badge" id="profileBadge">나의 독서 기록</span>
           </div>
           <div class="profile-meta">
@@ -933,14 +964,14 @@
             <span id="profileRegion">지역 선택 안 함</span>
           </div>
         </div>
-        <button id="shareCardBtn" aria-label="독서 기록 공유" title="공유 카드"
-          style="background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff;border:none;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(255,158,158,0.3);white-space:nowrap">
+        <button id="shareCardBtn" type="button" aria-label="독서 기록 이미지 공유" title="독서 기록 이미지 공유"
+          style="background:linear-gradient(135deg,#FF9E9E,#E8C5FF);color:#fff;border:none;border-radius:12px;padding:10px 14px;min-height:44px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;box-shadow:0 4px 12px rgba(255,158,158,0.3);white-space:nowrap">
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
             <polyline points="16 6 12 2 8 6"/>
             <line x1="12" y1="2" x2="12" y2="15"/>
           </svg>
-          공유
+          이미지 공유
         </button>
       </div>
 
@@ -975,11 +1006,11 @@
             <div class="goal-fill" id="goalFill"></div>
           </div>
           <div class="goal-text">
-            <span id="goalCurrent">18</span> / <span id="goalTarget">25</span>권
-            <span class="goal-percent" id="goalPercent">72%</span>
+            <span id="goalCurrent">0</span> / <span id="goalTarget">0</span>권
+            <span class="goal-percent" id="goalPercent">0%</span>
           </div>
         </div>
-        <div class="goal-message" id="goalMessage">🔥 7권만 더 읽으면 목표 달성!</div>
+        <div class="goal-message" id="goalMessage">독서 목표를 불러오는 중이에요.</div>
       </div>
 
       <!-- 뱃지 컬렉션 -->
@@ -987,7 +1018,7 @@
         <div class="badges-header">
           <span class="badges-icon">🏆</span>
           <span class="badges-title">획득한 뱃지</span>
-          <span class="badges-count" id="badgesCount">5/12</span>
+          <span class="badges-count" id="badgesCount">0/12</span>
         </div>
         <div class="badges-grid" id="badgesGrid"></div>
       </div>
@@ -1070,6 +1101,6 @@
   <script src="js/book-preview.js?v=20261025a"></script>
   <script src="js/garden.js?v=20261026a"></script>
   <script src="js/community-shelves.js?v=20261025a"></script>
-  <script src="js/share.js?v=20261106a"></script>
+  <script src="js/share.js?v=20261106b"></script>
 </body>
 </html>

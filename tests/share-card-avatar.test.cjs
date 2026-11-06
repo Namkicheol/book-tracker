@@ -3,8 +3,8 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const full = fs.readFileSync('js/share.js', 'utf8');
-const source = full.slice(full.indexOf('  async function showShareCard('), full.indexOf('  function _showShareCardModal('));
-async function render(avatar, fail = false, theme = 'paper', layout = 'profile', books = [], equipped = [], nickname = '책친구', missingContext = false) {
+const source = full.slice(full.indexOf('  // Invalidate private previews/forms'), full.indexOf('  // ── 프로필 편집 모달')) + full.slice(full.indexOf('  async function showShareCard('), full.indexOf('  function _showShareCardModal('));
+async function render(avatar, fail = false, theme = 'paper', layout = 'profile', books = [], equipped = [], nickname = '책친구', missingContext = false, switchDuringRender = false) {
   const texts = [], images = [], loaded = [];
   let result;
   const gradient = { addColorStop() {} };
@@ -21,7 +21,9 @@ async function render(avatar, fail = false, theme = 'paper', layout = 'profile',
   env.window.Storage = env.Storage = {getAllBooks:()=>books};
   env.window.ReadingGarden = env.ReadingGarden = {getGarden:()=>({count:books.filter(book=>!book.status).length,matureTrees:[],currentTree:null}),getCollection:()=>({equipped})};
   vm.runInNewContext(source + '\nthis.render = showShareCard;', env);
-  await env.render({theme,layout});
+  const rendering=env.render({theme,layout});
+  if(switchDuringRender) env.window.Storage.getOwner=()=> 'another-account';
+  await rendering;
   return { texts, images, loaded, result };
 }
 for (const avatar of ['https://example.org/profile.jpg', 'data:image/png;base64,profile-data']) {
@@ -141,4 +143,8 @@ test('initial card failure shows retry feedback and unlocks the entry button', a
   assert.equal(button.disabled,false);
   assert.equal(toasts.length,1);
   assert.match(toasts[0],/다시 눌러/);
+});
+
+test('account change while fonts/images load prevents a late card modal opening', async () => {
+  await assert.rejects(render('👩',false,'paper','profile',[],[],'책친구',false,true),/account/);
 });

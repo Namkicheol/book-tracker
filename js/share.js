@@ -804,38 +804,108 @@
     showToast._t = setTimeout(() => toast.classList.remove('show'), 2200);
   }
 
+  // Invalidate private previews/forms even if an account switches away and back.
+  let profileOwnerGeneration = 0;
+  let profileOwnerId = window.Storage?.getOwner?.() ?? null;
+  const profileOwnerClosers = new Set();
+  function captureProfileOwner() {
+    return { id: window.Storage?.getOwner?.() ?? null, generation: profileOwnerGeneration };
+  }
+  function isProfileOwnerCurrent(owner) {
+    return owner.generation === profileOwnerGeneration && owner.id === profileOwnerId && owner.id === (window.Storage?.getOwner?.() ?? null)
+      && (!window.Storage?.isOwnerCurrent || window.Storage.isOwnerCurrent());
+  }
+  function checkProfileOwner(nextId = window.Storage?.getOwner?.() ?? null) {
+    if (nextId === profileOwnerId && (!window.Storage?.isOwnerCurrent || window.Storage.isOwnerCurrent())) return;
+    profileOwnerId = nextId;
+    profileOwnerGeneration++;
+    [...profileOwnerClosers].forEach(close => close());
+  }
+  if (window.addEventListener) {
+    ['storage', 'focus', 'sync-status'].forEach(event => window.addEventListener(event, () => checkProfileOwner()));
+  }
+  if (window.SB?.enabled && window.SB.onAuthChange) window.SB.onAuthChange((event, session) => {
+    if (['SIGNED_IN', 'SIGNED_OUT', 'INITIAL_SESSION'].includes(event)) checkProfileOwner(session?.user?.id ?? null);
+  });
+
   // ── 프로필 편집 모달 ──────────────────────────────────────────
   function showProfileEditor() {
-    const ownerId = window.Storage && window.Storage.getOwner ? window.Storage.getOwner() : null;
+    const owner = captureProfileOwner();
+    if (!isProfileOwnerCurrent(owner)) return;
+    const ownerId = owner.id;
     const modal = document.createElement('div'); modal.className = 'friend-modal';
     const regions = window.REGIONS || {};
     const city = localStorage.getItem('profileCity') || '';
     const district = localStorage.getItem('profileDistrict') || '';
-    modal.innerHTML = `<form class="friend-modal-content" style="display:flex;flex-direction:column;gap:14px"><h2>프로필 편집</h2><label>닉네임<input name="nickname" maxlength="20" value="${escapeAttr(localStorage.getItem('profileName') || '책읽는엄마')}" style="width:100%"></label><p>아이 이름·생년월일·학교·반·상세 주소를 입력하지 마세요.</p><label>시·도 (선택)<select name="city" style="width:100%"><option value="">선택 안 함</option>${Object.keys(regions).map(c => `<option${c === city ? ' selected' : ''}>${escapeHtml(c)}</option>`).join('')}</select></label><label>시·군·구 (선택)<select name="district" style="width:100%"></select></label><label>이번 달 목표 (권)<input type="number" name="goal" min="1" max="200" value="${myStats.goalTarget || 20}"></label><a href="settings.html">내 서재 공개 설정</a><div style="display:flex;gap:10px"><button type="button" id="profileCancel">취소</button><button type="submit">저장</button></div></form>`;
+    const currentAvatar = localStorage.getItem('profileAvatar') || '👩';
+    let selectedAvatar = currentAvatar;
+    const avatarOptions = [...new Set([currentAvatar, '👩', '👨', '📖', '🌷', '🌿', '🐰', '🐻', '🐱', '🦊', '🐼', '🦉'])];
+    modal.innerHTML = `<form class="friend-modal-content" role="dialog" aria-modal="true" aria-labelledby="profileEditorTitle" style="display:flex;flex-direction:column;gap:14px"><h2 id="profileEditorTitle">프로필 편집</h2><fieldset style="border:0;padding:0;margin:0"><legend style="margin-bottom:8px">프로필 그림</legend><div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px">${avatarOptions.map((value,index)=>`<button type="button" data-profile-avatar="${index}" aria-label="${index===0 ? '현재 프로필 그림' : value+' 아바타'}" aria-pressed="${value===selectedAvatar}" style="height:44px;min-height:44px;padding:2px;overflow:hidden;border:1px solid #d4a4b5;border-radius:12px;background:var(--bg-paper,#fff);font-size:24px;cursor:pointer"></button>`).join('')}</div></fieldset><label>닉네임<input name="nickname" maxlength="20" value="${escapeAttr(localStorage.getItem('profileName') || '책읽는엄마')}" style="width:100%"></label><p>아이 이름·생년월일·학교·반·상세 주소를 입력하지 마세요.</p><label>시·도 (선택)<select name="city" style="width:100%"><option value="">선택 안 함</option>${Object.keys(regions).map(c => `<option${c === city ? ' selected' : ''}>${escapeHtml(c)}</option>`).join('')}</select></label><label>시·군·구 (선택)<select name="district" style="width:100%"></select></label><label>이번 달 목표 (권)<input type="number" name="goal" min="1" max="200" value="${myStats.goalTarget || 20}"></label><a href="settings.html">내 서재 공개 설정</a><div style="display:flex;gap:10px"><button type="button" id="profileCancel">취소</button><button type="submit">저장</button></div></form>`;
     document.body.appendChild(modal);
+    let closed = false;
+    const previousFocus = document.activeElement;
+    const close = () => {
+      if (closed) return;
+      closed = true;
+      profileOwnerClosers.delete(close);
+      document.removeEventListener('keydown',onKeydown);
+      modal.remove();
+      previousFocus?.focus();
+    };
+    const onKeydown = event => {
+      if (event.key === 'Escape') { event.preventDefault(); close(); }
+      if (event.key === 'Tab') {
+        const controls = [...modal.querySelectorAll('input, select, a, button:not(:disabled)')];
+        const first = controls[0], last = controls[controls.length-1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+      }
+    };
+    document.addEventListener('keydown',onKeydown);
+    profileOwnerClosers.add(close);
+    const avatarButtons = [...modal.querySelectorAll('[data-profile-avatar]')];
+    avatarButtons.forEach((button,index) => {
+      const value = avatarOptions[index];
+      if (window.setAvatarEl) window.setAvatarEl(button,/^data:image\//i.test(value) ? '📖' : value);
+      else button.textContent = /^(https?:|data:image\/)/i.test(value) ? '📖' : value;
+      if (value === selectedAvatar) button.style.outline = '2px solid #a55f7a';
+      button.addEventListener('click', () => {
+        if (!isProfileOwnerCurrent(owner)) { close(); return; }
+        selectedAvatar = value;
+        avatarButtons.forEach((choice,i) => {
+          const selected = avatarOptions[i] === selectedAvatar;
+          choice.setAttribute('aria-pressed',String(selected));
+          choice.style.outline = selected ? '2px solid #a55f7a' : '';
+        });
+      });
+    });
     const form = modal.querySelector('form');
     function updateDistrict() {
       form.elements.district.innerHTML = '<option value="">선택 안 함</option>' + (regions[form.elements.city.value] || []).map(d => `<option${d === district ? ' selected' : ''}>${escapeHtml(d)}</option>`).join('');
     }
     updateDistrict(); form.elements.city.addEventListener('change', updateDistrict);
-    modal.querySelector('#profileCancel').addEventListener('click', () => modal.remove());
-    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    form.elements.nickname.focus();
+    modal.querySelector('#profileCancel').addEventListener('click', close);
+    modal.addEventListener('click', e => { if (e.target === modal) close(); });
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      const profile = {public_nickname:form.elements.nickname.value.trim() || '책읽는엄마',nickname:form.elements.nickname.value.trim() || '책읽는엄마',city:form.elements.city.value || null,district:form.elements.district.value || null,monthly_goal:Math.min(200,Math.max(1,Number(form.elements.goal.value) || 20))};
+      if (closed || !isProfileOwnerCurrent(owner)) { close(); return; }
+      const profile = {avatar:selectedAvatar,public_nickname:form.elements.nickname.value.trim() || '책읽는엄마',nickname:form.elements.nickname.value.trim() || '책읽는엄마',city:form.elements.city.value || null,district:form.elements.district.value || null,monthly_goal:Math.min(200,Math.max(1,Number(form.elements.goal.value) || 20))};
       const saveButton = form.querySelector('button[type="submit"]');
       saveButton.disabled = true;
       try {
-        if (window.Storage && !window.Storage.isOwnerCurrent()) throw new Error('account');
+        if (!isProfileOwnerCurrent(owner)) throw new Error('account');
         if (ownerId) {
           const user = await window.SB.getUser();
-          if (!user || user.id !== ownerId) throw new Error('account');
+          if (!user || user.id !== ownerId || !isProfileOwnerCurrent(owner)) throw new Error('account');
           const saved = await window.SB.upsertProfile(profile, {expectedUserId:ownerId});
           if (!saved || saved.id !== ownerId || !window.Storage.isOwnerCurrent() || window.Storage.getOwner() !== ownerId) throw new Error('save');
         } else if (window.Storage && window.Storage.getOwner() !== null) throw new Error('account');
-        window.Sync.writeLocalProfile(profile); loadProfile(); myStats.goalTarget = profile.monthly_goal; renderGoal(); modal.remove();
+        if (closed || !isProfileOwnerCurrent(owner)) throw new Error('account');
+        window.Sync.writeLocalProfile(profile); loadProfile(); myStats.goalTarget = profile.monthly_goal; renderGoal(); close();
         showToast(ownerId ? '프로필을 저장했어요' : '이 기기에 프로필을 저장했어요');
       } catch (_) {
+        if (closed || !isProfileOwnerCurrent(owner)) { close(); return; }
         showToast('프로필 저장을 확인하지 못했어요. 계정을 확인한 뒤 다시 저장해 주세요.');
         saveButton.disabled = false;
         return;
@@ -859,6 +929,8 @@
   }
 
   async function showShareCard(options = {}, previewOnly = false) {
+    const owner = captureProfileOwner();
+    if (!isProfileOwnerCurrent(owner)) throw new Error('account');
     if (typeof options === 'string') options = { theme: options, layout: 'monthly' };
     const layout = ['profile', 'monthly', 'garden', 'collage', 'milestone'].includes(options.layout) ? options.layout : 'profile';
     const themes = { paper: 'monthly-paper.png', coffee: 'reading-coffee.png', forest: 'reading-forest.png', bookshelf: 'profile-bookshelf.png', garden: 'garden-postcard.png' };
@@ -1026,8 +1098,9 @@
     text('아이와 함께한 독서 기록',W/2,H-59,23);
     const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png',.95));
     if(!blob){if(previewOnly)throw new Error('이미지를 만들지 못했어요');showToast('이미지 생성 실패');return;}
+    if (!isProfileOwnerCurrent(owner)) throw new Error('account');
     if(previewOnly)return blob;
-    _showShareCardModal(URL.createObjectURL(blob),blob,name,next=>showShareCard(next,true),{layout,theme});
+    _showShareCardModal(URL.createObjectURL(blob),blob,name,next=>showShareCard(next,true),{layout,theme},owner);
   }
 
   function _loadCardImage(source) {
@@ -1060,7 +1133,7 @@
     ctx.closePath();
   }
 
-  function _showShareCardModal(imgUrl, blob, name, renderTheme, initial = {layout: 'profile', theme: 'bookshelf'}) {
+  function _showShareCardModal(imgUrl, blob, name, renderTheme, initial = {layout: 'profile', theme: 'bookshelf'}, owner = captureProfileOwner()) {
     const previousFocus = document.activeElement === document.body ? document.getElementById('shareCardBtn') : document.activeElement;
     const modal = document.createElement('div');
     modal.className = 'friend-modal';
@@ -1099,10 +1172,17 @@
     const close = () => {
       if (closed) return;
       closed = true;
+      profileOwnerClosers.delete(close);
       revision++;
       document.removeEventListener('keydown', onKeydown);
       URL.revokeObjectURL(imgUrl); modal.remove();
       previousFocus?.focus();
+    };
+    profileOwnerClosers.add(close);
+    const ensureOwner = () => {
+      if (!closed && isProfileOwnerCurrent(owner)) return true;
+      close();
+      return false;
     };
     const onKeydown = e => {
       if (e.key === 'Escape') close();
@@ -1113,6 +1193,7 @@
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }
     };
+    if (!ensureOwner()) return;
     document.addEventListener('keydown', onKeydown);
     modal.querySelector('[data-card-layout]').focus();
     modal.addEventListener('click', e => { if (e.target === modal) close(); });
@@ -1127,6 +1208,7 @@
     let applied = {...initial};
     let rendering = false;
     const regenerate = async () => {
+      if (!ensureOwner()) return;
       const request = ++revision;
       const next = {...selected};
       rendering = true;
@@ -1135,12 +1217,12 @@
       let nextUrl;
       try {
         const nextBlob = await renderTheme(next);
-        if (closed || request !== revision) return;
+        if (!ensureOwner() || request !== revision) return;
         nextUrl = URL.createObjectURL(nextBlob);
         const preview = new Image();
         preview.src = nextUrl;
         await preview.decode();
-        if (closed || request !== revision) { URL.revokeObjectURL(nextUrl); return; }
+        if (!ensureOwner() || request !== revision) { URL.revokeObjectURL(nextUrl); return; }
         const oldUrl = imgUrl;
         imgUrl = nextUrl;
         blob = nextBlob;
@@ -1171,6 +1253,7 @@
     }));
 
     modal.querySelector('#shareCardDownload').addEventListener('click', () => {
+      if (!ensureOwner() || rendering) return;
       const a = document.createElement('a');
       a.href = imgUrl;
       a.download = `momsbooks_${applied.layout}_${new Date().toISOString().slice(0,10)}.png`;
@@ -1180,7 +1263,7 @@
 
     let sharing = false;
     modal.querySelector('#shareCardShare').addEventListener('click', async () => {
-      if (sharing) return;
+      if (!ensureOwner() || sharing || rendering) return;
       sharing = true;
       shareButton.disabled = true;
       try {
