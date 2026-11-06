@@ -189,6 +189,13 @@
       });
       // Long-press to delete (only for actual folders, not "전체")
       if (chip.dataset.folder) {
+        chip.setAttribute('aria-keyshortcuts', 'Delete');
+        chip.setAttribute('title', '길게 누르거나 Delete 키로 폴더 삭제');
+        chip.addEventListener('keydown', event => {
+          if (event.key !== 'Delete') return;
+          event.preventDefault();
+          promptDeleteFolder(chip.dataset.folder);
+        });
         attachLongPress(chip, () => promptDeleteFolder(chip.dataset.folder));
       }
       // Drop target — 책 카드 드롭 시 그 폴더로 이동 ("전체" 제외)
@@ -679,6 +686,7 @@
     const name = (prompt('새 폴더 이름을 입력하세요') || '').trim();
     if (!name) return;
     const f = Storage.saveFolder({ name });
+    if (!f) { showToast('폴더를 추가하지 못했어요. 다시 시도해 주세요.'); return; }
     showToast(`"${f.name}" 폴더 추가됨`);
     renderFolders();
   }
@@ -688,7 +696,7 @@
     if (!f) return;
     const ok = confirm(`"${f.name}" 폴더를 삭제할까요?\n\n폴더 안 책은 삭제되지 않고, 폴더 분류만 해제됩니다.`);
     if (!ok) return;
-    Storage.deleteFolder(folderId);
+    if (!Storage.deleteFolder(folderId)) { showToast('폴더를 삭제하지 못했어요. 다시 시도해 주세요.'); return; }
     if (currentFolderId === folderId) currentFolderId = '';
     showToast('폴더 삭제됨');
     renderFolders();

@@ -281,6 +281,7 @@
       (cameraWanted && opts.cameraSession === cameraSession));
     const isbn = String(isbnRaw || '').replace(/\D/g, '');
     if (isbn.length !== 10 && isbn.length !== 13) {
+      hideLoading();
       showError('ISBN은 10자리 또는 13자리여야 합니다.');
       return;
     }
@@ -329,6 +330,7 @@
     const request = ++searchGeneration;
     const q = String(query || '').trim();
     if (!q) {
+      hideLoading();
       showError('검색어를 입력하세요.');
       return;
     }

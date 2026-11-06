@@ -437,7 +437,12 @@
 
     const deletedFolder = { ...folders[idx], deletedAt: now, updatedAt: now };
     folders[idx] = deletedFolder;
-    if (!writeJSON(KEYS.FOLDERS, folders)) return false;
+    if (!writeJSON(KEYS.FOLDERS, folders)) {
+      // A failed tombstone must not silently detach books from a live folder.
+      if (touched) writeJSON(KEYS.BOOKS, books);
+      if (window.Sync && window.Sync.notifyLocalSave) window.Sync.notifyLocalSave(true);
+      return false;
+    }
     if (window.Sync) {
       window.Sync.pushFolder(deletedFolder);
       if (touched) nextBooks.forEach(function(b) { if (b.updatedAt === now) window.Sync.pushBook(b); });

@@ -18,12 +18,8 @@
     { id: 'books10', emoji: '📚', name: '10권 달성', condition: (stats) => stats.total >= 10 },
     { id: 'books50', emoji: '🎓', name: '50권 달성', condition: (stats) => stats.total >= 50 },
     { id: 'books100', emoji: '💎', name: '100권 독파', condition: (stats) => stats.total >= 100 },
-    { id: 'rank1', emoji: '🏆', name: '1등 독서왕', condition: (stats) => stats.rank === 1 },
     { id: 'goal', emoji: '🎯', name: '목표 달성', condition: (stats) => stats.monthBooks >= stats.goalTarget },
-    { id: 'early', emoji: '⚡', name: '조기 달성', condition: (stats) => stats.goalAchievedEarly },
     { id: 'weekly', emoji: '📖', name: '매주 독서', condition: (stats) => stats.weeksInRow >= 4 },
-    { id: 'thick', emoji: '🌟', name: '두꺼운 책', condition: (stats) => stats.thickBooks >= 3 },
-    { id: 'genre', emoji: '⭐', name: '장르 마스터', condition: (stats) => stats.genreBooks >= 10 },
   ];
 
   // ── 알림 생성 (듀오링고 스타일) ─────────────────────────────
@@ -444,7 +440,8 @@
     const monthAgo = new Date(now.getFullYear(), now.getMonth(), 1);
     const yearAgo = new Date(now.getFullYear(), 0, 1);
 
-    const dated = books.filter(b => !b.status && b.readDate && new Date(b.readDate) <= now);
+    const completed = books.filter(book => !book.status);
+    const dated = completed.filter(b => b.readDate && new Date(b.readDate) <= now);
     const thisWeek = dated.filter(b => new Date(b.readDate) >= weekAgo).length;
     const thisMonth = dated.filter(b => new Date(b.readDate) >= monthAgo).length;
     const thisYear = dated.filter(b => new Date(b.readDate) >= yearAgo).length;
@@ -455,24 +452,14 @@
     // 매주 독서 체크
     const weeksInRow = calculateWeeksInRow(books);
 
-    // 페이지/장르 통계는 실제 근거가 생길 때까지 뱃지를 부여하지 않는다.
-    const thickBooks = 0;
-
-
-    const genreBooks = 0;
-
     myStats = {
-      total: books.length,
+      total: completed.length,
       weekBooks: thisWeek,
       monthBooks: thisMonth,
       yearBooks: thisYear,
       streak,
       weeksInRow,
-      thickBooks,
-      genreBooks,
-      rank: null,
       goalTarget: parseInt(localStorage.getItem('monthlyGoal') || '20'),
-      goalAchievedEarly: false, // TODO: 실제 계산
     };
 
     document.getElementById('statWeek').textContent = thisWeek;
@@ -560,11 +547,11 @@
     grid.innerHTML = BADGES.map(badge => {
       const isUnlocked = unlocked.some(u => u.id === badge.id);
       return `
-        <div class="badge-item ${isUnlocked ? 'unlocked' : 'locked'}"
-             data-badge="${badge.id}">
-          <div class="badge-emoji">${badge.emoji}</div>
-          <div class="badge-name">${badge.name}</div>
-        </div>
+        <button type="button" class="badge-item ${isUnlocked ? 'unlocked' : 'locked'}"
+             data-badge="${badge.id}" aria-label="${badge.name}, ${isUnlocked ? '획득' : '미획득'} 뱃지">
+          <span class="badge-emoji">${badge.emoji}</span>
+          <span class="badge-name">${badge.name}</span>
+        </button>
       `;
     }).join('');
 
@@ -587,12 +574,8 @@
       books10: '총 10권의 책을 읽었어요!',
       books50: '총 50권의 책을 읽었어요!',
       books100: '총 100권의 책을 읽었어요!',
-      rank1: '이번 달 독서 랭킹 1위를 달성했어요!',
       goal: '이번 달 목표를 달성했어요!',
-      early: '목표보다 일찍 달성했어요!',
       weekly: '4주 연속 독서를 했어요!',
-      thick: '두꺼운 책(300쪽 이상) 3권을 읽었어요!',
-      genre: '한 장르의 책을 10권 이상 읽었어요!',
     };
 
     const msg = isUnlocked

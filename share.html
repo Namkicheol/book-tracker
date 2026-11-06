@@ -461,9 +461,14 @@
     }
     .badge-item {
       aspect-ratio: 1;
+      width: 100%;
       background: linear-gradient(135deg, #FFF 0%, #FFFBF8 100%);
       border: 2px solid rgba(255, 184, 198, 0.2);
       border-radius: 14px;
+      padding: 0;
+      color: inherit;
+      font: inherit;
+      text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -473,6 +478,7 @@
       position: relative;
       overflow: hidden;
     }
+    .badge-item:focus-visible { outline: 2px solid #a85070; outline-offset: 3px; z-index: 1; }
     .badge-item.locked {
       opacity: 0.4;
       filter: grayscale(0.8);
@@ -497,10 +503,13 @@
       box-shadow: 0 6px 16px rgba(255, 184, 198, 0.35);
     }
     .badge-emoji {
+      display: block;
       font-size: 28px;
       margin-bottom: 4px;
     }
     .badge-name {
+      display: block;
+      width: 100%;
       font-size: 9px;
       font-weight: 700;
       color: var(--text-dark);
@@ -1018,7 +1027,7 @@
         <div class="badges-header">
           <span class="badges-icon">🏆</span>
           <span class="badges-title">획득한 뱃지</span>
-          <span class="badges-count" id="badgesCount">0/12</span>
+          <span class="badges-count" id="badgesCount">0/8</span>
         </div>
         <div class="badges-grid" id="badgesGrid"></div>
       </div>
@@ -1086,14 +1095,14 @@
       <div class="book-preview-body" id="previewBody"></div>
     </div>
   </div>
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="js/theme.js?v=20260510a"></script>
   <script src="js/config.js?v=20260510a"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase.js?v=20261025a"></script>
   <script src="js/auth-ui.js?v=20261026a"></script>
-  <script src="js/storage.js?v=20261026a"></script>
+  <script src="js/storage.js?v=20261106a"></script>
   <script src="js/sync.js?v=20261025a"></script>
   <script src="js/save-status.js?v=20261025a"></script>
   <script src="js/regions.js?v=20261020a"></script>
@@ -1101,6 +1110,6 @@
   <script src="js/book-preview.js?v=20261025a"></script>
   <script src="js/garden.js?v=20261026a"></script>
   <script src="js/community-shelves.js?v=20261025a"></script>
-  <script src="js/share.js?v=20261106b"></script>
+  <script src="js/share.js?v=20261106c"></script>
 </body>
 </html>

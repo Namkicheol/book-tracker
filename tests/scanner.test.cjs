@@ -8,7 +8,7 @@ function scannerHarness({ lookup = async () => null, start = async () => {}, pho
   const element = id => {
     if (!elements.has(id)) elements.set(id, {
       disabled: false, textContent: '', dataset: {}, style: {}, parentElement: { clientHeight: 180 },
-      classList: { add() {}, remove() {} }, scrollIntoView() {}, focus() {},
+      classList: { values:new Set(), add(value) {this.values.add(value)}, remove(value) {this.values.delete(value)}, contains(value){return this.values.has(value)} }, scrollIntoView() {}, focus() {},
     });
     return elements.get(id);
   };
@@ -39,7 +39,7 @@ function scannerHarness({ lookup = async () => null, start = async () => {}, pho
   };
   const source = fs.readFileSync('js/scanner.js', 'utf8').replace(
     '  // ── Boot',
-    '  window.scannerTest = { startBarcode, stopBarcode, onDecodeSuccess, isBookBarcode, scanBarcodePhoto, searchByIsbn, setMode, scanNextBook };\n  // ── Boot'
+    '  window.scannerTest = { startBarcode, stopBarcode, onDecodeSuccess, isBookBarcode, scanBarcodePhoto, searchByIsbn, setMode, scanNextBook, searchByTitle };\n  // ── Boot'
   );
   vm.runInNewContext(source, context);
   return { ...context.window.scannerTest, calls, element };
@@ -213,4 +213,16 @@ test('a stale preview save callback cannot replace a later search screen', async
   scanner.setMode('title');
   saved({id:'old',title:'늦은 책'});
   assert.equal(scanner.element('scanSavedTitle').textContent, '');
+});
+
+test('invalid replacement search clears loading while old response remains ignored',async()=>{
+  for(const replace of [scanner=>scanner.searchByIsbn('123'),scanner=>scanner.searchByTitle('   ')]) {
+    let finish;const scanner=scannerHarness({lookup:()=>new Promise(resolve=>{finish=resolve})});
+    const pending=scanner.searchByIsbn('9780306406157');
+    assert.equal(scanner.element('loadingSection').classList.contains('hidden'),false);
+    await replace(scanner);
+    assert.equal(scanner.element('loadingSection').classList.contains('hidden'),true);
+    finish({isbn:'9780306406157',title:'Late'});await pending;
+    assert.equal(scanner.calls.preview,0);
+  }
 });
