@@ -196,7 +196,8 @@
     try {
       searchBooks.filter(book => selected.has(book.isbn)).forEach(book => {
         if (inLibrary(book)) { selected.delete(book.isbn); return; }
-        Storage.saveBook({ ...book, status: 'want' });
+        const saved = Storage.saveBook({ ...book, status: 'want' });
+        if (!saved) throw new Error('책 저장을 확인하지 못했어요.');
         selected.delete(book.isbn);
         count++;
       });

@@ -18,7 +18,7 @@ function setup(search, lookup, catalog) {
   const window = {CURATED_BOOKS: catalog || [], API, Storage, addEventListener(name, fn) { events[name] = fn; }};
   if (!catalog) vm.runInNewContext(fs.readFileSync('js/curated-books.js', 'utf8'), {window});
   vm.runInNewContext(fs.readFileSync('js/recommendations.js', 'utf8'), {window, document, API, Storage, localStorage:{getItem(){return null;}}, console, setTimeout});
-  return {init, node, saved, events};
+  return {init, node, saved, events, Storage};
 }
 
 test('deduplicates catalog ISBNs and explicitly bulk adds only missing books', async () => {
@@ -172,4 +172,17 @@ test('Momsbooks recommendation opens the local Momsbooks shelf instead of a publ
  assert.ok(prevented);assert.equal(app.node('recShelfSource').value,'moms');
  assert.equal(app.node('recShelfAge').value,'');assert.equal(app.node('recShelfTopic').value,'');
  assert.match(app.node('recShelfStatus').textContent,/1권/);
+});
+
+test('bulk add retains failed selections and only reports confirmed saved books',async()=>{
+  const app=setup(async()=>[{isbn:'1',title:'First'},{isbn:'2',title:'Second'}]);
+  await app.init();app.node('recSelectAll').handlers.click();
+  let failed=true;
+  app.Storage.saveBook=book=>{if(book.isbn==='2'&&failed)return null;app.saved.push(book);return book};
+  app.node('recAddSelected').handlers.click();
+  assert.equal(app.saved.length,1);
+  assert.match(app.node('recActionStatus').textContent,/1권 저장됨/);
+  assert.match(app.node('recAddSelected').textContent,/선택한 1권/);
+  failed=false;app.node('recAddSelected').handlers.click();
+  assert.equal(app.saved.length,2);assert.equal(app.node('recAddSelected').disabled,true);
 });
